@@ -1,4 +1,4 @@
-package com.julun.huanque.common.layoutmanager
+package com.julun.huanque.common.widgets.layoutmanager
 
 import android.content.Context
 import androidx.recyclerview.widget.LinearLayoutManager

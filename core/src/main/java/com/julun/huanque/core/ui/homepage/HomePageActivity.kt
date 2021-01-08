@@ -46,7 +46,6 @@ import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.HomePageAdapter
 import com.julun.huanque.core.adapter.HomePagePicListAdapter
 import com.julun.huanque.core.manager.AliPlayerManager
-import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.viewmodel.HomePageViewModel
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
@@ -712,7 +711,7 @@ class HomePageActivity : BaseActivity() {
         BGABanner.Adapter<View, HomePagePicBean> { _, itemView, model, _ ->
             val pic = itemView?.findViewById<SimpleDraweeView>(R.id.sdv) ?: return@Adapter
 
-            ImageUtils.loadImageNoResize(pic, "${model?.pic}")
+            ImageUtils.loadImageNoResize(pic, "${model?.coverPic}")
             val icWater = itemView?.findViewById<ImageView>(R.id.iv_water) ?: return@Adapter
             if (model?.realPic == BusiConstant.True) {
                 icWater.show()
@@ -727,7 +726,7 @@ class HomePageActivity : BaseActivity() {
             val picBeanList = mPicAdapter.data
             val picList = mutableListOf<String>()
             picBeanList.forEach {
-                picList.add(StringHelper.getOssImgUrl(it.pic))
+                picList.add(StringHelper.getOssImgUrl(it.coverPic))
             }
 //            val bean = mHomePageViewModel.homeInfoBean.value ?: return@Delegate
 //            val imageList = bean.picList.apply { add(bean.headPic) }

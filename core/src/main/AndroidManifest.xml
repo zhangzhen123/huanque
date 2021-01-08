@@ -128,7 +128,6 @@
         <activity
             android:name=".ui.homepage.HomePageActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
             android:theme="@style/TranslucentTheme" />
         <activity
             android:name=".ui.dynamic.DynamicDetailActivity"

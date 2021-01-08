@@ -44,9 +44,9 @@ class NearbyForm(
     var offset: Int,
     var lat: Double,
     var lng: Double,
-    var province: String = "",
-    var city: String = "",
-    var districe: String = ""
+    var province: String? = null,
+    var city: String? = null,
+    var districe: String? = null
 )
 
 class LikeForm(
@@ -71,6 +71,15 @@ class TagDetailForm(
 class TagUserForm(
     var tagId: Int,
     var friendId: Long
+)
+
+
+class SaveSearchConfigForm(
+    var sexType: String,
+    var minAge: Int, var maxAge: Int,
+    var distance: Long,
+    var wishes: String,
+    var tagIds: String
 )
 
 

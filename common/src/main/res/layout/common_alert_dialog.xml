@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="305dp"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    app:cardBackgroundColor="@color/black_c5"
+    app:cardCornerRadius="@dimen/dimen_10">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/sdv_head"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            app:actualImageScaleType="centerCrop" />
+
+        <TextView
+            android:id="@+id/titleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/dimen_25"
+            android:gravity="bottom"
+            android:includeFontPadding="false"
+            android:paddingLeft="32dp"
+            android:paddingRight="32dp"
+            android:text="温馨提示"
+            android:textColor="@color/black_333"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/msgText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:minHeight="@dimen/dimen_50"
+            android:paddingLeft="20dp"
+            android:paddingTop="@dimen/dimen_15"
+            android:paddingRight="20dp"
+            android:textColor="@color/black_666"
+            android:textSize="16sp"
+            tools:text="确定充值吗确定充值吗确定充值吗确定充值吗" />
+
+        <TextView
+            android:id="@+id/okText"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_40"
+            android:layout_margin="@dimen/dimen_25"
+            android:background="@drawable/bg_alertbutton_right"
+            android:gravity="center"
+            android:text="@string/sure"
+            android:textColor="@color/black_333"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/cancelText"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_40"
+            android:layout_marginStart="@dimen/dimen_25"
+            android:layout_marginEnd="@dimen/dimen_25"
+            android:layout_marginBottom="@dimen/dimen_25"
+            android:gravity="center"
+            android:text="@string/cancel"
+            android:textColor="@color/black_666"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

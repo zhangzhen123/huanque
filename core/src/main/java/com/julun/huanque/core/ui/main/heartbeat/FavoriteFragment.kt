@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.SparseArray
 import android.view.View
 import android.widget.TextView
 import androidx.core.content.ContextCompat
@@ -17,9 +16,7 @@ import com.julun.huanque.common.base.BaseLazyFragment
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.QueryType
-import com.julun.huanque.common.bean.beans.ManagerTagBean
-import com.julun.huanque.common.constant.ActivityRequestCode
-import com.julun.huanque.common.constant.ManagerTagCode
+import com.julun.huanque.common.bean.beans.UserTagBean
 import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.removeDuplicate
@@ -82,9 +79,9 @@ class FavoriteFragment : BaseLazyFragment() {
 
     private lateinit var mCommonNavigator: CommonNavigator
     private var mFragmentMap = HashMap<Int, Fragment>()
-    private val mTabTitles = arrayListOf<ManagerTagBean>()
+    private val mTabTitles = arrayListOf<UserTagBean>()
 
-    private var currentTag: ManagerTagBean? = null
+    private var currentTag: UserTagBean? = null
     override fun getLayoutId(): Int {
         return R.layout.fragment_favorite_container
     }

@@ -298,7 +298,7 @@ data class NewUserGiftBean(
 
 
 data class ManagerTagTabBean(
-    var childList: List<ManagerTagBean> = listOf(),
+    var childList: List<UserTagBean> = listOf(),
     var like: String = "",
     var likeCnt: Int = 0,
     var tagIcon: String = "",
@@ -307,7 +307,7 @@ data class ManagerTagTabBean(
     var tagPic: String = ""
 ) : Serializable
 
-data class ManagerTagBean(
+data class UserTagBean(
     var like: Boolean = false,
     var likeCnt: Int = 0,
     var parentTagId: Int = 0,
@@ -324,7 +324,7 @@ data class ManagerTagBean(
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as ManagerTagBean
+        other as UserTagBean
 
         if (tagId != other.tagId) return false
 
@@ -339,7 +339,7 @@ data class ManagerParentTagBean(
 )
 
 data class ManagerListData(
-    var manageList: MutableList<ManagerTagBean> = mutableListOf(),
+    var manageList: MutableList<UserTagBean> = mutableListOf(),
     var tagList: List<ManagerTagTabBean> = listOf()
 )
 
@@ -422,6 +422,42 @@ data class LoginTagBean(
     //是否选中
     var selected: Boolean = false
 ) : Serializable
+
+data class FilterTagBean(
+    var distance: Long = 0,
+    var sexType: String = "",
+    var typeMap: TypeMap = TypeMap(),
+    var minAge: Int = 0,
+    var maxAge: Int = 0,
+    var wishList: List<FilterWish> = listOf()
+)
+
+data class TypeMap(
+    var Female: List<FilterGroupTag> = listOf(),
+    var Male: List<FilterGroupTag> = listOf()
+)
+
+data class FilterWish(
+    var selected: Boolean = false,
+    var wishType: String = "",
+    var wishTypeExplain: String = "",
+    var wishTypeText: String = ""
+)
+
+data class FilterGroupTag(
+    var tagList: MutableList<FilterTag> = mutableListOf(),
+    var tagType: String = "",
+    var tagTypeText: String = "",
+    var isFold: Boolean = false//是否展开
+)
+
+
+data class FilterTag(
+    var mark: Boolean = false,
+    var tagIcon: String = "",
+    var tagId: Int = 0,
+    var tagName: String = ""
+)
 
 /**
  * 星座对象

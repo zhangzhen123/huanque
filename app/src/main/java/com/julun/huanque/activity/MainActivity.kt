@@ -43,6 +43,7 @@ import com.julun.huanque.core.ui.main.dynamic_square.DynamicSquareFragment
 import com.julun.huanque.core.ui.main.heartbeat.HomeHeartbeatFragment
 import com.julun.huanque.core.ui.main.home.HomeFragment
 import com.julun.huanque.core.ui.main.program.HomeProgramFragment
+import com.julun.huanque.core.viewmodel.MainConnectViewModel
 import com.julun.huanque.core.viewmodel.TodayFateViewModel
 import com.julun.huanque.fragment.*
 import com.julun.huanque.message.fragment.MessageFragment

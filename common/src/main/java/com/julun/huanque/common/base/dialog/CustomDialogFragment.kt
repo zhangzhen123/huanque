@@ -38,7 +38,7 @@ class CustomDialogFragment(var builder: FDBuilder) : BaseDialogFragment() {
     class FDBuilder(
         val layoutId: () -> Int,
         val onStart: (dialog: BaseDialogFragment) -> Unit = {},
-        val initViews: (dialog: BaseDialogFragment, rootView: View) -> Unit = { dia, view -> },
+        val initViews: (dialog: BaseDialogFragment, rootView: View) -> Unit = { _, _ -> },
         val onClose: () -> Unit = {}
     )
 }

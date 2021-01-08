@@ -10,6 +10,7 @@ import android.view.animation.DecelerateInterpolator
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.viewpager.widget.ViewPager
@@ -18,8 +19,10 @@ import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.bean.beans.PagerTab
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.suger.dp2pxf
+import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.widgets.indicator.ScaleTransitionPagerTitleView
 import com.julun.huanque.core.R
+import com.julun.huanque.core.viewmodel.MainConnectViewModel
 import com.julun.rnlib.RnManager
 import com.luck.picture.lib.tools.StatusBarUtil
 import kotlinx.android.synthetic.main.fragment_heartbeat_container.*
@@ -46,6 +49,8 @@ class HomeHeartbeatFragment : BaseFragment() {
         fun newInstance() = HomeHeartbeatFragment()
     }
 
+    private val mMainConnectViewModel: MainConnectViewModel by activityViewModels()
+
     private lateinit var mCommonNavigator: CommonNavigator
     private var mFragmentList = SparseArray<Fragment>()
     private val mTabTitles = arrayListOf<PagerTab>()
@@ -56,7 +61,7 @@ class HomeHeartbeatFragment : BaseFragment() {
 
     private val viewModel: HeartbeatViewModel by viewModels()
 
-
+    private var mFilterTagFragment: FilterTagFragment? = null
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
 
         //
@@ -68,6 +73,10 @@ class HomeHeartbeatFragment : BaseFragment() {
         initMagicIndicator()
         home_container.post {
             RnManager.createReactInstanceManager(CommonInit.getInstance().getApp())
+        }
+        tv_filter_tag.onClickNew {
+            mFilterTagFragment = FilterTagFragment()
+            mFilterTagFragment?.show(childFragmentManager, "FilterTagFragment")
         }
 
 
@@ -104,7 +113,12 @@ class HomeHeartbeatFragment : BaseFragment() {
             }
 
         })
-
+        mMainConnectViewModel.heartBeatSwitch.observe(viewLifecycleOwner, Observer {
+            if(it!=null){
+                switchToTab(it)
+                mMainConnectViewModel.heartBeatSwitch.value=null
+            }
+        })
         viewModel.queryInfo()
 
     }

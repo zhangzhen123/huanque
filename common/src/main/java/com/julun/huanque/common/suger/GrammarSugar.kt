@@ -17,6 +17,7 @@ import com.facebook.drawee.generic.RoundingParams
 import com.facebook.drawee.span.DraweeSpanStringBuilder
 import com.facebook.widget.text.span.BetterImageSpan
 import com.julun.huanque.common.helper.DensityHelper
+import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.net.NAction
 import com.julun.huanque.common.statistics.StatisticManager
 import com.julun.huanque.common.utils.SortUtils
@@ -54,6 +55,13 @@ fun Any.dp2px(value: Int): Int {
 
 fun Any.dp2pxf(value: Int): Float {
     return DensityHelper.dp2pxf(value)
+}
+
+/**
+ * 把本地资源res转化为统一的Url
+ */
+fun localPath(resId: Int): String {
+    return "res://${CommonInit.getInstance().getApp().packageName}/$resId"
 }
 
 /**

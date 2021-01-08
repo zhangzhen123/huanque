@@ -3,6 +3,7 @@ package com.julun.huanque.core.ui.homepage
 import android.Manifest
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.Lifecycle
@@ -10,13 +11,20 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.base.BaseActivity
+import com.julun.huanque.common.base.dialog.BottomActionDialog
+import com.julun.huanque.common.base.dialog.LoadingDialog
+import com.julun.huanque.common.base.dialog.MyAlertDialog
+import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.forms.UpdateUserInfoForm
-import com.julun.huanque.common.constant.BusiConstant
-import com.julun.huanque.common.constant.SPParamKey
+import com.julun.huanque.common.constant.*
+import com.julun.huanque.common.interfaces.routerservice.IRealNameService
+import com.julun.huanque.common.manager.aliyunoss.OssUpLoadManager
 import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.hide
+import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.*
@@ -29,8 +37,7 @@ import com.julun.huanque.core.viewmodel.EditInfoViewModel
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureConfig
 import com.luck.picture.lib.config.PictureMimeType
-import com.trello.rxlifecycle4.android.ActivityEvent
-import com.trello.rxlifecycle4.android.FragmentEvent
+import com.luck.picture.lib.entity.LocalMedia
 import com.trello.rxlifecycle4.android.lifecycle.kotlin.bindUntilEvent
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
@@ -49,6 +56,7 @@ import kotlin.math.max
  *@描述 编辑资料页面
  */
 class EditInfoActivity : BaseActivity() {
+
     private val mEditInfoViewModel: EditInfoViewModel by viewModels()
 
     //进度条的总宽度
@@ -67,6 +75,64 @@ class EditInfoActivity : BaseActivity() {
     private val mEditSocialWishFragment: EditSocialWishFragment by lazy { EditSocialWishFragment() }
 
     private var mBarHeiht = 0
+
+    private val mLoadingDialog: LoadingDialog by lazy { LoadingDialog(this) }
+
+    //
+    private var currentPicBean: HomePagePicBean? = null
+
+    private var currentAction: String = ""
+
+    private var bottomDialog: BottomActionDialog? = null
+
+    private val bottomDialogListener: BottomActionDialog.OnActionListener by lazy {
+        object : BottomActionDialog.OnActionListener {
+            override fun operate(action: BottomAction) {
+
+                val picBean = currentPicBean ?: return
+                when (action.code) {
+                    BottomActionCode.DELETE -> {
+                        mEditInfoViewModel.updateCover(picBean.logId, null)
+                    }
+                    BottomActionCode.REPLACE -> {
+                        currentAction = BottomActionCode.REPLACE
+                        checkPicPermissions()
+                    }
+                    BottomActionCode.REPLACE_HEAD -> {
+                        currentAction = BottomActionCode.REPLACE_HEAD
+                        checkPicPermissions()
+                    }
+                    BottomActionCode.AUTH_HEAD -> {
+                        //
+                        //                        MyAlertDialog(this@EditInfoActivity).showAlertWithOKAndCancel(
+//                            "通过人脸识别技术确认照片为真人将获得认证标识，提高交友机会哦~",
+//                            MyAlertDialog.MyDialogCallback(onRight = {
+//                            }), "真人照片未认证", okText = "去认证", noText = "取消"
+//                        )
+                        (ARouter.getInstance().build(ARouterConstant.REALNAME_SERVICE)
+                            .navigation() as? IRealNameService)?.checkRealHead { e ->
+                            if (e is ResponseError && e.busiCode == ErrorCodes.REAL_HEAD_ERROR) {
+                                MyAlertDialog(this@EditInfoActivity, false).showAlertWithOKAndCancel(
+                                    e.busiMessage.toString(),
+                                    title = "修改提示",
+                                    okText = "修改头像",
+                                    noText = "取消",
+                                    callback = MyAlertDialog.MyDialogCallback(onRight = {
+                                        currentAction = BottomActionCode.REPLACE_HEAD
+                                        checkPicPermissions()
+                                    })
+                                )
+
+                            }
+                        }
+
+
+                    }
+
+                }
+            }
+        }
+    }
 
     //图片示例Fragment
     private val mPicDemoFragment = PicDemoFragment()
@@ -145,6 +211,17 @@ class EditInfoActivity : BaseActivity() {
             //社交意愿
             mEditSocialWishFragment.show(supportFragmentManager, "EditSocialWishFragment")
         }
+        mEditPicAdapter.setOnItemClickListener { adapter, view, position ->
+            val tempBean = mEditPicAdapter.getItemOrNull(position) ?: return@setOnItemClickListener
+            currentPicBean = tempBean
+            if (tempBean.coverPic.isEmpty()) {
+                //空白位置,进入选择图片页面
+                currentAction = BottomActionCode.ADD
+                checkPicPermissions()
+            } else {
+                showBottomDialog(tempBean.headerPic == BooleanType.TRUE)
+            }
+        }
         iv_demo.onClickNew {
             mPicDemoFragment.show(supportFragmentManager, "PicDemoFragment")
         }
@@ -166,12 +243,61 @@ class EditInfoActivity : BaseActivity() {
                 showWishContent(it)
             }
         })
+        mEditInfoViewModel.updateHeadResult.observe(this, Observer {
+            if (it != null) {
+                if (it.isSuccess()) {
+                    //头像修改成功 直接刷新整个页面
+                    mEditInfoViewModel.getBasicInfo()
+                } else {
+                    val error = it.error
+                    if (error?.busiCode == ErrorCodes.USER_LOSE_REAL_HEAD) {
+                        MyAlertDialog(this@EditInfoActivity, false).showAlertWithOKAndCancel(
+                            error.busiMessage.toString(),
+                            title = "修改提示",
+                            okText = "修改头像",
+                            noText = "确定使用",
+                            callback = MyAlertDialog.MyDialogCallback(onRight = {
+                                currentAction = BottomActionCode.REPLACE_HEAD
+                                checkPicPermissions()
+                            }, onCancel = {
+                                mEditInfoViewModel.updateHeadPic(
+                                    headPic = mEditInfoViewModel.currentHeadPic,
+                                    check = BooleanType.FALSE
+                                )
+                            })
+                        )
+
+                    }
+                }
+            }
+        })
+//        mEditInfoViewModel.processData.observe(this, Observer {
+//            if (it != null) {
+//                updateProgress(it.perfection)
+//            }
+//        })
+
+    }
+
+    private fun showBottomDialog(isHead: Boolean) {
+        val actions = arrayListOf<BottomAction>()
+        if (isHead) {
+            actions.add(BottomAction(BottomActionCode.REPLACE_HEAD, "更换头像"))
+            if (currentPicBean?.realPic != BooleanType.TRUE) {
+                actions.add(BottomAction(BottomActionCode.AUTH_HEAD, "认证头像"))
+            }
+        } else {
+            actions.add(BottomAction(BottomActionCode.REPLACE, "更换"))
+            actions.add(BottomAction(BottomActionCode.DELETE, "删除"))
+        }
+        actions.add(BottomAction(BottomActionCode.CANCEL, "取消"))
+        BottomActionDialog.create(bottomDialog, actions, bottomDialogListener).show(this, "BottomActionDialog")
     }
 
     /**
      * 显示数据
      */
-    private fun showViewByData(info: HomePageInfo) {
+    private fun showViewByData(info: EditPagerInfo) {
         updateProgress(info.perfection)
 
         //显示图片相关
@@ -180,20 +306,15 @@ class EditInfoActivity : BaseActivity() {
         val showPics = mutableListOf<HomePagePicBean>()
         showPics.add(HomePagePicBean(info.headPic, info.authMark, headerPic = BusiConstant.True))
         pics.forEach {
-            showPics.add(HomePagePicBean(it))
+            showPics.add(it)
         }
-        (0 until (9 - showPics.size)).forEach { _ ->
-            showPics.add(HomePagePicBean())
-        }
-        mEditPicAdapter.setList(showPics)
-        mEditPicAdapter.setOnItemClickListener { adapter, view, position ->
-            val tempBean = mEditPicAdapter.getItemOrNull(position) ?: return@setOnItemClickListener
-            if (tempBean.pic.isEmpty()) {
-                //空白位置,进入选择图片页面
-                checkPicPermissions()
+        if (showPics.size < 9) {
+            (0 until (9 - showPics.size)).forEach { _ ->
+                showPics.add(HomePagePicBean())
             }
         }
 
+        mEditPicAdapter.setList(showPics)
 
         val normalColor = GlobalUtils.getColor(R.color.black_333)
         val greyColor = GlobalUtils.getColor(R.color.black_999)
@@ -359,7 +480,11 @@ class EditInfoActivity : BaseActivity() {
 //                return makeMovementFlags(0, 0)
             }
 
-            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
                 //得到当拖拽的viewHolder的Positio n
                 val datas = mEditPicAdapter.data
                 //得到当拖拽的viewHolder的Position
@@ -383,7 +508,11 @@ class EditInfoActivity : BaseActivity() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
             }
 
-            override fun canDropOver(recyclerView: RecyclerView, current: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+            override fun canDropOver(
+                recyclerView: RecyclerView,
+                current: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
                 val tempData = mEditPicAdapter.getItemOrNull(target.adapterPosition) ?: return false
 
                 // && tempData.pic.isNotEmpty()
@@ -488,6 +617,14 @@ class EditInfoActivity : BaseActivity() {
      *
      */
     private fun goToPictureSelectPager() {
+        val heightRatio = when (currentAction) {
+            BottomActionCode.REPLACE_HEAD -> {
+                1
+            }
+            else -> {
+                2
+            }
+        }
         PictureSelector.create(this)
             .openGallery(PictureMimeType.ofImage())// 全部.PictureMimeType.ofAll()、图片.ofImage()、视频.ofVideo()、音频.ofAudio()
             .theme(R.style.picture_me_style_single)// 主题样式设置 具体参考 values/styles   用法：R.style.picture.white.style
@@ -499,7 +636,11 @@ class EditInfoActivity : BaseActivity() {
             .isZoomAnim(true)// 图片列表点击 缩放效果 默认true
             .imageFormat(PictureMimeType.PNG)// 拍照保存图片格式后缀,默认jpeg
             //.setOutputCameraPath("/CustomPath")// 自定义拍照保存路径
-            .enableCrop(false)// 是否裁剪
+            .enableCrop(true)// 是否裁剪
+            .withAspectRatio(1, heightRatio)// 裁剪比例 如16:9 3:2 3:4 1:1 可自定义
+            .hideBottomControls(true)// 是否显示uCrop工具栏，默认不显示
+            .freeStyleCropEnabled(false)// 裁剪框是否可拖拽
+            .isDragFrame(false)
             .compress(true)// 是否压缩
             .synOrAsy(true)//同步true或异步false 压缩 默认同步
             //.compressSavePath(getPath())//压缩图片保存地址
@@ -509,10 +650,6 @@ class EditInfoActivity : BaseActivity() {
             .previewEggs(true)// 预览图片时 是否增强左右滑动图片体验(图片滑动一半即可看到上一张是否选中)
             //.cropCompressQuality(90)// 裁剪压缩质量 默认100
             .minimumCompressSize(100)// 小于100kb的图片不压缩
-//            .cropWH(200, 200)// 裁剪宽高比，设置如果大于图片本身宽高则无效
-//            .withAspectRatio(1, 1)// 裁剪比例 如16:9 3:2 3:4 1:1 可自定义
-            .hideBottomControls(true)// 是否显示uCrop工具栏，默认不显示
-//            .freeStyleCropEnabled(true)// 裁剪框是否可拖拽
             .isDragFrame(false)
 //            .circleDimmedLayer(true)// 是否圆形裁剪
 //            .showCropFrame(false)// 是否显示裁剪矩形边框 圆形裁剪时建议设为false
@@ -524,6 +661,81 @@ class EditInfoActivity : BaseActivity() {
         //结果回调onActivityResult code
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == PictureConfig.CHOOSE_REQUEST) {
+            val selectList = PictureSelector.obtainMultipleResult(data)
+            for (media in selectList) {
+                Log.i("图片-----》", media.path)
+            }
+            startUploadImages(selectList)
+        }
+    }
+
+    private fun startUploadImages(selectList: List<LocalMedia>) {
+        try {
+            if (selectList.isNotEmpty()) {
+                val pathList = mutableListOf<String>()
+                selectList.forEach {
+                    val isGif = PictureMimeType.isGif(it.pictureType)
+                    //动图直接上传原图
+                    when {
+                        isGif -> {
+                            pathList.add(it.path)
+                        }
+                        it.isCompressed -> {
+                            pathList.add(it.compressPath)
+                        }
+                        else -> {
+                            pathList.add(it.path)
+                        }
+                    }
+                }
+                if (!mLoadingDialog.isShowing) {
+                    mLoadingDialog.showDialog()
+                }
+                OssUpLoadManager.uploadFiles(
+                    pathList,
+                    OssUpLoadManager.COVER_POSITION
+                ) { code, list ->
+                    if (code == OssUpLoadManager.CODE_SUCCESS) {
+                        logger("上传oss成功结果的：$list")
+                        val first = list?.firstOrNull()
+                        if (first != null) {
+                            when (currentAction) {
+                                BottomActionCode.REPLACE -> {
+                                    if (currentPicBean != null) {
+                                        mEditInfoViewModel.updateCover(currentPicBean!!.logId, coverPic = first)
+                                    }
+                                }
+                                BottomActionCode.REPLACE_HEAD -> {
+                                    mEditInfoViewModel.updateHeadPic(headPic = first, check = BooleanType.TRUE)
+                                }
+                                BottomActionCode.ADD -> {
+                                    mEditInfoViewModel.updateCover(null, coverPic = first)
+                                }
+                            }
+
+                        }
+
+
+                    } else {
+                        ToastUtils.show("上传失败，请稍后重试")
+
+                    }
+                    if (mLoadingDialog.isShowing) {
+                        mLoadingDialog.dismiss()
+                    }
+
+                }
+
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            logger("图片返回出错了")
+        }
+
+    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun userInfoUpdate(info: UpdateUserInfoForm) {

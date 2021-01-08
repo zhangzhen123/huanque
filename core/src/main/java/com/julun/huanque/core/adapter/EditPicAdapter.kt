@@ -3,7 +3,6 @@ package com.julun.huanque.core.adapter
 import android.view.View
 import android.widget.ImageView
 import com.chad.library.adapter.base.BaseQuickAdapter
-import com.chad.library.adapter.base.module.DraggableModule
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.bean.beans.HomePagePicBean
@@ -25,7 +24,7 @@ class EditPicAdapter : BaseQuickAdapter<HomePagePicBean, BaseViewHolder>(R.layou
         val iv_mark = holder.getView<ImageView>(R.id.iv_mark)
         val sdv_pic = holder.getView<SimpleDraweeView>(R.id.sdv_pic)
         val tv_header = holder.getView<View>(R.id.tv_header)
-        if (item.pic.isEmpty()) {
+        if (item.coverPic.isEmpty()) {
             //空布局
             rl_empty.show()
             iv_mark.hide()
@@ -43,7 +42,7 @@ class EditPicAdapter : BaseQuickAdapter<HomePagePicBean, BaseViewHolder>(R.layou
                 iv_mark.hide()
                 tv_header.hide()
             }
-            sdv_pic.loadImageNoResize(item.pic)
+            sdv_pic.loadImageNoResize(item.coverPic)
         }
 
         val tv_no_move = holder.getView<View>(R.id.tv_no_move)

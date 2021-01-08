@@ -3,7 +3,7 @@ package com.julun.huanque.common.viewmodel
 import androidx.lifecycle.*
 import com.julun.huanque.common.basic.ReactiveData
 import com.julun.huanque.common.basic.VoidResult
-import com.julun.huanque.common.bean.beans.ManagerTagBean
+import com.julun.huanque.common.bean.beans.UserTagBean
 import com.julun.huanque.common.bean.beans.ManagerTagTabBean
 import com.julun.huanque.common.bean.forms.TagForm
 import com.julun.huanque.common.bean.forms.TagListForm
@@ -32,15 +32,15 @@ class TagManagerViewModel : BaseViewModel() {
      */
     val tagChange: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
-    val currentTagList = arrayListOf<ManagerTagBean>()
+    val currentTagList = arrayListOf<UserTagBean>()
 
     /**
      * 喜欢或者取消的回调
      */
-    val tagChangeStatus: MutableLiveData<ReactiveData<ManagerTagBean>> by lazy { MutableLiveData<ReactiveData<ManagerTagBean>>() }
+    val tagChangeStatus: MutableLiveData<ReactiveData<UserTagBean>> by lazy { MutableLiveData<ReactiveData<UserTagBean>>() }
 
 
-    val tagGroupRemove: MutableLiveData<ReactiveData<ManagerTagBean>> by lazy { MutableLiveData<ReactiveData<ManagerTagBean>>() }
+    val tagGroupRemove: MutableLiveData<ReactiveData<UserTagBean>> by lazy { MutableLiveData<ReactiveData<UserTagBean>>() }
 
     val saveTagList: MutableLiveData<ReactiveData<VoidResult>> by lazy { MutableLiveData<ReactiveData<VoidResult>>() }
 
@@ -64,7 +64,7 @@ class TagManagerViewModel : BaseViewModel() {
 
     }
 
-    fun tagLike(tag: ManagerTagBean/*, parentTag: ManagerTagTabBean*/) {
+    fun tagLike(tag: UserTagBean/*, parentTag: ManagerTagTabBean*/) {
         viewModelScope.launch {
 
             request({
@@ -72,7 +72,7 @@ class TagManagerViewModel : BaseViewModel() {
                 tag.like = true
                 tagChangeStatus.value = tag.convertRtData()
                 //这里创建一个用于发送标签管理的对象
-                val tagBean = ManagerTagBean(
+                val tagBean = UserTagBean(
                     tagId = result.parentTagId,
                     likeCnt = 1,
                     tagName = result.parentTagName
@@ -87,7 +87,7 @@ class TagManagerViewModel : BaseViewModel() {
 
     }
 
-    fun tagCancelLike(tag: ManagerTagBean/*, parentTag: ManagerTagTabBean*/) {
+    fun tagCancelLike(tag: UserTagBean/*, parentTag: ManagerTagTabBean*/) {
         viewModelScope.launch {
 
             request({
@@ -95,7 +95,7 @@ class TagManagerViewModel : BaseViewModel() {
                 tag.like = false
                 tagChangeStatus.value = tag.convertRtData()
                 //这里创建一个用于发送标签管理的对象
-                val tagBean = ManagerTagBean(
+                val tagBean = UserTagBean(
                     tagId = result.parentTagId,
                     likeCnt = 1,
                     tagName = result.parentTagName
@@ -115,7 +115,7 @@ class TagManagerViewModel : BaseViewModel() {
     /**
      *这里的ManagerTagBean代表一级标签 子级的标签不会传到这里
      */
-    fun addTag(itemBean: ManagerTagBean) {
+    fun addTag(itemBean: UserTagBean) {
         if (currentTagList.isEmpty()) {
             logger("当前的全局标签列表数据为空！！")
             return
@@ -134,7 +134,7 @@ class TagManagerViewModel : BaseViewModel() {
         tagChange.value = true
     }
 
-    fun removeTag(itemBean: ManagerTagBean) {
+    fun removeTag(itemBean: UserTagBean) {
         if (currentTagList.isEmpty()) {
             logger("当前的全局标签列表数据为空！！")
             return
@@ -154,7 +154,7 @@ class TagManagerViewModel : BaseViewModel() {
     }
 
 
-    fun tagCancelGroupLike(tag: ManagerTagBean) {
+    fun tagCancelGroupLike(tag: UserTagBean) {
         tagHasChange = true
         viewModelScope.launch {
 

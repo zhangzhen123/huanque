@@ -370,3 +370,20 @@ data class SaveProfessionForm(
     //职业特性code 多个逗号隔开
     var professionFeatureCodes: String? = null
 ) : Serializable
+
+/**
+ *
+ */
+data class SaveCoverForm(
+    //职业ID （如果单独保存或者修改 收入或者职业特性时，记得带上当前职业ID，否则会按照默认来处理）
+    var logId: Long? = null,
+    var coverPic: String? = null
+)
+
+/**
+ *
+ */
+data class UserUpdateHeadForm(
+    var headPic: String,
+    var check:String
+)

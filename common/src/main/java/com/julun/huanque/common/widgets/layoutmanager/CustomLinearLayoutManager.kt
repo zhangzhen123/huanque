@@ -1,4 +1,4 @@
-package com.julun.huanque.common.widgets
+package com.julun.huanque.common.widgets.layoutmanager
 
 import android.content.Context
 import android.util.DisplayMetrics
@@ -16,7 +16,8 @@ class CustomLinearLayoutManager(context: Context?) : LinearLayoutManager(context
         if (recyclerView == null) {
             super.smoothScrollToPosition(recyclerView, state, position)
         } else {
-            val linearSmoothScroller = CustomLinearSmoothScroller(recyclerView.context)
+            val linearSmoothScroller =
+                CustomLinearSmoothScroller(recyclerView.context)
             linearSmoothScroller.targetPosition = position
             startSmoothScroll(linearSmoothScroller)
         }

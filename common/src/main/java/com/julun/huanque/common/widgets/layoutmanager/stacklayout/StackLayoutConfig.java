@@ -1,4 +1,4 @@
-package com.julun.huanque.common.layoutmanager.stacklayout;
+package com.julun.huanque.common.widgets.layoutmanager.stacklayout;
 
 
 import androidx.annotation.FloatRange;

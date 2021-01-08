@@ -86,9 +86,6 @@ class HomeProgramFragment : BaseFragment() {
         initViewModel()
         initViewPager()
         initMagicIndicator()
-        home_container.post {
-            RnManager.createReactInstanceManager(CommonInit.getInstance().getApp())
-        }
 
         iv_search.onClickNew {
             requireActivity().startActivity<SearchActivity>()

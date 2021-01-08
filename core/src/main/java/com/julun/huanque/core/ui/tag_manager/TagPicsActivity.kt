@@ -2,8 +2,11 @@ package com.julun.huanque.core.ui.tag_manager
 
 import android.app.Activity
 import android.os.Bundle
+import android.view.Gravity
 import android.view.View
 import android.widget.FrameLayout
+import android.widget.TextView
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
@@ -15,12 +18,13 @@ import com.julun.huanque.common.base.BaseVMActivity
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.QueryType
-import com.julun.huanque.common.bean.beans.ManagerTagBean
+import com.julun.huanque.common.bean.beans.UserTagBean
 import com.julun.huanque.common.bean.beans.TagDetailBean
 import com.julun.huanque.common.bean.beans.TagPicBean
 import com.julun.huanque.common.constant.IntentParamKey
 import com.julun.huanque.common.constant.ManagerTagCode
 import com.julun.huanque.common.helper.MixedHelper
+import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.utils.ToastUtils
@@ -44,12 +48,14 @@ class TagPicsActivity : BaseVMActivity<TagPicsViewModel>() {
 
 
     companion object {
-        fun start(act: Activity, tag: ManagerTagBean, likeUserId: Long? = null) {
+        fun start(act: Activity, tag: UserTagBean, likeUserId: Long? = null) {
             act.startActivity<TagPicsActivity>(ManagerTagCode.TAG_INFO to tag, IntentParamKey.USER_ID.name to likeUserId)
         }
 
         val width = (ScreenUtils.getScreenWidth() - dp2px(25)) / 2
     }
+
+    private var tagManagerViewModel = HuanViewModelManager.tagManagerViewModel
 
     override fun getLayoutId(): Int = R.layout.activity_tag_pics
 
@@ -79,11 +85,11 @@ class TagPicsActivity : BaseVMActivity<TagPicsViewModel>() {
         }
     }
 
-    private var currentTag: ManagerTagBean? = null
+    private var currentTag: UserTagBean? = null
     private var currentLikeUserId: Long? = null
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
 
-        currentTag = intent.getSerializableExtra(ManagerTagCode.TAG_INFO) as? ManagerTagBean
+        currentTag = intent.getSerializableExtra(ManagerTagCode.TAG_INFO) as? UserTagBean
         currentLikeUserId = intent.getLongExtra(IntentParamKey.USER_ID.name, 0L)
         if (currentLikeUserId == 0L) {
             currentLikeUserId = null
@@ -98,10 +104,10 @@ class TagPicsActivity : BaseVMActivity<TagPicsViewModel>() {
         rv_pics.layoutManager = StaggeredGridLayoutManager(2, RecyclerView.VERTICAL)
         initViewModel()
         iv_like.onClickNew {
-            //todo 跨页面 数据共享
+            switchLike()
         }
         tv_like.onClickNew {
-
+            switchLike()
         }
         rv_pics.adapter = picListAdapter
 
@@ -126,6 +132,15 @@ class TagPicsActivity : BaseVMActivity<TagPicsViewModel>() {
 
     }
 
+    private fun switchLike() {
+        val detail = mViewModel.tagDetail.value?.getT() ?: return
+        if (detail.like) {
+            tagManagerViewModel.tagCancelLike(UserTagBean(tagId = detail.tagId, tagName = detail.tagName))
+        } else {
+            tagManagerViewModel.tagLike(UserTagBean(tagId = detail.tagId, tagName = detail.tagName))
+        }
+
+    }
 
     private fun initViewModel() {
         mViewModel.tagDetail.observe(this, Observer {
@@ -135,6 +150,38 @@ class TagPicsActivity : BaseVMActivity<TagPicsViewModel>() {
                 loadDataFail(it.isRefresh())
             }
             mRefreshLayout.isRefreshing = false
+        })
+        tagManagerViewModel.tagChangeStatus.observe(this, Observer {
+            if (it.isSuccess()) {
+
+
+                if (it.isNew() && it.requireT().like) {
+                    ToastUtils.showToastCustom(R.layout.layout_toast_tag, action = { view, t ->
+                        val tv = view.findViewById<TextView>(R.id.toastContent)
+                        t.duration = Toast.LENGTH_SHORT
+                        t.setGravity(Gravity.CENTER, 0, 0)
+                        tv.text = "已喜欢"
+                    })
+                }
+                val tag = it.requireT()
+                if (tag.tagId != currentTag?.tagId) {
+                    return@Observer
+                }
+                val detail = mViewModel.tagDetail.value?.getT() ?: return@Observer
+                detail.like = tag.like
+                if (tag.like) {
+                    iv_like.setImageResource(R.mipmap.icon_tag_like)
+                    tv_like.text = "取消喜欢"
+                } else {
+                    iv_like.setImageResource(R.mipmap.icon_tag_dislike)
+                    tv_like.text = "喜欢"
+                }
+
+            } else if (it.state == NetStateType.ERROR) {
+//                if (it.isNew()) {
+//                    ToastUtils.show("网络异常")
+//                }
+            }
         })
     }
 

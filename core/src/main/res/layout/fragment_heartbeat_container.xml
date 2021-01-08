@@ -13,6 +13,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/tv_filter_tag"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginEnd="@dimen/dimen_10"
+        android:drawableEnd="@mipmap/logo_placeholder_small"
+        android:gravity="center"
+        android:text="筛选"
+        app:layout_constraintBottom_toBottomOf="@+id/magic_indicator"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <com.julun.huanque.common.widgets.viewpager.NoScrollViewPager
         android:id="@+id/view_pager"
         android:layout_width="match_parent"

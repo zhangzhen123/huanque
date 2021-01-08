@@ -11,16 +11,13 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.base.BaseVMFragment
-import com.julun.huanque.common.base.dialog.BottomDialog
+import com.julun.huanque.common.base.dialog.BottomActionDialog
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.basic.RootListData
-import com.julun.huanque.common.bean.beans.DynamicItemBean
-import com.julun.huanque.common.bean.beans.HomeDynamicListInfo
-import com.julun.huanque.common.bean.beans.PhotoBean
-import com.julun.huanque.common.bean.beans.PagerTab
+import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.events.LoginEvent
 import com.julun.huanque.common.bean.events.ShareSuccessEvent
 import com.julun.huanque.common.constant.*
@@ -82,10 +79,10 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
 
     private var huanQueViewModel = HuanViewModelManager.huanQueViewModel
 
-    private var bottomDialog: BottomDialog? = null
-    private val bottomDialogListener: BottomDialog.OnActionListener by lazy {
-        object : BottomDialog.OnActionListener {
-            override fun operate(action: BottomDialog.Action) {
+    private var bottomDialog: BottomActionDialog? = null
+    private val bottomDialogListener: BottomActionDialog.OnActionListener by lazy {
+        object : BottomActionDialog.OnActionListener {
+            override fun operate(action: BottomAction) {
                 when (action.code) {
                     BottomActionCode.DELETE -> {
                         logger.info("删除动态 ${currentItem?.postId}")
@@ -245,16 +242,16 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
                 R.id.iv_more_action -> {
                     logger.info("更多操作")
                     currentItem = item
-                    val actions = arrayListOf<BottomDialog.Action>()
+                    val actions = arrayListOf<BottomAction>()
                     if (item.userId == SessionUtils.getUserId()) {
-                        actions.add(BottomDialog.Action(BottomActionCode.DELETE, "删除"))
-                        actions.add(BottomDialog.Action(BottomActionCode.CANCEL, "取消"))
+                        actions.add(BottomAction(BottomActionCode.DELETE, "删除"))
+                        actions.add(BottomAction(BottomActionCode.CANCEL, "取消"))
                     } else {
-                        actions.add(BottomDialog.Action(BottomActionCode.REPORT, "举报"))
-                        actions.add(BottomDialog.Action(BottomActionCode.CANCEL, "取消"))
+                        actions.add(BottomAction(BottomActionCode.REPORT, "举报"))
+                        actions.add(BottomAction(BottomActionCode.CANCEL, "取消"))
                     }
                     if (bottomDialog == null) {
-                        bottomDialog = BottomDialog.newInstance(actions = actions)
+                        bottomDialog = BottomActionDialog.newInstance(actions = actions)
                     } else {
                         bottomDialog?.setActions(actions)
                     }

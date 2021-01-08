@@ -2,7 +2,10 @@ package com.julun.huanque.core.ui.tag_manager
 
 import android.app.Activity
 import android.os.Bundle
+import android.view.Gravity
 import android.view.View
+import android.widget.TextView
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.module.LoadMoreModule
@@ -10,20 +13,21 @@ import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.base.BaseVMActivity
 import com.julun.huanque.common.basic.NetState
+import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.QueryType
-import com.julun.huanque.common.bean.beans.ManagerTagBean
+import com.julun.huanque.common.bean.beans.UserTagBean
 import com.julun.huanque.common.bean.beans.TagUserPic
 import com.julun.huanque.common.bean.beans.TagUserPicListBean
 import com.julun.huanque.common.constant.IntentParamKey
 import com.julun.huanque.common.constant.ManagerTagCode
-import com.julun.huanque.common.layoutmanager.stacklayout.StackAlign
-import com.julun.huanque.common.layoutmanager.stacklayout.StackLayoutConfig
-import com.julun.huanque.common.layoutmanager.stacklayout.StackLayoutManager
+import com.julun.huanque.common.widgets.layoutmanager.stacklayout.StackAlign
+import com.julun.huanque.common.widgets.layoutmanager.stacklayout.StackLayoutConfig
+import com.julun.huanque.common.widgets.layoutmanager.stacklayout.StackLayoutManager
 import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.suger.*
+import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.viewmodel.TagManagerViewModel
 import com.julun.huanque.core.R
-import kotlinx.android.synthetic.main.activity_tag_pics.rv_pics
 import kotlinx.android.synthetic.main.activity_tag_user_pics.*
 import org.jetbrains.anko.startActivity
 
@@ -46,7 +50,7 @@ class TagUserPicsActivity : BaseVMActivity<TagUserPicsViewModel>() {
 
     override fun getLayoutId(): Int = R.layout.activity_tag_user_pics
 
-    private val tagManagerViewModel:TagManagerViewModel =HuanViewModelManager.tagManagerViewModel
+    private val tagManagerViewModel: TagManagerViewModel = HuanViewModelManager.tagManagerViewModel
     private var currentTagId: Int? = null
     private var currentLikeUserId: Long? = null
 
@@ -93,8 +97,13 @@ class TagUserPicsActivity : BaseVMActivity<TagUserPicsViewModel>() {
 
         tv_btn_like.onClickNew {
             //todo
-            cTagUserPicListBean?:return@onClickNew
-            tagManagerViewModel.tagLike(ManagerTagBean(tagId = cTagUserPicListBean!!.tagId,tagIcon = cTagUserPicListBean!!.tagIcon))
+            cTagUserPicListBean ?: return@onClickNew
+            tagManagerViewModel.tagLike(
+                UserTagBean(
+                    tagId = cTagUserPicListBean!!.tagId,
+                    tagIcon = cTagUserPicListBean!!.tagIcon
+                )
+            )
         }
         zan_layout.onClickNew {
             val info = cTagUserPicListBean ?: return@onClickNew
@@ -137,6 +146,38 @@ class TagUserPicsActivity : BaseVMActivity<TagUserPicsViewModel>() {
                 }
             }
         })
+        tagManagerViewModel.tagChangeStatus.observe(this, Observer {
+            if (it.isSuccess()) {
+
+
+                if (it.isNew() && it.requireT().like) {
+                    ToastUtils.showToastCustom(R.layout.layout_toast_tag, action = { view, t ->
+                        val tv = view.findViewById<TextView>(R.id.toastContent)
+                        t.duration = Toast.LENGTH_SHORT
+                        t.setGravity(Gravity.CENTER, 0, 0)
+                        tv.text = "已喜欢"
+                    })
+                }
+                val tag = it.requireT()
+                if(tag.tagId!=currentTagId){
+                    return@Observer
+                }
+                if (tag.like) {
+                    add_tag_guide_layout.hide()
+                    zan_layout.show()
+                } else {
+                    add_tag_guide_layout.show()
+                    tv_tag_name.text = tag.tagName
+                    zan_layout.hide()
+                }
+
+            } else if (it.state == NetStateType.ERROR) {
+//                if (it.isNew()) {
+//                    ToastUtils.show("网络异常")
+//                }
+            }
+        })
+
 
         currentTagId ?: return
         currentLikeUserId ?: return

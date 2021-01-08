@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tv_tag"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dimen_40"
+    android:layout_gravity="bottom"
+    android:layout_weight="1"
+    android:background="@drawable/sel_bg_tag_filter_btn"
+    android:gravity="center"
+    android:textColor="@color/selector_text_color"
+    android:textSize="@dimen/sp_14"
+    android:textStyle="bold"
+    tools:text="男生" />
+
+
+
+

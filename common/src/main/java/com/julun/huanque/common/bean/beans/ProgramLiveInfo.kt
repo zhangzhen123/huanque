@@ -644,7 +644,95 @@ data class HomePageInfo(
 
 ) : Serializable
 
+/**
+ * 编辑相关数据  这个类除了picList结构与上面不一样 其他一模一样 至于为什么这样做 问后台
+ */
+data class EditPagerInfo(
+    //年龄
+    var age: Int = 0,
+    //真人标识
+    var authMark: String = "",
+    //他人主页认证的标签列表
+    var authTagList: MutableList<HomeTagBean> = mutableListOf(),
+    //我认证的标签
+    var myAuthTag: MineTagBean = MineTagBean(),
+    //生日
+    var birthday: String = "",
+    //是否可以互动
+    var canInteractive: String = "",
+    //是否拉黑
+    var black: String = "",
+    //星座数据
+    var constellationInfo: ConstellationInfo = ConstellationInfo(),
+    //当前登录用户性别
+    var currSexType: String = "",
+    //当前用户ID
+    var currUserId: Long = 0,
+    //家乡数据
+    var homeTown: HomTownBean = HomTownBean(),
+    //距离使用的对象
+    var distanceCity: HomeCity = HomeCity(),
+    //是否关注
+    var follow: String = "",
+    //头像
+    var headPic: String = "",
+    //我的签名
+    var mySign: String = "",
+    //是否是真人
+    var headRealPeople: String = "",
+    //是否是密友
+    var intimate: String = "",
+    //他人主页喜欢的标签列表
+    var likeTagList: MutableList<HomeTagBean> = mutableListOf(),
+    //我喜欢的标签
+    var myLikeTag: MineTagBean = MineTagBean(),
+    //昵称
+    var nickname: String = "",
+    //在线状态
+    var online: HomeOnLineBean? = null,
+    //资料完成度 百分比
+    var perfection: Int = 0,
+    //封面列表
+    var picList: MutableList<HomePagePicBean> = mutableListOf(),
+    //动态数量
+    var postNum: Int = 0,
+    //收礼数据
+    var receiveGifts: MutableList<ChatGift> = mutableListOf(),
+    //贵族等级
+    var royalLevel: Int = 0,
+    //性别
+    var sex: String = "",
+    //用户ID
+    var userId: Long = 0L,
+    //用户等级
+    var userLevel: Int = 0,
+    //用户类型
+    var userType: String = "",
+    //身材数据
+    var figure: FigureBean = FigureBean(),
+    //社交意愿
+    var wishList: MutableList<SocialWishBean> = mutableListOf(),
+    //所有的社交意愿
+    var wishConfigList: MutableList<SocialWishBean> = mutableListOf(),
+    //职业相关
+    var profession: ProfessionInfo = ProfessionInfo(),
+    //学校数据
+    var schoolInfo: SchoolInfo = SchoolInfo(),
 
+    //语音签名对象
+    var voice: VoiceBean = VoiceBean(),
+
+    //主播等级
+    var anchorLevel: Int = 0,
+    //贵族等级图标
+    var royalPic: String = "",
+    //播放数据
+    var playProgram: HomePageProgram = HomePageProgram(),
+    //直播间内的动态数据
+    var post: PostInHomePage = PostInHomePage()
+    /*2.0.0新增字段*/
+
+) : Serializable
 /**
  * 编辑资料页面 家乡数据
  */
@@ -975,7 +1063,7 @@ data class EvaluateTags(
  */
 data class HomePagePicBean(
     //图片地址
-    var pic: String = "",
+    var coverPic: String = "",
     //真人水印
     var realPic: String = "",
     //是否选中
@@ -983,7 +1071,8 @@ data class HomePagePicBean(
     //是否是头像（编辑资料页面使用）
     var headerPic: String = "",
     //是否显示不可移动提示
-    var showNoMoveAttention: String = ""
+    var showNoMoveAttention: String = "",
+    var logId: Long = 0L
 ) : Serializable
 
 /**
@@ -1097,6 +1186,11 @@ data class UserProcessBean(
     var perfection: Int = 0
 ) : Serializable
 
+data class UserHeadChangeBean(
+    //资料完成度
+    var perfection: Int = 0,
+    var headRealPeople:Boolean=false
+) : Serializable
 /**
  * 编辑页面  家乡数据
  */

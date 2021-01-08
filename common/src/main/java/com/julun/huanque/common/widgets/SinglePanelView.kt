@@ -1,13 +1,9 @@
 package com.julun.huanque.common.widgets
 
 import android.content.Context
-import android.text.SpannableString
-import android.text.Spanned
-import android.text.style.ForegroundColorSpan
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.recyclerview.widget.GridLayoutManager
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.julun.huanque.common.R
@@ -16,16 +12,14 @@ import com.julun.huanque.common.adapter.NormalEmojiAdapter
 import com.julun.huanque.common.adapter.PrerogativeEmojiAdapter
 import com.julun.huanque.common.constant.EmojiType
 import com.julun.huanque.common.interfaces.EmojiInputListener
-import com.julun.huanque.common.layoutmanager.WrapContentGridLayoutManager
+import com.julun.huanque.common.widgets.layoutmanager.WrapContentGridLayoutManager
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
-import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.widgets.emotion.Emotion
 import com.julun.huanque.common.widgets.emotion.Emotions
 import kotlinx.android.synthetic.main.panel_single_emoji.view.*
-import kotlinx.android.synthetic.main.panel_view_private_chat.view.*
 
 /**
  *@创建者   dong

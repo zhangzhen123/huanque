@@ -4,14 +4,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.basic.ReactiveData
-import com.julun.huanque.common.bean.beans.ManagerTagBean
 import com.julun.huanque.common.bean.beans.TagUserPicListBean
-import com.julun.huanque.common.bean.forms.TagForm
 import com.julun.huanque.common.bean.forms.TagUserForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.TagService
-import com.julun.huanque.common.net.services.UserService
 import com.julun.huanque.common.suger.*
 import kotlinx.coroutines.launch
 
@@ -66,7 +63,7 @@ class TagUserPicsViewModel : BaseViewModel() {
         viewModelScope.launch {
 
             request({
-                val result = service.tagPraise(TagUserForm(tagId, friendId)).dataConvert()
+                val result = service.tagCancelPraise(TagUserForm(tagId, friendId)).dataConvert()
                 tagPraise.value = false.convertRtData()
             }, error = {
                 tagPraise.value = it.convertError()

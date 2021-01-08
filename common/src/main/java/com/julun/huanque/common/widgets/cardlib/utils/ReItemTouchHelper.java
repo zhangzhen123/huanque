@@ -472,6 +472,9 @@ public class ReItemTouchHelper extends RecyclerView.ItemDecoration
                         }
                         if (swipeDir <= 0) {
                             // this is a drag or failed swipe. recover immediately
+                            if(mCallback instanceof CardTouchHelperCallback){
+                                ((CardTouchHelperCallback) mCallback).onSwipeFail(this.mViewHolder);
+                            }
                             mCallback.clearView(mRecyclerView, prevSelected);
                             // full cleanup will happen on onDrawOver
                         } else {
