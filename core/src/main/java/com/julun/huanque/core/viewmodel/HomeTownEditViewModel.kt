@@ -36,7 +36,7 @@ class HomeTownEditViewModel : BaseViewModel() {
     var index = -1
 
     //跳转列表
-    var jumpList = mutableListOf<String>()
+    var tagList = ArrayList<String>()
 
     private val userService: UserService by lazy { Requests.create(UserService::class.java) }
 

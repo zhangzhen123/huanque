@@ -28,6 +28,7 @@ import com.julun.huanque.common.bean.beans.EducationBean
 import com.julun.huanque.common.bean.beans.SchoolInfo
 import com.julun.huanque.common.bean.beans.SingleSchool
 import com.julun.huanque.common.bean.forms.SaveSchoolForm
+import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
@@ -57,11 +58,15 @@ class SchoolActivity : BaseActivity() {
     companion object {
         const val Tag = "SchoolActivity"
         const val SchoolInfo = "SchoolInfo"
-        fun newInstance(act: Activity, schoolInfo: SchoolInfo) {
+        fun newInstance(act: Activity, schoolInfo: SchoolInfo, index: Int = -1, tagList: ArrayList<String>? = null) {
             val intent = Intent(act, SchoolActivity::class.java)
             if (ForceUtils.activityMatch(intent)) {
                 val bundle = Bundle()
                 bundle.putSerializable(SchoolInfo, schoolInfo)
+                bundle.putInt(ParamConstant.Index, index)
+                if (tagList != null) {
+                    bundle.putStringArrayList(ParamConstant.Tag_List, tagList)
+                }
                 intent.putExtras(bundle)
                 act.startActivity(intent)
             }
@@ -416,5 +421,28 @@ class SchoolActivity : BaseActivity() {
         dialogWindow.setGravity(Gravity.BOTTOM) //改成Bottom,底部显示
         dialogWindow.setDimAmount(0.3f)
 
+    }
+
+    private fun getNextClass(tag: String): Class<out BaseActivity>? {
+        return when (tag) {
+            HomeTownActivity.Tag -> {
+                HomeTownActivity::class.java
+            }
+            FigureActivity.Tag -> {
+                FigureActivity::class.java
+            }
+            UpdateBirthdayActivity.Tag -> {
+                UpdateBirthdayActivity::class.java
+            }
+            SchoolActivity.Tag->{
+                SchoolActivity::class.java
+            }
+            ProfessionActivity.Tag->{
+                ProfessionActivity::class.java
+            }
+            else->{
+                return null
+            }
+        }
     }
 }

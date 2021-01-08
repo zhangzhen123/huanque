@@ -48,6 +48,7 @@ import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.textColor
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.collections.ArrayList
 import kotlin.math.max
 
 /**
@@ -142,8 +143,6 @@ class EditInfoActivity : BaseActivity() {
     override fun getLayoutId() = R.layout.act_edit_info
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
-        SPUtils.commitBoolean(SPParamKey.First_Edit_Information, false)
-
         mBarHeiht = StatusBarUtil.getStatusBarHeight(this)
         header_page.textTitle.text = "编辑资料"
         header_page.textOperation.show()
@@ -164,7 +163,7 @@ class EditInfoActivity : BaseActivity() {
             val picSb = StringBuilder()
             mEditPicAdapter.data.forEach {
                 if (it.headerPic != BusiConstant.True && it.logId != 0L) {
-                    if(picSb.isNotEmpty()){
+                    if (picSb.isNotEmpty()) {
                         picSb.append(",")
                     }
                     picSb.append("${it.logId}")
@@ -173,7 +172,7 @@ class EditInfoActivity : BaseActivity() {
             if (picSb.toString() != mEditInfoViewModel.originCoverPicIdStr) {
                 //数据发生变化，需要请求接口
                 mEditInfoViewModel.saveConverOrder(picSb.toString())
-            }else{
+            } else {
                 finish()
             }
         }
@@ -207,20 +206,55 @@ class EditInfoActivity : BaseActivity() {
                 homeTownStr.append("/")
             }
             homeTownStr.append(info.homeTown.homeTownCity)
-            HomeTownActivity.newInstance(this, homeTownStr.toString())
+            val jumpList = getjumpOrder(HomeTownActivity.Tag)
+            if (jumpList.isEmpty()) {
+                HomeTownActivity.newInstance(this, homeTownStr.toString())
+            } else {
+                HomeTownActivity.newInstance(this, homeTownStr.toString(), 0)
+            }
         }
         tv_age_constellation_title.onClickNew {
             //年龄  星座
             val basicInfo = mEditInfoViewModel.basicInfo.value ?: return@onClickNew
-            UpdateBirthdayActivity.newInstance(this, basicInfo.birthday)
+            val jumpList = getjumpOrder(UpdateBirthdayActivity.Tag)
+            if (jumpList.isEmpty()) {
+                UpdateBirthdayActivity.newInstance(this, basicInfo.birthday)
+            } else {
+                UpdateBirthdayActivity.newInstance(this, basicInfo.birthday, 0, jumpList)
+            }
+
+        }
+
+        tv_figure_title.onClickNew {
+            val figureBean = mEditInfoViewModel.basicInfo.value?.figure ?: return@onClickNew
+            val jumpList = getjumpOrder(SchoolActivity.Tag)
+            if (jumpList.isEmpty()) {
+                FigureActivity.newInstance(this, figureBean)
+            } else {
+                FigureActivity.newInstance(this, figureBean, 0, jumpList)
+            }
         }
 
         tv_school_title.onClickNew {
             //学校
-            SchoolActivity.newInstance(this, mEditInfoViewModel.basicInfo.value?.schoolInfo ?: return@onClickNew)
+            val schoolInfo = mEditInfoViewModel.basicInfo.value?.schoolInfo ?: return@onClickNew
+            val jumpList = getjumpOrder(SchoolActivity.Tag)
+            if (jumpList.isEmpty()) {
+                SchoolActivity.newInstance(this, schoolInfo)
+            } else {
+                SchoolActivity.newInstance(this, schoolInfo, 0, jumpList)
+            }
+
         }
         tv_job_title.onClickNew {
-            ProfessionActivity.newInstance(this, mEditInfoViewModel.basicInfo.value?.profession ?: return@onClickNew)
+            val profession = mEditInfoViewModel.basicInfo.value?.profession ?: return@onClickNew
+
+            val jumpList = getjumpOrder(ProfessionActivity.Tag)
+            if (jumpList.isEmpty()) {
+                ProfessionActivity.newInstance(this, profession)
+            } else {
+                ProfessionActivity.newInstance(this, profession, 0, jumpList)
+            }
         }
         tv_social_wish_title.onClickNew {
             //社交意愿
@@ -240,11 +274,46 @@ class EditInfoActivity : BaseActivity() {
         iv_demo.onClickNew {
             mPicDemoFragment.show(supportFragmentManager, "PicDemoFragment")
         }
-        tv_figure_title.onClickNew {
-            FigureActivity.newInstance(this, mEditInfoViewModel.basicInfo.value?.figure ?: return@onClickNew)
-        }
 
     }
+
+    /**
+     * 获取跳转顺序
+     */
+    private fun getjumpOrder(firstTag: String): ArrayList<String> {
+        val basicInfo = mEditInfoViewModel.basicInfo.value ?: return ArrayList()
+
+        if (basicInfo.homeTown.homeTownId == 0 && basicInfo.birthday == "" && basicInfo.figure.height == 0) {
+            //城市为空 && 生日为空 && 身材为空
+            val schoolInfo = basicInfo.schoolInfo
+            if (schoolInfo.educationCode.isEmpty() && schoolInfo.education.isEmpty() && schoolInfo.school.isEmpty()
+                && schoolInfo.startYear.isEmpty()
+            ) {
+                //学校为空
+                val profession = basicInfo.profession
+                if (profession.professionId == 0 && profession.incomeText.isEmpty()) {
+                    //职业为空，需要连续跳转
+                    val tagList = mutableListOf<String>()
+                    tagList.add(HomeTownActivity.Tag)
+                    tagList.add(UpdateBirthdayActivity.Tag)
+                    tagList.add(FigureActivity.Tag)
+                    tagList.add(SchoolActivity.Tag)
+                    tagList.add(ProfessionActivity.Tag)
+
+                    val realTagList = ArrayList<String>()
+                    realTagList.add(firstTag)
+                    tagList.forEach {
+                        if (!realTagList.contains(it)) {
+                            realTagList.add(it)
+                        }
+                    }
+                    return realTagList
+                }
+            }
+        }
+        return ArrayList()
+    }
+
 
     /**
      * 初始化ViewModel
@@ -918,7 +987,7 @@ class EditInfoActivity : BaseActivity() {
         val picSb = StringBuilder()
         mEditPicAdapter.data.forEach {
             if (it.headerPic != BusiConstant.True && it.logId != 0L) {
-                if(picSb.isNotEmpty()){
+                if (picSb.isNotEmpty()) {
                     picSb.append(",")
                 }
                 picSb.append("${it.logId}")

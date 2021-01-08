@@ -9,6 +9,7 @@ import androidx.lifecycle.Observer
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.bean.beans.FigureBean
 import com.julun.huanque.common.constant.BusiConstant
+import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.constant.Sex
 import com.julun.huanque.common.suger.loadImage
 import com.julun.huanque.common.suger.onClickNew
@@ -19,6 +20,7 @@ import com.julun.huanque.core.viewmodel.FigureViewModel
 import kotlinx.android.synthetic.main.act_figure.*
 import org.greenrobot.eventbus.EventBus
 import java.math.BigDecimal
+import java.util.ArrayList
 import kotlin.math.max
 
 /**
@@ -31,16 +33,19 @@ class FigureActivity : BaseActivity() {
     companion object {
         const val Tag = "FigureActivity"
         const val Figure = "Figure"
-        fun newInstance(act: Activity, figureBean: FigureBean) {
+        fun newInstance(act: Activity, figureBean: FigureBean, index: Int = -1, tagList: ArrayList<String>? = null) {
             val intent = Intent(act, FigureActivity::class.java)
             if (ForceUtils.activityMatch(intent)) {
                 val bundle = Bundle()
                 bundle.putSerializable(Figure, figureBean)
+                bundle.putInt(ParamConstant.Index, index)
+                if (tagList != null) {
+                    bundle.putStringArrayList(ParamConstant.Tag_List, tagList)
+                }
                 intent.putExtras(bundle)
                 act.startActivity(intent)
             }
         }
-
     }
 
     private val mViewModel: FigureViewModel by viewModels()
@@ -166,5 +171,28 @@ class FigureActivity : BaseActivity() {
         }
     }
 
+
+    private fun getNextClass(tag: String): Class<out BaseActivity>? {
+        return when (tag) {
+            HomeTownActivity.Tag -> {
+                HomeTownActivity::class.java
+            }
+            FigureActivity.Tag -> {
+                FigureActivity::class.java
+            }
+            UpdateBirthdayActivity.Tag -> {
+                UpdateBirthdayActivity::class.java
+            }
+            SchoolActivity.Tag->{
+                SchoolActivity::class.java
+            }
+            ProfessionActivity.Tag->{
+                ProfessionActivity::class.java
+            }
+            else->{
+                return null
+            }
+        }
+    }
 
 }

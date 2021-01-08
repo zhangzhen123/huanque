@@ -190,4 +190,7 @@ object ParamConstant {
 
 
     const val Index = "Index"
+
+    //跳转数组
+    const val Tag_List = "Tag_List"
 }

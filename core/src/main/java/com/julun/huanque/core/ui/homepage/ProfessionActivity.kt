@@ -23,6 +23,7 @@ import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.forms.SaveProfessionForm
 import com.julun.huanque.common.bean.forms.UpdateUserInfoForm
 import com.julun.huanque.common.constant.BusiConstant
+import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.hide
@@ -57,11 +58,15 @@ class ProfessionActivity : BaseActivity() {
         /**
          * 跳转页面
          */
-        fun newInstance(act: Activity, info: ProfessionInfo) {
+        fun newInstance(act: Activity, info: ProfessionInfo, index: Int = -1, tagList: ArrayList<String>? = null) {
             val intent = Intent(act, ProfessionActivity::class.java)
             if (ForceUtils.activityMatch(intent)) {
                 val bundle = Bundle()
                 bundle.putSerializable(ProfessionInfoParams, info)
+                bundle.putInt(ParamConstant.Index, index)
+                if (tagList != null) {
+                    bundle.putStringArrayList(ParamConstant.Tag_List, tagList)
+                }
                 intent.putExtras(bundle)
                 act.startActivity(intent)
             }
@@ -423,6 +428,29 @@ class ProfessionActivity : BaseActivity() {
         dialogWindow.setGravity(Gravity.BOTTOM) //改成Bottom,底部显示
         dialogWindow.setDimAmount(0.3f)
 
+    }
+
+    private fun getNextClass(tag: String): Class<out BaseActivity>? {
+        return when (tag) {
+            HomeTownActivity.Tag -> {
+                HomeTownActivity::class.java
+            }
+            FigureActivity.Tag -> {
+                FigureActivity::class.java
+            }
+            UpdateBirthdayActivity.Tag -> {
+                UpdateBirthdayActivity::class.java
+            }
+            SchoolActivity.Tag->{
+                SchoolActivity::class.java
+            }
+            ProfessionActivity.Tag->{
+                ProfessionActivity::class.java
+            }
+            else->{
+                return null
+            }
+        }
     }
 
 }

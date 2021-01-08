@@ -38,6 +38,8 @@ import com.julun.huanque.core.viewmodel.HomeTownEditViewModel
 import kotlinx.android.synthetic.main.act_home_town.*
 import org.greenrobot.eventbus.EventBus
 import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.reflect.KClass
 
 /**
  *@创建者   dong
@@ -48,14 +50,20 @@ class HomeTownActivity : BaseActivity() {
 
     companion object {
         const val Tag = "HomeTownActivity"
+
         /**
          * 跳转页面
          */
-        fun newInstance(act: Activity, homeTownName: String, index: Int = -1) {
+        fun newInstance(act: Activity, homeTownName: String, index: Int = -1, tagList: ArrayList<String>? = null) {
             val intent = Intent(act, HomeTownActivity::class.java)
             if (ForceUtils.activityMatch(intent)) {
-                intent.putExtra(ParamConstant.Home_Town_Name, homeTownName)
-                intent.putExtra(ParamConstant.Index, index)
+                val bundle = Bundle()
+                bundle.putSerializable(ParamConstant.Home_Town_Name, homeTownName)
+                bundle.putInt(ParamConstant.Index, index)
+                if (tagList != null) {
+                    bundle.putStringArrayList(ParamConstant.Tag_List, tagList)
+                }
+                intent.putExtras(bundle)
                 act.startActivity(intent)
             }
         }
@@ -77,20 +85,17 @@ class HomeTownActivity : BaseActivity() {
     //人文弹窗
     private val mCultureMarkFragment: CultureMarkFragment by lazy { CultureMarkFragment() }
 
-    //    private val foodNoMarkList = mutableListOf<SingleCultureConfig>()
-//    private val placeNoMarkList = mutableListOf<SingleCultureConfig>()
     override fun getLayoutId() = R.layout.act_home_town
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         var index = intent?.getIntExtra(ParamConstant.Index, -1) ?: -1
-        val firstEdit = SPUtils.getBoolean(SPParamKey.First_Edit_Information, true)
-        if (firstEdit) {
-            //首次进入
-            SPUtils.commitBoolean(SPParamKey.First_Edit_Information, false)
-            index = 0
-        }
 
         mHomeTownEditViewModel.index = index
+        intent?.getStringArrayListExtra(ParamConstant.Tag_List)?.let {
+            mHomeTownEditViewModel.tagList.clear()
+            mHomeTownEditViewModel.tagList.addAll(it)
+        }
+
         if (index == -1) {
             con_progress.hide()
         } else {
@@ -118,6 +123,7 @@ class HomeTownActivity : BaseActivity() {
         if (mHomeTownEditViewModel.index >= 0) {
             header_page.textOperation.onClickNew {
                 //跳过
+                goToNext()
             }
         }
 
@@ -189,11 +195,37 @@ class HomeTownActivity : BaseActivity() {
                 mHomeTownEditViewModel.saveHomeTown(currentCityId, curIds.toString())
             } else {
                 //数据没有发生变化，直接返回
-                finish()
+                goToNext()
             }
 
         }
     }
+
+    /**
+     * 跳转下一级页面
+     */
+    private fun goToNext() {
+        if (mHomeTownEditViewModel.index >= 4) {
+            //已经是最后一个
+            finish()
+        } else {
+            //需要继续跳转
+            val tag = mHomeTownEditViewModel.tagList.getOrNull(mHomeTownEditViewModel.index + 1)
+            val targetClass = getNextClass(tag)
+            if (targetClass != null) {
+                //跳转下一次页面
+                val intent = Intent(this, targetClass)
+                if (ForceUtils.activityMatch(intent)) {
+                    val bundle = Bundle()
+                    bundle.putInt(ParamConstant.Index, mHomeTownEditViewModel.index + 1)
+                    bundle.putStringArrayList(ParamConstant.Tag_List, mHomeTownEditViewModel.tagList)
+                    startActivity(intent)
+                }
+            }
+            finish()
+        }
+    }
+
 
     /**
      * 初始化ViewModel
@@ -223,7 +255,7 @@ class HomeTownActivity : BaseActivity() {
                         .post(UpdateUserInfoForm(provinceName = mHomeTownEditViewModel.provinceName, cityName = mHomeTownEditViewModel.cityName))
                 }
                 EventBus.getDefault().post(it)
-                finish()
+                goToNext()
             }
         })
     }
@@ -511,6 +543,29 @@ class HomeTownActivity : BaseActivity() {
         dialogWindow.setGravity(Gravity.BOTTOM) //改成Bottom,底部显示
         dialogWindow.setDimAmount(0.3f)
 
+    }
+
+    private fun getNextClass(tag: String?): Class<out BaseActivity>? {
+        return when (tag) {
+            HomeTownActivity.Tag -> {
+                HomeTownActivity::class.java
+            }
+            FigureActivity.Tag -> {
+                FigureActivity::class.java
+            }
+            UpdateBirthdayActivity.Tag -> {
+                UpdateBirthdayActivity::class.java
+            }
+            SchoolActivity.Tag -> {
+                SchoolActivity::class.java
+            }
+            ProfessionActivity.Tag -> {
+                ProfessionActivity::class.java
+            }
+            else -> {
+                return null
+            }
+        }
     }
 
 }

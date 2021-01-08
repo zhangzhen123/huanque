@@ -14,9 +14,12 @@ import com.bigkoo.pickerview.listener.CustomListener
 import com.bigkoo.pickerview.listener.OnTimeSelectListener
 import com.bigkoo.pickerview.view.TimePickerView
 import com.julun.huanque.common.base.BaseActivity
+import com.julun.huanque.common.bean.beans.FigureBean
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.suger.dp2px
+import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.ConstellationUtils
 import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.common.utils.GlobalUtils
@@ -24,6 +27,8 @@ import com.julun.huanque.common.utils.TimeUtils
 import com.julun.huanque.core.R
 import com.julun.huanque.core.viewmodel.UpdateBirthdayViewModel
 import kotlinx.android.synthetic.main.act_birthday.*
+import kotlinx.android.synthetic.main.act_birthday.header_page
+import kotlinx.android.synthetic.main.act_home_town.*
 import org.greenrobot.eventbus.EventBus
 import java.sql.Time
 import java.util.*
@@ -37,13 +42,20 @@ class UpdateBirthdayActivity : BaseActivity() {
 
     companion object {
         const val Tag = "UpdateBirthdayActivity"
+
         /**
          * @param birthday 生日
          */
-        fun newInstance(act: Activity, birthday: String) {
+        fun newInstance(act: Activity, birthday: String, index: Int = -1, tagList: ArrayList<String>? = null) {
             val intent = Intent(act, UpdateBirthdayActivity::class.java)
             if (ForceUtils.activityMatch(intent)) {
-                intent.putExtra(ParamConstant.Birthday, birthday)
+                val bundle = Bundle()
+                bundle.putString(ParamConstant.Birthday, birthday)
+                bundle.putInt(ParamConstant.Index, index)
+                if (tagList != null) {
+                    bundle.putStringArrayList(ParamConstant.Tag_List, tagList)
+                }
+                intent.putExtras(bundle)
                 act.startActivity(intent)
             }
         }
@@ -56,6 +68,19 @@ class UpdateBirthdayActivity : BaseActivity() {
     override fun getLayoutId() = R.layout.act_birthday
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
+        var index = intent?.getIntExtra(ParamConstant.Index, -1) ?: -1
+
+        mViewModel.index = index
+
+        if (index == -1) {
+            con_progress.hide()
+        } else {
+            con_progress.show()
+            header_page.textOperation.show()
+            header_page.textOperation.text = "跳过"
+            progressBar.progress = (100 / 5) * (index + 1)
+        }
+
         val birthday = intent?.getStringExtra(ParamConstant.Birthday) ?: ""
 
         mViewModel.originalDate = TimeUtils.string2Date("yyyy-MM-dd", birthday)
@@ -69,6 +94,29 @@ class UpdateBirthdayActivity : BaseActivity() {
 
     override fun initEvents(rootView: View) {
         super.initEvents(rootView)
+
+        if (mViewModel.index >= 0) {
+            header_page.textOperation.onClickNew {
+                //跳过
+                val index = mViewModel.index
+                if (index >= 4) {
+                    //已经是最后一个
+                    finish()
+                } else {
+                    //需要继续跳转
+                    if (index == 0) {
+                        //跳转 生日
+                        HomeTownActivity.newInstance(this, "", index + 1)
+                    } else {
+                        //跳转身材
+                        FigureActivity.newInstance(this, FigureBean(), index + 1)
+                    }
+
+                }
+
+            }
+        }
+
         header_page.imageViewBack.onClickNew {
             finish()
         }
@@ -200,5 +248,28 @@ class UpdateBirthdayActivity : BaseActivity() {
         params.leftMargin = 0
         params.rightMargin = 0
         pvTime?.dialogContainerLayout?.layoutParams = params
+    }
+
+    private fun getNextClass(tag: String): Class<out BaseActivity>? {
+        return when (tag) {
+            HomeTownActivity.Tag -> {
+                HomeTownActivity::class.java
+            }
+            FigureActivity.Tag -> {
+                FigureActivity::class.java
+            }
+            UpdateBirthdayActivity.Tag -> {
+                UpdateBirthdayActivity::class.java
+            }
+            SchoolActivity.Tag->{
+                SchoolActivity::class.java
+            }
+            ProfessionActivity.Tag->{
+                ProfessionActivity::class.java
+            }
+            else->{
+                return null
+            }
+        }
     }
 }
