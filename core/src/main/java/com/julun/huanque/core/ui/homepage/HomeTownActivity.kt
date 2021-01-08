@@ -22,6 +22,7 @@ import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.forms.UpdateUserInfoForm
 import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.constant.ParamConstant
+import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.hide
@@ -29,6 +30,7 @@ import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.common.utils.GlobalUtils
+import com.julun.huanque.common.utils.SPUtils
 import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.HomeTownFoodAdapter
@@ -45,13 +47,15 @@ import java.util.*
 class HomeTownActivity : BaseActivity() {
 
     companion object {
+        const val Tag = "HomeTownActivity"
         /**
          * 跳转页面
          */
-        fun newInstance(act: Activity, homeTownName: String) {
+        fun newInstance(act: Activity, homeTownName: String, index: Int = -1) {
             val intent = Intent(act, HomeTownActivity::class.java)
             if (ForceUtils.activityMatch(intent)) {
                 intent.putExtra(ParamConstant.Home_Town_Name, homeTownName)
+                intent.putExtra(ParamConstant.Index, index)
                 act.startActivity(intent)
             }
         }
@@ -78,8 +82,27 @@ class HomeTownActivity : BaseActivity() {
     override fun getLayoutId() = R.layout.act_home_town
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
+        var index = intent?.getIntExtra(ParamConstant.Index, -1) ?: -1
+        val firstEdit = SPUtils.getBoolean(SPParamKey.First_Edit_Information, true)
+        if (firstEdit) {
+            //首次进入
+            SPUtils.commitBoolean(SPParamKey.First_Edit_Information, false)
+            index = 0
+        }
+
+        mHomeTownEditViewModel.index = index
+        if (index == -1) {
+            con_progress.hide()
+        } else {
+            con_progress.show()
+            header_page.textOperation.show()
+            header_page.textOperation.text = "跳过"
+            progressBar.progress = (100 / 5) * (index + 1)
+        }
+
         val cityName = intent?.getStringExtra(ParamConstant.Home_Town_Name) ?: ""
         tv_profression.text = cityName
+
         header_page.textTitle.text = "家乡"
         initViewModel()
         initRecyclerView()
@@ -90,6 +113,12 @@ class HomeTownActivity : BaseActivity() {
         super.initEvents(rootView)
         header_page.imageViewBack.onClickNew {
             finish()
+        }
+
+        if (mHomeTownEditViewModel.index >= 0) {
+            header_page.textOperation.onClickNew {
+                //跳过
+            }
         }
 
         tv_profression_title.onClickNew {
@@ -205,7 +234,7 @@ class HomeTownActivity : BaseActivity() {
     private fun initRecyclerView() {
         recycler_item_food.layoutManager = GridLayoutManager(this, 4)
         recycler_item_food.adapter = mFoodAdapter
-        mFoodAdapter.setEmptyView(MixedHelper.getEmptyView(this,"太棒了！家乡的美食你都吃过了",true))
+        mFoodAdapter.setEmptyView(MixedHelper.getEmptyView(this, "太棒了！家乡的美食你都吃过了", true))
         mFoodAdapter.setOnItemChildClickListener { adapter, view, position ->
             val data = mFoodAdapter.data
             val tempData = mFoodAdapter.getItemOrNull(position) ?: return@setOnItemChildClickListener
@@ -224,7 +253,7 @@ class HomeTownActivity : BaseActivity() {
 
         recycler_item_view.layoutManager = GridLayoutManager(this, 4)
         recycler_item_view.adapter = mPlaceAdapter
-        mPlaceAdapter.setEmptyView(MixedHelper.getEmptyView(this,"太棒了！家乡的景点你都去过了",true))
+        mPlaceAdapter.setEmptyView(MixedHelper.getEmptyView(this, "太棒了！家乡的景点你都去过了", true))
         mPlaceAdapter.setOnItemChildClickListener { adapter, view, position ->
             val data = mPlaceAdapter.data
             val tempData = mPlaceAdapter.getItemOrNull(position) ?: return@setOnItemChildClickListener

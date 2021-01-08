@@ -36,6 +36,7 @@ import java.util.*
 class UpdateBirthdayActivity : BaseActivity() {
 
     companion object {
+        const val Tag = "UpdateBirthdayActivity"
         /**
          * @param birthday 生日
          */

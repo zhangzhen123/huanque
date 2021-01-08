@@ -55,6 +55,7 @@ import java.util.*
 class SchoolActivity : BaseActivity() {
 
     companion object {
+        const val Tag = "SchoolActivity"
         const val SchoolInfo = "SchoolInfo"
         fun newInstance(act: Activity, schoolInfo: SchoolInfo) {
             val intent = Intent(act, SchoolActivity::class.java)

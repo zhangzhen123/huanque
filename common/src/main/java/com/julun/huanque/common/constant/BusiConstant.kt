@@ -138,6 +138,9 @@ object SPParamKey {
 
     //省市版本
     const val Province_City_Version = "Province_City_Version"
+
+    //首次编辑资料
+    const val First_Edit_Information = "First_Edit_Information"
 }
 
 /**

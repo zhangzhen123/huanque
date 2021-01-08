@@ -187,4 +187,7 @@ object ParamConstant {
 
     //星座名称
     const val ConstellationName = "constellationName"
+
+
+    const val Index = "Index"
 }

@@ -50,6 +50,8 @@ import java.util.*
 class ProfessionActivity : BaseActivity() {
 
     companion object {
+        const val Tag = "ProfessionActivity"
+
         const val ProfessionInfoParams = "ProfessionInfo"
 
         /**

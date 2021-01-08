@@ -29,7 +29,7 @@ import kotlin.math.max
 class FigureActivity : BaseActivity() {
 
     companion object {
-
+        const val Tag = "FigureActivity"
         const val Figure = "Figure"
         fun newInstance(act: Activity, figureBean: FigureBean) {
             val intent = Intent(act, FigureActivity::class.java)
@@ -159,7 +159,7 @@ class FigureActivity : BaseActivity() {
         val bmiValue = bmi.toInt()
 
         mViewModel.figureList.forEach {
-            if (bmiValue >= it.min && bmiValue <= it.max) {
+            if (bmiValue > it.min && bmiValue <= it.max) {
                 mViewModel.currentFigureConfig.value = it
                 return
             }

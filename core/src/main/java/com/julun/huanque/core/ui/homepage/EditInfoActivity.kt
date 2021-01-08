@@ -14,6 +14,7 @@ import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.forms.UpdateUserInfoForm
 import com.julun.huanque.common.constant.BusiConstant
+import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
@@ -75,6 +76,8 @@ class EditInfoActivity : BaseActivity() {
     override fun getLayoutId() = R.layout.act_edit_info
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
+        SPUtils.commitBoolean(SPParamKey.First_Edit_Information, false)
+
         mBarHeiht = StatusBarUtil.getStatusBarHeight(this)
         header_page.textTitle.text = "编辑资料"
         header_page.textOperation.show()
