@@ -78,7 +78,9 @@ class EditInfoActivity : BaseActivity() {
 
     //
     private var currentPicBean: HomePagePicBean? = null
+
     private var currentAction: String = ""
+
     private var bottomDialog: BottomActionDialog? = null
 
     private val bottomDialogListener: BottomActionDialog.OnActionListener by lazy {
@@ -129,6 +131,9 @@ class EditInfoActivity : BaseActivity() {
             }
         }
     }
+
+    //图片示例Fragment
+    private val mPicDemoFragment = PicDemoFragment()
 
     override fun isRegisterEventBus() = true
 
@@ -213,6 +218,13 @@ class EditInfoActivity : BaseActivity() {
                 showBottomDialog(tempBean.headerPic == BooleanType.TRUE)
             }
         }
+        iv_demo.onClickNew {
+            mPicDemoFragment.show(supportFragmentManager, "PicDemoFragment")
+        }
+        tv_figure_title.onClickNew {
+            FigureActivity.newInstance(this, mEditInfoViewModel.basicInfo.value?.figure ?: return@onClickNew)
+        }
+
     }
 
     /**
@@ -807,6 +819,34 @@ class EditInfoActivity : BaseActivity() {
             profession.professionTypeText = info.professionTypeText
             profession.professionName = info.professionName
             tv_job.text = "${profession.professionTypeText}/${profession.professionName}"
+        }
+    }
+
+    /**
+     * 身材数据变动
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun figureChange(info: FigureBean) {
+        val figureBean = mEditInfoViewModel.basicInfo.value?.figure ?: return
+        if (info.weight != 0 && info.height != 0) {
+            //数据变动
+            figureBean.weight = info.weight
+            figureBean.height = info.height
+
+            //身材
+            val weight = info.weight
+            val height = info.height
+            val whBuilder = StringBuilder()
+            if (height > 0) {
+                whBuilder.append("${height}cm")
+            }
+            if (weight > 0) {
+                if (height > 0) {
+                    whBuilder.append("/")
+                }
+                whBuilder.append("${weight}kg")
+            }
+            tv_figure.text = whBuilder.toString()
         }
     }
 

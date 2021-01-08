@@ -370,4 +370,10 @@ interface UserService {
     @POST("user/acct/data/updateHeadPic")
     suspend fun updateHeadPic(@Body form: UserUpdateHeadForm): Root<UserHeadChangeBean>
 
+
+    /**
+     * 初始化身材
+     */
+    @POST("user/acct/data/initFigure")
+    suspend fun initFigure(@Body form: EmptyForm = EmptyForm()): Root<FigureBean>
 }

@@ -855,7 +855,25 @@ data class FigureBean(
     //身材
     var figure: String = "",
     //建议
-    var suggest: String = ""
+    var suggest: String = "",
+    //身材图片（编辑页面使用）
+    var myFigurePic: String = "",
+    //身材配置列表（编辑页面使用）
+    var configList: MutableList<FigureConfig> = mutableListOf()
+) : Serializable
+
+/**
+ * 身材配置
+ */
+data class FigureConfig(
+    //身材
+    var figure: String = "",
+    //身材图片
+    var figurePic: String = "",
+    //最小bmi
+    var min: Int = 0,
+    //最大bmi
+    var max: Int = 0
 ) : Serializable
 
 /**
