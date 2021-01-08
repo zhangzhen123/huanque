@@ -128,7 +128,6 @@
         <activity
             android:name=".ui.homepage.HomePageActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
             android:theme="@style/TranslucentTheme" />
         <activity
             android:name=".ui.dynamic.DynamicDetailActivity"
@@ -140,8 +139,17 @@
             android:screenOrientation="portrait"
             android:theme="@style/CustomToolBarTheme" />
         <activity
+            android:name=".ui.homepage.UpdateBirthdayActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/CustomToolBarTheme" />
+        <activity
             android:name=".ui.homepage.EditInfoActivity"
             android:screenOrientation="portrait"
+            android:theme="@style/CustomToolBarTheme" />
+        <activity
+            android:name=".ui.homepage.SchoolActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustNothing"
             android:theme="@style/CustomToolBarTheme" />
         <activity
             android:name=".ui.homepage.UpdateNicknameActivity"
@@ -164,6 +172,14 @@
             android:name=".ui.dynamic.UserDynamicActivity"
             android:screenOrientation="portrait"
             android:theme="@style/CustomToolBarTheme" />
+        <activity
+            android:name=".ui.homepage.HomeTownActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/CustomToolBarTheme" />
+        <activity
+            android:name=".ui.homepage.ProfessionActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/CustomToolBarTheme" />
 
         <activity
             android:name=".ui.dynamic.CircleDynamicActivity"
@@ -174,11 +190,13 @@
             android:screenOrientation="portrait"
             android:theme="@style/CustomToolBarTheme" />
 
-        <activity android:name="com.julun.huanque.core.ui.tag_manager.TagPicsActivity"
+        <activity
+            android:name="com.julun.huanque.core.ui.tag_manager.TagPicsActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/CustomToolBarTheme"/>
-        <activity android:name="com.julun.huanque.core.ui.tag_manager.TagUserPicsActivity"
-            android:theme="@style/ShareTheme"/>
+            android:theme="@style/CustomToolBarTheme" />
+        <activity
+            android:name="com.julun.huanque.core.ui.tag_manager.TagUserPicsActivity"
+            android:theme="@style/ShareTheme" />
 
 
         <service android:name=".service.FloatingService" />

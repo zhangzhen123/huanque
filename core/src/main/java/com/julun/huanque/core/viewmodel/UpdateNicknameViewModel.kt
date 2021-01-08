@@ -40,7 +40,7 @@ class UpdateNicknameViewModel : BaseViewModel() {
         viewModelScope.launch {
             request({
                 val form = UpdateUserInfoForm(nickname)
-                perfectionData.value = userService.UpdateUserInfo(form).dataConvert()
+                perfectionData.value = userService.updateUserInfo(form).dataConvert()
                 //通知外界，基础数据有变化
                 EventBus.getDefault().post(form)
                 mOriginalNickname = nickname

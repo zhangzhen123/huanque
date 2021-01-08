@@ -305,5 +305,68 @@ data class UpdateUserInfoForm(
     //身高
     var height: Int? = null,
     //体重
-    var weight: Int? = null
+    var weight: Int? = null,
+    //省名称
+    var provinceName: String? = null,
+    //市名称
+    var cityName: String? = null
+) : Serializable
+
+/**
+ * 家乡版本form
+ */
+data class HomeTownVersionForm(
+    //省市 版本号
+    var version: Int? = null
+) : Serializable
+
+/**
+ * 城市ID form
+ */
+data class CityIdForm(
+    //城市ID
+    var cityId: Int = 0
+) : Serializable
+
+/**
+ * 人文数据更新form
+ */
+data class CultureUpdateForm(
+    //城市ID
+    var cityId: Int = 0,
+    //人文 Id
+    var cultureIds: String = ""
+) : Serializable
+
+/**
+ * 星座form
+ */
+data class ConstellationForm(var constellationType: String? = null) : Serializable
+
+/**
+ * 学校模糊搜索对象
+ */
+data class SchoolForm(var school: String = "") : Serializable
+
+/**
+ * 保存学校form
+ */
+data class SaveSchoolForm(
+    //学历
+    var education: String? = null,
+    //学校ID
+    var schoolId: Int? = null,
+    //入学年份
+    var startYear: String? = null
+) : Serializable
+
+/**
+ * 保存职业form
+ */
+data class SaveProfessionForm(
+    //职业ID （如果单独保存或者修改 收入或者职业特性时，记得带上当前职业ID，否则会按照默认来处理）
+    var professionId: Int? = null,
+    var income: String? = null,
+    //职业特性code 多个逗号隔开
+    var professionFeatureCodes: String? = null
 ) : Serializable

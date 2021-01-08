@@ -66,13 +66,13 @@ class HomeTownFragment : BaseBottomSheetFragment() {
         mHomeViewModel.homeInfoBean.observe(this, Observer { bean ->
             if (bean != null) {
                 val homeTownStr = StringBuilder()
-                if (bean.homeTownProvince.isNotEmpty()) {
-                    homeTownStr.append(bean.homeTownProvince)
+                if (bean.homeTown.homeTownProvince.isNotEmpty()) {
+                    homeTownStr.append(bean.homeTown.homeTownProvince)
                 }
                 if (homeTownStr.isNotEmpty()) {
                     homeTownStr.append("·")
                 }
-                homeTownStr.append(bean.homeTownCity)
+                homeTownStr.append(bean.homeTown.homeTownCity)
                 tv_city.text = homeTownStr.toString()
             }
         })

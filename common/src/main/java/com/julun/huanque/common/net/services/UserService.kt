@@ -302,7 +302,59 @@ interface UserService {
      * 更新用户数据
      */
     @POST("user/acct/data/update")
-    suspend fun UpdateUserInfo(@Body form: UpdateUserInfoForm): Root<UserProcessBean>
+    suspend fun updateUserInfo(@Body form: UpdateUserInfoForm): Root<UserProcessBean>
 
+    /**
+     * 家乡初始化
+     */
+    @POST("user/acct/data/initHomeTown")
+    suspend fun initHomeTown(@Body form: HomeTownVersionForm): Root<EditHomeTownBean>
 
+    /**
+     * 获取城市人文
+     */
+    @POST("user/acct/data/getCityCulture")
+    suspend fun getCityCulture(@Body from: CityIdForm): Root<EditHomeTownBean>
+
+    /**
+     * 保存城市  吃过的美食，去过的景点
+     */
+    @POST("user/acct/data/saveHomeTown")
+    suspend fun saveHomeTown(@Body form: CultureUpdateForm): Root<UserProcessBean>
+
+    /**
+     * 星座详情
+     */
+    @POST("user/acct/card/constellation")
+    suspend fun constellation(@Body form: ConstellationForm): Root<ConstellationInfo>
+
+    /**
+     * 学校初始化接口
+     */
+    @POST("user/acct/data/initSchool")
+    suspend fun initSchool(@Body form: EmptyForm = EmptyForm()): Root<SchoolBean>
+
+    /**
+     * 模糊搜索学校
+     */
+    @POST("user/acct/data/getSchool")
+    suspend fun getSchool(@Body form: SchoolForm): Root<QuerySchoolBean>
+
+    /**
+     * 保存学校数据
+     */
+    @POST("user/acct/data/saveSchool")
+    suspend fun saveSchool(@Body form: SaveSchoolForm): Root<UserProcessBean>
+
+    /**
+     * 初始化职业数据
+     */
+    @POST("user/acct/data/initProfession")
+    suspend fun initProfession(@Body form: EmptyForm = EmptyForm()): Root<EditProfessionBean>
+
+    /**
+     * 保存职业数据
+     */
+    @POST("user/acct/data/saveProfession")
+    suspend fun saveProfession(@Body form: SaveProfessionForm): Root<UserProcessBean>
 }

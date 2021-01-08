@@ -458,3 +458,8 @@ data class FilterTag(
     var tagId: Int = 0,
     var tagName: String = ""
 )
+
+/**
+ * 星座对象
+ */
+data class ConstellationBean(var type: String = "", var name: String = "") : Serializable

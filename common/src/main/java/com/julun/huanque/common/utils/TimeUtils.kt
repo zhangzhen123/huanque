@@ -2,7 +2,6 @@ package com.julun.huanque.common.utils
 
 import android.text.TextUtils
 import com.julun.huanque.common.helper.reportCrash
-import java.lang.StringBuilder
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -19,6 +18,7 @@ object TimeUtils {
     val TIME_FORMAT_YEAR_1 = "yyyy-MM-dd HH:mm"
     val TIME_FORMAT_YEAR_2 = "yyyy-MM-dd"
     val TIME_FORMAT_YEAR_3 = "yyyy年MM月dd日 HH:mm"
+    val TIME_FORMAT_YEAR_4 = "yyyy"
 
 
     val TIMEFORMAT1: String = "HH:mm:ss"
@@ -713,4 +713,39 @@ object TimeUtils {
         }
         return formatStr
     }
+
+    /**
+     * 根据日期显示性别
+     */
+    fun getAgeByDate(birthday: Date): Int {
+        val calendar = Calendar.getInstance()
+        if (calendar.timeInMillis - birthday.time < 0L) {
+            return -1
+        }
+        val yearNow = calendar[Calendar.YEAR]
+        val monthNow = calendar[Calendar.MONTH]
+        val dayOfMonthNow = calendar[Calendar.DAY_OF_MONTH]
+        calendar.time = birthday
+        val yearBirthday = calendar[Calendar.YEAR]
+        val monthBirthday = calendar[Calendar.MONTH]
+        val dayOfMonthBirthday = calendar[Calendar.DAY_OF_MONTH]
+        var age = yearNow - yearBirthday
+        if ((monthNow == monthBirthday && dayOfMonthNow < dayOfMonthBirthday) || monthNow < monthBirthday) {
+            age--
+        }
+        return age
+    }
+
+    /**
+     * string类型的日期 转换为 date
+     */
+    fun string2Date(template: String, strDate: String): Date? {
+        try {
+            return SimpleDateFormat(template).parse(strDate)
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
+        return null
+    }
+
 }

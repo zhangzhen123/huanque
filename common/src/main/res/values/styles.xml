@@ -444,4 +444,10 @@
         <item name="behavior_skipCollapsed">false</item>
     </style>
 
+    <style name="picker_view_slide_right_anim" mce_bogus="1" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/pickerview_slide_in_right</item>
+        <item name="android:windowExitAnimation">@anim/pickerview_slide_out_right</item>
+    </style>
+
+
 </resources>

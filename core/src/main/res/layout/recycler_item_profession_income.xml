@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="55dp">
+
+    <TextView
+        android:id="@+id/tv_content"
+        android:layout_width="0px"
+        android:layout_height="40dp"
+        android:layout_marginLeft="7.5dp"
+        android:layout_marginTop="7.5dp"
+        android:layout_marginRight="7.5dp"
+        android:layout_marginBottom="7.5dp"
+        android:background="@drawable/sel_profession_incom"
+        android:gravity="center"
+        android:singleLine="true"
+        android:textColor="@color/col_profession_income"
+        android:textSize="@dimen/sp_12"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="葱包" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

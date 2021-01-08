@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_pic"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="3dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginRight="3dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="111:146"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:placeholderImage="@mipmap/logo_placeholder_medium"
+        app:placeholderImageScaleType="centerCrop"
+        app:roundedCornerRadius="10dp" />
+
+    <TextView
+        android:id="@+id/tv_header"
+        android:layout_width="36dp"
+        android:layout_height="16dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/bg_edit_header_content"
+        android:gravity="center"
+        android:text="头像"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_10"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/sdv_pic"
+        app:layout_constraintRight_toRightOf="@+id/sdv_pic"
+        tools:visibility="visible" />
+
+    <ImageView
+        android:id="@+id/iv_mark"
+        android:layout_width="50dp"
+        android:layout_height="16dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="4dp"
+        android:src="@drawable/sel_header_auth"
+        app:layout_constraintLeft_toLeftOf="@id/sdv_pic"
+        app:layout_constraintTop_toTopOf="@id/sdv_pic" />
+
+    <RelativeLayout
+        android:id="@+id/rl_empty"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="3dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginRight="3dp"
+        android:background="@drawable/bg_edit_pic_empty"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="111:146"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="45dp"
+            android:layout_centerInParent="true"
+            android:src="@mipmap/icon_edit_pic_add" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_no_move"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="3dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginRight="3dp"
+        android:background="@drawable/bg_edit_pic_no_move"
+        android:gravity="center"
+        android:text="头像不可移动"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_14"
+        android:visibility="gone"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="111:146"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

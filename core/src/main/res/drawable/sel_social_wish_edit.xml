@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@mipmap/icon_wish_selected" android:state_selected="true" />
+    <item>
+        <shape>
+            <solid android:color="@color/transparent" />
+            <solid android:color="@color/transparent" />
+        </shape>
+    </item>
+</selector>

@@ -5,7 +5,9 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.alibaba.fastjson.annotation.JSONField
 import com.chad.library.adapter.base.entity.MultiItemEntity
+import com.contrarywind.interfaces.IPickerViewData
 import com.julun.huanque.common.basic.RootListData
+import com.julun.huanque.common.constant.BusiConstant
 import java.io.Serializable
 
 /**
@@ -576,8 +578,8 @@ data class HomePageInfo(
     var currSexType: String = "",
     //当前用户ID
     var currUserId: Long = 0,
-//当前城市
-    var currentCity: String = "",
+    //家乡数据
+    var homeTown: HomTownBean = HomTownBean(),
     //距离使用的对象
     var distanceCity: HomeCity = HomeCity(),
     //是否关注
@@ -620,12 +622,8 @@ data class HomePageInfo(
     var figure: FigureBean = FigureBean(),
     //社交意愿
     var wishList: MutableList<SocialWishBean> = mutableListOf(),
-    //家乡ID
-    var homeTownId: Long = 0,
-    //家乡省会
-    var homeTownProvince: String = "",
-    //家乡城市
-    var homeTownCity: String = "",
+    //所有的社交意愿
+    var wishConfigList: MutableList<SocialWishBean> = mutableListOf(),
     //职业相关
     var profession: ProfessionInfo = ProfessionInfo(),
     //学校数据
@@ -644,6 +642,19 @@ data class HomePageInfo(
     var post: PostInHomePage = PostInHomePage()
     /*2.0.0新增字段*/
 
+) : Serializable
+
+
+/**
+ * 编辑资料页面 家乡数据
+ */
+data class HomTownBean(
+    //城市数据
+    var homeTownCity: String = "",
+    //家乡ID
+    var homeTownId: Int = 0,
+    //省份数据
+    var homeTownProvince: String = ""
 ) : Serializable
 
 /**
@@ -690,8 +701,10 @@ data class SingleCulture(
     var cultureType: String = "",
     //人文类型文案
     var cultureTypeText: String = "",
-    //人文类型数量
+    //人文类型数量（总数零）
     var num: Int = 0,
+    //选择的数量
+    var totalMarkNum: Int = 0,
     //人文列表数据
     var cultureConfigList: MutableList<SingleCultureConfig> = mutableListOf()
 ) : Serializable
@@ -700,6 +713,8 @@ data class SingleCulture(
  * 单个人文对象
  */
 data class SingleCultureConfig(
+    //人文记录ID（编辑 使用）
+    var logId: Long = 0,
     //城市ID
     var cityId: Long = 0,
     //城市名称
@@ -778,7 +793,9 @@ data class SocialWishBean(
     //社交意愿code
     var wishType: String = "",
     //社交意愿文本
-    var wishTypeText: String = ""
+    var wishTypeText: String = "",
+    //是否选中（本地字段）
+    var selected: String = ""
 ) : Serializable
 
 /**
@@ -944,7 +961,11 @@ data class HomePagePicBean(
     //真人水印
     var realPic: String = "",
     //是否选中
-    var selected: String = ""
+    var selected: String = "",
+    //是否是头像（编辑资料页面使用）
+    var headerPic: String = "",
+    //是否显示不可移动提示
+    var showNoMoveAttention: String = ""
 ) : Serializable
 
 /**
@@ -1057,3 +1078,170 @@ data class UserProcessBean(
     //资料完成度
     var perfection: Int = 0
 ) : Serializable
+
+/**
+ * 编辑页面  家乡数据
+ */
+data class EditHomeTownBean(
+    //家乡Id
+    var homeTownId: Int = 1,
+    //城市配置合集  需客户端自行存储本地 如果城市配置版本没有变化，此字段不返回
+    var cityConfigList: MutableList<EditCityBean> = mutableListOf(),
+    //当前城市版本号
+    var version: Int = 0,
+    //人文数据
+    var cultureList: MutableList<SingleCulture> = mutableListOf(),
+    //家乡省会
+    var homeTownProvince: String = "",
+    //家乡城市
+    var homeTownCity: String = ""
+) : Serializable
+
+/**
+ * 城市对象
+ */
+data class EditCityBean(
+    //城市名称
+    var city: String = "",
+    //城市名称
+    var cityId: Int = 0,
+    //排序值
+    var cityOrderNum: Int = 0,
+    //城市拼音
+    var cityPinyin: String = "",
+    //城市类型
+    var cityType: String = "",
+    //国家名称
+    var country: String = "",
+    //纬度
+    var lat: String = "",
+    //经度
+    var lng: String = "",
+    //省份名称
+    var province: String = "",
+    //省份排序值
+    var provinceOrderNum: Int = 0
+) : Serializable, IPickerViewData {
+    override fun getPickerViewText(): String {
+        return city
+    }
+}
+
+/**
+ * 学校接口
+ */
+data class SchoolBean(
+    //学校
+    var school: String = "",
+    //学历code
+    var education: String = "",
+    //入学年份
+    var startYear: String = "",
+    //学历数据
+    var configList: MutableList<EducationBean> = mutableListOf(),
+    //学历名称（本地字段）
+    var educationText: String = ""
+) : Serializable
+
+/**
+ * 学历对象
+ */
+data class EducationBean(
+    //学历code
+    var educationCode: String = "",
+    //学历名称
+    var educationText: String = ""
+) : Serializable, IPickerViewData {
+    override fun getPickerViewText(): String {
+        return educationText
+    }
+}
+
+/**
+ * 搜索学校的结果
+ */
+data class QuerySchoolBean(
+    var schoolList: MutableList<SingleSchool> = mutableListOf()
+) : Serializable
+
+/**
+ * 单个学校
+ */
+data class SingleSchool(
+    //学校ID
+    var schoolId: Int = 0,
+    //学校名称
+    var schoolName: String = ""
+) : Serializable
+
+/**
+ * 编辑使用的职业对象
+ */
+data class EditProfessionBean(
+    //我的年收入code
+    var incomeCode: String = "",
+    //我的职业特性
+    var myFeatureList: MutableList<SingleProfessionFeatureConfig> = mutableListOf(),
+    //职业ID
+    var professionId: Int = 0,
+    //年收入配置表
+    var incomeConfigList: MutableList<SingleIncome> = mutableListOf(),
+    //职业特性配置表
+    var featureConfigList: MutableList<SingleProfessionFeatureConfig> = mutableListOf(),
+    //职业配置表
+    var professionConfigList: MutableList<SingleProfessionConfig> = mutableListOf(),
+    //职业特性选取数量最大值
+    var maxFeature: Int = 0
+) : Serializable
+
+/**
+ * 单个收入说明
+ */
+data class SingleIncome(
+    //年收入code
+    var incomeCode: String = "",
+    //年收入文案
+    var incomeText: String = ""
+) : Serializable
+
+/**
+ * 单个职业特性
+ */
+data class SingleProfessionFeatureConfig(
+    //职业特性code
+    var professionFeatureCode: String = "",
+    //职业特性文案
+    var professionFeatureText: String = "",
+    //是否标记（本地字段）
+    var mark: String = ""
+) : Serializable
+
+/**
+ * 单个职业配置
+ */
+data class SingleProfessionConfig(
+    //行业type
+    var professionType: String = "",
+//行业文案
+    var professionTypeText: String = "",
+    //职业列表
+    var professionList: MutableList<SingleProfession> = mutableListOf()
+) : Serializable, IPickerViewData {
+    override fun getPickerViewText(): String {
+        return professionTypeText
+    }
+}
+
+/**
+ * 单个职业
+ */
+data class SingleProfession(
+    // 职业ID
+    var professionId: Int = 0,
+    //职业名称
+    var professionName: String = ""
+) : Serializable, IPickerViewData {
+    override fun getPickerViewText(): String {
+        return professionName
+    }
+}
