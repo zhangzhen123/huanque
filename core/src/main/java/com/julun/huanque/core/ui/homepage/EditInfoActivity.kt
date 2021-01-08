@@ -148,7 +148,7 @@ class EditInfoActivity : BaseActivity() {
         header_page.textTitle.text = "编辑资料"
         header_page.textOperation.show()
         header_page.textOperation.text = "保存"
-        header_page.textOperation.isEnabled = false
+        header_page.textOperation.isEnabled = true
         initRecyclerView()
         initViewModel()
         mEditInfoViewModel.getBasicInfo()
@@ -157,10 +157,25 @@ class EditInfoActivity : BaseActivity() {
     override fun initEvents(rootView: View) {
         super.initEvents(rootView)
         header_page.imageViewBack.onClickNew {
-            finish()
+            onBackPressed()
         }
         header_page.textOperation.onClickNew {
             //保存
+            val picSb = StringBuilder()
+            mEditPicAdapter.data.forEach {
+                if (it.headerPic != BusiConstant.True && it.logId != 0L) {
+                    if(picSb.isNotEmpty()){
+                        picSb.append(",")
+                    }
+                    picSb.append("${it.logId}")
+                }
+            }
+            if (picSb.toString() != mEditInfoViewModel.originCoverPicIdStr) {
+                //数据发生变化，需要请求接口
+                mEditInfoViewModel.saveConverOrder(picSb.toString())
+            }else{
+                finish()
+            }
         }
         tv_nickname_title.onClickNew {
             //昵称
@@ -271,13 +286,61 @@ class EditInfoActivity : BaseActivity() {
                 }
             }
         })
-//        mEditInfoViewModel.processData.observe(this, Observer {
-//            if (it != null) {
-//                updateProgress(it.perfection)
-//            }
-//        })
+        mEditInfoViewModel.homePagePicChangeBean.observe(this, Observer {
+            if (it != null) {
+                //图片有变动
+                doWithConverPic(it)
+            }
+        })
+        mEditInfoViewModel.processData.observe(this, Observer {
+            if (it != null) {
+                updateProgress(it.perfection)
+            }
+        })
 
+        mEditInfoViewModel.coverOrderSaveFlag.observe(this, Observer {
+            if (it == true) {
+                finish()
+            }
+        })
     }
+
+    /**
+     * 对封面进行处理
+     */
+    private fun doWithConverPic(bean: HomePagePicBean) {
+        //有变动的logid
+        val logId = bean.logId
+        if (logId == 0L) {
+            return
+        }
+        var targetIndex = -1
+        var targetBean: HomePagePicBean? = null
+        mEditPicAdapter.data.forEachIndexed { index, homePagePicBean ->
+            if (homePagePicBean.headerPic != BusiConstant.True && (homePagePicBean.logId == logId || homePagePicBean.logId == 0L) && targetBean == null) {
+                targetIndex = index
+                targetBean = homePagePicBean
+            }
+        }
+        if (targetIndex >= 0 && targetBean != null) {
+            //找到对应的封面
+            val pic = bean.coverPic
+            if (pic.isNotEmpty()) {
+                //有图片   新增或者变更
+                targetBean?.logId = bean.logId
+                targetBean?.coverPic = bean.coverPic
+                mEditPicAdapter.notifyDataSetChanged()
+            } else {
+                //无图片，删除
+                mEditPicAdapter.removeAt(targetIndex)
+                (0 until (9 - mEditPicAdapter.data.size)).forEach { _ ->
+                    mEditPicAdapter.addData(HomePagePicBean())
+                }
+            }
+
+        }
+    }
+
 
     private fun showBottomDialog(isHead: Boolean) {
         val actions = arrayListOf<BottomAction>()
@@ -313,7 +376,7 @@ class EditInfoActivity : BaseActivity() {
                 showPics.add(HomePagePicBean())
             }
         }
-
+//originCoverPicList
         mEditPicAdapter.setList(showPics)
 
         val normalColor = GlobalUtils.getColor(R.color.black_333)
@@ -514,9 +577,7 @@ class EditInfoActivity : BaseActivity() {
                 target: RecyclerView.ViewHolder
             ): Boolean {
                 val tempData = mEditPicAdapter.getItemOrNull(target.adapterPosition) ?: return false
-
-                // && tempData.pic.isNotEmpty()
-                if (tempData.headerPic != BusiConstant.True) {
+                if (tempData.headerPic != BusiConstant.True && tempData.coverPic.isNotEmpty()) {
                     return true
                 }
                 return false
@@ -532,8 +593,7 @@ class EditInfoActivity : BaseActivity() {
         mEditPicAdapter.setOnItemLongClickListener { adapter, view, position ->
             val tempData = adapter.getItemOrNull(position) as? HomePagePicBean
                 ?: return@setOnItemLongClickListener true
-            // && tempData.pic.isNotEmpty()
-            if (tempData.headerPic != BusiConstant.True) {
+            if (tempData.headerPic != BusiConstant.True && tempData.coverPic.isNotEmpty()) {
                 helper.startDrag(recycler_view_pic.getChildViewHolder(view))
             } else {
                 if (tempData.headerPic == BusiConstant.True) {
@@ -854,5 +914,30 @@ class EditInfoActivity : BaseActivity() {
         }
     }
 
+    override fun onBackPressed() {
+        val picSb = StringBuilder()
+        mEditPicAdapter.data.forEach {
+            if (it.headerPic != BusiConstant.True && it.logId != 0L) {
+                if(picSb.isNotEmpty()){
+                    picSb.append(",")
+                }
+                picSb.append("${it.logId}")
+            }
+        }
+        if (picSb.toString() != mEditInfoViewModel.originCoverPicIdStr) {
+            //数据发生变化，需要提示
+            MyAlertDialog(this).showAlertWithOKAndCancel(
+                "要保存修改，请点击右上角【保存】按钮",
+                MyAlertDialog.MyDialogCallback(onRight = {
+
+                }, onCancel = {
+                    finish()
+                }), "修改未保存", "好的", noText = "放弃保存"
+            )
+        } else {
+            super.onBackPressed()
+        }
+
+    }
 
 }

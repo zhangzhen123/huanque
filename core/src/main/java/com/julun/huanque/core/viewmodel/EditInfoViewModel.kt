@@ -5,14 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.julun.huanque.common.basic.ReactiveData
 import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.basic.VoidResult
-import com.julun.huanque.common.bean.beans.EditPagerInfo
-import com.julun.huanque.common.bean.beans.SocialWishBean
-import com.julun.huanque.common.bean.beans.UserHeadChangeBean
-import com.julun.huanque.common.bean.beans.UserProcessBean
-import com.julun.huanque.common.bean.forms.SaveCoverForm
-import com.julun.huanque.common.bean.forms.SocialWishIdForm
-import com.julun.huanque.common.bean.forms.UpdateHeadForm
-import com.julun.huanque.common.bean.forms.UserUpdateHeadForm
+import com.julun.huanque.common.bean.beans.*
+import com.julun.huanque.common.bean.forms.*
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.constant.ErrorCodes
@@ -23,6 +17,7 @@ import com.julun.huanque.common.suger.convertRtData
 import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.request
 import kotlinx.coroutines.launch
+import java.lang.StringBuilder
 
 /**
  *@创建者   dong
@@ -31,6 +26,9 @@ import kotlinx.coroutines.launch
  */
 class EditInfoViewModel : BaseViewModel() {
     private val userService: UserService by lazy { Requests.create(UserService::class.java) }
+
+    //原始的封面列表
+    var originCoverPicIdStr = ""
 
     //基础数据
     val basicInfo: MutableLiveData<EditPagerInfo> by lazy { MutableLiveData<EditPagerInfo>() }
@@ -44,7 +42,13 @@ class EditInfoViewModel : BaseViewModel() {
     //资料完善度数据
     val processData: MutableLiveData<UserProcessBean> by lazy { MutableLiveData<UserProcessBean>() }
 
+    //封面数据变动
+    val homePagePicChangeBean: MutableLiveData<HomePagePicBean> by lazy { MutableLiveData<HomePagePicBean>() }
+
     val updateHeadResult: MutableLiveData<ReactiveData<UserHeadChangeBean>> by lazy { MutableLiveData<ReactiveData<UserHeadChangeBean>>() }
+
+    //封面顺序保存成功标识
+    val coverOrderSaveFlag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
     //是否需要请求接口，刷新数据
     var needFresh = false
@@ -58,6 +62,14 @@ class EditInfoViewModel : BaseViewModel() {
                 val data = userService.editBasic().dataConvert()
                 basicInfo.value = data
                 wishData.value = data.wishList
+                val idSb = StringBuilder()
+                data.picList.forEach {
+                    if (idSb.isNotEmpty()) {
+                        idSb.append(",")
+                    }
+                    idSb.append("${it.logId}")
+                }
+                originCoverPicIdStr = idSb.toString()
             })
         }
     }
@@ -90,8 +102,17 @@ class EditInfoViewModel : BaseViewModel() {
             request({
                 val result = userService.updateCover(SaveCoverForm(logId, coverPic)).dataConvert()
                 processData.value = result
-                //更新操作后 全部刷新
-                getBasicInfo()
+                val picBean = HomePagePicBean()
+                picBean.coverPic = coverPic ?: ""
+                if (result.logId != 0L) {
+                    picBean.logId = result.logId
+                } else {
+                    picBean.logId = logId ?: 0
+                }
+                if (picBean.logId > 0L) {
+                    //需要更新数据
+                    homePagePicChangeBean.value = picBean
+                }
             })
         }
     }
@@ -106,11 +127,24 @@ class EditInfoViewModel : BaseViewModel() {
         viewModelScope.launch {
             request({
                 val result = userService.updateHeadPic(UserUpdateHeadForm(headPic, check)).dataConvert(intArrayOf(ErrorCodes.USER_LOSE_REAL_HEAD))
-                updateHeadResult.value=result.convertRtData()
+                updateHeadResult.value = result.convertRtData()
             }, error = {
-                updateHeadResult.value=it.convertError()
+                updateHeadResult.value = it.convertError()
             })
         }
     }
+
+    /**
+     * 保存图像顺序
+     */
+    fun saveConverOrder(ids: String) {
+        viewModelScope.launch {
+            request({
+                userService.coverOrder(LogIdsForm(ids)).dataConvert()
+                coverOrderSaveFlag.value = true
+            }, {})
+        }
+    }
+
 
 }

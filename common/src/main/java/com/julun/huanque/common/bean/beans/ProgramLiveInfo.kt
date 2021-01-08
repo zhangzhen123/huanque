@@ -733,6 +733,7 @@ data class EditPagerInfo(
     /*2.0.0新增字段*/
 
 ) : Serializable
+
 /**
  * 编辑资料页面 家乡数据
  */
@@ -1183,14 +1184,17 @@ data class SingleAccount(
  */
 data class UserProcessBean(
     //资料完成度
-    var perfection: Int = 0
+    var perfection: Int = 0,
+    //添加封面的时候返回
+    var logId: Long = 0
 ) : Serializable
 
 data class UserHeadChangeBean(
     //资料完成度
     var perfection: Int = 0,
-    var headRealPeople:Boolean=false
+    var headRealPeople: Boolean = false
 ) : Serializable
+
 /**
  * 编辑页面  家乡数据
  */
