@@ -29,6 +29,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.base.BaseLazyFragment
+import com.julun.huanque.common.base.dialog.CommonDialogFragment
 import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.bean.beans.HomePagePicBean
@@ -37,9 +38,12 @@ import com.julun.huanque.common.bean.beans.NearbyUserBean
 import com.julun.huanque.common.constant.BooleanType
 import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.constant.HomeTabType
+import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.suger.*
+import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.utils.SessionUtils
+import com.julun.huanque.common.utils.device.PhoneUtils
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
 import com.julun.huanque.common.widgets.cardlib.CardLayoutManager
 import com.julun.huanque.common.widgets.cardlib.CardSetting
@@ -81,12 +85,16 @@ class NearbyFragment : BaseLazyFragment() {
 
     override fun getLayoutId(): Int = R.layout.fragment_nearby
 
+    private var commonDialogFragment: CommonDialogFragment? = null
+
+    //当前能滑动的方向集合
+    private var mSwipeDirection = ReItemTouchHelper.LEFT or ReItemTouchHelper.RIGHT
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         initLoadingAni()
         initViewModel()
         val setting: CardSetting = object : CardSetting() {
             override fun couldSwipeOutDirection(): Int {
-                return ReItemTouchHelper.LEFT or ReItemTouchHelper.RIGHT
+                return mSwipeDirection
             }
 
             override fun getCardRotateDegree(): Float {
@@ -118,6 +126,7 @@ class NearbyFragment : BaseLazyFragment() {
             }
         }
         setting.setSwipeListener(object : OnSwipeCardListener<NearbyUserBean> {
+            var currentDirection: Int = 0
             override fun onSwiping(
                 viewHolder: RecyclerView.ViewHolder?,
                 dx: Float,
@@ -126,6 +135,7 @@ class NearbyFragment : BaseLazyFragment() {
                 ratio: Float
             ) {
                 val holder: BaseViewHolder = viewHolder as BaseViewHolder
+                currentDirection = direction
                 when (direction) {
                     ReItemTouchHelper.DOWN -> {
 //                        Log.e("aaa", "swiping direction=down")
@@ -142,7 +152,7 @@ class NearbyFragment : BaseLazyFragment() {
                         holder.getView<ImageView>(R.id.iv_dislike).alpha = ratio
                     }
                     ReItemTouchHelper.RIGHT -> {
-//                        Log.e("aaa", "swiping direction=right")
+                        logger.info("swiping direction=right ratio=${ratio}")
                         holder.getView<ImageView>(R.id.iv_like).alpha = ratio
                     }
                 }
@@ -164,10 +174,11 @@ class NearbyFragment : BaseLazyFragment() {
 
                     }
                     ReItemTouchHelper.LEFT -> {
+                        mViewModel.noFeel(o.userId)
 
                     }
                     ReItemTouchHelper.RIGHT -> {
-
+                        mViewModel.like(o.userId)
                     }
                 }
                 currentAniIndex = 0
@@ -176,6 +187,33 @@ class NearbyFragment : BaseLazyFragment() {
             }
 
             override fun onSwipedClear() {
+
+            }
+
+            override fun onSwipedOutUnable(selected: RecyclerView.ViewHolder?) {
+                val holder: BaseViewHolder? = selected as? BaseViewHolder
+                if (holder != null) {
+                    holder.getView<ImageView>(R.id.iv_like).alpha = 0f
+                    holder.getView<ImageView>(R.id.iv_dislike).alpha = 0f
+                }
+                when (currentDirection) {
+                    ReItemTouchHelper.LEFT -> {
+                    }
+                    ReItemTouchHelper.RIGHT -> {
+                        logger.info("onSwipedClear direction=RIGHT mViewModel.currentHeartTouchTimes=${mViewModel.currentHeartTouchTimes}")
+                        if (mViewModel.currentHeartTouchTimes <= 0) {
+                            //
+                            logger.info("提示弹窗 心动次数不足")
+                            CommonDialogFragment.create(
+                                commonDialogFragment, "心动数已达到上限",
+                                mViewModel.heartTouchNotEnoughTips,
+                                imageRes = R.mipmap.bg_header_living,
+                                okText = "我知道了"
+                            ).show(requireActivity(), "CommonDialogFragment")
+                        }
+
+                    }
+                }
 
             }
 
@@ -201,6 +239,10 @@ class NearbyFragment : BaseLazyFragment() {
                     }
 
                 }
+                R.id.iv_super_like->{
+                    //todo
+                    logger.info("超级喜欢")
+                }
             }
         }
 
@@ -222,6 +264,7 @@ class NearbyFragment : BaseLazyFragment() {
     }
 
     private var noMoreDataError: ResponseError? = null
+
     private fun initViewModel() {
         mViewModel.dataList.observe(this, Observer {
             if (it.isSuccess()) {
@@ -236,7 +279,9 @@ class NearbyFragment : BaseLazyFragment() {
                             noMoreDataError = ResponseError(bean.remainTimes, "没有找到附近的人，去看看其他喜欢的人吧。")
                         }
                     }
-
+                    if (it.isRefresh()) {
+                        showLoading(noMoreDataError)
+                    }
                     return@Observer
                 }
 
@@ -263,7 +308,7 @@ class NearbyFragment : BaseLazyFragment() {
             }
         })
         mMainConnectViewModel.refreshNearby.observe(this, Observer {
-            if(it!=null){
+            if (it != null) {
                 val loc = currentLocation ?: return@Observer
                 logger.info("当前的列表数目已经小于10 开始取数据")
                 mViewModel.requestNearbyList(
@@ -274,6 +319,21 @@ class NearbyFragment : BaseLazyFragment() {
                     loc.city,
                     loc.district
                 )
+            }
+        })
+        mViewModel.likeTag.observe(this, Observer {
+            if (it != null) {
+
+                if (mViewModel.currentRemainTimes <= 0) {
+                    //如果总次数没有了 就不让滑了 任何方向都不行
+                    mSwipeDirection = 0
+                } else {
+                    if (mViewModel.currentHeartTouchTimes <= 0) {
+                        mSwipeDirection = ReItemTouchHelper.LEFT
+                    } else {
+                        mSwipeDirection = ReItemTouchHelper.LEFT or ReItemTouchHelper.RIGHT
+                    }
+                }
             }
         })
     }
@@ -341,7 +401,6 @@ class NearbyFragment : BaseLazyFragment() {
         waterRv.startMoving()
 
         if (state != null) {
-            tv_desc_title.show()
             tv_desc_title.text = state.busiMessage
             tv_go.show()
             when {
@@ -355,7 +414,7 @@ class NearbyFragment : BaseLazyFragment() {
             }
 
         } else {
-            tv_desc_title.hide()
+            tv_desc_title.text = "正在查找附近的人…"
             tv_go.hide()
         }
 
@@ -391,6 +450,9 @@ class NearbyFragment : BaseLazyFragment() {
         }
     }
 
+
+    private var checkPermissionTag = false
+
     /**
      * 检查定位权限
      */
@@ -401,8 +463,7 @@ class NearbyFragment : BaseLazyFragment() {
             .requestEachCombined(
                 Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.ACCESS_FINE_LOCATION
-            )
-            .subscribe { permission ->
+            ).subscribe { permission ->
                 when {
                     permission.granted -> {
                         logger.info("获取权限成功")
@@ -412,7 +473,28 @@ class NearbyFragment : BaseLazyFragment() {
                         logger.info("获取定位被拒绝")
                     else -> {
                         logger.info("获取定位被永久拒绝")
-                        //todo 打开定位提示
+                        CommonDialogFragment.create(
+                            commonDialogFragment, "开启附近功能",
+                            "需要启用位置权限，才能看到附近心动的人\n" +
+                                    "请到手机系统设置中开启",
+                            imageRes = R.mipmap.bg_header_living,
+                            okText = "一键开启",
+                            cancelable = false,
+                            callback = CommonDialogFragment.MyDialogCallback(
+                                onOk = {
+                                    PhoneUtils.getPermissionSetting(requireActivity().packageName).let {
+                                        if (ForceUtils.activityMatch(it)) {
+                                            try {
+                                                checkPermissionTag = true
+                                                startActivity(it)
+                                            } catch (e: Exception) {
+                                                reportCrash("跳转权限或者默认设置页失败", e)
+                                            }
+                                        }
+                                    }
+
+                                })
+                        ).show(requireActivity(), "CommonDialogFragment")
                     }
                 }
 
@@ -424,7 +506,15 @@ class NearbyFragment : BaseLazyFragment() {
      */
     private fun stopLocation() {
         mLocationService.stop()
-        mLocationService.unregisterListener(mLocationListener)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (checkPermissionTag) {
+            checkPermissionTag = false
+            checkPermission()
+        }
+
     }
 
     override fun onStop() {
@@ -434,6 +524,7 @@ class NearbyFragment : BaseLazyFragment() {
     }
 
     override fun onDestroy() {
+        mLocationService.unregisterListener(mLocationListener)
         loadingAniPlay = false
         loadingSetAni?.cancel()
         super.onDestroy()
@@ -535,7 +626,14 @@ class NearbyFragment : BaseLazyFragment() {
     private val cardsAdapter: BaseQuickAdapter<NearbyUserBean, BaseViewHolder> by lazy {
         object : BaseQuickAdapter<NearbyUserBean, BaseViewHolder>(R.layout.item_user_swip_card, list) {
             init {
-                addChildClickViewIds(R.id.card_img, R.id.ani_tag_01, R.id.ani_tag_02, R.id.ani_tag_03, R.id.ani_tag_04)
+                addChildClickViewIds(
+                    R.id.card_img,
+                    R.id.ani_tag_01,
+                    R.id.ani_tag_02,
+                    R.id.ani_tag_03,
+                    R.id.ani_tag_04,
+                    R.id.iv_super_like
+                )
             }
 
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {

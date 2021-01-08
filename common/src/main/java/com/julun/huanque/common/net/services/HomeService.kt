@@ -2,7 +2,9 @@ package com.julun.huanque.common.net.services
 
 import com.julun.huanque.common.basic.Root
 import com.julun.huanque.common.basic.RootListData
+import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.bean.beans.*
+import com.julun.huanque.common.bean.forms.FriendIdForm
 import com.julun.huanque.common.bean.forms.LikeForm
 import com.julun.huanque.common.bean.forms.NearbyForm
 import com.julun.huanque.common.bean.forms.RecomListForm
@@ -27,7 +29,7 @@ interface HomeService {
      * 查询主页主要信息 offset为了0时会附带主页其他信息 否则只返回列表信息
      */
     @POST("social/friend/home/recom")
-    suspend fun homeRecom(@Body form: RecomListForm ): Root<HomeListData<HomeRecomItem>>
+    suspend fun homeRecom(@Body form: RecomListForm): Root<HomeListData<HomeRecomItem>>
 
     /**
      * 获取列表信息
@@ -46,4 +48,18 @@ interface HomeService {
      */
     @POST("social/friend/home/likeList")
     suspend fun getLikeList(@Body form: LikeForm): Root<FavoriteListData<FavoriteUserBean>>
+
+    /**
+     * 喜欢
+     */
+    @POST("social/friend/home/like")
+    suspend fun like(@Body form: FriendIdForm): Root<VoidResult>
+
+    /**
+     * 无感
+     */
+    @POST("social/friend/home/noFeel")
+    suspend fun noFeel(@Body form: FriendIdForm): Root<VoidResult>
+
+
 }

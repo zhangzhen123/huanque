@@ -236,4 +236,8 @@ public class CardTouchHelperCallback<T> extends ReItemTouchHelper.Callback {
     private float getYThreshold(RecyclerView recyclerView) {
         return getXThreshold(recyclerView);
     }
+    //新增滑动未移除的回调方法
+    public void onSwipeFail(RecyclerView.ViewHolder selected){
+        mListener.onSwipedOutUnable(selected);
+    }
 }

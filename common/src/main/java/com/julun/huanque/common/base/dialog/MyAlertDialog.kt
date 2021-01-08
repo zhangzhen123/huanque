@@ -280,7 +280,6 @@ class MyAlertDialog : AppBaseDialog {
             }
         }
     }
-
     override fun onClick(v: View) {
         when (v.id) {
             R.id.cancelText -> if (callback != null) {

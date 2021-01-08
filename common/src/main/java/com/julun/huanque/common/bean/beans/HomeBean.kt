@@ -378,8 +378,11 @@ data class OpenInstallParamsBean(
 
 
 class NearbyListData<T> : RootListData<T>() {
-    var myTagList: List<UserTagBean> = mutableListOf()
-    var remainTimes:Int=1
+    var myTagList: MutableList<UserTagBean> = mutableListOf()
+    var myLikeTagList: MutableList<UserTagBean> = mutableListOf()
+    var heartTouchNotEnoughTips: String = ""
+    var remainTimes: Int = 0
+    var heartTouchTimes: Int = 0
 }
 
 data class NearbyUserBean(
