@@ -571,8 +571,8 @@ class NearbyFragment : BaseLazyFragment() {
                 logger.info("没有数据了 停止动画")
                 return@postDelayed
             }
-            rd1.removeListener()
-            rd2.removeListener()
+//            rd1.removeListener()
+//            rd2.removeListener()
             randomLocation(rd1)
             randomLocation(rd2)
 

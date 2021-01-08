@@ -601,6 +601,14 @@ class EditInfoActivity : BaseActivity() {
      *
      */
     private fun goToPictureSelectPager() {
+        val heightRatio = when (currentAction) {
+            BottomActionCode.REPLACE_HEAD -> {
+                1
+            }
+            else -> {
+                2
+            }
+        }
         PictureSelector.create(this)
             .openGallery(PictureMimeType.ofImage())// 全部.PictureMimeType.ofAll()、图片.ofImage()、视频.ofVideo()、音频.ofAudio()
             .theme(R.style.picture_me_style_single)// 主题样式设置 具体参考 values/styles   用法：R.style.picture.white.style
@@ -613,7 +621,7 @@ class EditInfoActivity : BaseActivity() {
             .imageFormat(PictureMimeType.PNG)// 拍照保存图片格式后缀,默认jpeg
             //.setOutputCameraPath("/CustomPath")// 自定义拍照保存路径
             .enableCrop(true)// 是否裁剪
-            .withAspectRatio(1, 1)// 裁剪比例 如16:9 3:2 3:4 1:1 可自定义
+            .withAspectRatio(1, heightRatio)// 裁剪比例 如16:9 3:2 3:4 1:1 可自定义
             .hideBottomControls(true)// 是否显示uCrop工具栏，默认不显示
             .freeStyleCropEnabled(false)// 裁剪框是否可拖拽
             .isDragFrame(false)

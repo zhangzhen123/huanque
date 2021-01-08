@@ -27,7 +27,7 @@
 
     <LinearLayout
         android:id="@+id/ll_content"
-        android:layout_width="72dp"
+        android:layout_width="wrap_content"
         android:layout_height="@dimen/dimen_26"
         android:layout_marginStart="@dimen/dimen_5"
         android:layout_marginEnd="@dimen/dimen_5"
@@ -53,7 +53,7 @@
             android:maxLines="1"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_12"
-            tools:text="测试" />
+            tools:text="测试测试测试测试" />
 
         <ImageView
             android:layout_width="6dp"
