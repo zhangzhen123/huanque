@@ -357,4 +357,10 @@ interface UserService {
      */
     @POST("user/acct/data/saveProfession")
     suspend fun saveProfession(@Body form: SaveProfessionForm): Root<UserProcessBean>
+
+    /**
+     * 初始化身材
+     */
+    @POST("user/acct/data/initFigure")
+    suspend fun initFigure(@Body form: EmptyForm = EmptyForm()): Root<FigureBean>
 }

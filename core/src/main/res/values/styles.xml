@@ -9,4 +9,82 @@
         </item>
         <item name="android:progressDrawable">@drawable/progress_drawable_pk_props</item>
     </style>
+
+    <!--自定义滚动尺-->
+<!--    <declare-styleable name="RulerWheel">-->
+<!--        &lt;!&ndash;大号刻度线颜色&ndash;&gt;-->
+<!--        <attr name="lineColorMax" format="color"/>-->
+<!--        &lt;!&ndash;中号刻度线颜色&ndash;&gt;-->
+<!--        <attr name="lineColorMid" format="color"/>-->
+<!--        &lt;!&ndash;小号刻度线颜色&ndash;&gt;-->
+<!--        <attr name="lineColorMin" format="color"/>-->
+
+<!--        &lt;!&ndash;大号刻度线的大小,优先级高于scaleWidth&ndash;&gt;-->
+<!--        <attr name="MaxBarSize" format="dimension"/>-->
+<!--        &lt;!&ndash;中号刻度线的大小,优先级高于scaleWidth&ndash;&gt;-->
+<!--        <attr name="MidBarSize" format="dimension"/>-->
+<!--        &lt;!&ndash;大号刻度线的大小,优先级高于scaleWidth&ndash;&gt;-->
+<!--        <attr name="MinBarSize" format="dimension"/>-->
+
+
+<!--        &lt;!&ndash;是否显示刻度值&ndash;&gt;-->
+<!--        <attr name="showScaleValue" format="boolean"/>-->
+<!--        &lt;!&ndash;是否渐显显示刻度尺&ndash;&gt;-->
+<!--        <attr name="showGradient" format="boolean"/>-->
+<!--        &lt;!&ndash;刻度宽度,所有的都一样大小&ndash;&gt;-->
+<!--        <attr name="scaleWidth" format="dimension"/>-->
+<!--        &lt;!&ndash;刻度左右间距&ndash;&gt;-->
+<!--        <attr name="line_divider" format="dimension"/>-->
+<!--        <attr name="text_Size" format="integer"/>-->
+<!--        <attr name="text_color" format="color"/>-->
+<!--        <attr name="def_value" format="integer"/>-->
+<!--        <attr name="max_value" format="integer"/>-->
+<!--        <attr name="min_value" format="integer"/>-->
+<!--        <attr name="mask_bg" format="reference"/>-->
+<!--        &lt;!&ndash;刻度值渐现&ndash;&gt;-->
+<!--        <attr name="scaleValueGradient" format="boolean"/>-->
+
+
+<!--        <attr name="mode" format="enum">-->
+<!--            <enum name="SCALE" value="0"/>-->
+<!--            <enum name="HALF" value="1"/>-->
+<!--        </attr>-->
+
+<!--        <attr name="dataMode" format="enum">-->
+<!--            <enum name="AUTO" value="0" />-->
+<!--            <enum name="DATA" value="1"/>-->
+<!--        </attr>-->
+
+<!--        <attr name="dataSource"  format="reference"/>-->
+
+
+<!--        <attr name="alignMode" format="enum">-->
+<!--            <enum name="UP" value="0"/>-->
+<!--            <enum name="DOWN" value="1"/>-->
+<!--        </attr>-->
+
+<!--    </declare-styleable>-->
+
+    <declare-styleable name="HeightView">
+        <attr name="orientation" format="enum">
+            <enum name="HORIZONTAL" value="1" />
+            <enum name="VERTICAL" value="2" />
+        </attr>
+        <attr name="backgroundColor" format="color" />
+        <attr name="textColor" format="color" />
+        <attr name="textSize" format="dimension" />
+        <attr name="highlightColor" format="color" />
+        <attr name="markerColor" format="color" />
+        <attr name="lineColor" format="color" />
+        <attr name="lineWidth" format="dimension" />
+        <attr name="shortLine" format="dimension" />
+        <attr name="longLine" format="dimension" />
+        <attr name="highlightLineWidth" format="dimension" />
+        <attr name="ratio" format="float" />
+        <attr name="markerSpace" format="dimension" />
+        <attr name="lines" format="integer"/>
+        <attr name="startLineValue" format="integer"/>
+        <attr name="markerSize" format="dimension"/>
+
+    </declare-styleable>
 </resources>
