@@ -1,27 +1,45 @@
 package com.julun.huanque.core.ui.homepage
 
+import android.Manifest
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.forms.UpdateUserInfoForm
+import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.*
+import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
 import com.julun.huanque.core.R
+import com.julun.huanque.core.adapter.EditPicAdapter
 import com.julun.huanque.core.adapter.HomePageTagAdapter
 import com.julun.huanque.core.ui.record_voice.VoiceSignActivity
 import com.julun.huanque.core.viewmodel.EditInfoViewModel
+import com.luck.picture.lib.PictureSelector
+import com.luck.picture.lib.config.PictureConfig
+import com.luck.picture.lib.config.PictureMimeType
+import com.trello.rxlifecycle4.android.ActivityEvent
+import com.trello.rxlifecycle4.android.FragmentEvent
+import com.trello.rxlifecycle4.android.lifecycle.kotlin.bindUntilEvent
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.android.synthetic.main.act_edit_info.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.textColor
+import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.math.max
 
 /**
@@ -40,6 +58,9 @@ class EditInfoActivity : BaseActivity() {
 
     //我喜欢的标签adapter
     private val mLikeTagAdapter = HomePageTagAdapter()
+
+    //图片Adapter
+    private val mEditPicAdapter = EditPicAdapter()
 
     //社交意愿弹窗
     private val mEditSocialWishFragment: EditSocialWishFragment by lazy { EditSocialWishFragment() }
@@ -139,6 +160,27 @@ class EditInfoActivity : BaseActivity() {
      */
     private fun showViewByData(info: HomePageInfo) {
         updateProgress(info.perfection)
+
+        //显示图片相关
+        val pics = info.picList
+        //用来显示的数据
+        val showPics = mutableListOf<HomePagePicBean>()
+        showPics.add(HomePagePicBean(info.headPic, info.authMark, headerPic = BusiConstant.True))
+        pics.forEach {
+            showPics.add(HomePagePicBean(it))
+        }
+        (0 until (9 - showPics.size)).forEach { _ ->
+            showPics.add(HomePagePicBean())
+        }
+        mEditPicAdapter.setList(showPics)
+        mEditPicAdapter.setOnItemClickListener { adapter, view, position ->
+            val tempBean = mEditPicAdapter.getItemOrNull(position) ?: return@setOnItemClickListener
+            if (tempBean.pic.isEmpty()) {
+                //空白位置,进入选择图片页面
+                checkPicPermissions()
+            }
+        }
+
 
         val normalColor = GlobalUtils.getColor(R.color.black_333)
         val greyColor = GlobalUtils.getColor(R.color.black_999)
@@ -290,6 +332,79 @@ class EditInfoActivity : BaseActivity() {
      * 初始化RecyclerView
      */
     private fun initRecyclerView() {
+        //图片
+        recycler_view_pic.layoutManager = GridLayoutManager(this, 3)
+        recycler_view_pic.adapter = mEditPicAdapter
+
+
+        val callback = object : ItemTouchHelper.Callback() {
+            override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
+                val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN or
+                        ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+                val swipeFlags = 0
+                return makeMovementFlags(dragFlags, swipeFlags)
+//                return makeMovementFlags(0, 0)
+            }
+
+            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+                //得到当拖拽的viewHolder的Positio n
+                val datas = mEditPicAdapter.data
+                //得到当拖拽的viewHolder的Position
+                val fromPosition = viewHolder.adapterPosition
+                //拿到当前拖拽到的item的viewHolder
+                //拿到当前拖拽到的item的viewHolder
+                val toPosition = target.adapterPosition
+                if (fromPosition < toPosition) {
+                    for (i in fromPosition until toPosition) {
+                        Collections.swap(datas, i, i + 1)
+                    }
+                } else {
+                    for (i in fromPosition downTo toPosition + 1) {
+                        Collections.swap(datas, i, i - 1)
+                    }
+                }
+                mEditPicAdapter.notifyItemMoved(fromPosition, toPosition)
+                return true
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+            }
+
+            override fun canDropOver(recyclerView: RecyclerView, current: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+                val tempData = mEditPicAdapter.getItemOrNull(target.adapterPosition) ?: return false
+
+                // && tempData.pic.isNotEmpty()
+                if (tempData.headerPic != BusiConstant.True) {
+                    return true
+                }
+                return false
+            }
+
+            override fun isLongPressDragEnabled(): Boolean {
+                return false
+            }
+        }
+        val helper = ItemTouchHelper(callback)
+
+        helper.attachToRecyclerView(recycler_view_pic)
+        mEditPicAdapter.setOnItemLongClickListener { adapter, view, position ->
+            val tempData = adapter.getItemOrNull(position) as? HomePagePicBean
+                ?: return@setOnItemLongClickListener true
+            // && tempData.pic.isNotEmpty()
+            if (tempData.headerPic != BusiConstant.True) {
+                helper.startDrag(recycler_view_pic.getChildViewHolder(view))
+            } else {
+                if (tempData.headerPic == BusiConstant.True) {
+                    //头像 显示提示
+                    tempData.showNoMoveAttention = BusiConstant.True
+                    mEditPicAdapter.notifyItemChanged(position)
+                    timerHideAttention()
+                }
+
+            }
+            return@setOnItemLongClickListener true
+        }
+
         recycler_view_tag.layoutManager = GridLayoutManager(this, 4)
         recycler_view_tag.adapter = mTagAdapter
         mTagAdapter.setOnItemClickListener { adapter, view, position ->
@@ -301,14 +416,101 @@ class EditInfoActivity : BaseActivity() {
 
     }
 
+
+    private var mHideDisposable: Disposable? = null
+
+    /**
+     * 定时隐藏提示效果
+     */
+    private fun timerHideAttention() {
+        mHideDisposable?.dispose()
+        mHideDisposable = Observable.timer(2, TimeUnit.SECONDS)
+            .bindUntilEvent(this, Lifecycle.Event.ON_DESTROY)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                mEditPicAdapter.getItemOrNull(0)?.showNoMoveAttention = BusiConstant.False
+                mEditPicAdapter.notifyItemChanged(0)
+            }, {})
+    }
+
+
     override fun onRestart() {
         super.onRestart()
         if (mEditInfoViewModel.needFresh) {
             mEditInfoViewModel.getBasicInfo()
             mEditInfoViewModel.needFresh = false
         }
-
     }
+
+    /**
+     * 检查图片权限
+     */
+    private fun checkPicPermissions() {
+        val rxPermissions = RxPermissions(this)
+        rxPermissions
+            .requestEachCombined(
+                Manifest.permission.CAMERA,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+            .subscribe { permission ->
+                when {
+                    permission.granted -> {
+                        logger.info("获取权限成功")
+                        //判断亲密特权
+                        goToPictureSelectPager()
+                    }
+                    permission.shouldShowRequestPermissionRationale -> // Oups permission denied
+                        ToastUtils.show("权限无法获取")
+                    else -> {
+                        logger.info("获取权限被永久拒绝")
+                        val message = "无法获取到相机/存储权限，请手动到设置中开启"
+                        ToastUtils.show(message)
+                    }
+                }
+
+            }
+    }
+
+    /**
+     *
+     */
+    private fun goToPictureSelectPager() {
+        PictureSelector.create(this)
+            .openGallery(PictureMimeType.ofImage())// 全部.PictureMimeType.ofAll()、图片.ofImage()、视频.ofVideo()、音频.ofAudio()
+            .theme(R.style.picture_me_style_single)// 主题样式设置 具体参考 values/styles   用法：R.style.picture.white.style
+            .minSelectNum(1)// 最小选择数量
+            .imageSpanCount(4)// 每行显示个数
+            .selectionMode(PictureConfig.SINGLE)
+            .previewImage(true)// 是否可预览图片
+            .isCamera(true)// 是否显示拍照按钮
+            .isZoomAnim(true)// 图片列表点击 缩放效果 默认true
+            .imageFormat(PictureMimeType.PNG)// 拍照保存图片格式后缀,默认jpeg
+            //.setOutputCameraPath("/CustomPath")// 自定义拍照保存路径
+            .enableCrop(false)// 是否裁剪
+            .compress(true)// 是否压缩
+            .synOrAsy(true)//同步true或异步false 压缩 默认同步
+            //.compressSavePath(getPath())//压缩图片保存地址
+            .glideOverride(120, 120)// glide 加载宽高，越小图片列表越流畅，但会影响列表图片浏览的清晰度
+            .isGif(false)// 是否显示gif图片
+//                    .selectionMedia(selectList)// 是否传入已选图片
+            .previewEggs(true)// 预览图片时 是否增强左右滑动图片体验(图片滑动一半即可看到上一张是否选中)
+            //.cropCompressQuality(90)// 裁剪压缩质量 默认100
+            .minimumCompressSize(100)// 小于100kb的图片不压缩
+//            .cropWH(200, 200)// 裁剪宽高比，设置如果大于图片本身宽高则无效
+//            .withAspectRatio(1, 1)// 裁剪比例 如16:9 3:2 3:4 1:1 可自定义
+            .hideBottomControls(true)// 是否显示uCrop工具栏，默认不显示
+//            .freeStyleCropEnabled(true)// 裁剪框是否可拖拽
+            .isDragFrame(false)
+//            .circleDimmedLayer(true)// 是否圆形裁剪
+//            .showCropFrame(false)// 是否显示裁剪矩形边框 圆形裁剪时建议设为false
+//            .showCropGrid(false)// 是否显示裁剪矩形网格 圆形裁剪时建议设为false
+//            .rotateEnabled(false) // 裁剪是否可旋转图片
+//            .scaleEnabled(true)// 裁剪是否可放大缩小图片
+            .forResult(PictureConfig.CHOOSE_REQUEST)
+
+        //结果回调onActivityResult code
+    }
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun userInfoUpdate(info: UpdateUserInfoForm) {

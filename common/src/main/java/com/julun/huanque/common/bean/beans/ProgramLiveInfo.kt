@@ -961,7 +961,11 @@ data class HomePagePicBean(
     //真人水印
     var realPic: String = "",
     //是否选中
-    var selected: String = ""
+    var selected: String = "",
+    //是否是头像（编辑资料页面使用）
+    var headerPic: String = "",
+    //是否显示不可移动提示
+    var showNoMoveAttention: String = ""
 ) : Serializable
 
 /**
