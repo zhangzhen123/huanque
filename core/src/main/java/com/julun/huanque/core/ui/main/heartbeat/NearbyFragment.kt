@@ -766,7 +766,7 @@ class NearbyFragment : BaseLazyFragment() {
                 }
                 mPicsAdapter.notifyDataSetChanged()
                 val pic = mPicsAdapter.getItemOrNull(position) ?: return
-                sdv.loadImageNoResize(pic.pic)
+                sdv.loadImageNoResize(pic.coverPic)
                 tv.text = "${position + 1}/${mPicsAdapter.data.size}"
             }
         }

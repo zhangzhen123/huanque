@@ -21,15 +21,12 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.effective.android.panel.PanelSwitchHelper
 import com.effective.android.panel.view.panel.PanelView
 import com.julun.huanque.common.base.BaseVMActivity
-import com.julun.huanque.common.base.dialog.BottomDialog
+import com.julun.huanque.common.base.dialog.BottomActionDialog
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.QueryType
-import com.julun.huanque.common.bean.beans.DynamicChangeResult
-import com.julun.huanque.common.bean.beans.DynamicComment
-import com.julun.huanque.common.bean.beans.DynamicDetailInfo
-import com.julun.huanque.common.bean.beans.PhotoBean
+import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.events.ShareSuccessEvent
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.ImageHelper
@@ -94,10 +91,10 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
     private var mHelper: PanelSwitchHelper? = null
 
     //我的主页 操作弹窗
-    private var bottomDialog: BottomDialog? = null
-    private val bottomDialogListener: BottomDialog.OnActionListener by lazy {
-        object : BottomDialog.OnActionListener {
-            override fun operate(action: BottomDialog.Action) {
+    private var bottomDialog: BottomActionDialog? = null
+    private val bottomDialogListener: BottomActionDialog.OnActionListener by lazy {
+        object : BottomActionDialog.OnActionListener {
+            override fun operate(action: BottomAction) {
                 val bean = mViewModel.dynamicInfo.value?.post ?: return
                 when (action.code) {
                     BottomActionCode.DELETE -> {
@@ -181,16 +178,16 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
 //            mActionFragment = mActionFragment ?: DynamicDetailActionFragment.newInstance()
 //            mActionFragment?.show(supportFragmentManager, "DynamicDetailActionFragment")
             val bean = mViewModel.dynamicInfo.value?.post ?: return@onClickNew
-            val actions = arrayListOf<BottomDialog.Action>()
+            val actions = arrayListOf<BottomAction>()
             if (bean.userId == SessionUtils.getUserId()) {
-                actions.add(BottomDialog.Action(BottomActionCode.DELETE, "删除"))
-                actions.add(BottomDialog.Action(BottomActionCode.CANCEL, "取消"))
+                actions.add(BottomAction(BottomActionCode.DELETE, "删除"))
+                actions.add(BottomAction(BottomActionCode.CANCEL, "取消"))
             } else {
-                actions.add(BottomDialog.Action(BottomActionCode.REPORT, "举报"))
-                actions.add(BottomDialog.Action(BottomActionCode.CANCEL, "取消"))
+                actions.add(BottomAction(BottomActionCode.REPORT, "举报"))
+                actions.add(BottomAction(BottomActionCode.CANCEL, "取消"))
             }
             if (bottomDialog == null) {
-                bottomDialog = BottomDialog.newInstance(actions = actions)
+                bottomDialog = BottomActionDialog.newInstance(actions = actions)
             } else {
                 bottomDialog?.setActions(actions)
             }

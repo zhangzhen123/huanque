@@ -44,9 +44,9 @@ class NearbyForm(
     var offset: Int,
     var lat: Double,
     var lng: Double,
-    var province: String = "",
-    var city: String = "",
-    var districe: String = ""
+    var province: String? = null,
+    var city: String? = null,
+    var districe: String? = null
 )
 
 class LikeForm(

@@ -296,7 +296,7 @@ interface UserService {
      * 编辑资料页面，基础信息
      */
     @POST("user/acct/info/editBasic")
-    suspend fun editBasic(@Body form: EmptyForm = EmptyForm()): Root<HomePageInfo>
+    suspend fun editBasic(@Body form: EmptyForm = EmptyForm()): Root<EditPagerInfo>
 
     /**
      * 更新用户数据
@@ -357,4 +357,17 @@ interface UserService {
      */
     @POST("user/acct/data/saveProfession")
     suspend fun saveProfession(@Body form: SaveProfessionForm): Root<UserProcessBean>
+
+    /**
+     * 更新封面操作
+     */
+    @POST("user/acct/data/updateCover")
+    suspend fun updateCover(@Body form: SaveCoverForm): Root<UserProcessBean>
+
+    /**
+     * 更新头像
+     */
+    @POST("user/acct/data/updateHeadPic")
+    suspend fun updateHeadPic(@Body form: UserUpdateHeadForm): Root<UserHeadChangeBean>
+
 }

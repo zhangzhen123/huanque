@@ -8,6 +8,8 @@ enum class CollapsingToolbarLayoutState {
     INTERNEDIATE
 }
 
+class BottomAction(var code: String, var tag: String)
+
 data class CommonDialogInfo(
     var title: String? = null,
     var content: String? = null,

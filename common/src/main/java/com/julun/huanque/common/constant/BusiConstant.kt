@@ -209,7 +209,8 @@ object ErrorCodes {
     //头像认证出错
     const val REAL_HEAD_ERROR = 1301
 
-
+    //检测到用户头像失去真人标识
+    const val USER_LOSE_REAL_HEAD = 1303
 }
 
 /**

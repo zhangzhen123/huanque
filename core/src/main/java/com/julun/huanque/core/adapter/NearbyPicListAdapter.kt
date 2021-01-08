@@ -1,15 +1,10 @@
 package com.julun.huanque.core.adapter
 
-import android.graphics.Color
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
-import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder
-import com.facebook.drawee.generic.RoundingParams
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.bean.beans.HomePagePicBean
 import com.julun.huanque.common.constant.BusiConstant
-import com.julun.huanque.common.helper.StringHelper
-import com.julun.huanque.common.suger.dp2pxf
 import com.julun.huanque.common.suger.loadImage
 import com.julun.huanque.core.R
 
@@ -37,6 +32,6 @@ class NearbyPicListAdapter : BaseQuickAdapter<HomePagePicBean, BaseViewHolder>(R
 //            .setRoundingParams(roundParams)
 //            .build()
 //        sdv.hierarchy = hierarchy
-        sdv.loadImage(item.pic+BusiConstant.OSS_120, 40f, 40f)
+        sdv.loadImage(item.coverPic+BusiConstant.OSS_120, 40f, 40f)
     }
 }

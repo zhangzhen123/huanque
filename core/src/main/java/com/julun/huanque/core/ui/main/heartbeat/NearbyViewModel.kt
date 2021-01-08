@@ -45,9 +45,9 @@ class NearbyViewModel : BaseViewModel() {
         queryType: QueryType,
         lat: Double,
         lng: Double,
-        province: String = "",
-        city: String = "",
-        districe: String = ""
+        province: String? = null,
+        city: String? = null,
+        districe: String? = null
     ) {
 
         viewModelScope.launch {

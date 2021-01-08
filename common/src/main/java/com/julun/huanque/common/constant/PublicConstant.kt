@@ -48,6 +48,11 @@ object BottomActionCode {
     const val SHARE = "share"
     const val BLACK = "black"
     const val CANCEL = "cancel"
+
+    const val REPLACE = "Replace"
+    const val ADD = "Add"
+    const val REPLACE_HEAD = "Replace_head"
+    const val AUTH_HEAD = "auth_head"
 }
 
 object StatisticCode {
