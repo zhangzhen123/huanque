@@ -22,7 +22,6 @@ import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.forms.UpdateUserInfoForm
 import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.constant.ParamConstant
-import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.hide
@@ -30,16 +29,15 @@ import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.common.utils.GlobalUtils
-import com.julun.huanque.common.utils.SPUtils
 import com.julun.huanque.common.utils.ScreenUtils
+import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.HomeTownFoodAdapter
+import com.julun.huanque.core.utils.EditUtils
 import com.julun.huanque.core.viewmodel.HomeTownEditViewModel
 import kotlinx.android.synthetic.main.act_home_town.*
 import org.greenrobot.eventbus.EventBus
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.reflect.KClass
 
 /**
  *@创建者   dong
@@ -49,21 +47,13 @@ import kotlin.reflect.KClass
 class HomeTownActivity : BaseActivity() {
 
     companion object {
-        const val Tag = "HomeTownActivity"
-
         /**
          * 跳转页面
          */
-        fun newInstance(act: Activity, homeTownName: String, index: Int = -1, tagList: ArrayList<String>? = null) {
+        fun newInstance(act: Activity, homeTownName: String) {
             val intent = Intent(act, HomeTownActivity::class.java)
             if (ForceUtils.activityMatch(intent)) {
-                val bundle = Bundle()
-                bundle.putSerializable(ParamConstant.Home_Town_Name, homeTownName)
-                bundle.putInt(ParamConstant.Index, index)
-                if (tagList != null) {
-                    bundle.putStringArrayList(ParamConstant.Tag_List, tagList)
-                }
-                intent.putExtras(bundle)
+                intent.putExtra(ParamConstant.Home_Town_Name, homeTownName)
                 act.startActivity(intent)
             }
         }
@@ -90,12 +80,6 @@ class HomeTownActivity : BaseActivity() {
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         var index = intent?.getIntExtra(ParamConstant.Index, -1) ?: -1
 
-        mHomeTownEditViewModel.index = index
-        intent?.getStringArrayListExtra(ParamConstant.Tag_List)?.let {
-            mHomeTownEditViewModel.tagList.clear()
-            mHomeTownEditViewModel.tagList.addAll(it)
-        }
-
         if (index == -1) {
             con_progress.hide()
         } else {
@@ -105,8 +89,10 @@ class HomeTownActivity : BaseActivity() {
             progressBar.progress = (100 / 5) * (index + 1)
         }
 
+        mHomeTownEditViewModel.index = index
+
         val cityName = intent?.getStringExtra(ParamConstant.Home_Town_Name) ?: ""
-        tv_profression.text = cityName
+        tv_home_town.text = cityName
 
         header_page.textTitle.text = "家乡"
         initViewModel()
@@ -123,7 +109,7 @@ class HomeTownActivity : BaseActivity() {
         if (mHomeTownEditViewModel.index >= 0) {
             header_page.textOperation.onClickNew {
                 //跳过
-                goToNext()
+                EditUtils.goToNext(this, mHomeTownEditViewModel.index)
             }
         }
 
@@ -148,12 +134,20 @@ class HomeTownActivity : BaseActivity() {
 
         view_income.onClickNew {
             //美食
+            if (tv_home_town.text.toString().isEmpty()) {
+                ToastUtils.show("请先选择城市")
+                return@onClickNew
+            }
             mHomeTownEditViewModel.markFragmentType = HomeTownEditViewModel.Food
             mCultureMarkFragment.show(supportFragmentManager, "CultureMarkFragment")
         }
 
         view_profess_feature.onClickNew {
             //景点
+            if (tv_home_town.text.toString().isEmpty()) {
+                ToastUtils.show("请先选择城市")
+                return@onClickNew
+            }
             mHomeTownEditViewModel.markFragmentType = HomeTownEditViewModel.Place
             mCultureMarkFragment.show(supportFragmentManager, "CultureMarkFragment")
         }
@@ -195,34 +189,9 @@ class HomeTownActivity : BaseActivity() {
                 mHomeTownEditViewModel.saveHomeTown(currentCityId, curIds.toString())
             } else {
                 //数据没有发生变化，直接返回
-                goToNext()
+                EditUtils.goToNext(this, mHomeTownEditViewModel.index)
             }
 
-        }
-    }
-
-    /**
-     * 跳转下一级页面
-     */
-    private fun goToNext() {
-        if (mHomeTownEditViewModel.index >= 4) {
-            //已经是最后一个
-            finish()
-        } else {
-            //需要继续跳转
-            val tag = mHomeTownEditViewModel.tagList.getOrNull(mHomeTownEditViewModel.index + 1)
-            val targetClass = getNextClass(tag)
-            if (targetClass != null) {
-                //跳转下一次页面
-                val intent = Intent(this, targetClass)
-                if (ForceUtils.activityMatch(intent)) {
-                    val bundle = Bundle()
-                    bundle.putInt(ParamConstant.Index, mHomeTownEditViewModel.index + 1)
-                    bundle.putStringArrayList(ParamConstant.Tag_List, mHomeTownEditViewModel.tagList)
-                    startActivity(intent)
-                }
-            }
-            finish()
         }
     }
 
@@ -238,6 +207,7 @@ class HomeTownActivity : BaseActivity() {
         })
         mHomeTownEditViewModel.foodCultureData.observe(this, Observer {
             if (it != null) {
+                showEmptyView()
                 showFoodView(it)
             }
         })
@@ -255,7 +225,7 @@ class HomeTownActivity : BaseActivity() {
                         .post(UpdateUserInfoForm(provinceName = mHomeTownEditViewModel.provinceName, cityName = mHomeTownEditViewModel.cityName))
                 }
                 EventBus.getDefault().post(it)
-                goToNext()
+                EditUtils.goToNext(this, mHomeTownEditViewModel.index)
             }
         })
     }
@@ -266,7 +236,6 @@ class HomeTownActivity : BaseActivity() {
     private fun initRecyclerView() {
         recycler_item_food.layoutManager = GridLayoutManager(this, 4)
         recycler_item_food.adapter = mFoodAdapter
-        mFoodAdapter.setEmptyView(MixedHelper.getEmptyView(this, "太棒了！家乡的美食你都吃过了", true))
         mFoodAdapter.setOnItemChildClickListener { adapter, view, position ->
             val data = mFoodAdapter.data
             val tempData = mFoodAdapter.getItemOrNull(position) ?: return@setOnItemChildClickListener
@@ -285,7 +254,6 @@ class HomeTownActivity : BaseActivity() {
 
         recycler_item_view.layoutManager = GridLayoutManager(this, 4)
         recycler_item_view.adapter = mPlaceAdapter
-        mPlaceAdapter.setEmptyView(MixedHelper.getEmptyView(this, "太棒了！家乡的景点你都去过了", true))
         mPlaceAdapter.setOnItemChildClickListener { adapter, view, position ->
             val data = mPlaceAdapter.data
             val tempData = mPlaceAdapter.getItemOrNull(position) ?: return@setOnItemChildClickListener
@@ -301,7 +269,23 @@ class HomeTownActivity : BaseActivity() {
             }
             showTotalFoodNum(totalList, tv_view_num)
         }
+        showEmptyView()
     }
+
+    /**
+     * 显示美食和景点的空布局
+     */
+    private fun showEmptyView() {
+        if (tv_home_town.text.isEmpty()) {
+            //家乡为空
+            mFoodAdapter.setEmptyView(MixedHelper.getEmptyView(this, "选择城市后可添加吃过的美食", true))
+            mPlaceAdapter.setEmptyView(MixedHelper.getEmptyView(this, "选择城市后可添加去过的景点", true))
+        } else {
+            mFoodAdapter.setEmptyView(MixedHelper.getEmptyView(this, "太棒了！家乡的美食你都吃过了", true))
+            mPlaceAdapter.setEmptyView(MixedHelper.getEmptyView(this, "太棒了！家乡的景点你都去过了", true))
+        }
+    }
+
 
     /**
      * 获取插入的数据
@@ -340,7 +324,7 @@ class HomeTownActivity : BaseActivity() {
         homeTownStr.append(cityName)
         mHomeTownEditViewModel.provinceName = provinceName
         mHomeTownEditViewModel.cityName = cityName
-        tv_profression.text = homeTownStr.toString()
+        tv_home_town.text = homeTownStr.toString()
     }
 
     /**
@@ -543,29 +527,6 @@ class HomeTownActivity : BaseActivity() {
         dialogWindow.setGravity(Gravity.BOTTOM) //改成Bottom,底部显示
         dialogWindow.setDimAmount(0.3f)
 
-    }
-
-    private fun getNextClass(tag: String?): Class<out BaseActivity>? {
-        return when (tag) {
-            HomeTownActivity.Tag -> {
-                HomeTownActivity::class.java
-            }
-            FigureActivity.Tag -> {
-                FigureActivity::class.java
-            }
-            UpdateBirthdayActivity.Tag -> {
-                UpdateBirthdayActivity::class.java
-            }
-            SchoolActivity.Tag -> {
-                SchoolActivity::class.java
-            }
-            ProfessionActivity.Tag -> {
-                ProfessionActivity::class.java
-            }
-            else -> {
-                return null
-            }
-        }
     }
 
 }

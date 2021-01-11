@@ -171,13 +171,13 @@ class HomePageInformationFragment : BaseFragment() {
         homeTownStr.append(bean.homeTown.homeTownCity)
         when {
             homeTownStr.length > 6 -> {
-                tv_profression.text = "${homeTownStr.substring(0, 6)}..."
+                tv_home_town.text = "${homeTownStr.substring(0, 6)}..."
             }
             homeTownStr.isNotEmpty() -> {
-                tv_profression.text = homeTownStr.toString()
+                tv_home_town.text = homeTownStr.toString()
             }
             else -> {
-                tv_profression.text = "-"
+                tv_home_town.text = "-"
             }
         }
 

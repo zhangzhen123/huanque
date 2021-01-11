@@ -84,15 +84,35 @@ class EditSocialWishFragment : BaseBottomSheetFragment() {
         recycler_view.layoutManager = LinearLayoutManager(requireContext())
         recycler_view.adapter = mAdapter
         mAdapter.setOnItemClickListener { adapter, view, position ->
+
             val tempBean = adapter.getItemOrNull(position) as? SocialWishBean ?: return@setOnItemClickListener
-            val newState = if (tempBean.selected == BusiConstant.True) {
-                BusiConstant.False
+            if (tempBean.selected == BusiConstant.True) {
+                //取消选中
+                val selectCount = getSelectCount()
+                if (selectCount <= 1) {
+                    return@setOnItemClickListener
+                }
+
+                tempBean.selected = BusiConstant.False
             } else {
-                BusiConstant.True
+                tempBean.selected = BusiConstant.True
             }
-            tempBean.selected = newState
+
             adapter.notifyDataSetChanged()
         }
+    }
+
+    /**
+     * 获取选中的数量
+     */
+    private fun getSelectCount(): Int {
+        var count = 0
+        mAdapter.data.forEach {
+            if (it.selected == BusiConstant.True) {
+                count++
+            }
+        }
+        return count
     }
 
 

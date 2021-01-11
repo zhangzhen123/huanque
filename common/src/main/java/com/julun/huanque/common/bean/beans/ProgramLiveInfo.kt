@@ -1200,7 +1200,7 @@ data class UserHeadChangeBean(
  */
 data class EditHomeTownBean(
     //家乡Id
-    var homeTownId: Int = 1,
+    var homeTownId: Int = 0,
     //城市配置合集  需客户端自行存储本地 如果城市配置版本没有变化，此字段不返回
     var cityConfigList: MutableList<EditCityBean> = mutableListOf(),
     //当前城市版本号

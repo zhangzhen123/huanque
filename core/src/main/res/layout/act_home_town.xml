@@ -54,7 +54,7 @@
         app:layout_constraintTop_toBottomOf="@id/con_progress" />
 
     <TextView
-        android:id="@+id/tv_profression"
+        android:id="@+id/tv_home_town"
         android:layout_width="wrap_content"
         android:layout_height="54dp"
         android:layout_marginRight="15dp"
@@ -148,9 +148,11 @@
         android:textColor="@color/white"
         android:textSize="@dimen/sp_12"
         android:textStyle="bold"
+        android:visibility="gone"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/recycler_item_food" />
+        app:layout_constraintTop_toBottomOf="@id/recycler_item_food"
+        tools:visibility="visible" />
 
     <View
         android:id="@+id/view_profess_feature"
@@ -224,9 +226,11 @@
         android:textColor="@color/white"
         android:textSize="@dimen/sp_12"
         android:textStyle="bold"
+        android:visibility="gone"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/recycler_item_view" />
+        app:layout_constraintTop_toBottomOf="@id/recycler_item_view"
+        tools:visibility="visible" />
 
     <TextView
         android:id="@+id/tv_save"

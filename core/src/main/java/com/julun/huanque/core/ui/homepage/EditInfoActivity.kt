@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
@@ -33,6 +34,7 @@ import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.EditPicAdapter
 import com.julun.huanque.core.adapter.HomePageTagAdapter
 import com.julun.huanque.core.ui.record_voice.VoiceSignActivity
+import com.julun.huanque.core.utils.EditUtils
 import com.julun.huanque.core.viewmodel.EditInfoViewModel
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureConfig
@@ -48,7 +50,6 @@ import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.textColor
 import java.util.*
 import java.util.concurrent.TimeUnit
-import kotlin.collections.ArrayList
 import kotlin.math.max
 
 /**
@@ -143,6 +144,11 @@ class EditInfoActivity : BaseActivity() {
     override fun getLayoutId() = R.layout.act_edit_info
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
+        if (SPUtils.getBoolean(SPParamKey.First_Edit, true)) {
+            iv_demo.performClick()
+            SPUtils.commitBoolean(SPParamKey.First_Edit, false)
+        }
+
         mBarHeiht = StatusBarUtil.getStatusBarHeight(this)
         header_page.textTitle.text = "编辑资料"
         header_page.textOperation.show()
@@ -206,54 +212,55 @@ class EditInfoActivity : BaseActivity() {
                 homeTownStr.append("/")
             }
             homeTownStr.append(info.homeTown.homeTownCity)
-            val jumpList = getjumpOrder(HomeTownActivity.Tag)
-            if (jumpList.isEmpty()) {
-                HomeTownActivity.newInstance(this, homeTownStr.toString())
+            val needJump = getNeedJumpOrder(HomeTownActivity::class.java)
+            if (needJump) {
+                EditUtils.jumpActivity(this, 0)
             } else {
-                HomeTownActivity.newInstance(this, homeTownStr.toString(), 0)
+                HomeTownActivity.newInstance(this, homeTownStr.toString())
             }
         }
         tv_age_constellation_title.onClickNew {
             //年龄  星座
             val basicInfo = mEditInfoViewModel.basicInfo.value ?: return@onClickNew
-            val jumpList = getjumpOrder(UpdateBirthdayActivity.Tag)
-            if (jumpList.isEmpty()) {
-                UpdateBirthdayActivity.newInstance(this, basicInfo.birthday)
+
+            val needJump = getNeedJumpOrder(UpdateBirthdayActivity::class.java)
+            if (needJump) {
+                EditUtils.jumpActivity(this, 0)
             } else {
-                UpdateBirthdayActivity.newInstance(this, basicInfo.birthday, 0, jumpList)
+                UpdateBirthdayActivity.newInstance(this, basicInfo.birthday)
             }
 
         }
 
         tv_figure_title.onClickNew {
             val figureBean = mEditInfoViewModel.basicInfo.value?.figure ?: return@onClickNew
-            val jumpList = getjumpOrder(SchoolActivity.Tag)
-            if (jumpList.isEmpty()) {
-                FigureActivity.newInstance(this, figureBean)
+            val needJump = getNeedJumpOrder(FigureActivity::class.java)
+            if (needJump) {
+                EditUtils.jumpActivity(this, 0)
             } else {
-                FigureActivity.newInstance(this, figureBean, 0, jumpList)
+                FigureActivity.newInstance(this, figureBean)
             }
         }
 
         tv_school_title.onClickNew {
             //学校
             val schoolInfo = mEditInfoViewModel.basicInfo.value?.schoolInfo ?: return@onClickNew
-            val jumpList = getjumpOrder(SchoolActivity.Tag)
-            if (jumpList.isEmpty()) {
-                SchoolActivity.newInstance(this, schoolInfo)
+
+            val needJump = getNeedJumpOrder(SchoolActivity::class.java)
+            if (needJump) {
+                EditUtils.jumpActivity(this, 0)
             } else {
-                SchoolActivity.newInstance(this, schoolInfo, 0, jumpList)
+                SchoolActivity.newInstance(this, schoolInfo)
             }
 
         }
         tv_job_title.onClickNew {
             val profession = mEditInfoViewModel.basicInfo.value?.profession ?: return@onClickNew
-
-            val jumpList = getjumpOrder(ProfessionActivity.Tag)
-            if (jumpList.isEmpty()) {
-                ProfessionActivity.newInstance(this, profession)
+            val needJump = getNeedJumpOrder(ProfessionActivity::class.java)
+            if (needJump) {
+                EditUtils.jumpActivity(this, 0)
             } else {
-                ProfessionActivity.newInstance(this, profession, 0, jumpList)
+                ProfessionActivity.newInstance(this, profession)
             }
         }
         tv_social_wish_title.onClickNew {
@@ -278,10 +285,10 @@ class EditInfoActivity : BaseActivity() {
     }
 
     /**
-     * 获取跳转顺序
+     * 获取是否需要顺序跳转
      */
-    private fun getjumpOrder(firstTag: String): ArrayList<String> {
-        val basicInfo = mEditInfoViewModel.basicInfo.value ?: return ArrayList()
+    private fun getNeedJumpOrder(curClass: Class<out BaseActivity>): Boolean {
+        val basicInfo = mEditInfoViewModel.basicInfo.value ?: return false
 
         if (basicInfo.homeTown.homeTownId == 0 && basicInfo.birthday == "" && basicInfo.figure.height == 0) {
             //城市为空 && 生日为空 && 身材为空
@@ -293,25 +300,25 @@ class EditInfoActivity : BaseActivity() {
                 val profession = basicInfo.profession
                 if (profession.professionId == 0 && profession.incomeText.isEmpty()) {
                     //职业为空，需要连续跳转
-                    val tagList = mutableListOf<String>()
-                    tagList.add(HomeTownActivity.Tag)
-                    tagList.add(UpdateBirthdayActivity.Tag)
-                    tagList.add(FigureActivity.Tag)
-                    tagList.add(SchoolActivity.Tag)
-                    tagList.add(ProfessionActivity.Tag)
+                    val tagList = mutableListOf<Class<out BaseActivity>>()
+                    tagList.add(HomeTownActivity::class.java)
+                    tagList.add(UpdateBirthdayActivity::class.java)
+                    tagList.add(FigureActivity::class.java)
+                    tagList.add(SchoolActivity::class.java)
+                    tagList.add(ProfessionActivity::class.java)
 
-                    val realTagList = ArrayList<String>()
-                    realTagList.add(firstTag)
+                    EditUtils.jumpList.clear()
+                    EditUtils.jumpList.add(curClass)
                     tagList.forEach {
-                        if (!realTagList.contains(it)) {
-                            realTagList.add(it)
+                        if (!EditUtils.jumpList.contains(it)) {
+                            EditUtils.jumpList.add(it)
                         }
                     }
-                    return realTagList
+                    return true
                 }
             }
         }
-        return ArrayList()
+        return false
     }
 
 
@@ -501,14 +508,16 @@ class EditInfoActivity : BaseActivity() {
             homeTownStr.append("/")
         }
         homeTownStr.append(info.homeTown.homeTownCity)
-        tv_profression.text = homeTownStr.toString()
+        showBasicInfo(tv_home_town, homeTownStr.toString())
 
         //年龄和星座
         val ageConstell = StringBuilder()
-        ageConstell.append(info.age)
-        ageConstell.append("/")
-        ageConstell.append(info.constellationInfo.constellationName)
-        tv_age_constellation.text = ageConstell.toString()
+        if (info.age != 0) {
+            ageConstell.append(info.age)
+            ageConstell.append("/")
+            ageConstell.append(info.constellationInfo.constellationName)
+        }
+        showBasicInfo(tv_age_constellation, ageConstell.toString())
 
         //身材
         val weight = info.figure.weight
@@ -523,11 +532,18 @@ class EditInfoActivity : BaseActivity() {
             }
             whBuilder.append("${weight}kg")
         }
-        tv_figure.text = whBuilder.toString()
+//        tv_figure.text = whBuilder.toString()
+        showBasicInfo(tv_figure, whBuilder.toString())
 
-        tv_school.text = info.schoolInfo.school
+//        tv_school.text = info.schoolInfo.school
+        showBasicInfo(tv_school, info.schoolInfo.school)
 
-        tv_job.text = "${info.profession.professionTypeText}/${info.profession.professionName}"
+//        tv_job.text = "${info.profession.professionTypeText}/${info.profession.professionName}"
+        if (info.profession.professionTypeText.isNotEmpty() && info.profession.professionName.isNotEmpty()) {
+            showBasicInfo(tv_job, "${info.profession.professionTypeText}/${info.profession.professionName}")
+        } else {
+            showBasicInfo(tv_job, "")
+        }
 
 
         val tagList = info.myAuthTag.showTagList
@@ -560,6 +576,22 @@ class EditInfoActivity : BaseActivity() {
 
         tv_user_id.text = "欢鹊ID ${info.userId}"
     }
+
+    /**
+     * 显示基础数据
+     */
+    private fun showBasicInfo(tv: TextView, content: String) {
+        if (content.isEmpty()) {
+            //内容为空
+            tv.text = "未完成"
+            tv.textColor = GlobalUtils.formatColor("#FF2207")
+        } else {
+            //内容不未空
+            tv.text = content
+            tv.textColor = GlobalUtils.getColor(R.color.black_333)
+        }
+    }
+
 
     /**
      * 显示社交意愿数据
@@ -892,7 +924,8 @@ class EditInfoActivity : BaseActivity() {
             homeTownStr.append(info.provinceName)
             homeTownStr.append("/")
             homeTownStr.append(info.cityName)
-            tv_profression.text = homeTownStr.toString()
+            tv_home_town.text = homeTownStr.toString()
+            tv_home_town.textColor = GlobalUtils.getColor(R.color.black_333)
         }
         val birthday = info.birthday
         if (birthday != null) {
@@ -910,6 +943,7 @@ class EditInfoActivity : BaseActivity() {
                 ageConstell.append("/")
                 ageConstell.append(constellationName)
                 tv_age_constellation.text = ageConstell.toString()
+                tv_age_constellation.textColor = GlobalUtils.getColor(R.color.black_333)
             }
 
         }
@@ -924,6 +958,7 @@ class EditInfoActivity : BaseActivity() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun schoolChange(bean: SchoolInfo) {
         tv_school.text = bean.school
+        tv_school.textColor = GlobalUtils.getColor(R.color.black_333)
         mEditInfoViewModel.basicInfo.value?.schoolInfo?.let {
             if (bean.startYear.isNotEmpty()) {
                 it.startYear = bean.startYear
@@ -952,6 +987,7 @@ class EditInfoActivity : BaseActivity() {
             profession.professionTypeText = info.professionTypeText
             profession.professionName = info.professionName
             tv_job.text = "${profession.professionTypeText}/${profession.professionName}"
+            tv_job.textColor = GlobalUtils.getColor(R.color.black_333)
         }
     }
 
@@ -980,6 +1016,7 @@ class EditInfoActivity : BaseActivity() {
                 whBuilder.append("${weight}kg")
             }
             tv_figure.text = whBuilder.toString()
+            tv_figure.textColor = GlobalUtils.getColor(R.color.black_333)
         }
     }
 

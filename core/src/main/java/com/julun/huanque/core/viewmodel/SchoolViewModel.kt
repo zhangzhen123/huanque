@@ -22,6 +22,8 @@ import java.util.*
 class SchoolViewModel : BaseViewModel() {
     private val userService: UserService by lazy { Requests.create(UserService::class.java) }
 
+    var index = -1
+
     //最初的学校数据
     var originalSchoolInfo: SchoolInfo? = null
 

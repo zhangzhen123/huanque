@@ -9,7 +9,6 @@ import android.view.Gravity
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
@@ -21,7 +20,6 @@ import com.contrarywind.interfaces.IPickerViewData
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.forms.SaveProfessionForm
-import com.julun.huanque.common.bean.forms.UpdateUserInfoForm
 import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.helper.MixedHelper
@@ -34,14 +32,19 @@ import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.core.R
-import com.julun.huanque.core.adapter.HomeTownFoodAdapter
 import com.julun.huanque.core.adapter.ProfessionFeatureFoodAdapter
 import com.julun.huanque.core.adapter.ProfessionIncomeAdapter
+import com.julun.huanque.core.utils.EditUtils
 import com.julun.huanque.core.viewmodel.ProfessionViewModel
 import kotlinx.android.synthetic.main.act_profession.*
+import kotlinx.android.synthetic.main.act_profession.con_progress
+import kotlinx.android.synthetic.main.act_profession.header_page
+import kotlinx.android.synthetic.main.act_profession.progressBar
+import kotlinx.android.synthetic.main.act_profession.tv_profression_title
+import kotlinx.android.synthetic.main.act_profession.tv_save
+import kotlinx.android.synthetic.main.act_profession.view_profess_feature
 import org.greenrobot.eventbus.EventBus
 import java.lang.StringBuilder
-import java.util.*
 
 /**
  *@创建者   dong
@@ -51,22 +54,16 @@ import java.util.*
 class ProfessionActivity : BaseActivity() {
 
     companion object {
-        const val Tag = "ProfessionActivity"
-
         const val ProfessionInfoParams = "ProfessionInfo"
 
         /**
          * 跳转页面
          */
-        fun newInstance(act: Activity, info: ProfessionInfo, index: Int = -1, tagList: ArrayList<String>? = null) {
+        fun newInstance(act: Activity, info: ProfessionInfo) {
             val intent = Intent(act, ProfessionActivity::class.java)
             if (ForceUtils.activityMatch(intent)) {
                 val bundle = Bundle()
                 bundle.putSerializable(ProfessionInfoParams, info)
-                bundle.putInt(ParamConstant.Index, index)
-                if (tagList != null) {
-                    bundle.putStringArrayList(ParamConstant.Tag_List, tagList)
-                }
                 intent.putExtras(bundle)
                 act.startActivity(intent)
             }
@@ -86,6 +83,17 @@ class ProfessionActivity : BaseActivity() {
     override fun getLayoutId() = R.layout.act_profession
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
+        var index = intent?.getIntExtra(ParamConstant.Index, -1) ?: -1
+
+        if (index == -1) {
+            con_progress.hide()
+        } else {
+            con_progress.show()
+            header_page.textOperation.show()
+            header_page.textOperation.text = "跳过"
+            progressBar.progress = (100 / 5) * (index + 1)
+        }
+        mViewModel.index = index
         mViewModel.originalProfession = intent?.getSerializableExtra(ProfessionInfoParams) as? ProfessionInfo
         header_page.textTitle.text = "职业"
         initViewModel()
@@ -98,6 +106,12 @@ class ProfessionActivity : BaseActivity() {
         super.initEvents(rootView)
         header_page.imageViewBack.onClickNew {
             finish()
+        }
+        if (mViewModel.index >= 0) {
+            header_page.textOperation.onClickNew {
+                //跳过
+                EditUtils.goToNext(this,mViewModel.index)
+            }
         }
 
         tv_profression_title.onClickNew {
@@ -175,6 +189,8 @@ class ProfessionActivity : BaseActivity() {
             if (form.income != null || form.professionFeatureCodes != null || form.professionId != null) {
                 //数据有变动
                 mViewModel.saveProfession(form)
+            }else{
+                EditUtils.goToNext(this,mViewModel.index)
             }
 
         }
@@ -207,7 +223,7 @@ class ProfessionActivity : BaseActivity() {
         mViewModel.processData.observe(this, Observer {
             if (it != null) {
                 EventBus.getDefault().post(it)
-                finish()
+                EditUtils.goToNext(this,mViewModel.index)
             }
         })
     }
@@ -221,7 +237,7 @@ class ProfessionActivity : BaseActivity() {
         mViewModel.nameH = contentH
         mViewModel.nameZ = contentZ
         if (contentH.isNotEmpty() && contentZ.isNotEmpty()) {
-            tv_profression.text = "$contentH/$contentZ"
+            tv_home_town.text = "$contentH/$contentZ"
         }
     }
 
@@ -428,29 +444,6 @@ class ProfessionActivity : BaseActivity() {
         dialogWindow.setGravity(Gravity.BOTTOM) //改成Bottom,底部显示
         dialogWindow.setDimAmount(0.3f)
 
-    }
-
-    private fun getNextClass(tag: String): Class<out BaseActivity>? {
-        return when (tag) {
-            HomeTownActivity.Tag -> {
-                HomeTownActivity::class.java
-            }
-            FigureActivity.Tag -> {
-                FigureActivity::class.java
-            }
-            UpdateBirthdayActivity.Tag -> {
-                UpdateBirthdayActivity::class.java
-            }
-            SchoolActivity.Tag->{
-                SchoolActivity::class.java
-            }
-            ProfessionActivity.Tag->{
-                ProfessionActivity::class.java
-            }
-            else->{
-                return null
-            }
-        }
     }
 
 }

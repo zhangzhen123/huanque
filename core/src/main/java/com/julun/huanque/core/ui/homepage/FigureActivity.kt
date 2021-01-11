@@ -11,13 +11,22 @@ import com.julun.huanque.common.bean.beans.FigureBean
 import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.constant.Sex
+import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.loadImage
 import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.core.R
+import com.julun.huanque.core.utils.EditUtils
 import com.julun.huanque.core.viewmodel.FigureViewModel
+import kotlinx.android.synthetic.main.act_birthday.*
 import kotlinx.android.synthetic.main.act_figure.*
+import kotlinx.android.synthetic.main.act_figure.con_progress
+import kotlinx.android.synthetic.main.act_figure.header_page
+import kotlinx.android.synthetic.main.act_figure.progressBar
+import kotlinx.android.synthetic.main.act_figure.tv_save
+import kotlinx.android.synthetic.main.act_home_town.*
 import org.greenrobot.eventbus.EventBus
 import java.math.BigDecimal
 import java.util.ArrayList
@@ -31,27 +40,35 @@ import kotlin.math.max
 class FigureActivity : BaseActivity() {
 
     companion object {
-        const val Tag = "FigureActivity"
+
         const val Figure = "Figure"
-        fun newInstance(act: Activity, figureBean: FigureBean, index: Int = -1, tagList: ArrayList<String>? = null) {
+        fun newInstance(act: Activity, figureBean: FigureBean) {
             val intent = Intent(act, FigureActivity::class.java)
             if (ForceUtils.activityMatch(intent)) {
                 val bundle = Bundle()
                 bundle.putSerializable(Figure, figureBean)
-                bundle.putInt(ParamConstant.Index, index)
-                if (tagList != null) {
-                    bundle.putStringArrayList(ParamConstant.Tag_List, tagList)
-                }
                 intent.putExtras(bundle)
                 act.startActivity(intent)
             }
         }
+
     }
 
     private val mViewModel: FigureViewModel by viewModels()
     override fun getLayoutId() = R.layout.act_figure
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
+        var index = intent?.getIntExtra(ParamConstant.Index, -1) ?: -1
+
+        if (index == -1) {
+            con_progress.hide()
+        } else {
+            con_progress.show()
+            header_page.textOperation.show()
+            header_page.textOperation.text = "跳过"
+            progressBar.progress = (100 / 5) * (index + 1)
+        }
+        mViewModel.index = index
         header_page.textTitle.text = "身材"
         initViewModel()
         mViewModel.initFigure()
@@ -65,6 +82,12 @@ class FigureActivity : BaseActivity() {
         header_page.imageViewBack.onClickNew {
             finish()
         }
+        if (mViewModel.index >= 0) {
+            header_page.textOperation.onClickNew {
+                //跳过
+                EditUtils.goToNext(this,mViewModel.index)
+            }
+        }
         tv_save.onClickNew {
             val currentHeight = mViewModel.currentHeight.value ?: return@onClickNew
             val currentWeight = mViewModel.currentWeight.value ?: return@onClickNew
@@ -72,7 +95,7 @@ class FigureActivity : BaseActivity() {
                 //数据有变化
                 mViewModel.updateFigure(currentHeight, currentWeight)
             } else {
-                finish()
+                EditUtils.goToNext(this,mViewModel.index)
             }
         }
 
@@ -143,7 +166,7 @@ class FigureActivity : BaseActivity() {
         mViewModel.processData.observe(this, androidx.lifecycle.Observer {
             if (it != null) {
                 EventBus.getDefault().post(it)
-                finish()
+                EditUtils.goToNext(this,mViewModel.index)
             }
         })
     }
@@ -167,30 +190,6 @@ class FigureActivity : BaseActivity() {
             if (bmiValue > it.min && bmiValue <= it.max) {
                 mViewModel.currentFigureConfig.value = it
                 return
-            }
-        }
-    }
-
-
-    private fun getNextClass(tag: String): Class<out BaseActivity>? {
-        return when (tag) {
-            HomeTownActivity.Tag -> {
-                HomeTownActivity::class.java
-            }
-            FigureActivity.Tag -> {
-                FigureActivity::class.java
-            }
-            UpdateBirthdayActivity.Tag -> {
-                UpdateBirthdayActivity::class.java
-            }
-            SchoolActivity.Tag->{
-                SchoolActivity::class.java
-            }
-            ProfessionActivity.Tag->{
-                ProfessionActivity::class.java
-            }
-            else->{
-                return null
             }
         }
     }

@@ -6,95 +6,6 @@
     android:layout_height="match_parent"
     android:background="@color/white">
 
-
-    <!--    <RelativeLayout-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="match_parent"-->
-    <!--        android:visibility="gone">-->
-
-
-    <!--        <com.julun.huanque.core.widgets.figureview.HeightView xmlns:app="http://schemas.android.com/apk/res-auto"-->
-    <!--            android:id="@+id/hv_activity_main"-->
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="match_parent"-->
-    <!--            android:layout_marginTop="10dp"-->
-    <!--            android:layout_marginBottom="10dp"-->
-    <!--            android:focusable="true"-->
-    <!--            android:focusableInTouchMode="true"-->
-    <!--            android:padding="20dp"-->
-    <!--            app:markerSpace="0dp" />-->
-
-    <!--        <com.julun.huanque.core.widgets.figureview.HeightView xmlns:app="http://schemas.android.com/apk/res-auto"-->
-    <!--            android:id="@+id/view7"-->
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="match_parent"-->
-    <!--            android:layout_above="@+id/view"-->
-    <!--            android:layout_alignTop="@+id/view4"-->
-    <!--            android:layout_alignEnd="@+id/view"-->
-    <!--            android:layout_alignRight="@+id/view"-->
-    <!--            android:focusable="true"-->
-    <!--            android:focusableInTouchMode="true"-->
-    <!--            android:padding="20dp"-->
-    <!--            app:backgroundColor="#FF6600"-->
-    <!--            app:highlightColor="@color/primary_text_disabled_material_light"-->
-    <!--            app:highlightLineWidth="2dp"-->
-    <!--            app:lineWidth="2dp"-->
-    <!--            app:textSize="17sp" />-->
-
-    <!--        <com.julun.huanque.core.widgets.figureview.HeightView xmlns:app="http://schemas.android.com/apk/res-auto"-->
-    <!--            android:id="@+id/view"-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:layout_alignParentBottom="true"-->
-    <!--            android:layout_marginStart="10dp"-->
-    <!--            android:layout_marginLeft="10dp"-->
-    <!--            android:layout_marginEnd="10dp"-->
-    <!--            android:layout_marginRight="10dp"-->
-    <!--            android:layout_marginBottom="10dp"-->
-    <!--            android:layout_toEndOf="@+id/hv_activity_main"-->
-    <!--            android:layout_toRightOf="@+id/hv_activity_main"-->
-    <!--            android:focusable="true"-->
-    <!--            android:focusableInTouchMode="true"-->
-    <!--            android:padding="20dp"-->
-    <!--            app:backgroundColor="@android:color/holo_purple"-->
-    <!--            app:lineColor="#00FF00"-->
-    <!--            app:orientation="HORIZONTAL"-->
-    <!--            app:startLineValue="25" />-->
-
-    <!--        <com.julun.huanque.core.widgets.figureview.HeightView xmlns:app="http://schemas.android.com/apk/res-auto"-->
-    <!--            android:id="@+id/view4"-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:layout_below="@+id/view3"-->
-    <!--            android:layout_alignStart="@+id/view3"-->
-    <!--            android:layout_alignLeft="@+id/view3"-->
-    <!--            android:layout_alignParentEnd="true"-->
-    <!--            android:layout_alignParentRight="true"-->
-    <!--            android:layout_marginTop="10dp"-->
-    <!--            android:focusable="true"-->
-    <!--            android:focusableInTouchMode="true"-->
-    <!--            android:padding="20dp"-->
-    <!--            app:backgroundColor="@color/material_deep_teal_200"-->
-    <!--            app:highlightColor="#33aa33"-->
-    <!--            app:markerColor="@color/accent_material_light"-->
-    <!--            app:orientation="HORIZONTAL" />-->
-
-    <!--        <com.julun.huanque.core.widgets.figureview.HeightView xmlns:app="http://schemas.android.com/apk/res-auto"-->
-    <!--            android:id="@+id/view3"-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:layout_alignStart="@+id/view"-->
-    <!--            android:layout_alignLeft="@+id/view"-->
-    <!--            android:layout_alignTop="@+id/hv_activity_main"-->
-    <!--            android:focusable="true"-->
-    <!--            android:focusableInTouchMode="true"-->
-    <!--            android:padding="20dp"-->
-    <!--            app:backgroundColor="@color/highlighted_text_material_dark"-->
-    <!--            app:markerColor="@color/primary_text_disabled_material_light"-->
-    <!--            app:orientation="HORIZONTAL"-->
-    <!--            app:textColor="@color/accent_material_light" />-->
-    <!--    </RelativeLayout>-->
-
     <com.julun.huanque.common.widgets.HeaderPageView
         android:id="@+id/header_page"
         android:layout_width="0px"
@@ -103,6 +14,33 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/con_progress"
+        android:layout_width="0px"
+        android:layout_height="38dp"
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/header_page"
+        tools:visibility="visible">
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="0px"
+            android:layout_height="8dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:max="100"
+            android:progressDrawable="@drawable/bg_edit_progress"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/sdv_figure"
         android:layout_width="103dp"
@@ -110,7 +48,7 @@
         android:layout_marginTop="40dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/header_page"
+        app:layout_constraintTop_toBottomOf="@id/con_progress"
         app:placeholderImage="@mipmap/logo_placeholder_medium"
         app:placeholderImageScaleType="centerCrop" />
 
