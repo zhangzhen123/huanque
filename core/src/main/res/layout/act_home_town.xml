@@ -13,6 +13,33 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/con_progress"
+        android:layout_width="0px"
+        android:layout_height="38dp"
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/header_page"
+        tools:visibility="visible">
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="0px"
+            android:layout_height="8dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:max="100"
+            android:progressDrawable="@drawable/bg_edit_progress"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <TextView
         android:id="@+id/tv_profression_title"
         android:layout_width="0px"
@@ -24,10 +51,10 @@
         android:textSize="@dimen/sp_14"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/header_page" />
+        app:layout_constraintTop_toBottomOf="@id/con_progress" />
 
     <TextView
-        android:id="@+id/tv_profression"
+        android:id="@+id/tv_home_town"
         android:layout_width="wrap_content"
         android:layout_height="54dp"
         android:layout_marginRight="15dp"
@@ -121,9 +148,11 @@
         android:textColor="@color/white"
         android:textSize="@dimen/sp_12"
         android:textStyle="bold"
+        android:visibility="gone"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/recycler_item_food" />
+        app:layout_constraintTop_toBottomOf="@id/recycler_item_food"
+        tools:visibility="visible" />
 
     <View
         android:id="@+id/view_profess_feature"
@@ -197,9 +226,11 @@
         android:textColor="@color/white"
         android:textSize="@dimen/sp_12"
         android:textStyle="bold"
+        android:visibility="gone"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/recycler_item_view" />
+        app:layout_constraintTop_toBottomOf="@id/recycler_item_view"
+        tools:visibility="visible" />
 
     <TextView
         android:id="@+id/tv_save"

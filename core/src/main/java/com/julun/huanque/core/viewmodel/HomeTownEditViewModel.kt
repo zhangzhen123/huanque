@@ -32,6 +32,12 @@ class HomeTownEditViewModel : BaseViewModel() {
         const val Place = "Place"
     }
 
+    //当前进度（首次编辑的时候使用）
+    var index = -1
+
+    //跳转列表
+    var tagList = ArrayList<String>()
+
     private val userService: UserService by lazy { Requests.create(UserService::class.java) }
 
     //家乡数据

@@ -28,6 +28,7 @@ import com.julun.huanque.common.bean.beans.EducationBean
 import com.julun.huanque.common.bean.beans.SchoolInfo
 import com.julun.huanque.common.bean.beans.SingleSchool
 import com.julun.huanque.common.bean.forms.SaveSchoolForm
+import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
@@ -38,10 +39,16 @@ import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.utils.TimeUtils
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.SchoolResultAdapter
+import com.julun.huanque.core.utils.EditUtils
 import com.julun.huanque.core.viewmodel.SchoolViewModel
+import kotlinx.android.synthetic.main.act_figure.*
+import kotlinx.android.synthetic.main.act_home_town.*
 import kotlinx.android.synthetic.main.act_school.*
+import kotlinx.android.synthetic.main.act_school.con_progress
 import kotlinx.android.synthetic.main.act_school.frame
 import kotlinx.android.synthetic.main.act_school.header_page
+import kotlinx.android.synthetic.main.act_school.progressBar
+import kotlinx.android.synthetic.main.act_school.tv_save
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.textColor
 import java.lang.Exception
@@ -80,6 +87,18 @@ class SchoolActivity : BaseActivity() {
     override fun getLayoutId() = R.layout.act_school
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
+        var index = intent?.getIntExtra(ParamConstant.Index, -1) ?: -1
+
+        if (index == -1) {
+            con_progress.hide()
+        } else {
+            con_progress.show()
+            header_page.textOperation.show()
+            header_page.textOperation.text = "跳过"
+            progressBar.progress = (100 / 5) * (index + 1)
+        }
+        mViewModel.index = index
+
         mViewModel.originalSchoolInfo = intent?.getSerializableExtra(SchoolInfo) as? SchoolInfo
         mViewModel.selectSchool = SingleSchool().apply {
             schoolName = mViewModel.originalSchoolInfo?.school ?: ""
@@ -97,6 +116,12 @@ class SchoolActivity : BaseActivity() {
         super.initEvents(rootView)
         header_page.imageViewBack.onClickNew {
             finish()
+        }
+        if (mViewModel.index >= 0) {
+            header_page.textOperation.onClickNew {
+                //跳过
+                EditUtils.goToNext(this,mViewModel.index)
+            }
         }
         tv_education_title.onClickNew {
             //学历
@@ -177,7 +202,7 @@ class SchoolActivity : BaseActivity() {
 
             if (form.education == null && form.schoolId == null && form.startYear == null) {
                 //数据没有变化，直接返回
-                finish()
+                EditUtils.goToNext(this,mViewModel.index)
             } else {
                 mViewModel.saveSchool(form, schoolName ?: "", mViewModel.schoolData.value?.educationText ?: "")
             }
@@ -236,7 +261,7 @@ class SchoolActivity : BaseActivity() {
         mViewModel.processData.observe(this, androidx.lifecycle.Observer {
             if (it != null) {
                 EventBus.getDefault().post(it)
-                finish()
+                EditUtils.goToNext(this,mViewModel.index)
             }
         })
     }

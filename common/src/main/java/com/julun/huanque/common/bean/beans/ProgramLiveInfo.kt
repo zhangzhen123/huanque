@@ -733,6 +733,7 @@ data class EditPagerInfo(
     /*2.0.0新增字段*/
 
 ) : Serializable
+
 /**
  * 编辑资料页面 家乡数据
  */
@@ -1183,20 +1184,23 @@ data class SingleAccount(
  */
 data class UserProcessBean(
     //资料完成度
-    var perfection: Int = 0
+    var perfection: Int = 0,
+    //添加封面的时候返回
+    var logId: Long = 0
 ) : Serializable
 
 data class UserHeadChangeBean(
     //资料完成度
     var perfection: Int = 0,
-    var headRealPeople:Boolean=false
+    var headRealPeople: Boolean = false
 ) : Serializable
+
 /**
  * 编辑页面  家乡数据
  */
 data class EditHomeTownBean(
     //家乡Id
-    var homeTownId: Int = 1,
+    var homeTownId: Int = 0,
     //城市配置合集  需客户端自行存储本地 如果城市配置版本没有变化，此字段不返回
     var cityConfigList: MutableList<EditCityBean> = mutableListOf(),
     //当前城市版本号

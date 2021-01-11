@@ -20,6 +20,9 @@ import java.util.*
  */
 class UpdateBirthdayViewModel : BaseViewModel() {
     private val userService : UserService by lazy { Requests.create(UserService::class.java) }
+
+    //当前进度（首次编辑的时候使用）
+    var index = -1
     //原始生日
     var originalDate: Date? = null
 

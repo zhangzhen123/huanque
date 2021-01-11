@@ -376,4 +376,7 @@ interface UserService {
      */
     @POST("user/acct/data/initFigure")
     suspend fun initFigure(@Body form: EmptyForm = EmptyForm()): Root<FigureBean>
+
+    @POST("user/acct/data/coverOrder")
+    suspend fun coverOrder(@Body form: LogIdsForm): Root<VoidResult>
 }

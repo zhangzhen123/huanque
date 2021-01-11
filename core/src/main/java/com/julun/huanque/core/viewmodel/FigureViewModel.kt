@@ -22,6 +22,8 @@ import org.greenrobot.eventbus.EventBus
 class FigureViewModel : BaseViewModel() {
     private val userService: UserService by lazy { Requests.create(UserService::class.java) }
 
+    var index = -1
+
     //原始身高
     var originHeight = 0
 

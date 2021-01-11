@@ -86,13 +86,13 @@
             android:textColor="#B2B2B2"
             android:textSize="@dimen/sp_12"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/tv_profression"
+            app:layout_constraintBottom_toTopOf="@+id/tv_home_town"
             app:layout_constraintLeft_toLeftOf="@id/view_home_town"
             app:layout_constraintTop_toTopOf="@id/view_home_town"
             app:layout_constraintVertical_chainStyle="packed" />
 
         <TextView
-            android:id="@+id/tv_profression"
+            android:id="@+id/tv_home_town"
             android:layout_width="0px"
             android:layout_height="20dp"
             android:layout_marginTop="2dp"

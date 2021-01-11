@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
@@ -22,16 +23,19 @@ import com.julun.huanque.common.bean.forms.UpdateUserInfoForm
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.interfaces.routerservice.IRealNameService
 import com.julun.huanque.common.manager.aliyunoss.OssUpLoadManager
-import com.julun.huanque.common.suger.*
+import com.julun.huanque.common.suger.dp2px
+import com.julun.huanque.common.suger.hide
+import com.julun.huanque.common.suger.logger
+import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.EditPicAdapter
 import com.julun.huanque.core.adapter.HomePageTagAdapter
 import com.julun.huanque.core.ui.record_voice.VoiceSignActivity
+import com.julun.huanque.core.utils.EditUtils
 import com.julun.huanque.core.viewmodel.EditInfoViewModel
-import com.julun.rnlib.RNPageActivity
-import com.julun.rnlib.RnConstant
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureConfig
 import com.luck.picture.lib.config.PictureMimeType
@@ -140,11 +144,16 @@ class EditInfoActivity : BaseActivity() {
     override fun getLayoutId() = R.layout.act_edit_info
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
+        if (SPUtils.getBoolean(SPParamKey.First_Edit, true)) {
+            iv_demo.performClick()
+            SPUtils.commitBoolean(SPParamKey.First_Edit, false)
+        }
+
         mBarHeiht = StatusBarUtil.getStatusBarHeight(this)
         header_page.textTitle.text = "编辑资料"
         header_page.textOperation.show()
         header_page.textOperation.text = "保存"
-        header_page.textOperation.isEnabled = false
+        header_page.textOperation.isEnabled = true
         initRecyclerView()
         initViewModel()
         mEditInfoViewModel.getBasicInfo()
@@ -153,10 +162,25 @@ class EditInfoActivity : BaseActivity() {
     override fun initEvents(rootView: View) {
         super.initEvents(rootView)
         header_page.imageViewBack.onClickNew {
-            finish()
+            onBackPressed()
         }
         header_page.textOperation.onClickNew {
             //保存
+            val picSb = StringBuilder()
+            mEditPicAdapter.data.forEach {
+                if (it.headerPic != BusiConstant.True && it.logId != 0L) {
+                    if (picSb.isNotEmpty()) {
+                        picSb.append(",")
+                    }
+                    picSb.append("${it.logId}")
+                }
+            }
+            if (picSb.toString() != mEditInfoViewModel.originCoverPicIdStr) {
+                //数据发生变化，需要请求接口
+                mEditInfoViewModel.saveConverOrder(picSb.toString())
+            } else {
+                finish()
+            }
         }
         tv_nickname_title.onClickNew {
             //昵称
@@ -188,20 +212,56 @@ class EditInfoActivity : BaseActivity() {
                 homeTownStr.append("/")
             }
             homeTownStr.append(info.homeTown.homeTownCity)
-            HomeTownActivity.newInstance(this, homeTownStr.toString())
+            val needJump = getNeedJumpOrder(HomeTownActivity::class.java)
+            if (needJump) {
+                EditUtils.jumpActivity(this, 0)
+            } else {
+                HomeTownActivity.newInstance(this, homeTownStr.toString())
+            }
         }
         tv_age_constellation_title.onClickNew {
             //年龄  星座
             val basicInfo = mEditInfoViewModel.basicInfo.value ?: return@onClickNew
-            UpdateBirthdayActivity.newInstance(this, basicInfo.birthday)
+
+            val needJump = getNeedJumpOrder(UpdateBirthdayActivity::class.java)
+            if (needJump) {
+                EditUtils.jumpActivity(this, 0)
+            } else {
+                UpdateBirthdayActivity.newInstance(this, basicInfo.birthday)
+            }
+
+        }
+
+        tv_figure_title.onClickNew {
+            val figureBean = mEditInfoViewModel.basicInfo.value?.figure ?: return@onClickNew
+            val needJump = getNeedJumpOrder(FigureActivity::class.java)
+            if (needJump) {
+                EditUtils.jumpActivity(this, 0)
+            } else {
+                FigureActivity.newInstance(this, figureBean)
+            }
         }
 
         tv_school_title.onClickNew {
             //学校
-            SchoolActivity.newInstance(this, mEditInfoViewModel.basicInfo.value?.schoolInfo ?: return@onClickNew)
+            val schoolInfo = mEditInfoViewModel.basicInfo.value?.schoolInfo ?: return@onClickNew
+
+            val needJump = getNeedJumpOrder(SchoolActivity::class.java)
+            if (needJump) {
+                EditUtils.jumpActivity(this, 0)
+            } else {
+                SchoolActivity.newInstance(this, schoolInfo)
+            }
+
         }
         tv_job_title.onClickNew {
-            ProfessionActivity.newInstance(this, mEditInfoViewModel.basicInfo.value?.profession ?: return@onClickNew)
+            val profession = mEditInfoViewModel.basicInfo.value?.profession ?: return@onClickNew
+            val needJump = getNeedJumpOrder(ProfessionActivity::class.java)
+            if (needJump) {
+                EditUtils.jumpActivity(this, 0)
+            } else {
+                ProfessionActivity.newInstance(this, profession)
+            }
         }
         tv_social_wish_title.onClickNew {
             //社交意愿
@@ -221,11 +281,46 @@ class EditInfoActivity : BaseActivity() {
         iv_demo.onClickNew {
             mPicDemoFragment.show(supportFragmentManager, "PicDemoFragment")
         }
-        tv_figure_title.onClickNew {
-            FigureActivity.newInstance(this, mEditInfoViewModel.basicInfo.value?.figure ?: return@onClickNew)
-        }
 
     }
+
+    /**
+     * 获取是否需要顺序跳转
+     */
+    private fun getNeedJumpOrder(curClass: Class<out BaseActivity>): Boolean {
+        val basicInfo = mEditInfoViewModel.basicInfo.value ?: return false
+
+        if (basicInfo.homeTown.homeTownId == 0 && basicInfo.birthday == "" && basicInfo.figure.height == 0) {
+            //城市为空 && 生日为空 && 身材为空
+            val schoolInfo = basicInfo.schoolInfo
+            if (schoolInfo.educationCode.isEmpty() && schoolInfo.education.isEmpty() && schoolInfo.school.isEmpty()
+                && schoolInfo.startYear.isEmpty()
+            ) {
+                //学校为空
+                val profession = basicInfo.profession
+                if (profession.professionId == 0 && profession.incomeText.isEmpty()) {
+                    //职业为空，需要连续跳转
+                    val tagList = mutableListOf<Class<out BaseActivity>>()
+                    tagList.add(HomeTownActivity::class.java)
+                    tagList.add(UpdateBirthdayActivity::class.java)
+                    tagList.add(FigureActivity::class.java)
+                    tagList.add(SchoolActivity::class.java)
+                    tagList.add(ProfessionActivity::class.java)
+
+                    EditUtils.jumpList.clear()
+                    EditUtils.jumpList.add(curClass)
+                    tagList.forEach {
+                        if (!EditUtils.jumpList.contains(it)) {
+                            EditUtils.jumpList.add(it)
+                        }
+                    }
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
 
     /**
      * 初始化ViewModel
@@ -267,13 +362,61 @@ class EditInfoActivity : BaseActivity() {
                 }
             }
         })
-//        mEditInfoViewModel.processData.observe(this, Observer {
-//            if (it != null) {
-//                updateProgress(it.perfection)
-//            }
-//        })
+        mEditInfoViewModel.homePagePicChangeBean.observe(this, Observer {
+            if (it != null) {
+                //图片有变动
+                doWithConverPic(it)
+            }
+        })
+        mEditInfoViewModel.processData.observe(this, Observer {
+            if (it != null) {
+                updateProgress(it.perfection)
+            }
+        })
 
+        mEditInfoViewModel.coverOrderSaveFlag.observe(this, Observer {
+            if (it == true) {
+                finish()
+            }
+        })
     }
+
+    /**
+     * 对封面进行处理
+     */
+    private fun doWithConverPic(bean: HomePagePicBean) {
+        //有变动的logid
+        val logId = bean.logId
+        if (logId == 0L) {
+            return
+        }
+        var targetIndex = -1
+        var targetBean: HomePagePicBean? = null
+        mEditPicAdapter.data.forEachIndexed { index, homePagePicBean ->
+            if (homePagePicBean.headerPic != BusiConstant.True && (homePagePicBean.logId == logId || homePagePicBean.logId == 0L) && targetBean == null) {
+                targetIndex = index
+                targetBean = homePagePicBean
+            }
+        }
+        if (targetIndex >= 0 && targetBean != null) {
+            //找到对应的封面
+            val pic = bean.coverPic
+            if (pic.isNotEmpty()) {
+                //有图片   新增或者变更
+                targetBean?.logId = bean.logId
+                targetBean?.coverPic = bean.coverPic
+                mEditPicAdapter.notifyDataSetChanged()
+            } else {
+                //无图片，删除
+                mEditPicAdapter.removeAt(targetIndex)
+                (0 until (9 - mEditPicAdapter.data.size)).forEach { _ ->
+                    mEditPicAdapter.addData(HomePagePicBean())
+                }
+            }
+
+        }
+    }
+
 
     private fun showBottomDialog(isHead: Boolean) {
         val actions = arrayListOf<BottomAction>()
@@ -309,7 +452,7 @@ class EditInfoActivity : BaseActivity() {
                 showPics.add(HomePagePicBean())
             }
         }
-
+//originCoverPicList
         mEditPicAdapter.setList(showPics)
 
         val normalColor = GlobalUtils.getColor(R.color.black_333)
@@ -365,14 +508,16 @@ class EditInfoActivity : BaseActivity() {
             homeTownStr.append("/")
         }
         homeTownStr.append(info.homeTown.homeTownCity)
-        tv_profression.text = homeTownStr.toString()
+        showBasicInfo(tv_home_town, homeTownStr.toString())
 
         //年龄和星座
         val ageConstell = StringBuilder()
-        ageConstell.append(info.age)
-        ageConstell.append("/")
-        ageConstell.append(info.constellationInfo.constellationName)
-        tv_age_constellation.text = ageConstell.toString()
+        if (info.age != 0) {
+            ageConstell.append(info.age)
+            ageConstell.append("/")
+            ageConstell.append(info.constellationInfo.constellationName)
+        }
+        showBasicInfo(tv_age_constellation, ageConstell.toString())
 
         //身材
         val weight = info.figure.weight
@@ -387,11 +532,18 @@ class EditInfoActivity : BaseActivity() {
             }
             whBuilder.append("${weight}kg")
         }
-        tv_figure.text = whBuilder.toString()
+//        tv_figure.text = whBuilder.toString()
+        showBasicInfo(tv_figure, whBuilder.toString())
 
-        tv_school.text = info.schoolInfo.school
+//        tv_school.text = info.schoolInfo.school
+        showBasicInfo(tv_school, info.schoolInfo.school)
 
-        tv_job.text = "${info.profession.professionTypeText}/${info.profession.professionName}"
+//        tv_job.text = "${info.profession.professionTypeText}/${info.profession.professionName}"
+        if (info.profession.professionTypeText.isNotEmpty() && info.profession.professionName.isNotEmpty()) {
+            showBasicInfo(tv_job, "${info.profession.professionTypeText}/${info.profession.professionName}")
+        } else {
+            showBasicInfo(tv_job, "")
+        }
 
 
         val tagList = info.myAuthTag.showTagList
@@ -424,6 +576,22 @@ class EditInfoActivity : BaseActivity() {
 
         tv_user_id.text = "欢鹊ID ${info.userId}"
     }
+
+    /**
+     * 显示基础数据
+     */
+    private fun showBasicInfo(tv: TextView, content: String) {
+        if (content.isEmpty()) {
+            //内容为空
+            tv.text = "未完成"
+            tv.textColor = GlobalUtils.formatColor("#FF2207")
+        } else {
+            //内容不未空
+            tv.text = content
+            tv.textColor = GlobalUtils.getColor(R.color.black_333)
+        }
+    }
+
 
     /**
      * 显示社交意愿数据
@@ -510,9 +678,7 @@ class EditInfoActivity : BaseActivity() {
                 target: RecyclerView.ViewHolder
             ): Boolean {
                 val tempData = mEditPicAdapter.getItemOrNull(target.adapterPosition) ?: return false
-
-                // && tempData.pic.isNotEmpty()
-                if (tempData.headerPic != BusiConstant.True) {
+                if (tempData.headerPic != BusiConstant.True && tempData.coverPic.isNotEmpty()) {
                     return true
                 }
                 return false
@@ -528,8 +694,7 @@ class EditInfoActivity : BaseActivity() {
         mEditPicAdapter.setOnItemLongClickListener { adapter, view, position ->
             val tempData = adapter.getItemOrNull(position) as? HomePagePicBean
                 ?: return@setOnItemLongClickListener true
-            // && tempData.pic.isNotEmpty()
-            if (tempData.headerPic != BusiConstant.True) {
+            if (tempData.headerPic != BusiConstant.True && tempData.coverPic.isNotEmpty()) {
                 helper.startDrag(recycler_view_pic.getChildViewHolder(view))
             } else {
                 if (tempData.headerPic == BusiConstant.True) {
@@ -759,7 +924,8 @@ class EditInfoActivity : BaseActivity() {
             homeTownStr.append(info.provinceName)
             homeTownStr.append("/")
             homeTownStr.append(info.cityName)
-            tv_profression.text = homeTownStr.toString()
+            tv_home_town.text = homeTownStr.toString()
+            tv_home_town.textColor = GlobalUtils.getColor(R.color.black_333)
         }
         val birthday = info.birthday
         if (birthday != null) {
@@ -777,6 +943,7 @@ class EditInfoActivity : BaseActivity() {
                 ageConstell.append("/")
                 ageConstell.append(constellationName)
                 tv_age_constellation.text = ageConstell.toString()
+                tv_age_constellation.textColor = GlobalUtils.getColor(R.color.black_333)
             }
 
         }
@@ -791,6 +958,7 @@ class EditInfoActivity : BaseActivity() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun schoolChange(bean: SchoolInfo) {
         tv_school.text = bean.school
+        tv_school.textColor = GlobalUtils.getColor(R.color.black_333)
         mEditInfoViewModel.basicInfo.value?.schoolInfo?.let {
             if (bean.startYear.isNotEmpty()) {
                 it.startYear = bean.startYear
@@ -819,6 +987,7 @@ class EditInfoActivity : BaseActivity() {
             profession.professionTypeText = info.professionTypeText
             profession.professionName = info.professionName
             tv_job.text = "${profession.professionTypeText}/${profession.professionName}"
+            tv_job.textColor = GlobalUtils.getColor(R.color.black_333)
         }
     }
 
@@ -847,8 +1016,34 @@ class EditInfoActivity : BaseActivity() {
                 whBuilder.append("${weight}kg")
             }
             tv_figure.text = whBuilder.toString()
+            tv_figure.textColor = GlobalUtils.getColor(R.color.black_333)
         }
     }
 
+    override fun onBackPressed() {
+        val picSb = StringBuilder()
+        mEditPicAdapter.data.forEach {
+            if (it.headerPic != BusiConstant.True && it.logId != 0L) {
+                if (picSb.isNotEmpty()) {
+                    picSb.append(",")
+                }
+                picSb.append("${it.logId}")
+            }
+        }
+        if (picSb.toString() != mEditInfoViewModel.originCoverPicIdStr) {
+            //数据发生变化，需要提示
+            MyAlertDialog(this).showAlertWithOKAndCancel(
+                "要保存修改，请点击右上角【保存】按钮",
+                MyAlertDialog.MyDialogCallback(onRight = {
+
+                }, onCancel = {
+                    finish()
+                }), "修改未保存", "好的", noText = "放弃保存"
+            )
+        } else {
+            super.onBackPressed()
+        }
+
+    }
 
 }

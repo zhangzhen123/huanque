@@ -30,8 +30,10 @@ import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.ScreenUtils
+import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.HomeTownFoodAdapter
+import com.julun.huanque.core.utils.EditUtils
 import com.julun.huanque.core.viewmodel.HomeTownEditViewModel
 import kotlinx.android.synthetic.main.act_home_town.*
 import org.greenrobot.eventbus.EventBus
@@ -73,13 +75,25 @@ class HomeTownActivity : BaseActivity() {
     //人文弹窗
     private val mCultureMarkFragment: CultureMarkFragment by lazy { CultureMarkFragment() }
 
-    //    private val foodNoMarkList = mutableListOf<SingleCultureConfig>()
-//    private val placeNoMarkList = mutableListOf<SingleCultureConfig>()
     override fun getLayoutId() = R.layout.act_home_town
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
+        var index = intent?.getIntExtra(ParamConstant.Index, -1) ?: -1
+
+        if (index == -1) {
+            con_progress.hide()
+        } else {
+            con_progress.show()
+            header_page.textOperation.show()
+            header_page.textOperation.text = "跳过"
+            progressBar.progress = (100 / 5) * (index + 1)
+        }
+
+        mHomeTownEditViewModel.index = index
+
         val cityName = intent?.getStringExtra(ParamConstant.Home_Town_Name) ?: ""
-        tv_profression.text = cityName
+        tv_home_town.text = cityName
+
         header_page.textTitle.text = "家乡"
         initViewModel()
         initRecyclerView()
@@ -90,6 +104,13 @@ class HomeTownActivity : BaseActivity() {
         super.initEvents(rootView)
         header_page.imageViewBack.onClickNew {
             finish()
+        }
+
+        if (mHomeTownEditViewModel.index >= 0) {
+            header_page.textOperation.onClickNew {
+                //跳过
+                EditUtils.goToNext(this, mHomeTownEditViewModel.index)
+            }
         }
 
         tv_profression_title.onClickNew {
@@ -113,12 +134,20 @@ class HomeTownActivity : BaseActivity() {
 
         view_income.onClickNew {
             //美食
+            if (tv_home_town.text.toString().isEmpty()) {
+                ToastUtils.show("请先选择城市")
+                return@onClickNew
+            }
             mHomeTownEditViewModel.markFragmentType = HomeTownEditViewModel.Food
             mCultureMarkFragment.show(supportFragmentManager, "CultureMarkFragment")
         }
 
         view_profess_feature.onClickNew {
             //景点
+            if (tv_home_town.text.toString().isEmpty()) {
+                ToastUtils.show("请先选择城市")
+                return@onClickNew
+            }
             mHomeTownEditViewModel.markFragmentType = HomeTownEditViewModel.Place
             mCultureMarkFragment.show(supportFragmentManager, "CultureMarkFragment")
         }
@@ -160,11 +189,12 @@ class HomeTownActivity : BaseActivity() {
                 mHomeTownEditViewModel.saveHomeTown(currentCityId, curIds.toString())
             } else {
                 //数据没有发生变化，直接返回
-                finish()
+                EditUtils.goToNext(this, mHomeTownEditViewModel.index)
             }
 
         }
     }
+
 
     /**
      * 初始化ViewModel
@@ -177,6 +207,7 @@ class HomeTownActivity : BaseActivity() {
         })
         mHomeTownEditViewModel.foodCultureData.observe(this, Observer {
             if (it != null) {
+                showEmptyView()
                 showFoodView(it)
             }
         })
@@ -194,7 +225,7 @@ class HomeTownActivity : BaseActivity() {
                         .post(UpdateUserInfoForm(provinceName = mHomeTownEditViewModel.provinceName, cityName = mHomeTownEditViewModel.cityName))
                 }
                 EventBus.getDefault().post(it)
-                finish()
+                EditUtils.goToNext(this, mHomeTownEditViewModel.index)
             }
         })
     }
@@ -205,7 +236,6 @@ class HomeTownActivity : BaseActivity() {
     private fun initRecyclerView() {
         recycler_item_food.layoutManager = GridLayoutManager(this, 4)
         recycler_item_food.adapter = mFoodAdapter
-        mFoodAdapter.setEmptyView(MixedHelper.getEmptyView(this,"太棒了！家乡的美食你都吃过了",true))
         mFoodAdapter.setOnItemChildClickListener { adapter, view, position ->
             val data = mFoodAdapter.data
             val tempData = mFoodAdapter.getItemOrNull(position) ?: return@setOnItemChildClickListener
@@ -224,7 +254,6 @@ class HomeTownActivity : BaseActivity() {
 
         recycler_item_view.layoutManager = GridLayoutManager(this, 4)
         recycler_item_view.adapter = mPlaceAdapter
-        mPlaceAdapter.setEmptyView(MixedHelper.getEmptyView(this,"太棒了！家乡的景点你都去过了",true))
         mPlaceAdapter.setOnItemChildClickListener { adapter, view, position ->
             val data = mPlaceAdapter.data
             val tempData = mPlaceAdapter.getItemOrNull(position) ?: return@setOnItemChildClickListener
@@ -240,7 +269,23 @@ class HomeTownActivity : BaseActivity() {
             }
             showTotalFoodNum(totalList, tv_view_num)
         }
+        showEmptyView()
     }
+
+    /**
+     * 显示美食和景点的空布局
+     */
+    private fun showEmptyView() {
+        if (tv_home_town.text.isEmpty()) {
+            //家乡为空
+            mFoodAdapter.setEmptyView(MixedHelper.getEmptyView(this, "选择城市后可添加吃过的美食", true))
+            mPlaceAdapter.setEmptyView(MixedHelper.getEmptyView(this, "选择城市后可添加去过的景点", true))
+        } else {
+            mFoodAdapter.setEmptyView(MixedHelper.getEmptyView(this, "太棒了！家乡的美食你都吃过了", true))
+            mPlaceAdapter.setEmptyView(MixedHelper.getEmptyView(this, "太棒了！家乡的景点你都去过了", true))
+        }
+    }
+
 
     /**
      * 获取插入的数据
@@ -279,7 +324,7 @@ class HomeTownActivity : BaseActivity() {
         homeTownStr.append(cityName)
         mHomeTownEditViewModel.provinceName = provinceName
         mHomeTownEditViewModel.cityName = cityName
-        tv_profression.text = homeTownStr.toString()
+        tv_home_town.text = homeTownStr.toString()
     }
 
     /**

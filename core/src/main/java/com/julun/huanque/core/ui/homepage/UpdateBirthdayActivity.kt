@@ -14,16 +14,19 @@ import com.bigkoo.pickerview.listener.CustomListener
 import com.bigkoo.pickerview.listener.OnTimeSelectListener
 import com.bigkoo.pickerview.view.TimePickerView
 import com.julun.huanque.common.base.BaseActivity
+import com.julun.huanque.common.bean.beans.FigureBean
 import com.julun.huanque.common.constant.ParamConstant
+import com.julun.huanque.common.constant.Sex
 import com.julun.huanque.common.suger.dp2px
+import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
-import com.julun.huanque.common.utils.ConstellationUtils
-import com.julun.huanque.common.utils.ForceUtils
-import com.julun.huanque.common.utils.GlobalUtils
-import com.julun.huanque.common.utils.TimeUtils
+import com.julun.huanque.common.suger.show
+import com.julun.huanque.common.utils.*
 import com.julun.huanque.core.R
+import com.julun.huanque.core.utils.EditUtils
 import com.julun.huanque.core.viewmodel.UpdateBirthdayViewModel
 import kotlinx.android.synthetic.main.act_birthday.*
+import kotlinx.android.synthetic.main.act_birthday.header_page
 import org.greenrobot.eventbus.EventBus
 import java.sql.Time
 import java.util.*
@@ -55,10 +58,25 @@ class UpdateBirthdayActivity : BaseActivity() {
     override fun getLayoutId() = R.layout.act_birthday
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
+        var index = intent?.getIntExtra(ParamConstant.Index, -1) ?: -1
+
+        mViewModel.index = index
+
+        if (index == -1) {
+            con_progress.hide()
+        } else {
+            con_progress.show()
+            header_page.textOperation.show()
+            header_page.textOperation.text = "跳过"
+            progressBar.progress = (100 / 5) * (index + 1)
+        }
+
         val birthday = intent?.getStringExtra(ParamConstant.Birthday) ?: ""
 
-        mViewModel.originalDate = TimeUtils.string2Date("yyyy-MM-dd", birthday)
-        mViewModel.birthdayData.value = mViewModel.originalDate
+        if (birthday.isNotEmpty()) {
+            mViewModel.originalDate = TimeUtils.string2Date("yyyy-MM-dd", birthday)
+            mViewModel.birthdayData.value = mViewModel.originalDate
+        }
 
         header_page.textTitle.text = "出生日期"
         initTimePicker()
@@ -68,6 +86,14 @@ class UpdateBirthdayActivity : BaseActivity() {
 
     override fun initEvents(rootView: View) {
         super.initEvents(rootView)
+
+        if (mViewModel.index >= 0) {
+            header_page.textOperation.onClickNew {
+                //跳过
+                EditUtils.goToNext(this, mViewModel.index)
+            }
+        }
+
         header_page.imageViewBack.onClickNew {
             finish()
         }
@@ -99,7 +125,7 @@ class UpdateBirthdayActivity : BaseActivity() {
         mViewModel.processData.observe(this, androidx.lifecycle.Observer {
             if (it != null) {
                 EventBus.getDefault().post(it)
-                finish()
+                EditUtils.goToNext(this, mViewModel.index)
             }
         })
     }
@@ -131,7 +157,16 @@ class UpdateBirthdayActivity : BaseActivity() {
         val selTime = mViewModel.originalDate
         if (selTime != null) {
             selectedDate.time = selTime
+        }else{
+            if(SessionUtils.getSex() == Sex.MALE){
+                //男
+                selectedDate.set(currentYear - 25, currentMonth, currentDay)
+            }else{
+                //女
+                selectedDate.set(currentYear - 22, currentMonth, currentDay)
+            }
         }
+
 
 
 //        val startDate = Calendar.getInstance()
@@ -144,8 +179,8 @@ class UpdateBirthdayActivity : BaseActivity() {
 //            tv_bir.text = getTime(date)
 //            judgeNextEnable()
         })
-            .setDate(selectedDate)
             .setRangDate(startDate, endDate)
+            .setDate(selectedDate)
             .setSubmitColor(GlobalUtils.getColor(R.color.black_333))
             .setCancelColor(GlobalUtils.getColor(R.color.black_333))
             .setOutSideCancelable(false)
@@ -157,12 +192,14 @@ class UpdateBirthdayActivity : BaseActivity() {
                     val tv_certain = v.findViewById<View>(R.id.tv_certain)
                     tv_certain.onClickNew {
                         //保存按钮
-                        val originDate = mViewModel.originalDate ?: return@onClickNew
+                        val originDate = mViewModel.originalDate
                         val curDate = mViewModel.birthdayData.value ?: return@onClickNew
-                        if (originDate.time != curDate.time) {
+                        if ((originDate?.time ?: 0) != curDate.time) {
                             //生日数据有变化
                             val birthday = TimeUtils.formatTime(curDate.time, TimeUtils.TIME_FORMAT_YEAR_2)
                             mViewModel.updateBirthday(birthday)
+                        } else {
+                            EditUtils.goToNext(this@UpdateBirthdayActivity, mViewModel.index)
                         }
                     }
 
@@ -190,6 +227,7 @@ class UpdateBirthdayActivity : BaseActivity() {
             .build()
 
         pvTime?.setKeyBackCancelable(false)
+        mViewModel.birthdayData.postValue(selectedDate.time)
 
         val params = FrameLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,

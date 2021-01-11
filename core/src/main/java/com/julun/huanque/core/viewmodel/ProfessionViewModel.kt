@@ -23,6 +23,8 @@ import org.greenrobot.eventbus.EventBus
 class ProfessionViewModel : BaseViewModel() {
     private val userService: UserService by lazy { Requests.create(UserService::class.java) }
 
+    var index = -1
+
     //原始职业数据
     var originalProfession: ProfessionInfo? = null
 

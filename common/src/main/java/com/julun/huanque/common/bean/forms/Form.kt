@@ -385,5 +385,10 @@ data class SaveCoverForm(
  */
 data class UserUpdateHeadForm(
     var headPic: String,
-    var check:String
+    var check: String
 )
+
+/**
+ * 保存编辑页面  图片顺序form
+ */
+data class LogIdsForm(var logIds: String = "") : Serializable
