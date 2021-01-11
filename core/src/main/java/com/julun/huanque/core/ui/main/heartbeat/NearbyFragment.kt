@@ -53,6 +53,7 @@ import com.julun.huanque.common.widgets.cardlib.utils.ReItemTouchHelper
 import com.julun.huanque.common.widgets.recycler.decoration.HorizontalItemDecoration
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.NearbyPicListAdapter
+import com.julun.huanque.core.ui.homepage.HomePageActivity
 import com.julun.huanque.core.ui.tag_manager.TagUserPicsActivity
 import com.julun.huanque.core.viewmodel.MainConnectViewModel
 import com.julun.huanque.core.widgets.HomeCardTagView
@@ -242,6 +243,9 @@ class NearbyFragment : BaseLazyFragment() {
                 R.id.iv_super_like->{
                     //todo
                     logger.info("超级喜欢")
+                }
+                R.id.card_img->{
+                    HomePageActivity.newInstance(requireActivity(),item.userId)
                 }
             }
         }
