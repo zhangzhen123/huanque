@@ -10,13 +10,14 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.bean.beans.HomePageInfo
-import com.julun.huanque.common.bean.beans.HomeTagBean
+import com.julun.huanque.common.bean.beans.UserTagBean
 import com.julun.huanque.common.bean.beans.SocialWishBean
 import com.julun.huanque.common.bean.forms.InviteCompleteForm
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.HomePageTagAdapter
+import com.julun.huanque.core.ui.tag_manager.AuthTagPicActivity
 import com.julun.huanque.core.viewmodel.HomePageViewModel
 import com.julun.huanque.core.viewmodel.InviteFillViewModel
 import kotlinx.android.synthetic.main.frag_home_page_information.*
@@ -183,27 +184,24 @@ class HomePageInformationFragment : BaseFragment() {
         recycler_view_tag.adapter = mTagAdapter
         mTagAdapter.setOnItemClickListener { adapter, view, position ->
 //            ll_tag.performClick()
-            val tempData = mTagAdapter.getItemOrNull(position) ?: return@setOnItemClickListener
-            if (tempData.tagId == 0L) {
-                //空标签，显示邀请
-                mInviteViewModel.mType = InviteCompleteForm.AuthTag
-                mInviteFillFragment.show(childFragmentManager, "InviteFillFragment")
+            val item = mTagAdapter.getItemOrNull(position) ?: return@setOnItemClickListener
+            if(isSameSex){
+                //todo
             }
+            AuthTagPicActivity.start(requireActivity(), item.tagId,mHomePageViewModel.mineHomePage,false, isSameSex)
         }
 
         recycler_view_like_tag.layoutManager = GridLayoutManager(context, 4)
         recycler_view_like_tag.adapter = mLikeTagAdapter
         mLikeTagAdapter.setOnItemClickListener { adapter, view, position ->
 //            ll_tag.performClick()
-            val tempData = mLikeTagAdapter.getItemOrNull(position) ?: return@setOnItemClickListener
-            if (tempData.tagId == 0L) {
-                //空标签，显示邀请
-                mInviteViewModel.mType = InviteCompleteForm.LikeTag
-                mInviteFillFragment.show(childFragmentManager, "InviteFillFragment")
-            }
+            val item = mLikeTagAdapter.getItemOrNull(position) ?: return@setOnItemClickListener
+            AuthTagPicActivity.start(requireActivity(), item.tagId,mHomePageViewModel.mineHomePage, true, isSameSex)
         }
+
     }
 
+    private var isSameSex: Boolean = false
 
     /**
      * 初始化ViewModel
@@ -218,6 +216,7 @@ class HomePageInformationFragment : BaseFragment() {
     }
 
     private fun showViewByData(bean: HomePageInfo) {
+        isSameSex=bean.sex==bean.currSexType
         //家乡
         val homeTownStr = StringBuilder()
         if (bean.homeTown.homeTownProvince.isNotEmpty()) {
@@ -304,7 +303,7 @@ class HomePageInformationFragment : BaseFragment() {
 
         val tagList = bean.authTagList
         tv_tag_count.text = "${tagList.size}"
-        val realTagList = mutableListOf<HomeTagBean>()
+        val realTagList = mutableListOf<UserTagBean>()
         if (tagList.size >= 4) {
             tv_more_tag.show()
             tagList.take(4).forEach {
@@ -316,13 +315,13 @@ class HomePageInformationFragment : BaseFragment() {
         }
         if (realTagList.size < 4) {
             //添加引导布局
-            realTagList.add(HomeTagBean())
+            realTagList.add(UserTagBean())
         }
         mTagAdapter.setList(realTagList)
 
         val likeTagList = bean.likeTagList
         tv_like_tag_count.text = "${likeTagList.size}"
-        val realLikeTagList = mutableListOf<HomeTagBean>()
+        val realLikeTagList = mutableListOf<UserTagBean>()
         if (likeTagList.size >= 4) {
             tv_more_like_tag.show()
             likeTagList.take(4).forEach {
@@ -334,7 +333,7 @@ class HomePageInformationFragment : BaseFragment() {
         }
         if (realLikeTagList.size < 4) {
             //添加引导布局
-            realLikeTagList.add(HomeTagBean())
+            realLikeTagList.add(UserTagBean())
         }
         mLikeTagAdapter.setList(realLikeTagList)
 

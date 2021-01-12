@@ -52,6 +52,23 @@ interface TagService {
      */
     @POST("social/user/tag/likeDetail")
     suspend fun tagDetail(@Body body: TagDetailForm): Root<TagDetailBean>
+    /**
+     * 标签认证图片
+     */
+    @POST("social/user/tag/authDetail")
+    suspend fun authDetail(@Body body: TagForm): Root<AuthTagPicInfo>
+
+    /**
+     * 标签认证图片
+     */
+    @POST("social/user/tag/apply")
+    suspend fun tagApply(@Body body: TagApplyForm): Root<AuthPic>
+
+    /**
+     * 删除标签认证图片
+     */
+    @POST("social/user/tag/deleteAuthPic")
+    suspend fun deleteAuthPic(@Body body: LogForm): Root<VoidResult>
 
     /**
      * 标签用户图片列表

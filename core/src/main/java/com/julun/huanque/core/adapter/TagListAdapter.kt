@@ -5,7 +5,7 @@ import android.widget.TextView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
-import com.julun.huanque.common.bean.beans.HomeTagBean
+import com.julun.huanque.common.bean.beans.UserTagBean
 import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.suger.loadImageNoResize
 import com.julun.huanque.common.utils.GlobalUtils
@@ -17,13 +17,13 @@ import kotlinx.android.synthetic.main.fragment_user_card.*
  *@创建时间 2020/12/28 11:21
  *@描述 标签图片列表Adapter
  */
-class TagListAdapter : BaseQuickAdapter<HomeTagBean, BaseViewHolder>(R.layout.recycler_item_tag_list) {
+class TagListAdapter : BaseQuickAdapter<UserTagBean, BaseViewHolder>(R.layout.recycler_item_tag_list) {
     private val likeDrawable = GlobalUtils.getDrawable(R.mipmap.icon_tag_like_heart)
     private val gettedDrawable = GlobalUtils.getDrawable(R.mipmap.icon_tag_getted)
 
     //是否是喜欢的标签
     var like: Boolean = false
-    override fun convert(holder: BaseViewHolder, item: HomeTagBean) {
+    override fun convert(holder: BaseViewHolder, item: UserTagBean) {
         val adapterPosition = holder.adapterPosition
         if (adapterPosition % 4 == 0) {
             holder.itemView.setPadding(0, 0, 1, 0)

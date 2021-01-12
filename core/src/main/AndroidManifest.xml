@@ -202,6 +202,10 @@
             android:name="com.julun.huanque.core.ui.tag_manager.TagUserPicsActivity"
             android:theme="@style/ShareTheme" />
 
+        <activity android:name=".ui.tag_manager.AuthTagPicActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/CustomToolBarTheme"/>
+
 
         <service android:name=".service.FloatingService" />
         <service android:name=".service.BadgeIntentService" />

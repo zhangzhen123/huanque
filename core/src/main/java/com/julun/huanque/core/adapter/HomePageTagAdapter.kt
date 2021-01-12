@@ -4,7 +4,7 @@ import android.view.View
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
-import com.julun.huanque.common.bean.beans.HomeTagBean
+import com.julun.huanque.common.bean.beans.UserTagBean
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.loadImage
 import com.julun.huanque.common.suger.show
@@ -15,12 +15,12 @@ import com.julun.huanque.core.R
  *@创建时间 2020/12/22 20:33
  *@描述 主页tag Adapter
  */
-class HomePageTagAdapter : BaseQuickAdapter<HomeTagBean, BaseViewHolder>(R.layout.recycler_item_home_tag) {
+class HomePageTagAdapter : BaseQuickAdapter<UserTagBean,BaseViewHolder>(R.layout.recycler_item_home_tag) {
     //是否是喜欢的标签
     var like = false
-    override fun convert(holder: BaseViewHolder, item: HomeTagBean) {
+    override fun convert(holder: BaseViewHolder, item: UserTagBean) {
         val con_empty = holder.getView<View>(R.id.con_empty)
-        if (item.tagId == 0L) {
+        if (item.tagId == 0) {
             //空布局
             con_empty.show()
         } else {

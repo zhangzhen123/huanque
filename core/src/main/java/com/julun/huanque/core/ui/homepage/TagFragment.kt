@@ -12,9 +12,11 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.julun.huanque.common.base.BaseBottomSheetFragment
 import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.suger.dp2px
+import com.julun.huanque.common.suger.onAdapterClickNew
+import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.TagListAdapter
-import com.julun.huanque.core.ui.tag_manager.TagPicsActivity
+import com.julun.huanque.core.ui.tag_manager.AuthTagPicActivity
 import com.julun.huanque.core.viewmodel.HomePageViewModel
 import kotlinx.android.synthetic.main.frag_tag.*
 
@@ -37,7 +39,7 @@ class TagFragment : BaseBottomSheetFragment() {
 
     //喜欢的标签 标记位
     private var mLike = false
-
+    private var isSameSex:Boolean=false
     private val mHomeViewModel: HomePageViewModel by activityViewModels()
     private val mAdapter = TagListAdapter()
     private var mBottomSheetBehavior: BottomSheetBehavior<View>? = null
@@ -50,20 +52,22 @@ class TagFragment : BaseBottomSheetFragment() {
         super.onViewCreated(view, savedInstanceState)
         mLike = arguments?.getBoolean(LikeTag) ?: false
         mAdapter.like = mLike
-        initViews()
+        if (mLike) {
+            tv_like_former.text = "你已认证 "
+            tv_like_later.text = " 个TA喜欢的标签"
+            tv_title.text="TA喜欢的标签"
+        } else {
+            tv_like_former.text = "TA拥有 "
+            tv_like_later.text = " 个你已喜欢的标签"
+            tv_title.text="TA拥有的标签"
+        }
+//        initViews()
     }
 
     override fun getLayoutId() = R.layout.frag_tag
 
 
     override fun initViews() {
-        if (mLike) {
-            tv_like_former.text = "你已认证 "
-            tv_like_later.text = " 个TA喜欢的标签"
-        } else {
-            tv_like_former.text = "TA拥有 "
-            tv_like_later.text = " 个你已喜欢的标签"
-        }
         initRecyclerView()
     }
 
@@ -74,8 +78,9 @@ class TagFragment : BaseBottomSheetFragment() {
     private fun initRecyclerView() {
         recycler_view.layoutManager = GridLayoutManager(requireContext(), 4)
         recycler_view.adapter = mAdapter
-        mAdapter.setOnItemClickListener { adapter, view, position ->
-            TagPicsActivity
+        mAdapter.onAdapterClickNew { _, _, position ->
+            val item=mAdapter.getItemOrNull(position)?:return@onAdapterClickNew
+            AuthTagPicActivity.start(requireActivity(),item.tagId,mHomeViewModel.mineHomePage,mLike,isSameSex)
         }
     }
 
@@ -114,6 +119,7 @@ class TagFragment : BaseBottomSheetFragment() {
                 }
                 mAdapter.setList(authTagList)
                 tv_love_count.text = "$likeCount"
+                isSameSex=it.sex==it.currSexType
             }
         })
     }

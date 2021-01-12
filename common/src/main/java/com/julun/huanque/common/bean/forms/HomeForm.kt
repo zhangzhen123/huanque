@@ -82,5 +82,15 @@ class SaveSearchConfigForm(
     var tagIds: String
 )
 
+class TagApplyForm(
+    var tagId: Int,
+    var applyPic: String,
+    var logId: Int?=null
+)
+
+class LogForm(
+    var logId: Int
+)
+
 
 
