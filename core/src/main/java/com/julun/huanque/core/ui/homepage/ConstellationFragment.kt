@@ -3,17 +3,13 @@ package com.julun.huanque.core.ui.homepage
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import com.julun.huanque.common.base.BaseBottomSheetFragment
-import com.julun.huanque.common.bean.beans.ConstellationInfo
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.loadImage
+import com.julun.huanque.common.suger.loadImageInPx
+import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.core.R
-import com.julun.huanque.core.viewmodel.ConstellationViewModel
-import com.julun.huanque.core.viewmodel.HomePageViewModel
 import kotlinx.android.synthetic.main.frag_constellation.*
 
 /**
@@ -23,7 +19,6 @@ import kotlinx.android.synthetic.main.frag_constellation.*
  */
 class ConstellationFragment : BaseBottomSheetFragment() {
     companion object {
-
         /**
          * 更新生日页面使用
          */
@@ -38,58 +33,31 @@ class ConstellationFragment : BaseBottomSheetFragment() {
 
     }
 
-    private val mHomePageViewModel: HomePageViewModel by activityViewModels()
+    private val mPicWidth = ScreenUtils.getScreenWidth()
 
-    private val mConstellationViewModel: ConstellationViewModel by viewModels()
+    private val mPicHeight = mPicWidth * 378 / 375
 
     override fun getLayoutId() = R.layout.frag_constellation
 
     override fun initViews() {
         val type = arguments?.getString(ParamConstant.TYPE) ?: ""
         if (type.isNotEmpty()) {
-            mConstellationViewModel.queryConstellation(type)
+            sdv_constell.loadImageInPx("http://cdn.ihuanque.com/config/app/constellation_${type}.png", mPicWidth, mPicHeight)
         }
     }
 
-    override fun getHeight() = dp2px(423)
+    override fun getHeight(): Int {
+        return dp2px(46) + mPicHeight
+    }
+
     override fun onStart() {
         super.onStart()
 //        dialog?.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
         val win = dialog?.window ?: return
         win.setWindowAnimations(R.style.dialog_bottom_bottom_style)
-        initViewModel()
         val parent = view?.parent
         if (parent is View) {
             parent.setBackgroundColor(Color.TRANSPARENT)
         }
     }
-
-    /**
-     * 初始化ViewModel
-     */
-    private fun initViewModel() {
-        mHomePageViewModel.homeInfoBean.observe(this, Observer {
-            if (it != null) {
-                showViewByData(it.constellationInfo)
-            }
-        })
-        mConstellationViewModel.constellationData.observe(this, Observer {
-            if (it != null) {
-                showViewByData(it)
-            }
-        })
-    }
-
-    /**
-     * 显示数据
-     */
-    private fun showViewByData(info: ConstellationInfo) {
-        sdv_constell.loadImage(info.constellationPic, 130f, 130f)
-        tv_constell.text = info.constellationName
-        tv_constell_time.text = info.hitText
-        tv_match.text = info.pairConstellation
-        tv_introduce.text = info.constellationDesc
-    }
-
-
 }

@@ -377,6 +377,15 @@ interface UserService {
     @POST("user/acct/data/initFigure")
     suspend fun initFigure(@Body form: EmptyForm = EmptyForm()): Root<FigureBean>
 
+    /**
+     * 封面排序
+     */
     @POST("user/acct/data/coverOrder")
     suspend fun coverOrder(@Body form: LogIdsForm): Root<VoidResult>
+
+    /**
+     * 邀请完善资料
+     */
+    @POST("user/acct/info/inviteComplete")
+    suspend fun inviteComplete(@Body form: InviteCompleteForm): Root<VoidResult>
 }

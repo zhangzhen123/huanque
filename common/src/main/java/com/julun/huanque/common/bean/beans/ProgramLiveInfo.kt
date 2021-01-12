@@ -572,8 +572,10 @@ data class HomePageInfo(
     var canInteractive: String = "",
     //是否拉黑
     var black: String = "",
-    //星座数据
-    var constellationInfo: ConstellationInfo = ConstellationInfo(),
+    //星座code
+    var constellationType : String = "",
+    //星座名称
+    var constellation : String = "",
     //当前登录用户性别
     var currSexType: String = "",
     //当前用户ID
@@ -828,7 +830,7 @@ data class ProfessionInfo(
     //年收入
     var incomeText: String = "",
     //职业特性
-    var myFeatureList: String = ""
+    var myFeatureList: MutableList<SingleProfessionFeatureConfig> = mutableListOf()
 ) : Serializable
 
 /**
@@ -855,8 +857,10 @@ data class FigureBean(
     var weight: Int = 0,
     //身材
     var figure: String = "",
+    //身材图片，主页使用
+    var figurePic: String = "",
     //建议
-    var suggest: String = "",
+    var suggest: MutableList<String> = mutableListOf(),
     //身材图片（编辑页面使用）
     var myFigurePic: String = "",
     //身材配置列表（编辑页面使用）
@@ -901,6 +905,10 @@ data class SocialWishBean(
     var wishType: String = "",
     //社交意愿文本
     var wishTypeText: String = "",
+    //主页使用的图标
+    var icon: String = "",
+    //社交意愿说明
+    var wishTypeExplain: String = "",
     //是否选中（本地字段）
     var selected: String = ""
 ) : Serializable
@@ -962,7 +970,9 @@ data class HomeCity(
     //距离(单位米)
     var distance: Long = 0,
     //主页用户城市名称
-    var curryCityName: String = ""
+    var curryCityName: String = "",
+    //是否同市
+    var sameCity: String = ""
 ) : Serializable
 
 /**

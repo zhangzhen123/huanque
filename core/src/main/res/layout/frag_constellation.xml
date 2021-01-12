@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="423dp"
+    android:layout_height="wrap_content"
     android:background="@drawable/bg_top_radius_10">
 
     <View
@@ -36,112 +36,12 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@id/view_top" />
 
-    <View
-        android:layout_width="0px"
-        android:layout_height="377dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/view_top" />
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/sdv_constell"
-        android:layout_width="130dp"
-        android:layout_height="130dp"
-        android:layout_marginTop="50dp"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/tv_constell"
-        app:layout_constraintTop_toBottomOf="@id/view_top"
-        app:placeholderImage="@mipmap/logo_placeholder_medium"
-        app:placeholderImageScaleType="centerCrop"
-        app:roundAsCircle="true" />
-
-    <TextView
-        android:id="@+id/tv_constell"
-        android:layout_width="94dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="30dp"
-        android:textColor="@color/black_333"
-        android:textSize="@dimen/sp_16"
-        android:textStyle="bold"
-        app:layout_constraintLeft_toRightOf="@id/sdv_constell"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/sdv_constell"
-        tools:text="水瓶座" />
-
-    <TextView
-        android:id="@+id/tv_constell_time_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="日期"
-        android:textColor="@color/black_999"
-        android:textSize="@dimen/sp_14"
-        app:layout_constraintBottom_toTopOf="@+id/tv_constell_time"
-        app:layout_constraintLeft_toLeftOf="@id/tv_constell"
-        app:layout_constraintTop_toBottomOf="@id/tv_constell"
-        app:layout_constraintVertical_chainStyle="packed" />
-
-    <TextView
-        android:id="@+id/tv_constell_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/black_333"
-        android:textSize="@dimen/sp_16"
-        app:layout_constraintBottom_toTopOf="@id/tv_match_title"
-        app:layout_constraintLeft_toLeftOf="@id/tv_constell"
-        app:layout_constraintTop_toBottomOf="@id/tv_constell_time_title"
-        tools:text="12-23" />
-
-    <TextView
-        android:id="@+id/tv_match"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:textColor="@color/black_333"
-        android:textSize="@dimen/sp_14"
-        app:layout_constraintBottom_toBottomOf="@id/sdv_constell"
-        app:layout_constraintLeft_toLeftOf="@id/tv_constell"
-        tools:text="水瓶座" />
-
-    <TextView
-        android:id="@+id/tv_match_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="星座配对"
-        android:textColor="@color/black_999"
-        android:textSize="@dimen/sp_14"
-        app:layout_constraintBottom_toTopOf="@id/tv_match"
-        app:layout_constraintLeft_toLeftOf="@id/tv_constell" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:text="性格特点"
-        android:textColor="@color/black_999"
-        android:textSize="@dimen/sp_14"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/sdv_constell" />
-
-
-    <TextView
-        android:id="@+id/tv_introduce"
         android:layout_width="0px"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="33dp"
-        android:layout_marginTop="60dp"
-        android:layout_marginRight="33dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/sdv_constell"
-        tools:text="考虑到恐惧和尽快恢复" />
-
-    <View
-        android:layout_width="0px"
-        android:layout_height="1dp"
-        android:background="#E5E5E5"
+        android:layout_height="0px"
+        app:layout_constraintDimensionRatio="375:378"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/view_top" />

@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Typeface
 import android.media.MediaPlayer
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.animation.AccelerateInterpolator
@@ -22,6 +23,7 @@ import androidx.viewpager.widget.ViewPager
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.facebook.drawee.view.SimpleDraweeView
+import com.google.android.material.appbar.AppBarLayout
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.NetStateType
@@ -31,6 +33,7 @@ import com.julun.huanque.common.bean.beans.HomePagePicBean
 import com.julun.huanque.common.bean.beans.VoiceBean
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.StringHelper
+import com.julun.huanque.common.interfaces.ScrollMarginListener
 import com.julun.huanque.common.interfaces.routerservice.IRealNameService
 import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.manager.audio.AudioPlayerManager
@@ -56,11 +59,9 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNav
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerIndicator
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator
-import org.jetbrains.anko.backgroundDrawable
-import org.jetbrains.anko.backgroundResource
-import org.jetbrains.anko.leftPadding
-import org.jetbrains.anko.rightPadding
+import org.jetbrains.anko.*
 import java.text.DecimalFormat
+import kotlin.math.abs
 
 /**
  *@创建者   dong
@@ -234,56 +235,79 @@ class HomePageActivity : BaseActivity() {
             mHomePageActionFragment?.show(supportFragmentManager, "HomePageActionFragment")
         }
 
-        iv_more_black.onClickNew {
-            //更多操作
-            iv_more.performClick()
-        }
+//        iv_more_black.onClickNew {
+//            //更多操作
+//            iv_more.performClick()
+//        }
 
         iv_close.onClickNew {
             finish()
         }
-        iv_close_black.onClickNew {
-            finish()
+//        iv_close_black.onClickNew {
+//            finish()
+//        }
+        custom_coordinator.mListener = object : ScrollMarginListener {
+            override fun scroll(distance: Int) {
+                val params = view_shader.layoutParams as? ConstraintLayout.LayoutParams ?: return
+                params.topMargin = distance
+                view_shader.layoutParams = params
+            }
         }
 
-//todo
-//        nested_scroll_view.setOnScrollChangeListener { v: NestedScrollView?, scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int ->
-//            val changeEnableDistance = scrollY - mStartChange
+        appBarLayout.addOnOffsetChangedListener(object : AppBarLayout.OnOffsetChangedListener {
+            override fun onOffsetChanged(appBarLayout: AppBarLayout?, verticalOffset: Int) {
+                val changeEnableDistance = abs(verticalOffset) - mStartChange
+                when {
+                    changeEnableDistance <= 0 -> {
+                        tv_user_name.alpha = 0f
+                        view_shader_white.alpha = 0f
+                        iv_more.alpha = 1f
+                        iv_more_black.alpha = 0f
+                        iv_close.alpha = 1f
+                        iv_close_black.alpha = 0f
+                    }
+                    changeEnableDistance >= mChangeDistance -> {
+                        tv_user_name.alpha = 1f
+                        view_shader_white.alpha = 1f
+                        iv_more.alpha = 0f
+                        iv_more_black.alpha = 1f
+                        iv_close.alpha = 0f
+                        iv_close_black.alpha = 1f
+                    }
+                    else -> {
+                        val alpha = changeEnableDistance / mChangeDistance.toFloat()
+                        tv_user_name.alpha = alpha
+                        view_shader_white.alpha = alpha
+                        iv_close_black.alpha = alpha
+                        iv_more.alpha = (1 - alpha)
+                        iv_more_black.alpha = alpha
+                        tv_user_name.alpha = alpha
+                    }
+                }
+
+            }
+        })
+
+
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 //
-//            val color: Int = when {
-//                changeEnableDistance <= 0 -> {
-//                    tv_user_name.alpha = 0f
-//                    iv_more.alpha = 1f
-//                    iv_more_black.alpha = 0f
-//                    iv_close.alpha = 1f
-//                    iv_close_black.alpha = 0f
-//                    GlobalUtils.formatColor("#00FFFFFF")
-////                    view_top.alpha = 0f
-//                }
-//                changeEnableDistance >= mChangeDistance -> {
-////                    view_top.alpha = 1f
-//                    tv_user_name.alpha = 1f
-//                    iv_more.alpha = 0f
-//                    iv_more_black.alpha = 1f
-//                    iv_close.alpha = 0f
-//                    iv_close_black.alpha = 1f
-//                    GlobalUtils.formatColor("#FFFFFFFF")
-//                }
-//                else -> {
-//                    val alpha = changeEnableDistance / mChangeDistance.toFloat()
-//                    iv_close.alpha = (1 - alpha)
-//                    iv_close_black.alpha = alpha
-//                    iv_more.alpha = (1 - alpha)
-//                    iv_more_black.alpha = alpha
-//                    tv_user_name.alpha = alpha
 //
-//                    GlobalUtils.getColorWithAlpha(alpha, Color.WHITE)
+//            custom_coordinator.setOnScrollChangeListener { v: View, scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int ->
+//                val changeEnableDistance = scrollY - mStartChange
+//                when {
+//                    changeEnableDistance <= 0 -> {
+//                        tv_user_name.alpha = 0f
+//                    }
+//                    changeEnableDistance >= mChangeDistance -> {
+//                        tv_user_name.alpha = 1f
+//                    }
+//                    else -> {
+//                        val alpha = changeEnableDistance / mChangeDistance.toFloat()
+//                        tv_user_name.alpha = alpha
+//                    }
 //                }
 //            }
-//            view_top.backgroundColor = color
-//            StatusBarUtil.setColor(this, color)
 //        }
-
         //播放音效
         view_voice.onClickNew { }
 
@@ -446,10 +470,10 @@ class HomePageActivity : BaseActivity() {
         //是否是我的主页
         mHomePageViewModel.mineHomePage = userID == SessionUtils.getUserId()
         if (mHomePageViewModel.mineHomePage) {
-            iv_more_black.hide()
+//            iv_more_black.hide()
             iv_more.hide()
         } else {
-            iv_more_black.show()
+//            iv_more_black.show()
             iv_more.show()
         }
         mHomePageViewModel.homeInfo()
@@ -611,7 +635,12 @@ class HomePageActivity : BaseActivity() {
         }
         showBanner(picList)
         mPicAdapter.setList(picList)
-        sdv_real.loadImage(bean.authMark, 18f, 18f)
+        if (bean.authMark.isEmpty()) {
+            sdv_real.hide()
+        } else {
+            sdv_real.show()
+            sdv_real.loadImage(bean.authMark, 18f, 18f)
+        }
 
         val voiceStatus = bean.voice.voiceStatus
         if (voiceStatus == VoiceBean.Pass) {
@@ -673,19 +702,48 @@ class HomePageActivity : BaseActivity() {
             mCommonNavigator.adapter?.notifyDataSetChanged()
         }
         val distance = bean.distanceCity.distance
-        if (distance >= 1000) {
-            val df = DecimalFormat("#.00")
-            tv_distance.text = "${df.format(distance / 1000)}km"
+        if (bean.distanceCity.curryCityName.isEmpty()) {
+            //没有城市，显示星球
+            val starList = mutableListOf<String>("金星", "木星", "水星", "火星", "土星")
+            val currentStar = starList.random()
+            tv_distance.text = currentStar
+            iv_vehicle.show()
+            iv_vehicle.imageResource = R.mipmap.icon_home_distance_rocket
         } else {
-            tv_distance.text = "${distance}m"
+            //有城市
+            if (distance >= 1000) {
+                val df = DecimalFormat("#.00")
+                tv_distance.text = "${df.format(distance / 1000)}km"
+            } else {
+                tv_distance.text = "${distance}m"
+            }
+            if (bean.distanceCity.sameCity == BusiConstant.True) {
+                //同市
+                iv_vehicle.hide()
+            } else {
+                //不同市
+                iv_vehicle.show()
+                if (distance < 100 * 1000) {
+                    //显示汽车
+                    iv_vehicle.imageResource = R.mipmap.icon_home_distance_car
+                } else if (distance > 800 * 1000) {
+                    //显示飞机
+                    iv_vehicle.imageResource = R.mipmap.icon_home_distance_air_plan
+                } else {
+                    //显示动车
+                    iv_vehicle.imageResource = R.mipmap.icon_home_distance_rail_way
+                }
+            }
+
         }
+
 
         val sexName = if (bean.sex == Sex.MALE) {
             "男"
         } else {
             "女"
         }
-        tv_age.text = "${bean.age}岁 ${sexName}"
+        tv_age.text = "${bean.distanceCity.curryCityName} /${bean.age}岁 ${sexName}"
 
 
         if (mHomePageViewModel.mineHomePage) {
@@ -733,7 +791,7 @@ class HomePageActivity : BaseActivity() {
 //
 //            imageList.forEach { picList.add(StringHelper.getOssImgUrl(it)) }
             logger.info("State = ${lifecycle.currentState}")
-            if (lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
+            if (!isFinishing && !custom_coordinator.isScrolling()) {
                 ImageActivity.start(
                     this, posisiton, picList,
                     from = ImageActivityFrom.HOME,
