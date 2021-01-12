@@ -18,6 +18,7 @@ import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.HomePageTagAdapter
 import com.julun.huanque.core.ui.tag_manager.AuthTagPicActivity
+import com.julun.huanque.core.ui.tag_manager.TagPicsActivity
 import com.julun.huanque.core.viewmodel.HomePageViewModel
 import com.julun.huanque.core.viewmodel.InviteFillViewModel
 import kotlinx.android.synthetic.main.frag_home_page_information.*
@@ -61,7 +62,7 @@ class HomePageInformationFragment : BaseFragment() {
     private val mSchoolFragment: SchoolFragment by lazy { SchoolFragment() }
 
     //喜欢的标签
-    private val mLikeTagFragment: TagFragment by lazy { TagFragment.newInstance(true) }
+    private val mLikeTagFragment: TagFragment by lazy { TagFragment.newInstance(true, isSameSex) }
 
     //邀请弹窗
     private val mInviteFillFragment: InviteFillFragment by lazy { InviteFillFragment() }
@@ -185,10 +186,18 @@ class HomePageInformationFragment : BaseFragment() {
         mTagAdapter.setOnItemClickListener { adapter, view, position ->
 //            ll_tag.performClick()
             val item = mTagAdapter.getItemOrNull(position) ?: return@setOnItemClickListener
-            if(isSameSex){
-                //todo
+            if (item.tagId == 0) {
+                //空布局，显示邀请
+                mInviteViewModel.mType = InviteCompleteForm.AuthTag
+                mInviteFillFragment.show(childFragmentManager, "InviteFillFragment")
+            } else {
+//                if (isSameSex) {
+//                    //todo
+//                }
+                TagPicsActivity.start(requireActivity(), item, mHomePageViewModel.targetUserId)
+//                AuthTagPicActivity.start(requireActivity(), item.tagId, mHomePageViewModel.mineHomePage, false, isSameSex)
             }
-            AuthTagPicActivity.start(requireActivity(), item.tagId,mHomePageViewModel.mineHomePage,false, isSameSex)
+
         }
 
         recycler_view_like_tag.layoutManager = GridLayoutManager(context, 4)
@@ -196,7 +205,19 @@ class HomePageInformationFragment : BaseFragment() {
         mLikeTagAdapter.setOnItemClickListener { adapter, view, position ->
 //            ll_tag.performClick()
             val item = mLikeTagAdapter.getItemOrNull(position) ?: return@setOnItemClickListener
-            AuthTagPicActivity.start(requireActivity(), item.tagId,mHomePageViewModel.mineHomePage, true, isSameSex)
+            if (item.tagId == 0) {
+                //空布局，显示邀请
+                mInviteViewModel.mType = InviteCompleteForm.AuthTag
+                mInviteFillFragment.show(childFragmentManager, "InviteFillFragment")
+            } else {
+                if(isSameSex){
+                    //同性
+                    TagPicsActivity.start(requireActivity(), item, mHomePageViewModel.targetUserId)
+                }else{
+                    //异性
+                    AuthTagPicActivity.start(requireActivity(), item.tagId, mHomePageViewModel.mineHomePage, true, isSameSex)
+                }
+            }
         }
 
     }
@@ -216,7 +237,7 @@ class HomePageInformationFragment : BaseFragment() {
     }
 
     private fun showViewByData(bean: HomePageInfo) {
-        isSameSex=bean.sex==bean.currSexType
+        isSameSex = bean.sex == bean.currSexType
         //家乡
         val homeTownStr = StringBuilder()
         if (bean.homeTown.homeTownProvince.isNotEmpty()) {

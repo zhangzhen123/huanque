@@ -17,6 +17,7 @@ import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.TagListAdapter
 import com.julun.huanque.core.ui.tag_manager.AuthTagPicActivity
+import com.julun.huanque.core.ui.tag_manager.TagPicsActivity
 import com.julun.huanque.core.viewmodel.HomePageViewModel
 import kotlinx.android.synthetic.main.frag_tag.*
 
@@ -29,17 +30,25 @@ class TagFragment : BaseBottomSheetFragment() {
     companion object {
         //是否是喜欢标签弹窗
         private const val LikeTag = "LikeTag"
-        fun newInstance(like: Boolean): TagFragment {
+
+        //同性
+        private const val SameSex = "SameSex"
+        fun newInstance(like: Boolean, sameSex: Boolean): TagFragment {
             val bundle = Bundle()
             val fragment = TagFragment()
-            fragment.arguments = bundle.apply { putBoolean(LikeTag, like) }
+            fragment.arguments = bundle.apply {
+                putBoolean(LikeTag, like)
+                putBoolean(SameSex, sameSex)
+            }
             return fragment
         }
     }
 
     //喜欢的标签 标记位
     private var mLike = false
-    private var isSameSex:Boolean=false
+
+    //同性
+    private var mSameSex = false
     private val mHomeViewModel: HomePageViewModel by activityViewModels()
     private val mAdapter = TagListAdapter()
     private var mBottomSheetBehavior: BottomSheetBehavior<View>? = null
@@ -48,26 +57,46 @@ class TagFragment : BaseBottomSheetFragment() {
 //        return inflater.inflate(R.layout.frag_tag, container, false)
 //    }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        mLike = arguments?.getBoolean(LikeTag) ?: false
-        mAdapter.like = mLike
-        if (mLike) {
-            tv_like_former.text = "你已认证 "
-            tv_like_later.text = " 个TA喜欢的标签"
-            tv_title.text="TA喜欢的标签"
-        } else {
-            tv_like_former.text = "TA拥有 "
-            tv_like_later.text = " 个你已喜欢的标签"
-            tv_title.text="TA拥有的标签"
-        }
-//        initViews()
-    }
+//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+//        super.onViewCreated(view, savedInstanceState)
+//
+////        initViews()
+//    }
 
     override fun getLayoutId() = R.layout.frag_tag
 
 
     override fun initViews() {
+        mLike = arguments?.getBoolean(LikeTag) ?: false
+        mAdapter.like = mLike
+        mSameSex = arguments?.getBoolean(SameSex) ?: false
+
+        if (mLike) {
+            tv_title.text = "TA喜欢的标签"
+
+            if (mSameSex) {
+                //同性
+                tv_like_former.text = "你们有 "
+                tv_like_later.text = " 个共同喜欢的标签"
+            } else {
+                //异性
+                tv_like_former.text = "你已认证 "
+                tv_like_later.text = " 个TA喜欢的标签"
+            }
+        } else {
+            //Ta拥有的标签
+            tv_title.text = "TA拥有的标签"
+            if (mSameSex) {
+                //同性
+                tv_like_former.text = "你已认证 "
+                tv_like_later.text = " 个TA拥有的标签"
+            } else {
+                //异性
+                tv_like_former.text = "TA拥有 "
+                tv_like_later.text = " 个你已喜欢的标签"
+            }
+
+        }
         initRecyclerView()
     }
 
@@ -79,8 +108,21 @@ class TagFragment : BaseBottomSheetFragment() {
         recycler_view.layoutManager = GridLayoutManager(requireContext(), 4)
         recycler_view.adapter = mAdapter
         mAdapter.onAdapterClickNew { _, _, position ->
-            val item=mAdapter.getItemOrNull(position)?:return@onAdapterClickNew
-            AuthTagPicActivity.start(requireActivity(),item.tagId,mHomeViewModel.mineHomePage,mLike,isSameSex)
+            val item = mAdapter.getItemOrNull(position) ?: return@onAdapterClickNew
+//            AuthTagPicActivity.start(requireActivity(), item.tagId, mHomeViewModel.mineHomePage, mLike, isSameSex)
+            if (mLike) {
+                //喜欢的标签
+                if (mSameSex) {
+                    //同性 跳转列表页
+                    TagPicsActivity.start(requireActivity(), item, mHomeViewModel.targetUserId)
+                } else {
+                    //异性 跳转认证标签页
+                    AuthTagPicActivity.start(requireActivity(), item.tagId, mHomeViewModel.mineHomePage, true, mSameSex)
+                }
+            } else {
+                //拥有的标签
+                TagPicsActivity.start(requireActivity(), item, mHomeViewModel.targetUserId)
+            }
         }
     }
 
@@ -119,7 +161,6 @@ class TagFragment : BaseBottomSheetFragment() {
                 }
                 mAdapter.setList(authTagList)
                 tv_love_count.text = "$likeCount"
-                isSameSex=it.sex==it.currSexType
             }
         })
     }

@@ -86,11 +86,10 @@
 
                     <com.facebook.drawee.view.SimpleDraweeView
                         android:id="@+id/sdv_voice_state"
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
-                        android:layout_marginLeft="4dp"
-                        android:background="@drawable/bg_enable"
-                        app:actualImageResource="@mipmap/icon_pause_home_page"
+                        android:layout_width="34dp"
+                        android:layout_height="10dp"
+                        android:layout_marginLeft="9dp"
+                        app:actualImageResource="@mipmap/icon_home_voice"
                         app:layout_constraintBottom_toBottomOf="@id/view_voice"
                         app:layout_constraintLeft_toLeftOf="@id/view_voice"
                         app:layout_constraintTop_toTopOf="@id/view_voice" />
@@ -196,7 +195,7 @@
                         app:layout_constraintBottom_toBottomOf="@id/tv_nickname"
                         app:layout_constraintLeft_toRightOf="@id/tv_nickname"
                         app:layout_constraintTop_toTopOf="@id/tv_nickname"
-                        app:placeholderImage="@mipmap/logo_placeholder_medium" />
+                        app:actualImageResource="@mipmap/iocn_real_people" />
 
                     <ImageView
                         android:id="@+id/sdv_super"
