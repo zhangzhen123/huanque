@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:layout_marginStart="@dimen/dimen_5"
+    android:layout_marginEnd="@dimen/dimen_5"
+    tools:layout_height="@dimen/dimen_250">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_add_img"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:actualImageScaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintDimensionRatio="h,1:1.28"
+        app:placeholderImage="@mipmap/logo_placeholder_medium"
+        app:placeholderImageScaleType="centerCrop"
+        app:roundedCornerRadius="@dimen/dimen_9" />
+
+    <RelativeLayout
+        android:id="@+id/rl_status"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/bg_shape_add_tag_pic_shadow"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@+id/sdv_add_img"
+        app:layout_constraintTop_toTopOf="@+id/sdv_add_img"
+        app:layout_constraintEnd_toEndOf="@+id/sdv_add_img"
+        app:layout_constraintBottom_toBottomOf="@+id/sdv_add_img"
+        tools:visibility="visible">
+
+        <TextView
+            android:id="@+id/tv_add_pic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginStart="@dimen/dimen_3"
+            android:layout_marginEnd="@dimen/dimen_3"
+            android:drawableEnd="@mipmap/icon_forward_white_01"
+            android:drawablePadding="@dimen/dimen_2"
+            android:gravity="center"
+            android:maxLines="1"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_16"
+            android:textStyle="bold"
+            tools:text="重新上传" />
+
+        <TextView
+            android:id="@+id/tv_fail_reason"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_add_pic"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="@dimen/dimen_27"
+            android:layout_marginTop="@dimen/dimen_15"
+            android:layout_marginEnd="@dimen/dimen_27"
+            android:background="@drawable/bg_shape_white_p20"
+            android:gravity="center"
+            android:paddingStart="@dimen/dimen_10"
+            android:paddingTop="@dimen/dimen_5"
+            android:paddingEnd="@dimen/dimen_10"
+            android:paddingBottom="@dimen/dimen_5"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_10"
+            android:visibility="gone"
+            tools:text="原因：太涩了，露的太多， 建议多穿点。"
+            tools:visibility="visible" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_verify_status"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dimen_20"
+        android:layout_marginTop="@dimen/dimen_15"
+        android:background="@drawable/bg_shape_auth_tag_error"
+        android:gravity="center"
+        android:paddingStart="@dimen/dimen_7"
+        android:paddingEnd="@dimen/dimen_7"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_12"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@+id/sdv_add_img"
+        app:layout_constraintTop_toTopOf="@+id/sdv_add_img"
+        tools:text="审核失败"
+        tools:visibility="visible" />
+
+    <ImageView
+        android:id="@+id/iv_auth_success"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_8"
+        android:layout_marginEnd="@dimen/dimen_8"
+        android:src="@mipmap/ic_tag_pic_auth_success"
+        app:layout_constraintEnd_toEndOf="@+id/sdv_add_img"
+        app:layout_constraintTop_toTopOf="@+id/sdv_add_img" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

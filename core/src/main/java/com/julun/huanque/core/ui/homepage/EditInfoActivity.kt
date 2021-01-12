@@ -548,7 +548,7 @@ class EditInfoActivity : BaseActivity() {
 
         val tagList = info.myAuthTag.showTagList
         tv_tag_count.text = "${info.myAuthTag.markTagNum}"
-        val realTagList = mutableListOf<HomeTagBean>()
+        val realTagList = mutableListOf<UserTagBean>()
         if (tagList.size >= 4) {
             tv_more_tag.show()
             tagList.take(4).forEach {
@@ -562,7 +562,7 @@ class EditInfoActivity : BaseActivity() {
 
         val likeTagList = info.myLikeTag.showTagList
         tv_like_tag_count.text = "${info.myLikeTag.markTagNum}"
-        val realLikeTagList = mutableListOf<HomeTagBean>()
+        val realLikeTagList = mutableListOf<UserTagBean>()
         if (likeTagList.size >= 4) {
             tv_more_like_tag.show()
             likeTagList.take(4).forEach {

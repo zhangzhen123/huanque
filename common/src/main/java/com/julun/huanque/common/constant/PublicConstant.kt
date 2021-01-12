@@ -97,3 +97,12 @@ object ManagerTagCode {
     const val TAG_LIST = "tag_list"
     const val TAG_INFO= "tag_info"
 }
+
+/**
+ *  审核状态 Wait 等待审核 Reject 被拒绝 Pass 审核通过
+ */
+object TagPicAuthStatus{
+   const val Wait="Wait"
+   const val Reject="Reject"
+   const val Pass="Pass"
+}

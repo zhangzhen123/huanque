@@ -44,6 +44,8 @@ object OssUpLoadManager {
     const val MESSAGE_PIC = "user/message"// im图片路径
     const val POST_POSITION = "social/post"//动态路径
 
+    const val APPLY_POSITION = "user/apply/pic"//标签图片
+
 
     var isUploading = false
 

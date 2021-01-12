@@ -314,7 +314,13 @@ data class UserTagBean(
     var tagIcon: String = "",
     var tagId: Int = 0,
     var tagName: String = "",
-    var tagPic: String = ""
+    var tagPic: String = "",
+    //喜欢或者认证的标记
+    var mark: String = "",
+    //点赞数量
+    var praiseNum: Long = 0,
+    //审核通过照片数量
+    var picNum: Int = 0
 ) : Serializable {
     override fun hashCode(): Int {
         return tagId.hashCode()
@@ -354,6 +360,25 @@ data class TagDetailBean(
     var tagPic: String = ""
 )
 
+data class AuthTagPicInfo(
+    var authPicList: MutableList<AuthPic> = mutableListOf(),
+    var otherAuthPicList: List<String> = listOf(),
+    var praiseNum: Int = 0,
+    var tagDesc: String = "",
+    var tagIcon: String = "",
+    var tagId: Int = 0,
+    var tagName: String = "",
+    var tagPic: String = "",
+    var auth: Boolean = false
+)
+
+data class AuthPic(
+    var applyPic: String = "",
+    var auditReason: String = "",
+    var auditStatus: String = "",
+    var logId: Int = 0,
+    var tagId: Int = 0
+)
 
 data class TagPicBean(
     var applyPic: String = "",

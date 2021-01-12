@@ -563,7 +563,7 @@ data class HomePageInfo(
     //真人标识
     var authMark: String = "",
     //他人主页认证的标签列表
-    var authTagList: MutableList<HomeTagBean> = mutableListOf(),
+    var authTagList: MutableList<UserTagBean> = mutableListOf(),
     //我认证的标签
     var myAuthTag: MineTagBean = MineTagBean(),
     //生日
@@ -593,7 +593,7 @@ data class HomePageInfo(
     //是否是密友
     var intimate: String = "",
     //他人主页喜欢的标签列表
-    var likeTagList: MutableList<HomeTagBean> = mutableListOf(),
+    var likeTagList: MutableList<UserTagBean> = mutableListOf(),
     //我喜欢的标签
     var myLikeTag: MineTagBean = MineTagBean(),
     //昵称
@@ -653,7 +653,7 @@ data class EditPagerInfo(
     //真人标识
     var authMark: String = "",
     //他人主页认证的标签列表
-    var authTagList: MutableList<HomeTagBean> = mutableListOf(),
+    var authTagList: MutableList<UserTagBean> = mutableListOf(),
     //我认证的标签
     var myAuthTag: MineTagBean = MineTagBean(),
     //生日
@@ -683,7 +683,7 @@ data class EditPagerInfo(
     //是否是密友
     var intimate: String = "",
     //他人主页喜欢的标签列表
-    var likeTagList: MutableList<HomeTagBean> = mutableListOf(),
+    var likeTagList: MutableList<UserTagBean> = mutableListOf(),
     //我喜欢的标签
     var myLikeTag: MineTagBean = MineTagBean(),
     //昵称
@@ -751,7 +751,7 @@ data class HomTownBean(
  */
 data class MineTagBean(
     //标签列表
-    var showTagList: MutableList<HomeTagBean> = mutableListOf(),
+    var showTagList: MutableList<UserTagBean> = mutableListOf(),
     //分类标签列表
     var typeTagList: MutableList<SingleTypeTag> = mutableListOf(),
     //我 认证/喜欢 的标签数量
@@ -765,7 +765,7 @@ data class SingleTypeTag(
     //tab标签名称
     var tabTagName: String = "",
     //分组标签列表
-    var groupTagList: MutableList<HomeTagBean> = mutableListOf()
+    var groupTagList: MutableList<UserTagBean> = mutableListOf()
 ) : Serializable
 
 /**
@@ -905,25 +905,25 @@ data class SocialWishBean(
     var selected: String = ""
 ) : Serializable
 
-/**
- * 主页tag对象
- */
-data class HomeTagBean(
-    //标签ID
-    var tagId: Long = 0,
-    //标签名称
-    var tagName: String = "",
-    //标签Icon
-    var tagIcon: String = "",
-    //标签上显示的图片
-    var tagPic: String = "",
-    //喜欢或者认证的标记
-    var mark: String = "",
-    //点赞数量
-    var praiseNum: Long = 0,
-    //审核通过照片数量
-    var picNum: Int = 0
-) : Serializable
+///**
+// * 主页tag对象
+// */
+//data class UserTagBean(
+//    //标签ID
+//    var tagId: Long = 0,
+//    //标签名称
+//    var tagName: String = "",
+//    //标签Icon
+//    var tagIcon: String = "",
+//    //标签上显示的图片
+//    var tagPic: String = "",
+//    //喜欢或者认证的标记
+//    var mark: String = "",
+//    //点赞数量
+//    var praiseNum: Long = 0,
+//    //审核通过照片数量
+//    var picNum: Int = 0
+//) : Serializable
 
 /**
  * 主页在线状态
