@@ -52,7 +52,13 @@ class SchoolFragment : BaseBottomSheetFragment() {
      */
     private fun showViewByData(info: SchoolInfo) {
         tv_school.text = info.school
-        tv_education.text = info.education
+        val education = info.education
+        if (education.isNotEmpty()) {
+            tv_education.text = education
+        } else {
+            tv_education.text = "-"
+        }
+        tv_start_year.text = info.startYear
     }
 
 

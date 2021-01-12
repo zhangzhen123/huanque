@@ -392,3 +392,25 @@ data class UserUpdateHeadForm(
  * 保存编辑页面  图片顺序form
  */
 data class LogIdsForm(var logIds: String = "") : Serializable
+
+/**
+ * 邀请完善资料的form
+ */
+data class InviteCompleteForm(
+    //好友ID
+    var friendId: Long = 0,
+    //完善类型
+    var completeType: String = ""
+) : Serializable {
+    companion object {
+        //个人资料
+        const val Information = "Information"
+
+        //认证标签
+        const val AuthTag = "AuthTag"
+
+        //喜欢标签
+        const val LikeTag = "LikeTag"
+    }
+
+}

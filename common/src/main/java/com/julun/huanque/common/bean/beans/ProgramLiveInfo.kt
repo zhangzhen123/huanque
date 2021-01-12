@@ -828,7 +828,7 @@ data class ProfessionInfo(
     //年收入
     var incomeText: String = "",
     //职业特性
-    var myFeatureList: String = ""
+    var myFeatureList: MutableList<SingleProfessionFeatureConfig> = mutableListOf()
 ) : Serializable
 
 /**
@@ -855,8 +855,10 @@ data class FigureBean(
     var weight: Int = 0,
     //身材
     var figure: String = "",
+    //身材图片，主页使用
+    var figurePic: String = "",
     //建议
-    var suggest: String = "",
+    var suggest: MutableList<String> = mutableListOf(),
     //身材图片（编辑页面使用）
     var myFigurePic: String = "",
     //身材配置列表（编辑页面使用）
@@ -962,7 +964,9 @@ data class HomeCity(
     //距离(单位米)
     var distance: Long = 0,
     //主页用户城市名称
-    var curryCityName: String = ""
+    var curryCityName: String = "",
+    //是否同市
+    var sameCity: String = ""
 ) : Serializable
 
 /**

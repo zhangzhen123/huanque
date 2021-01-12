@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="423dp"
     android:background="@drawable/bg_top_radius_10">
 
     <View
@@ -38,75 +38,122 @@
 
     <View
         android:layout_width="0px"
-        android:layout_height="430dp"
+        android:layout_height="377dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/view_top" />
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/sdv_figure"
-        android:layout_width="100dp"
-        android:layout_height="0px"
-        android:layout_marginTop="20dp"
-        app:layout_constraintDimensionRatio="1:3"
+        android:layout_width="90dp"
+        android:layout_height="275dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/view_top" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/tv_height_title"
+        android:layout_width="64dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="标准身材"
-        app:layout_constraintLeft_toLeftOf="@id/sdv_figure"
-        app:layout_constraintRight_toRightOf="@id/sdv_figure"
-        app:layout_constraintTop_toBottomOf="@id/sdv_figure" />
+        android:layout_marginRight="30dp"
+        android:drawableTop="@drawable/sel_height_detail"
+        android:gravity="center"
+        android:text="身高"
+        android:textColor="@color/black_999"
+        android:textSize="@dimen/sp_12"
+        app:layout_constraintBottom_toTopOf="@+id/tv_height"
+        app:layout_constraintRight_toLeftOf="@+id/sdv_figure"
+        app:layout_constraintTop_toTopOf="@id/sdv_figure"
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
         android:id="@+id/tv_height"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        app:layout_constraintLeft_toRightOf="@id/sdv_figure"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/sdv_figure"
-        tools:text="165cm" />
+        android:textColor="@color/primary_color"
+        android:textSize="@dimen/sp_24"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/sdv_figure"
+        app:layout_constraintLeft_toLeftOf="@id/tv_height_title"
+        app:layout_constraintRight_toRightOf="@id/tv_height_title"
+        app:layout_constraintTop_toBottomOf="@id/tv_height_title"
+        tools:text="180cm" />
+
 
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/tv_weight_title"
+        android:layout_width="64dp"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:drawableTop="@drawable/sel_weight_detail"
+        android:gravity="center"
         android:text="身高"
+        android:textColor="@color/black_999"
+        android:textSize="@dimen/sp_12"
+        app:layout_constraintBottom_toTopOf="@+id/tv_weight"
         app:layout_constraintLeft_toRightOf="@id/sdv_figure"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_height" />
+        app:layout_constraintTop_toTopOf="@id/sdv_figure"
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
         android:id="@+id/tv_weight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
-        app:layout_constraintLeft_toRightOf="@id/sdv_figure"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/sdv_figure"
-        tools:text="50kg" />
+        android:textColor="@color/primary_color"
+        android:textSize="@dimen/sp_24"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/sdv_figure"
+        app:layout_constraintLeft_toLeftOf="@id/tv_weight_title"
+        app:layout_constraintRight_toRightOf="@id/tv_weight_title"
+        app:layout_constraintTop_toBottomOf="@id/tv_weight_title"
+        tools:text="60kg" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="体重"
-        app:layout_constraintLeft_toRightOf="@id/sdv_figure"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_weight" />
-
-    <TextView
-        android:id="@+id/tv_suggest"
+    <LinearLayout
+        android:id="@+id/ll_figure"
         android:layout_width="0px"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginRight="15dp"
+        android:layout_marginLeft="46dp"
+        android:layout_marginRight="46dp"
+        android:background="@drawable/sel_figure_suggest"
+        android:orientation="vertical"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/sdv_figure" />
+        app:layout_constraintTop_toBottomOf="@id/sdv_figure">
+
+        <TextView
+            android:id="@+id/tv_figure"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="标准身材"
+            android:textColor="@color/black_333"
+            android:textSize="@dimen/sp_16"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="@id/sdv_figure"
+            app:layout_constraintRight_toRightOf="@id/sdv_figure"
+            app:layout_constraintTop_toBottomOf="@id/sdv_figure" />
+
+
+        <TextView
+            android:id="@+id/tv_suggest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginRight="15dp"
+            android:gravity="center_horizontal"
+            android:textColor="@color/black_666"
+            android:textSize="@dimen/sp_12"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/sdv_figure"
+            tools:text="了肯德基嗯零九分看拉俄军方李开复" />
+    </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.marginTop
 import com.google.android.material.appbar.CollapsingToolbarLayout
+import com.julun.huanque.common.interfaces.ScrollMarginListener
 import java.util.logging.Logger
 
 
@@ -21,6 +22,7 @@ import java.util.logging.Logger
  */
 class CustomCoordinatorLayout(context: Context, attrs: AttributeSet?) :
     CoordinatorLayout(context, attrs) {
+    var mListener : ScrollMarginListener? = null
     private var mZoomView: View? = null
     private var mZoomViewWidth = 0
     private var mZoomViewHeight = 0
@@ -45,6 +47,11 @@ class CustomCoordinatorLayout(context: Context, attrs: AttributeSet?) :
     private var height2: Int = 0
     private var height3 = 0
 
+    //是否处于缩放中
+    fun isScrolling(): Boolean {
+        val tempWidth = mZoomView?.measuredWidth ?: 0
+        return tempWidth != mZoomViewWidth
+    }
 
     fun setmZoomView(mZoomView: View?) {
         this.mZoomView = mZoomView
@@ -161,6 +168,7 @@ class CustomCoordinatorLayout(context: Context, attrs: AttributeSet?) :
         val marginTop = lp.height - mZoomViewHeight
         val picParams = mMoveView3?.layoutParams as? CollapsingToolbarLayout.LayoutParams ?: return
         picParams?.topMargin = marginTop
+        mListener?.scroll(marginTop)
         mMoveView3?.layoutParams = picParams
         try {
             val parent = mMoveView?.parent as? CollapsingToolbarLayout ?: return

@@ -12,11 +12,13 @@ import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.bean.beans.HomePageInfo
 import com.julun.huanque.common.bean.beans.HomeTagBean
 import com.julun.huanque.common.bean.beans.SocialWishBean
+import com.julun.huanque.common.bean.forms.InviteCompleteForm
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.HomePageTagAdapter
 import com.julun.huanque.core.viewmodel.HomePageViewModel
+import com.julun.huanque.core.viewmodel.InviteFillViewModel
 import kotlinx.android.synthetic.main.frag_home_page_information.*
 import org.jetbrains.anko.textColor
 import java.lang.StringBuilder
@@ -35,6 +37,9 @@ class HomePageInformationFragment : BaseFragment() {
     }
 
     private val mHomePageViewModel: HomePageViewModel by activityViewModels()
+
+    //邀请填写弹窗使用
+    private val mInviteViewModel: InviteFillViewModel by activityViewModels()
 
     //标签adapter
     private val mTagAdapter = HomePageTagAdapter()
@@ -63,6 +68,9 @@ class HomePageInformationFragment : BaseFragment() {
     //喜欢的标签
     private val mLikeTagFragment: TagFragment by lazy { TagFragment.newInstance(true) }
 
+    //邀请弹窗
+    private val mInviteFillFragment: InviteFillFragment by lazy { InviteFillFragment() }
+
     override fun getLayoutId() = R.layout.frag_home_page_information
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
@@ -87,13 +95,21 @@ class HomePageInformationFragment : BaseFragment() {
         ll_like_tag.onClickNew {
             if (tv_more_like_tag.visibility == View.VISIBLE) {
                 //显示他拥有的标签弹窗
+                mInviteViewModel.mType = InviteCompleteForm.Information
                 mLikeTagFragment.show(childFragmentManager, "TagFragment")
             }
         }
 
         view_home_town.onClickNew {
             //家乡数据
-            HomeTownFragment().show(childFragmentManager, "HomeTownFragment")
+            if ((mHomePageViewModel.homeInfoBean.value?.homeTown?.homeTownId ?: 0) > 0) {
+                //有家乡数据
+                HomeTownFragment().show(childFragmentManager, "HomeTownFragment")
+            } else {
+                //无家乡数据,邀请填写
+                mInviteViewModel.mType = InviteCompleteForm.Information
+                mInviteFillFragment.show(childFragmentManager, "InviteFillFragment")
+            }
         }
 
         view_stature.onClickNew {
@@ -103,16 +119,29 @@ class HomePageInformationFragment : BaseFragment() {
 
         view_constellation.onClickNew {
             //星座
-            mConstellationFragment.show(childFragmentManager, "FigureFragment")
+            mConstellationFragment.show(childFragmentManager, "ConstellationFragment")
         }
         view_job.onClickNew {
             //职业
-            mJobFragment.show(childFragmentManager, "JobFragment")
+            val profession = mHomePageViewModel.homeInfoBean.value?.profession
+            if (profession?.professionName?.isNotEmpty() == true && profession?.professionTypeText?.isNotEmpty()) {
+                mJobFragment.show(childFragmentManager, "JobFragment")
+            } else {
+                //显示邀请弹窗
+                mInviteFillFragment.show(childFragmentManager, "InviteFillFragment")
+            }
         }
 
         view_school.onClickNew {
             //学校
-            mSchoolFragment.show(childFragmentManager, "SchoolFragment")
+            if (mHomePageViewModel.homeInfoBean.value?.schoolInfo?.school?.isNotEmpty() == true) {
+                //有学校数据
+                mSchoolFragment.show(childFragmentManager, "SchoolFragment")
+            } else {
+                //没有学校数据
+                //显示邀请弹窗
+                mInviteFillFragment.show(childFragmentManager, "InviteFillFragment")
+            }
         }
 
         view_social.onClickNew {
@@ -155,6 +184,7 @@ class HomePageInformationFragment : BaseFragment() {
         mHomePageViewModel.homeInfoBean.observe(this, Observer {
             if (it != null) {
                 showViewByData(it)
+                mInviteViewModel.userId = it.currUserId
             }
         })
     }

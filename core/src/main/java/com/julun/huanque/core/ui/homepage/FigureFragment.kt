@@ -12,13 +12,16 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.julun.huanque.common.base.BaseBottomSheetFragment
 import com.julun.huanque.common.bean.beans.FigureBean
 import com.julun.huanque.common.constant.BusiConstant
+import com.julun.huanque.common.constant.Sex
 import com.julun.huanque.common.suger.dp2px
+import com.julun.huanque.common.suger.loadImage
 import com.julun.huanque.common.suger.loadImageNoResize
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.TagListAdapter
 import com.julun.huanque.core.viewmodel.HomePageViewModel
 import kotlinx.android.synthetic.main.frag_figure.*
 import kotlinx.android.synthetic.main.frag_tag.*
+import java.lang.StringBuilder
 
 /**
  *@创建者   dong
@@ -49,7 +52,7 @@ class FigureFragment : BaseBottomSheetFragment() {
     }
 
 
-    override fun getHeight() = dp2px(480)
+    override fun getHeight() = dp2px(423)
 
     /**
      * 初始化ViewModel
@@ -58,6 +61,10 @@ class FigureFragment : BaseBottomSheetFragment() {
         mHomeViewModel.homeInfoBean.observe(this, Observer {
             if (it != null) {
                 showViewByData(it.figure)
+                val female = it.sex == Sex.FEMALE
+                tv_height_title.isSelected = female
+                tv_weight_title.isSelected = female
+                ll_figure.isSelected = female
             }
         })
     }
@@ -66,10 +73,18 @@ class FigureFragment : BaseBottomSheetFragment() {
      * 显示身材数据
      */
     private fun showViewByData(data: FigureBean) {
-//        sdv_figure.loadImageNoResize(data.)
+        sdv_figure.loadImage(data.figurePic, 90f, 275f)
         tv_height.text = "${data.height}cm"
         tv_weight.text = "${data.weight}kg"
-        tv_suggest.text = data.suggest
+        val suggest = StringBuilder()
+        data.suggest.forEach {
+            if (suggest.isNotEmpty()) {
+                suggest.append("\n")
+            }
+            suggest.append(it)
+        }
+        tv_suggest.text = suggest.toString()
+        tv_figure.text = data.figure
     }
 
 

@@ -28,12 +28,23 @@ class HomeTownCircumFragment : BaseFragment() {
 
     //家乡ViewModel
     private val mHomeTownViewModel: HomeTownViewModel by activityViewModels()
-    private val mAdapter = HomeTownCircumListAdapter()
     private var mType = ""
+    private val mAdapter = HomeTownCircumListAdapter()
     override fun getLayoutId() = R.layout.frag_home_towm_circum
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         mType = arguments?.getString(ParamConstant.TYPE, "") ?: ""
+        mAdapter.markContent = when (mType) {
+            "Food" -> {
+                "TA吃过"
+            }
+            "Place" -> {
+                "TA去过"
+            }
+            else -> {
+                ""
+            }
+        }
         initRecyclerView()
     }
 

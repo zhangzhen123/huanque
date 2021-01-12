@@ -11,12 +11,14 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import com.julun.huanque.common.base.BaseBottomSheetFragment
 import com.julun.huanque.common.suger.dp2px
+import com.julun.huanque.common.utils.ViewPager2Helper
 import com.julun.huanque.common.widgets.indicator.ScaleTransitionPagerTitleView
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.HomeTownCircumAdapter
 import com.julun.huanque.core.viewmodel.HomePageViewModel
 import com.julun.huanque.core.viewmodel.HomeTownViewModel
 import kotlinx.android.synthetic.main.frag_home_town.*
+import net.lucode.hackware.magicindicator.ViewPagerHelper
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNavigatorAdapter
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerIndicator
@@ -45,7 +47,7 @@ class HomeTownFragment : BaseBottomSheetFragment() {
         mHomeTownViewModel.queryHomeTownInfo(userIdListBean)
     }
 
-    override fun getHeight() = dp2px(480)
+    override fun getHeight() = dp2px(423)
 
     override fun onStart() {
         super.onStart()
@@ -93,7 +95,6 @@ class HomeTownFragment : BaseBottomSheetFragment() {
      * 初始化ViewPager2
      */
     private fun initViewPager2(typeList: MutableList<String>) {
-        view_pager2.isUserInputEnabled = false
         view_pager2.adapter = HomeTownCircumAdapter(requireActivity(), typeList)
         view_pager2.offscreenPageLimit = typeList.size
     }
@@ -153,8 +154,8 @@ class HomeTownFragment : BaseBottomSheetFragment() {
 //                }
                 val indicator = LinePagerIndicator(context)
                 indicator.mode = LinePagerIndicator.MODE_EXACTLY
-                indicator.lineHeight = 12f
-                indicator.lineWidth = 39f
+                indicator.lineHeight = 6f
+                indicator.lineWidth = 12f
                 indicator.roundRadius = 6f
                 indicator.startInterpolator = AccelerateInterpolator()
                 indicator.endInterpolator = DecelerateInterpolator(2.0f)
@@ -164,7 +165,7 @@ class HomeTownFragment : BaseBottomSheetFragment() {
             }
         }
         magic_indicator.navigator = mCommonNavigator
-//        ViewPagerHelper.bind(magic_indicator, view_pager2)
+        ViewPager2Helper.bind(magic_indicator, view_pager2)
     }
 
 }

@@ -4,10 +4,12 @@ import android.graphics.Color
 import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.GridLayoutManager
 import com.julun.huanque.common.base.BaseBottomSheetFragment
 import com.julun.huanque.common.bean.beans.ProfessionInfo
 import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.core.R
+import com.julun.huanque.core.adapter.ProfessionPeculiarityAdapter
 import com.julun.huanque.core.viewmodel.HomePageViewModel
 import kotlinx.android.synthetic.main.frag_job.*
 
@@ -18,13 +20,14 @@ import kotlinx.android.synthetic.main.frag_job.*
  */
 class JobFragment : BaseBottomSheetFragment() {
     private val mHomePageViewModel: HomePageViewModel by activityViewModels()
+    private val mAdapter = ProfessionPeculiarityAdapter()
     override fun getLayoutId() = R.layout.frag_job
 
     override fun initViews() {
         initRecyclerView()
     }
 
-    override fun getHeight() = dp2px(480)
+    override fun getHeight() = dp2px(423)
     override fun onStart() {
         super.onStart()
 //        dialog?.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
@@ -52,7 +55,8 @@ class JobFragment : BaseBottomSheetFragment() {
      * 初始化ViewModel
      */
     private fun initRecyclerView() {
-        recycler_view_peculiarity
+        recycler_view_peculiarity.layoutManager = GridLayoutManager(requireContext(), 3)
+        recycler_view_peculiarity.adapter = mAdapter
     }
 
     /**
@@ -61,7 +65,13 @@ class JobFragment : BaseBottomSheetFragment() {
     private fun showViewByData(info: ProfessionInfo) {
         tv_industry.text = info.professionTypeText
         tv_profession.text = info.professionName
-        tv_income.text = info.incomeText
+        val incomeText = info.incomeText
+        if (incomeText.isEmpty()) {
+            tv_income.text = incomeText
+        } else {
+            tv_income.text = "-"
+        }
+        mAdapter.setList(info.myFeatureList)
     }
 
 
