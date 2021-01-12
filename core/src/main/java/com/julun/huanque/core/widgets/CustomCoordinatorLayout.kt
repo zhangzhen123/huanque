@@ -12,6 +12,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.marginTop
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.julun.huanque.common.interfaces.ScrollMarginListener
+import com.julun.huanque.common.manager.GlobalDialogManager.logger
 import java.util.logging.Logger
 
 
@@ -22,7 +23,7 @@ import java.util.logging.Logger
  */
 class CustomCoordinatorLayout(context: Context, attrs: AttributeSet?) :
     CoordinatorLayout(context, attrs) {
-    var mListener : ScrollMarginListener? = null
+    var mListener: ScrollMarginListener? = null
     private var mZoomView: View? = null
     private var mZoomViewWidth = 0
     private var mZoomViewHeight = 0
@@ -78,7 +79,10 @@ class CustomCoordinatorLayout(context: Context, attrs: AttributeSet?) :
 //        logger.info("y = $y")
         when (ev.action) {
             MotionEvent.ACTION_UP -> {
-                if (isScrollDown) return super.dispatchTouchEvent(ev)
+                if (isScrollDown) {
+                    setZoom(0f)
+                    return super.dispatchTouchEvent(ev)
+                }
                 //手指离开后恢复图片
                 isScrolling = false
                 val marginTop = mMoveView3?.marginTop ?: 0
@@ -91,6 +95,7 @@ class CustomCoordinatorLayout(context: Context, attrs: AttributeSet?) :
             MotionEvent.ACTION_MOVE -> {
 //                logger.info("y = $y,mZoomView?.measuredWidth = ${mZoomView?.measuredWidth}")
                 if (y != 0 && (mZoomView?.measuredWidth ?: 0) <= mZoomViewWidth) {
+                    setZoom(0f)
                     return super.dispatchTouchEvent(ev)
                 }
                 isScrollDown = false
@@ -98,6 +103,7 @@ class CustomCoordinatorLayout(context: Context, attrs: AttributeSet?) :
                     if (scrollY == 0) {
                         firstPosition = ev.y // 滚动到顶部时记录位置，否则正常返回
                     } else {
+                        setZoom(0f)
                         return super.dispatchTouchEvent(ev)
                     }
                 }
@@ -105,6 +111,7 @@ class CustomCoordinatorLayout(context: Context, attrs: AttributeSet?) :
                     ((ev.y - firstPosition) * mScrollRate).toInt() // 滚动距离乘以一个系数
                 if (distance < 0) { // 当前位置比记录位置要小，正常返回
                     isScrollDown = true
+                    setZoom(0f)
                     return super.dispatchTouchEvent(ev)
                 }
                 // 处理放大
@@ -158,12 +165,16 @@ class CustomCoordinatorLayout(context: Context, attrs: AttributeSet?) :
         if (mZoomViewWidth <= 0 || mZoomViewHeight <= 0) {
             return
         }
+        if (zoom == 0f &&mZoomView?.width == mZoomViewWidth) {
+            mListener?.scroll(0)
+            return
+        }
         val lp: ViewGroup.LayoutParams = mZoomView?.layoutParams ?: return
         lp.width = (mZoomViewWidth * ((mZoomViewWidth + zoom) / mZoomViewWidth)).toInt()
         lp.height = (mZoomViewHeight * ((mZoomViewWidth + zoom) / mZoomViewWidth)).toInt()
         (lp as MarginLayoutParams).setMargins(-(lp.width - mZoomViewWidth) / 2, 0, 0, 0)
         mZoomView?.layoutParams = lp
-//        logger.info("zoom width = ${lp.width},height = ${lp.height},distance = $zoom")
+        logger.info("zoom width = ${lp.width},height = ${lp.height},distance = $zoom")
         //给图片设置marginTop
         val marginTop = lp.height - mZoomViewHeight
         val picParams = mMoveView3?.layoutParams as? CollapsingToolbarLayout.LayoutParams ?: return

@@ -12,6 +12,7 @@ import com.julun.huanque.common.bean.forms.UserIdForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.net.Requests
+import com.julun.huanque.common.net.services.HomeService
 import com.julun.huanque.common.net.services.SocialService
 import com.julun.huanque.common.net.services.UserService
 import com.julun.huanque.common.suger.dataConvert
@@ -36,6 +37,8 @@ class HomePageViewModel : BaseViewModel() {
     private val userService: UserService by lazy { Requests.create(UserService::class.java) }
 
     private val socialService: SocialService by lazy { Requests.create(SocialService::class.java) }
+
+    private val service: HomeService by lazy { Requests.create(HomeService::class.java) }
 
     //主页数据
     val homeInfoBean: MutableLiveData<HomePageInfo> by lazy { MutableLiveData<HomePageInfo>() }
@@ -67,6 +70,9 @@ class HomePageViewModel : BaseViewModel() {
     //评价成功标识
     val evaluateFlag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
+    //心动状态
+    val heartStatus: MutableLiveData<String> by lazy { MutableLiveData<String>() }
+
     //评论列表
     var targetUserId = 0L
 
@@ -83,6 +89,7 @@ class HomePageViewModel : BaseViewModel() {
                 homeInfoBean.value = result
                 blackStatus.value = result.black
                 followStatus.value = result.follow
+                heartStatus.value = result.heartTouch
             }, {}, needLoadState = true)
         }
     }
@@ -233,6 +240,17 @@ class HomePageViewModel : BaseViewModel() {
                 closeListData.value = socialService.closeConfidantRank(UserIdForm(targetUserId)).dataConvert()
             }, {})
         }
+    }
+
+    fun like(userId: Long) {
+        viewModelScope.launch {
+            request({
+                val result = service.like(FriendIdForm(userId)).dataConvert()
+                heartStatus.value = BusiConstant.True
+                homeInfoBean.value?.heartTouch = BusiConstant.True
+            })
+        }
+
     }
 
 }

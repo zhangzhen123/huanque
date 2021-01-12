@@ -120,6 +120,7 @@ class HomePageInformationFragment : BaseFragment() {
             } else {
                 //没有星座数据
                 //显示邀请弹窗
+                mInviteViewModel.mType = InviteCompleteForm.Information
                 mInviteFillFragment.show(childFragmentManager, "InviteFillFragment")
             }
         }
@@ -130,6 +131,7 @@ class HomePageInformationFragment : BaseFragment() {
                 mJobFragment.show(childFragmentManager, "JobFragment")
             } else {
                 //显示邀请弹窗
+                mInviteViewModel.mType = InviteCompleteForm.Information
                 mInviteFillFragment.show(childFragmentManager, "InviteFillFragment")
             }
         }
@@ -142,6 +144,7 @@ class HomePageInformationFragment : BaseFragment() {
             } else {
                 //没有学校数据
                 //显示邀请弹窗
+                mInviteViewModel.mType = InviteCompleteForm.Information
                 mInviteFillFragment.show(childFragmentManager, "InviteFillFragment")
             }
         }
@@ -152,6 +155,7 @@ class HomePageInformationFragment : BaseFragment() {
             if (wishListCount == 0) {
                 //没有社交意愿
                 //显示邀请弹窗
+                mInviteViewModel.mType = InviteCompleteForm.Information
                 mInviteFillFragment.show(childFragmentManager, "InviteFillFragment")
             } else {
                 //有社交意愿
@@ -179,11 +183,25 @@ class HomePageInformationFragment : BaseFragment() {
         recycler_view_tag.adapter = mTagAdapter
         mTagAdapter.setOnItemClickListener { adapter, view, position ->
 //            ll_tag.performClick()
+            val tempData = mTagAdapter.getItemOrNull(position) ?: return@setOnItemClickListener
+            if (tempData.tagId == 0L) {
+                //空标签，显示邀请
+                mInviteViewModel.mType = InviteCompleteForm.AuthTag
+                mInviteFillFragment.show(childFragmentManager, "InviteFillFragment")
+            }
         }
 
         recycler_view_like_tag.layoutManager = GridLayoutManager(context, 4)
         recycler_view_like_tag.adapter = mLikeTagAdapter
-
+        mLikeTagAdapter.setOnItemClickListener { adapter, view, position ->
+//            ll_tag.performClick()
+            val tempData = mLikeTagAdapter.getItemOrNull(position) ?: return@setOnItemClickListener
+            if (tempData.tagId == 0L) {
+                //空标签，显示邀请
+                mInviteViewModel.mType = InviteCompleteForm.LikeTag
+                mInviteFillFragment.show(childFragmentManager, "InviteFillFragment")
+            }
+        }
     }
 
 

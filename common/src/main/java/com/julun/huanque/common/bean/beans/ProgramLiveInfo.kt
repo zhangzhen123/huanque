@@ -568,14 +568,18 @@ data class HomePageInfo(
     var myAuthTag: MineTagBean = MineTagBean(),
     //生日
     var birthday: String = "",
+    //是否心动
+    var heartTouch: String = "",
+    //心动文案
+    var interactTips: String = "",
     //是否可以互动
     var canInteractive: String = "",
     //是否拉黑
     var black: String = "",
     //星座code
-    var constellationType : String = "",
+    var constellationType: String = "",
     //星座名称
-    var constellation : String = "",
+    var constellation: String = "",
     //当前登录用户性别
     var currSexType: String = "",
     //当前用户ID

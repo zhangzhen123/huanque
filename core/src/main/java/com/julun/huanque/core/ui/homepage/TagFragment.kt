@@ -14,6 +14,7 @@ import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.TagListAdapter
+import com.julun.huanque.core.ui.tag_manager.TagPicsActivity
 import com.julun.huanque.core.viewmodel.HomePageViewModel
 import kotlinx.android.synthetic.main.frag_tag.*
 
@@ -73,6 +74,9 @@ class TagFragment : BaseBottomSheetFragment() {
     private fun initRecyclerView() {
         recycler_view.layoutManager = GridLayoutManager(requireContext(), 4)
         recycler_view.adapter = mAdapter
+        mAdapter.setOnItemClickListener { adapter, view, position ->
+            TagPicsActivity
+        }
     }
 
     override fun onStart() {

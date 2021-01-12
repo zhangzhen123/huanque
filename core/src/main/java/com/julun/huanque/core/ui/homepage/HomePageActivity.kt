@@ -128,7 +128,7 @@ class HomePageActivity : BaseActivity() {
 //        view_shader.layoutParams = shaderParams
 
         custom_coordinator.setmZoomView(view_holder)
-        custom_coordinator.setZoom(1f)
+        custom_coordinator.setZoom(0f)
         custom_coordinator.setmMoveView(toolbar, view_pager, con_header)
 
         initViewModel()
@@ -381,6 +381,11 @@ class HomePageActivity : BaseActivity() {
                 startActivity(intent)
             }
         }
+
+        view_heart.onClickNew {
+            //心动
+            mHomePageViewModel.like(mHomePageViewModel.targetUserId)
+        }
     }
 
 
@@ -611,6 +616,12 @@ class HomePageActivity : BaseActivity() {
             }
         })
 
+        mHomePageViewModel.heartStatus.observe(this, Observer {
+            if (it != null) {
+                showHeartView(it)
+            }
+        })
+
         huanQueViewModel.userInfoStatusChange.observe(this, Observer {
             if (it.isSuccess()) {
                 val change = it.requireT()
@@ -641,6 +652,8 @@ class HomePageActivity : BaseActivity() {
             sdv_real.show()
             sdv_real.loadImage(bean.authMark, 18f, 18f)
         }
+
+        tv_xd_time.text = bean.interactTips
 
         val voiceStatus = bean.voice.voiceStatus
         if (voiceStatus == VoiceBean.Pass) {
@@ -761,6 +774,22 @@ class HomePageActivity : BaseActivity() {
             tv_private_chat.show()
             tv_home_heart.show()
             view_heart.show()
+        }
+    }
+
+
+    /**
+     * 显示心动状态
+     */
+    private fun showHeartView(heartStatus: String) {
+        if (heartStatus == BusiConstant.True) {
+            //已经心动
+            view_heart.hide()
+            tv_home_heart.hide()
+        } else {
+            //未心动
+            view_heart.show()
+            tv_home_heart.show()
         }
     }
 
