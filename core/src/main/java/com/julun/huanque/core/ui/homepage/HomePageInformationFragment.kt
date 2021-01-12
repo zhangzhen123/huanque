@@ -53,12 +53,6 @@ class HomePageInformationFragment : BaseFragment() {
     //身材弹窗
     private val mFigureFragment: FigureFragment by lazy { FigureFragment() }
 
-    //星座
-    private val mConstellationFragment: ConstellationFragment by lazy { ConstellationFragment() }
-
-    //社交意愿
-    private val mSocialWishFragment: SocialWishFragment by lazy { SocialWishFragment() }
-
     //职业
     private val mJobFragment: JobFragment by lazy { JobFragment() }
 
@@ -119,7 +113,15 @@ class HomePageInformationFragment : BaseFragment() {
 
         view_constellation.onClickNew {
             //星座
-            mConstellationFragment.show(childFragmentManager, "ConstellationFragment")
+            val conType = mHomePageViewModel.homeInfoBean.value?.constellationType
+            if (conType?.isNotEmpty() == true) {
+                //有星座数据
+                ConstellationFragment.newInstance(conType).show(childFragmentManager, "ConstellationFragment")
+            } else {
+                //没有星座数据
+                //显示邀请弹窗
+                mInviteFillFragment.show(childFragmentManager, "InviteFillFragment")
+            }
         }
         view_job.onClickNew {
             //职业
@@ -132,7 +134,7 @@ class HomePageInformationFragment : BaseFragment() {
             }
         }
 
-        view_school.onClickNew {
+        view_wish.onClickNew {
             //学校
             if (mHomePageViewModel.homeInfoBean.value?.schoolInfo?.school?.isNotEmpty() == true) {
                 //有学校数据
@@ -146,7 +148,15 @@ class HomePageInformationFragment : BaseFragment() {
 
         view_social.onClickNew {
             //社交意愿
-            mSocialWishFragment.show(childFragmentManager, "SocialWishFragment")
+            val wishListCount = mHomePageViewModel.homeInfoBean.value?.wishList?.size ?: 0
+            if (wishListCount == 0) {
+                //没有社交意愿
+                //显示邀请弹窗
+                mInviteFillFragment.show(childFragmentManager, "InviteFillFragment")
+            } else {
+                //有社交意愿
+                SocialWishFragment.newInstance(wishListCount).show(childFragmentManager, "SocialWishFragment")
+            }
         }
 
         tv_user_id.onClickNew {
@@ -231,7 +241,7 @@ class HomePageInformationFragment : BaseFragment() {
         }
 
         //星座
-        val constellationName = bean.constellationInfo.constellationName
+        val constellationName = bean.constellation
         if (constellationName.isEmpty()) {
             tv_constellation.text = "-"
         } else {

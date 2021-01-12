@@ -572,8 +572,10 @@ data class HomePageInfo(
     var canInteractive: String = "",
     //是否拉黑
     var black: String = "",
-    //星座数据
-    var constellationInfo: ConstellationInfo = ConstellationInfo(),
+    //星座code
+    var constellationType : String = "",
+    //星座名称
+    var constellation : String = "",
     //当前登录用户性别
     var currSexType: String = "",
     //当前用户ID
@@ -903,6 +905,10 @@ data class SocialWishBean(
     var wishType: String = "",
     //社交意愿文本
     var wishTypeText: String = "",
+    //主页使用的图标
+    var icon: String = "",
+    //社交意愿说明
+    var wishTypeExplain: String = "",
     //是否选中（本地字段）
     var selected: String = ""
 ) : Serializable

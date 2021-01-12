@@ -45,7 +45,7 @@
 
 
     <View
-        android:id="@+id/view_school"
+        android:id="@+id/view_wish"
         android:layout_width="0px"
         android:layout_height="88dp"
         android:layout_marginLeft="38dp"
@@ -58,14 +58,14 @@
         app:layout_constraintVertical_chainStyle="packed" />
 
     <ImageView
-        android:id="@+id/iv_school"
+        android:id="@+id/sdv_wish"
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:layout_marginLeft="50dp"
         android:src="@mipmap/icon_detail_school"
-        app:layout_constraintBottom_toBottomOf="@id/view_school"
-        app:layout_constraintLeft_toLeftOf="@id/view_school"
-        app:layout_constraintTop_toTopOf="@id/view_school" />
+        app:layout_constraintBottom_toBottomOf="@id/view_wish"
+        app:layout_constraintLeft_toLeftOf="@id/view_wish"
+        app:layout_constraintTop_toTopOf="@id/view_wish" />
 
     <View
         android:id="@+id/view_education"
@@ -78,7 +78,7 @@
         app:layout_constraintBottom_toTopOf="@+id/view_start_year"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/view_school" />
+        app:layout_constraintTop_toBottomOf="@id/view_wish" />
 
     <ImageView
         android:id="@+id/iv_education"
@@ -126,8 +126,8 @@
         android:textSize="@dimen/sp_16"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/tv_school"
-        app:layout_constraintLeft_toRightOf="@id/iv_school"
-        app:layout_constraintTop_toTopOf="@id/view_school"
+        app:layout_constraintLeft_toRightOf="@id/sdv_wish"
+        app:layout_constraintTop_toTopOf="@id/view_wish"
         app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
@@ -138,7 +138,7 @@
         android:textColor="@color/black_333"
         android:textSize="@dimen/sp_16"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@id/view_school"
+        app:layout_constraintBottom_toBottomOf="@id/view_wish"
         app:layout_constraintLeft_toLeftOf="@id/tv_school_title"
         app:layout_constraintTop_toBottomOf="@id/tv_school_title"
         tools:text="浙江大学" />
