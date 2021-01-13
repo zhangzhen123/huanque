@@ -107,7 +107,7 @@ class NearbyFragment : BaseLazyFragment() {
             }
 
             override fun getCardTranslateDistance(): Int {
-                return 15
+                return 30
             }
 
             override fun enableHardWare(): Boolean {
@@ -118,6 +118,9 @@ class NearbyFragment : BaseLazyFragment() {
                 return 0.15f
             }
 
+            override fun getCardScale(): Float {
+                return 0.05f
+            }
             override fun getSwipeOutAnimDuration(): Int {
                 return 200
             }

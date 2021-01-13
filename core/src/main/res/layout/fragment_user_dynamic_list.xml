@@ -7,6 +7,7 @@
     <com.julun.huanque.common.widgets.refreshlayout.VpSwipeRefreshLayout
         android:id="@+id/mRefreshLayout"
         android:layout_width="match_parent"
+        android:layout_marginBottom="@dimen/dimen_70"
         android:layout_height="match_parent">
 
         <com.julun.huanque.common.widgets.ImageRecyclerView
@@ -21,7 +22,7 @@
         android:layout_height="@dimen/dimen_45"
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="@dimen/dimen_15"
-        android:layout_marginBottom="@dimen/dimen_40"
+        android:layout_marginBottom="@dimen/dimen_80"
         android:src="@mipmap/icon_publish_dynamic" />
 
     <com.julun.huanque.common.widgets.statepage.StatePageView

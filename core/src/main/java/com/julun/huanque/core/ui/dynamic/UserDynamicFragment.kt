@@ -123,7 +123,6 @@ class UserDynamicFragment : BaseVMFragment<UserDynamicViewModel>() {
         (postList.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         dynamicAdapter.headerWithEmptyEnable = true
         postList.adapter = dynamicAdapter
-        dynamicAdapter.addFooterView(LayoutInflater.from(context).inflate(R.layout.view_bottom_holder, null))
         dynamicAdapter.setEmptyView(
             MixedHelper.getEmptyView(
                 requireContext(),

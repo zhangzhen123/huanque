@@ -298,7 +298,7 @@
                 <androidx.appcompat.widget.Toolbar
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
-                    android:layout_height="30dp"
+                    android:layout_height="64dp"
                     android:alpha="0"
                     android:background="@color/white"></androidx.appcompat.widget.Toolbar>
 
