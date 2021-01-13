@@ -103,6 +103,9 @@ class HomePageInformationFragment : BaseFragment() {
                 HomeTownFragment().show(childFragmentManager, "HomeTownFragment")
             } else {
                 //无家乡数据,邀请填写
+                if (mHomePageViewModel.mineHomePage) {
+                    return@onClickNew
+                }
                 mInviteViewModel.mType = InviteCompleteForm.Information
                 mInviteFillFragment.show(childFragmentManager, "InviteFillFragment")
             }
@@ -122,6 +125,9 @@ class HomePageInformationFragment : BaseFragment() {
             } else {
                 //没有星座数据
                 //显示邀请弹窗
+                if (mHomePageViewModel.mineHomePage) {
+                    return@onClickNew
+                }
                 mInviteViewModel.mType = InviteCompleteForm.Information
                 mInviteFillFragment.show(childFragmentManager, "InviteFillFragment")
             }
@@ -133,6 +139,9 @@ class HomePageInformationFragment : BaseFragment() {
                 mJobFragment.show(childFragmentManager, "JobFragment")
             } else {
                 //显示邀请弹窗
+                if (mHomePageViewModel.mineHomePage) {
+                    return@onClickNew
+                }
                 mInviteViewModel.mType = InviteCompleteForm.Information
                 mInviteFillFragment.show(childFragmentManager, "InviteFillFragment")
             }
@@ -146,6 +155,9 @@ class HomePageInformationFragment : BaseFragment() {
             } else {
                 //没有学校数据
                 //显示邀请弹窗
+                if (mHomePageViewModel.mineHomePage) {
+                    return@onClickNew
+                }
                 mInviteViewModel.mType = InviteCompleteForm.Information
                 mInviteFillFragment.show(childFragmentManager, "InviteFillFragment")
             }
@@ -157,6 +169,9 @@ class HomePageInformationFragment : BaseFragment() {
             if (wishListCount == 0) {
                 //没有社交意愿
                 //显示邀请弹窗
+                if (mHomePageViewModel.mineHomePage) {
+                    return@onClickNew
+                }
                 mInviteViewModel.mType = InviteCompleteForm.Information
                 mInviteFillFragment.show(childFragmentManager, "InviteFillFragment")
             } else {
@@ -188,6 +203,9 @@ class HomePageInformationFragment : BaseFragment() {
             val item = mTagAdapter.getItemOrNull(position) ?: return@setOnItemClickListener
             if (item.tagId == 0) {
                 //空布局，显示邀请
+                if (mHomePageViewModel.mineHomePage) {
+                    return@setOnItemClickListener
+                }
                 mInviteViewModel.mType = InviteCompleteForm.AuthTag
                 mInviteFillFragment.show(childFragmentManager, "InviteFillFragment")
             } else {
@@ -207,13 +225,16 @@ class HomePageInformationFragment : BaseFragment() {
             val item = mLikeTagAdapter.getItemOrNull(position) ?: return@setOnItemClickListener
             if (item.tagId == 0) {
                 //空布局，显示邀请
+                if (mHomePageViewModel.mineHomePage) {
+                    return@setOnItemClickListener
+                }
                 mInviteViewModel.mType = InviteCompleteForm.AuthTag
                 mInviteFillFragment.show(childFragmentManager, "InviteFillFragment")
             } else {
-                if(isSameSex){
+                if (isSameSex) {
                     //同性
                     TagPicsActivity.start(requireActivity(), item, mHomePageViewModel.targetUserId)
-                }else{
+                } else {
                     //异性
                     AuthTagPicActivity.start(requireActivity(), item.tagId, mHomePageViewModel.mineHomePage, true, isSameSex)
                 }
@@ -359,5 +380,15 @@ class HomePageInformationFragment : BaseFragment() {
         mLikeTagAdapter.setList(realLikeTagList)
 
         tv_user_id.text = "欢鹊ID ${bean.userId}"
+
+        if (mHomePageViewModel.mineHomePage) {
+            //我的主页
+            tv_tag_title.text = "我拥有的标签"
+            tv_like_tag_title.text = "我喜欢的标签"
+        } else {
+            //他人主页
+            tv_tag_title.text = "TA拥有的标签"
+            tv_like_tag_title.text = "TA喜欢的标签"
+        }
     }
 }

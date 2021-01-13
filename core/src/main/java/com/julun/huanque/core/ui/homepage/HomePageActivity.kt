@@ -338,7 +338,10 @@ class HomePageActivity : BaseActivity() {
 //            }
 //        }
         //播放音效
-        view_voice.onClickNew { }
+        view_voice.onClickNew {
+            //进入语音录制页面
+
+        }
 
 
         view_private_chat.onClickNew {
@@ -702,8 +705,7 @@ class HomePageActivity : BaseActivity() {
             view_voice.show()
             tv_time.show()
             sdv_voice_state.show()
-            tv_time.leftPadding = dp2px(4f)
-            tv_time.rightPadding = 0
+            tv_record.hide()
 //            sdv_voice_state.backgroundResource = R.drawable.bg_enable
 //            ImageUtils.loadImageLocal(sdv_voice_state, R.mipmap.icon_pause_home_page)
         } else {
@@ -712,22 +714,16 @@ class HomePageActivity : BaseActivity() {
                 if (voiceStatus != VoiceBean.Pass) {
                     //语音签名为空 显示待录制状态
                     view_voice.show()
-                    tv_time.show()
-                    sdv_voice_state.show()
-                    ImageUtils.loadImageLocal(sdv_voice_state, R.mipmap.icon_home_page_record)
-                    sdv_voice_state.backgroundDrawable = null
-                    tv_time.text = "语音录制"
-                    tv_time.leftPadding = dp2px(10f)
-                    tv_time.rightPadding = dp2px(15f)
+                    tv_record.show()
+                    tv_time.hide()
+                    sdv_voice_state.hide()
                 }
             } else {
                 //他人主页 不显示语音签名
                 view_voice.hide()
                 tv_time.hide()
-                view_voice.hide()
                 sdv_voice_state.hide()
-                tv_time.leftPadding = dp2px(4f)
-                tv_time.rightPadding = 0
+                tv_record.hide()
             }
 
         }
