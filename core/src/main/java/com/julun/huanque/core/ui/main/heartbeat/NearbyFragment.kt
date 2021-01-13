@@ -24,6 +24,7 @@ import androidx.core.view.ViewCompat
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.baidu.location.BDAbstractLocationListener
@@ -36,8 +37,9 @@ import com.julun.huanque.common.base.dialog.CommonDialogFragment
 import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.bean.beans.HomePagePicBean
-import com.julun.huanque.common.bean.beans.UserTagBean
 import com.julun.huanque.common.bean.beans.NearbyUserBean
+import com.julun.huanque.common.bean.beans.UserTagBean
+import com.julun.huanque.common.bean.events.LikeEvent
 import com.julun.huanque.common.constant.BooleanType
 import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.constant.HomeTabType
@@ -63,6 +65,8 @@ import com.julun.huanque.core.viewmodel.MainConnectViewModel
 import com.julun.huanque.core.widgets.HomeCardTagView
 import com.julun.maplib.LocationService
 import kotlinx.android.synthetic.main.fragment_nearby.*
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import java.util.*
 import kotlin.math.abs
 import kotlin.math.max
@@ -90,6 +94,10 @@ class NearbyFragment : BaseLazyFragment() {
 
     override fun getLayoutId(): Int = R.layout.fragment_nearby
 
+    override fun isRegisterEventBus(): Boolean {
+        return true
+    }
+
     private var commonDialogFragment: CommonDialogFragment? = null
 
     //当前能滑动的方向集合
@@ -115,12 +123,13 @@ class NearbyFragment : BaseLazyFragment() {
             }
 
             override fun getSwipeThreshold(): Float {
-                return 0.15f
+                return 0.35f
             }
 
             override fun getCardScale(): Float {
                 return 0.05f
             }
+
             override fun getSwipeOutAnimDuration(): Int {
                 return 200
             }
@@ -267,7 +276,7 @@ class NearbyFragment : BaseLazyFragment() {
                      * 4、生成带有共享元素的Bundle，这样系统才会知道这几个元素需要做动画
                      */
                     val activityOptionsCompat: ActivityOptionsCompat =
-                        ActivityOptionsCompat.makeSceneTransitionAnimation(requireActivity(), pair1,pair2)
+                        ActivityOptionsCompat.makeSceneTransitionAnimation(requireActivity(), pair1, pair2)
 
                     intent.putExtra(ParamConstant.UserId, tempBean.userId)
                     intent.putExtra(ParamConstant.NearByBean, tempBean)
@@ -292,6 +301,22 @@ class NearbyFragment : BaseLazyFragment() {
             val mFilterTagFragment = FilterTagFragment()
             mFilterTagFragment.show(childFragmentManager, "FilterTagFragment")
         }
+    }
+
+    //收到其他地方的心都无感操作 自动滑出  后台已经过滤同一天对同一用户的多次喜欢操作或者无感操作做去重 所以这里触发接口没问题
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun receiveLike(event: LikeEvent) {
+        lifecycleScope.launchWhenResumed {
+            mViewModel.likeEvent.value = event
+        }
+    }
+
+    private fun swipeAutoLike() {
+        mReItemTouchHelper.swipeManually(ReItemTouchHelper.RIGHT)
+    }
+
+    private fun swipeAutoNoFeel() {
+        mReItemTouchHelper.swipeManually(ReItemTouchHelper.LEFT)
     }
 
     private var noMoreDataError: ResponseError? = null
@@ -363,6 +388,19 @@ class NearbyFragment : BaseLazyFragment() {
                         mSwipeDirection = ReItemTouchHelper.LEFT
                     } else {
                         mSwipeDirection = ReItemTouchHelper.LEFT or ReItemTouchHelper.RIGHT
+                    }
+                }
+            }
+        })
+        mViewModel.likeEvent.observe(this, Observer {
+            if (it != null) {
+                val item = cardsAdapter.getItemOrNull(0) ?: return@Observer
+
+                if (item.userId == it.userId) {
+                    if (it.like) {
+                        swipeAutoLike()
+                    } else {
+                        swipeAutoNoFeel()
                     }
                 }
             }
@@ -500,36 +538,43 @@ class NearbyFragment : BaseLazyFragment() {
                         logger.info("获取权限成功")
                         mLocationService.start()
                     }
-                    permission.shouldShowRequestPermissionRationale -> // Oups permission denied
+                    permission.shouldShowRequestPermissionRationale -> {
+                        // Oups permission denied
                         logger.info("获取定位被拒绝")
+                        showOpenLocationDialog()
+                    }
                     else -> {
                         logger.info("获取定位被永久拒绝")
-                        CommonDialogFragment.create(
-                            commonDialogFragment, "开启附近功能",
-                            "需要启用位置权限，才能看到附近心动的人\n" +
-                                    "请到手机系统设置中开启",
-                            imageRes = R.mipmap.bg_header_living,
-                            okText = "一键开启",
-                            cancelable = false,
-                            callback = CommonDialogFragment.MyDialogCallback(
-                                onOk = {
-                                    PhoneUtils.getPermissionSetting(requireActivity().packageName).let {
-                                        if (ForceUtils.activityMatch(it)) {
-                                            try {
-                                                checkPermissionTag = true
-                                                startActivity(it)
-                                            } catch (e: Exception) {
-                                                reportCrash("跳转权限或者默认设置页失败", e)
-                                            }
-                                        }
-                                    }
-
-                                })
-                        ).show(requireActivity(), "CommonDialogFragment")
+                        showOpenLocationDialog()
                     }
                 }
 
             }
+    }
+
+    private fun showOpenLocationDialog() {
+        CommonDialogFragment.create(
+            commonDialogFragment, "开启附近功能",
+            "需要启用位置权限，才能看到附近心动的人\n" +
+                    "请到手机系统设置中开启",
+            imageRes = R.mipmap.bg_header_living,
+            okText = "一键开启",
+            cancelable = false,
+            callback = CommonDialogFragment.MyDialogCallback(
+                onOk = {
+                    PhoneUtils.getPermissionSetting(requireActivity().packageName).let {
+                        if (ForceUtils.activityMatch(it)) {
+                            try {
+                                checkPermissionTag = true
+                                startActivity(it)
+                            } catch (e: Exception) {
+                                reportCrash("跳转权限或者默认设置页失败", e)
+                            }
+                        }
+                    }
+
+                })
+        ).show(requireActivity(), "CommonDialogFragment")
     }
 
     /**

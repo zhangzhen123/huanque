@@ -228,3 +228,8 @@ class LoginSubAccountEvent(var userId: Long) : Serializable
  * 创建分身成功消息
  */
 class CreateAccountSuccess() : Serializable
+
+/**
+ * 喜欢后发个通知
+ */
+class LikeEvent(var userId: Long,var like:Boolean)

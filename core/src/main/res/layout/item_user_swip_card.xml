@@ -207,6 +207,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"
             android:layout_marginEnd="20dp"
+            android:visibility="gone"
             android:layout_marginBottom="@dimen/dimen_65"
             android:src="@mipmap/icon_super_like" />
 
