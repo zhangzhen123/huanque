@@ -406,7 +406,7 @@ data class FavoriteUserBean(
     var age: Int = 0,
     var area: String = "",
     var coverPic: String = "",
-    var coverPicList: List<String> = listOf(),
+    var coverPicList: MutableList<String> = mutableListOf(),
     var distance: Int = 0,
     var hasRealName: String = "",
     var nickname: String = "",
@@ -415,9 +415,9 @@ data class FavoriteUserBean(
     var tagIcon: String = "",
     var tagId: Int = 0,
     var tagName: String = "",
-    var userId: Int = 0,
+    var userId: Long = 0,
     var interactTips: String = ""
-)
+) : Serializable
 
 class FavoriteListData<T> : RootListData<T>() {
     var tagList: MutableList<UserTagBean> = mutableListOf()

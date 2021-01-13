@@ -264,19 +264,19 @@ class NearbyFragment : BaseLazyFragment() {
                     val parentView = view.parent as? View ?: return@setOnItemChildClickListener
                     val tempBean = cardsAdapter.getItemOrNull(position) ?: return@setOnItemChildClickListener
                     val shareView = parentView.findViewById<View>(R.id.card_img)
-                    val tv_user_name = parentView.findViewById<View>(R.id.tv_user_name)
+//                    val tv_user_name = parentView.findViewById<View>(R.id.tv_user_name)
 
                     val intent = Intent(requireActivity(), HomePageActivity::class.java)
                     val pair1: androidx.core.util.Pair<View, String> =
                         androidx.core.util.Pair(shareView, ViewCompat.getTransitionName(shareView) ?: "")
-                    val pair2: androidx.core.util.Pair<View, String> =
-                        androidx.core.util.Pair(tv_user_name, ViewCompat.getTransitionName(tv_user_name) ?: "")
+//                    val pair2: androidx.core.util.Pair<View, String> =
+//                        androidx.core.util.Pair(tv_user_name, ViewCompat.getTransitionName(tv_user_name) ?: "")
 
                     /**
                      * 4、生成带有共享元素的Bundle，这样系统才会知道这几个元素需要做动画
                      */
                     val activityOptionsCompat: ActivityOptionsCompat =
-                        ActivityOptionsCompat.makeSceneTransitionAnimation(requireActivity(), pair1, pair2)
+                        ActivityOptionsCompat.makeSceneTransitionAnimation(requireActivity(), pair1)
 
                     intent.putExtra(ParamConstant.UserId, tempBean.userId)
                     intent.putExtra(ParamConstant.NearByBean, tempBean)
@@ -718,8 +718,8 @@ class NearbyFragment : BaseLazyFragment() {
                 if (tempData != null) {
                     val card_img = holder.getView<SimpleDraweeView>(R.id.card_img)
                     ViewCompat.setTransitionName(card_img, "Image${tempData.userId}")
-                    val tv_user_name = holder.getView<TextView>(R.id.tv_user_name)
-                    ViewCompat.setTransitionName(tv_user_name, "TextView${tempData.userId}")
+//                    val tv_user_name = holder.getView<TextView>(R.id.tv_user_name)
+//                    ViewCompat.setTransitionName(tv_user_name, "TextView${tempData.userId}")
                 }
 
             }

@@ -654,6 +654,8 @@ data class HomePageInfo(
  * 编辑相关数据  这个类除了picList结构与上面不一样 其他一模一样 至于为什么这样做 问后台
  */
 data class EditPagerInfo(
+    //星座名称
+    var constellation: String = "",
     //年龄
     var age: Int = 0,
     //真人标识
@@ -1342,9 +1344,17 @@ data class SingleProfessionFeatureConfig(
     var professionFeatureCode: String = "",
     //职业特性文案
     var professionFeatureText: String = "",
+    //特性分类
+    var professionFeatureType: String = "",
     //是否标记（本地字段）
     var mark: String = ""
-) : Serializable
+) : Serializable {
+    companion object {
+        const val Positive = "Positive"
+        const val Middle = "Middle"
+        const val Negative = "Negative"
+    }
+}
 
 /**
  * 单个职业配置

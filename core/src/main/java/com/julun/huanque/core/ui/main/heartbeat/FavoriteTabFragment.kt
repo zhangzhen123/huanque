@@ -3,6 +3,7 @@ package com.julun.huanque.core.ui.main.heartbeat
 import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,8 @@ import android.view.ViewGroup
 import android.view.animation.DecelerateInterpolator
 import androidx.cardview.widget.CardView
 import androidx.core.animation.addListener
+import androidx.core.app.ActivityOptionsCompat
+import androidx.core.view.ViewCompat
 import androidx.core.view.children
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -25,10 +28,7 @@ import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.bean.beans.*
-import com.julun.huanque.common.constant.ARouterConstant
-import com.julun.huanque.common.constant.BooleanType
-import com.julun.huanque.common.constant.IntentParamKey
-import com.julun.huanque.common.constant.MainPageIndexConst
+import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.utils.ToastUtils
@@ -37,6 +37,7 @@ import com.julun.huanque.common.widgets.recycler.decoration.HorizontalItemDecora
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.NearbyPicListAdapter
 import com.julun.huanque.core.manager.VideoPlayerManager
+import com.julun.huanque.core.ui.homepage.HomePageActivity
 import kotlinx.android.synthetic.main.fragment_favorite_tab.*
 import kotlinx.android.synthetic.main.layout_bottom_favorite.view.*
 import java.math.RoundingMode
@@ -87,10 +88,26 @@ class FavoriteTabFragment : BaseVMFragment<FavoriteTabViewModel>() {
         authorList.addItemDecoration(GridLayoutSpaceItemDecoration2(dp2px(5)))
         authorList.isNestedScrollingEnabled = false
 
-        authorAdapter.setOnItemClickListener { _, _, position ->
+        authorAdapter.setOnItemClickListener { _, view, position ->
             val item = authorAdapter.getItemOrNull(position) ?: return@setOnItemClickListener
-//            logger.info("跳转直播间${item.programId}")
-//            PlayerActivity.start(requireActivity(), programId = item.programId, prePic = item.coverPic)
+            val shareView = view.findViewById<View>(R.id.card_img)
+//                    val tv_user_name = parentView.findViewById<View>(R.id.tv_user_name)
+
+            val intent = Intent(requireActivity(), HomePageActivity::class.java)
+            val pair1: androidx.core.util.Pair<View, String> =
+                androidx.core.util.Pair(shareView, ViewCompat.getTransitionName(shareView) ?: "")
+//                    val pair2: androidx.core.util.Pair<View, String> =
+//                        androidx.core.util.Pair(tv_user_name, ViewCompat.getTransitionName(tv_user_name) ?: "")
+
+            /**
+             * 4、生成带有共享元素的Bundle，这样系统才会知道这几个元素需要做动画
+             */
+            val activityOptionsCompat: ActivityOptionsCompat =
+                ActivityOptionsCompat.makeSceneTransitionAnimation(requireActivity(), pair1)
+
+            intent.putExtra(ParamConstant.UserId, item.userId)
+            intent.putExtra(ParamConstant.FavoriteUserBean, item)
+            startActivity(intent, activityOptionsCompat.toBundle())
         }
         authorList.itemAnimator = null
         authorAdapter.animationEnable = true
@@ -433,6 +450,18 @@ class FavoriteTabFragment : BaseVMFragment<FavoriteTabViewModel>() {
     private val itemHeight = (ScreenUtils.getScreenHeight() - ScreenUtils.statusHeight - dp2px(49 + 53 + 40 + 20)) / 2
     private val authorAdapter: BaseQuickAdapter<FavoriteUserBean, BaseViewHolder> by lazy {
         object : BaseQuickAdapter<FavoriteUserBean, BaseViewHolder>(R.layout.item_favorite_user_list) {
+
+            override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
+                super.onBindViewHolder(holder, position)
+                val tempData = getItemOrNull(position)
+                if (tempData != null) {
+                    val card_img = holder.getView<SimpleDraweeView>(R.id.card_img)
+                    ViewCompat.setTransitionName(card_img, "Image${tempData.userId}")
+//                    val tv_user_name = holder.getView<TextView>(R.id.tv_user_name)
+//                    ViewCompat.setTransitionName(tv_user_name, "TextView${tempData.userId}")
+                }
+            }
+
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
                 val holder = super.onCreateViewHolder(parent, viewType)
                 val cardView = holder.getView<CardView>(R.id.card_view)
