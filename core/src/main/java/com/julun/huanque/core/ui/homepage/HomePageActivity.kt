@@ -33,10 +33,7 @@ import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.ResponseError
-import com.julun.huanque.common.bean.beans.HomePageInfo
-import com.julun.huanque.common.bean.beans.HomePagePicBean
-import com.julun.huanque.common.bean.beans.NearbyUserBean
-import com.julun.huanque.common.bean.beans.VoiceBean
+import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.interfaces.ScrollMarginListener
@@ -133,7 +130,7 @@ class HomePageActivity : BaseActivity() {
              * 1、设置相同的TransitionName
              */
             ViewCompat.setTransitionName(bga_banner, "Image${mHomePageViewModel.targetUserId}")
-            ViewCompat.setTransitionName(tv_nickname, "TextView${mHomePageViewModel.targetUserId}")
+//            ViewCompat.setTransitionName(tv_nickname, "TextView${mHomePageViewModel.targetUserId}")
             /**
              * 2、设置WindowTransition,除指定的ShareElement外，其它所有View都会执行这个Transition动画
              */
@@ -422,7 +419,7 @@ class HomePageActivity : BaseActivity() {
 
 
     private fun initViewPager() {
-        mPagerAdapter = HomePageAdapter(supportFragmentManager,mHomePageViewModel.targetUserId )
+        mPagerAdapter = HomePageAdapter(supportFragmentManager, mHomePageViewModel.targetUserId)
         view_pager.adapter = mPagerAdapter
         //配置预加载页数
 //        view_pager.offscreenPageLimit = 2
@@ -504,14 +501,22 @@ class HomePageActivity : BaseActivity() {
     private fun resetView(intent: Intent) {
         //附近数据
         val nearByBean = intent.getSerializableExtra(ParamConstant.NearByBean) as? NearbyUserBean
+        val favoriteBean = intent.getSerializableExtra(ParamConstant.FavoriteUserBean) as? FavoriteUserBean
 //        mHomePageViewModel.nearByBeanData.value = nearByBean
-        if (nearByBean != null) {
-            mHomePageViewModel.shareElement = true
-            showPic(nearByBean.coverPic, nearByBean.coverPicList)
-            tv_nickname.text = nearByBean.nickname
-        } else {
-            mHomePageViewModel.shareElement = false
+        when {
+            nearByBean != null -> {
+                mHomePageViewModel.shareElement = true
+                showPic(nearByBean.coverPic, nearByBean.coverPicList)
+            }
+            favoriteBean != null -> {
+                mHomePageViewModel.shareElement = true
+                showPic(favoriteBean.coverPic, favoriteBean.coverPicList)
+            }
+            else -> {
+                mHomePageViewModel.shareElement = false
+            }
         }
+
 
         val userID = intent.getLongExtra(ParamConstant.UserId, 0)
         mHomePageViewModel.targetUserId = userID
@@ -683,8 +688,8 @@ class HomePageActivity : BaseActivity() {
         tv_user_name.text = bean.nickname
         if (!mHomePageViewModel.shareElement) {
             showPic(bean.headPic, bean.picList)
-            tv_nickname.text = bean.nickname
         }
+        tv_nickname.text = bean.nickname
         if (bean.authMark.isEmpty()) {
             sdv_real.hide()
         } else {

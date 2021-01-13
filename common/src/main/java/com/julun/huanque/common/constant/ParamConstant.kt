@@ -196,4 +196,7 @@ object ParamConstant {
 
     //附近数据
     const val NearByBean = "NearByBean"
+
+    //喜欢的数据
+    const val FavoriteUserBean = "FavoriteUserBean"
 }
