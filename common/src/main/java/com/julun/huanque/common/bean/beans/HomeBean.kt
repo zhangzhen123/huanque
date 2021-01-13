@@ -407,7 +407,7 @@ data class FavoriteUserBean(
     var area: String = "",
     var coverPic: String = "",
     var coverPicList: MutableList<String> = mutableListOf(),
-    var distance: Int = 0,
+    var distance: Int = -1,
     var hasRealName: String = "",
     var nickname: String = "",
     var picCnt: Int = 0,
@@ -416,7 +416,8 @@ data class FavoriteUserBean(
     var tagId: Int = 0,
     var tagName: String = "",
     var userId: Long = 0,
-    var interactTips: String = ""
+    var interactTips: String = "",
+    var sameCity:Boolean=false
 ) : Serializable
 
 class FavoriteListData<T> : RootListData<T>() {

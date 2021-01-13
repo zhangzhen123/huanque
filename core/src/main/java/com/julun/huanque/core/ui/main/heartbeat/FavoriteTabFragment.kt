@@ -9,6 +9,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.DecelerateInterpolator
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.core.animation.addListener
 import androidx.core.app.ActivityOptionsCompat
@@ -38,8 +40,11 @@ import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.NearbyPicListAdapter
 import com.julun.huanque.core.manager.VideoPlayerManager
 import com.julun.huanque.core.ui.homepage.HomePageActivity
+import kotlinx.android.synthetic.main.act_home_page.*
 import kotlinx.android.synthetic.main.fragment_favorite_tab.*
+import kotlinx.android.synthetic.main.fragment_favorite_tab.state_pager_view
 import kotlinx.android.synthetic.main.layout_bottom_favorite.view.*
+import org.jetbrains.anko.imageResource
 import java.math.RoundingMode
 import java.text.DecimalFormat
 
@@ -484,33 +489,55 @@ class FavoriteTabFragment : BaseVMFragment<FavoriteTabViewModel>() {
                 holder.setText(R.id.tv_tag, "${item.tagName} ${item.picCnt}")
 
                 holder.setText(R.id.tv_age, age)
-                if (item.distance != 0) {
-                    //todo 距离加狗屎emoji
-                    when {
-                        item.distance < 1000 -> {
-                            holder.setText(R.id.tv_distance, "${item.distance}")
-                                .setVisible(R.id.tv_distance, true)
-                            holder.setText(R.id.tv_location, "m ${item.area}")
-                        }
-                        item.distance < 100000 -> {
-                            val format = DecimalFormat("#.0")
-                            format.roundingMode = RoundingMode.DOWN
-                            val dt = format.format((item.distance / 1000.0))
-                            holder.setText(R.id.tv_distance, dt)
-                                .setVisible(R.id.tv_distance, true)
-                            holder.setText(R.id.tv_location, "km ${item.area}")
-                        }
-                        item.distance < 800000 -> {
 
+                val tvDistance = holder.getView<TextView>(R.id.tv_distance)
+                val ivDistance = holder.getView<ImageView>(R.id.iv_distance)
+                if (item.distance != -1) {
+                    if (item.sameCity) {
+                        tvDistance.show()
+                        ivDistance.hide()
+                        when {
+                            item.distance < 1000 -> {
+                                holder.setText(R.id.tv_distance, "${item.distance}")
+                                holder.setText(R.id.tv_location, "m ${item.area}")
+                            }
+                            else -> {
+                                val format = DecimalFormat("#.0")
+                                format.roundingMode = RoundingMode.DOWN
+                                val dt = format.format((item.distance / 1000.0))
+                                holder.setText(R.id.tv_distance, dt)
+                                holder.setText(R.id.tv_location, "km ${item.area}")
+                            }
                         }
-                        else -> {
+                    } else {
+                        tvDistance.hide()
+                        ivDistance.show()
+                        holder.setText(R.id.tv_location, item.area)
+                        when {
+                            item.distance < 100000 -> {
+                                iv_vehicle.imageResource = R.mipmap.icon_home_distance_car
+                            }
+                            item.distance < 800000 -> {
 
+                                //显示动车
+                                ivDistance.imageResource = R.mipmap.icon_home_distance_rail_way
+                            }
+                            else -> {
+                                ivDistance.show()
+                                //显示飞机
+                                ivDistance.imageResource = R.mipmap.icon_home_distance_air_plan
+                            }
                         }
+
                     }
 
                 } else {
-                    holder.setText(R.id.tv_location, item.area)
-                        .setGone(R.id.tv_distance, true)
+                    tvDistance.hide()
+                    ivDistance.show()
+                    val starList = mutableListOf<String>("金星", "木星", "水星", "火星", "土星")
+                    val currentStar = starList.random()
+                    ivDistance.imageResource = R.mipmap.icon_home_distance_rocket
+                    holder.setText(R.id.tv_location, currentStar)
                 }
                 if (item.interactTips.isNotEmpty()) {
                     holder.setText(R.id.tv_top_right_tips, item.interactTips).setGone(R.id.tv_top_right_tips, false)
