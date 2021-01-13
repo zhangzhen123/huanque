@@ -97,7 +97,7 @@ class FavoriteFragment : BaseLazyFragment() {
         initMagicIndicator()
 
         tag_manager.onClickNew {
-            TagManagerActivity.start(this)
+            TagManagerActivity.start(requireActivity())
         }
     }
 
@@ -142,9 +142,12 @@ class FavoriteFragment : BaseLazyFragment() {
             val list = tagManagerViewModel.currentTagList
             logger.info("我是选择的结果=${list}")
             list.removeDuplicate()
-            val first = mTabTitles.first()
+            val first = mTabTitles.firstOrNull()
             mTabTitles.clear()
-            mTabTitles.add(first)
+
+            if(first!=null){
+                mTabTitles.add(first)
+            }
             mTabTitles.addAll(list)
             refreshTabList(currentTag?.tagId)
         })

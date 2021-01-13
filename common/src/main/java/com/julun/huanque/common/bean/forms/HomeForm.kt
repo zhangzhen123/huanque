@@ -91,6 +91,9 @@ class TagApplyForm(
 class LogForm(
     var logId: Int
 )
+class MyTagForm(
+    var findType: String
+)
 
 
 

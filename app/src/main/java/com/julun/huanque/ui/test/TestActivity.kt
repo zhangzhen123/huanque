@@ -30,6 +30,7 @@ import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.ui.live.dialog.CardManagerDialogFragment
 import com.julun.huanque.core.ui.tag_manager.TagManagerActivity
 import com.julun.huanque.core.ui.record_voice.VoiceSignActivity
+import com.julun.huanque.core.ui.tag_manager.MyTagsActivity
 import com.julun.huanque.message.activity.PrivateConversationActivity
 import com.julun.huanque.message.fragment.ChatSendGiftFragment
 import com.julun.huanque.support.LoginManager
@@ -215,7 +216,8 @@ class TestActivity : BaseActivity() {
 
         btn_usercard.onClickNew {
             //标签管理
-            TagManagerActivity.start(this)
+//            TagManagerActivity.start(this)
+            MyTagsActivity.start(this, MyTagType.LIKE)
         }
 
         btn_manager.onClickNew {

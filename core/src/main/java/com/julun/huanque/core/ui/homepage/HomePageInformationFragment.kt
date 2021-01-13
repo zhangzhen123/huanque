@@ -13,12 +13,14 @@ import com.julun.huanque.common.bean.beans.HomePageInfo
 import com.julun.huanque.common.bean.beans.UserTagBean
 import com.julun.huanque.common.bean.beans.SocialWishBean
 import com.julun.huanque.common.bean.forms.InviteCompleteForm
+import com.julun.huanque.common.constant.MyTagType
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.HomePageTagAdapter
 import com.julun.huanque.core.ui.tag_manager.AuthTagPicActivity
 import com.julun.huanque.core.ui.tag_manager.TagPicsActivity
+import com.julun.huanque.core.ui.tag_manager.MyTagsActivity
 import com.julun.huanque.core.viewmodel.HomePageViewModel
 import com.julun.huanque.core.viewmodel.InviteFillViewModel
 import kotlinx.android.synthetic.main.frag_home_page_information.*
@@ -80,8 +82,12 @@ class HomePageInformationFragment : BaseFragment() {
         ll_tag.onClickNew {
             //他拥有的标签
             if (tv_more_tag.visibility == View.VISIBLE) {
-                //显示他拥有的标签弹窗
-                mTagFragment.show(childFragmentManager, "TagFragment")
+                if(mHomePageViewModel.mineHomePage){
+                    MyTagsActivity.start(requireActivity(), MyTagType.AUTH)
+                }else{
+                    //显示他拥有的标签弹窗
+                    mTagFragment.show(childFragmentManager, "TagFragment")
+                }
             }
         }
 //        rl_tag.onClickNew {
@@ -91,8 +97,13 @@ class HomePageInformationFragment : BaseFragment() {
         ll_like_tag.onClickNew {
             if (tv_more_like_tag.visibility == View.VISIBLE) {
                 //显示他拥有的标签弹窗
-                mInviteViewModel.mType = InviteCompleteForm.Information
-                mLikeTagFragment.show(childFragmentManager, "TagFragment")
+                if(mHomePageViewModel.mineHomePage){
+                    MyTagsActivity.start(requireActivity(), MyTagType.LIKE)
+                }else{
+                    mInviteViewModel.mType = InviteCompleteForm.Information
+                    mLikeTagFragment.show(childFragmentManager, "TagFragment")
+                }
+
             }
         }
 

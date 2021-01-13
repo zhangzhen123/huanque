@@ -304,7 +304,8 @@ data class ManagerTagTabBean(
     var tagIcon: String = "",
     var tagId: Int = 0,
     var tagName: String = "",
-    var tagPic: String = ""
+    var tagPic: String = "",
+    var showType: Int = 0//
 ) : Serializable
 
 data class UserTagBean(
@@ -348,6 +349,17 @@ data class ManagerListData(
     var manageList: MutableList<UserTagBean> = mutableListOf(),
     var tagList: List<ManagerTagTabBean> = listOf()
 )
+
+data class MyTagListData(
+    var markTagNum: Int = 0,
+    var typeTagList: List<TagTypeTag> = listOf()
+)
+
+data class TagTypeTag(
+    var groupTagList: List<UserTagBean> = listOf(),
+    var tabTagName: String = "",
+    var showType: String = ""
+) : Serializable
 
 data class TagDetailBean(
     var authNum: Int = 0,

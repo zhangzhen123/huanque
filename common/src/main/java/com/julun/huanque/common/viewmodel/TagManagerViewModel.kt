@@ -5,6 +5,8 @@ import com.julun.huanque.common.basic.ReactiveData
 import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.bean.beans.UserTagBean
 import com.julun.huanque.common.bean.beans.ManagerTagTabBean
+import com.julun.huanque.common.bean.beans.MyTagListData
+import com.julun.huanque.common.bean.forms.MyTagForm
 import com.julun.huanque.common.bean.forms.TagForm
 import com.julun.huanque.common.bean.forms.TagListForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
@@ -70,6 +72,7 @@ class TagManagerViewModel : BaseViewModel() {
             request({
                 val result = service.tagLike(TagForm(tag.tagId)).dataConvert()
                 tag.like = true
+                tag.parentTagId = result.parentTagId
                 tagChangeStatus.value = tag.convertRtData()
                 //这里创建一个用于发送标签管理的对象
                 val tagBean = UserTagBean(

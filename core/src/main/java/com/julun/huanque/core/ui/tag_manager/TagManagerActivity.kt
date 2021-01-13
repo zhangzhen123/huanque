@@ -29,8 +29,10 @@ import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.bean.beans.UserTagBean
 import com.julun.huanque.common.bean.beans.ManagerTagTabBean
 import com.julun.huanque.common.constant.ActivityRequestCode
+import com.julun.huanque.common.constant.ManagerTagCode
 import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.suger.dp2pxf
+import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.loadImage
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.utils.ToastUtils
@@ -46,6 +48,7 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerInd
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator
 import org.jetbrains.anko.backgroundResource
+import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.startActivityForResult
 import kotlin.properties.Delegates
 
@@ -61,21 +64,15 @@ import kotlin.properties.Delegates
 class TagManagerActivity : BaseActivity() {
 
     companion object {
-        fun start(act: Activity) {
-            act.startActivityForResult<TagManagerActivity>(requestCode = ActivityRequestCode.MANAGER_TAG_RESULT_CODE)
-        }
 
-        fun start(fragment: Fragment) {
-            fragment.startActivityForResult(
-                Intent(fragment.activity, TagManagerActivity::class.java),
-                ActivityRequestCode.MANAGER_TAG_RESULT_CODE
-            )
+        fun start(act: Activity) {
+//            act.startActivityForResult<TagManagerActivity>(requestCode = ActivityRequestCode.MANAGER_TAG_RESULT_CODE)
+            act.startActivity<TagManagerActivity>()
         }
     }
 
-
-//    private var state: CollapsingToolbarLayoutState? = null
-    private var viewModel=HuanViewModelManager.tagManagerViewModel
+    //    private var state: CollapsingToolbarLayoutState? = null
+    private var viewModel = HuanViewModelManager.tagManagerViewModel
 
     private var deleteEnsureDialog: BaseDialogFragment? = null
     private lateinit var mCommonNavigator: CommonNavigator
@@ -269,7 +266,7 @@ class TagManagerActivity : BaseActivity() {
     override fun finish() {
         val intent = this.intent
 
-        if(viewModel.tagHasChange){
+        if (viewModel.tagHasChange) {
 //            intent.putExtra(ManagerTagCode.TAG_LIST, viewModel.currentTagList)
 //            setResult(Activity.RESULT_OK, intent)
         }
