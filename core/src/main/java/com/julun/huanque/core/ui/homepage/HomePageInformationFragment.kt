@@ -82,9 +82,9 @@ class HomePageInformationFragment : BaseFragment() {
         ll_tag.onClickNew {
             //他拥有的标签
             if (tv_more_tag.visibility == View.VISIBLE) {
-                if(mHomePageViewModel.mineHomePage){
+                if (mHomePageViewModel.mineHomePage) {
                     MyTagsActivity.start(requireActivity(), MyTagType.AUTH)
-                }else{
+                } else {
                     //显示他拥有的标签弹窗
                     mTagFragment.show(childFragmentManager, "TagFragment")
                 }
@@ -97,9 +97,9 @@ class HomePageInformationFragment : BaseFragment() {
         ll_like_tag.onClickNew {
             if (tv_more_like_tag.visibility == View.VISIBLE) {
                 //显示他拥有的标签弹窗
-                if(mHomePageViewModel.mineHomePage){
+                if (mHomePageViewModel.mineHomePage) {
                     MyTagsActivity.start(requireActivity(), MyTagType.LIKE)
-                }else{
+                } else {
                     mInviteViewModel.mType = InviteCompleteForm.Information
                     mLikeTagFragment.show(childFragmentManager, "TagFragment")
                 }
@@ -220,17 +220,19 @@ class HomePageInformationFragment : BaseFragment() {
                 mInviteViewModel.mType = InviteCompleteForm.AuthTag
                 mInviteFillFragment.show(childFragmentManager, "InviteFillFragment")
             } else {
-//                if (isSameSex) {
-//                    //todo
-//                }
-                TagPicsActivity.start(requireActivity(), item, mHomePageViewModel.targetUserId)
-//                AuthTagPicActivity.start(requireActivity(), item.tagId, mHomePageViewModel.mineHomePage, false, isSameSex)
+                if (mHomePageViewModel.mineHomePage) {
+                    //我的主页
+                    AuthTagPicActivity.start(requireActivity(), item.tagId, mHomePageViewModel.mineHomePage, false, true)
+                } else {
+                    TagPicsActivity.start(requireActivity(), item, mHomePageViewModel.targetUserId)
+                }
             }
 
         }
 
         recycler_view_like_tag.layoutManager = GridLayoutManager(context, 4)
         recycler_view_like_tag.adapter = mLikeTagAdapter
+        mLikeTagAdapter.like = true
         mLikeTagAdapter.setOnItemClickListener { adapter, view, position ->
 //            ll_tag.performClick()
             val item = mLikeTagAdapter.getItemOrNull(position) ?: return@setOnItemClickListener
@@ -242,15 +244,23 @@ class HomePageInformationFragment : BaseFragment() {
                 mInviteViewModel.mType = InviteCompleteForm.AuthTag
                 mInviteFillFragment.show(childFragmentManager, "InviteFillFragment")
             } else {
-                if (isSameSex) {
-                    //同性
-                    TagPicsActivity.start(requireActivity(), item, mHomePageViewModel.targetUserId)
+                if (mHomePageViewModel.mineHomePage) {
+                    //我的主页
+                    AuthTagPicActivity.start(requireActivity(), item.tagId, mHomePageViewModel.mineHomePage, true, false)
                 } else {
-                    //异性
-                    AuthTagPicActivity.start(requireActivity(), item.tagId, mHomePageViewModel.mineHomePage, true, isSameSex)
+                    if (isSameSex) {
+                        //同性
+                        TagPicsActivity.start(requireActivity(), item, mHomePageViewModel.targetUserId)
+                    } else {
+                        //异性
+                        AuthTagPicActivity.start(requireActivity(), item.tagId, mHomePageViewModel.mineHomePage, true, isSameSex)
+                    }
                 }
             }
         }
+
+//        recycler_view_tag_mine.layoutManager = GridLayoutManager(context, 4)
+
 
     }
 
@@ -354,7 +364,24 @@ class HomePageInformationFragment : BaseFragment() {
             vf_social.stopFlipping()
         }
 
-        val tagList = bean.authTagList
+        if (mHomePageViewModel.mineHomePage) {
+            mTagAdapter.mine = true
+            mLikeTagAdapter.mine = true
+            tv_tag_title.text = "我拥有的标签"
+            tv_like_tag_title.text = "我喜欢的标签"
+        } else {
+            mTagAdapter.mine = false
+            mLikeTagAdapter.mine = false
+            tv_tag_title.text = "TA拥有的标签"
+            tv_like_tag_title.text = "TA喜欢的标签"
+        }
+
+
+        val tagList = if (mHomePageViewModel.mineHomePage) {
+            bean.myAuthTag.showTagList
+        } else {
+            bean.authTagList
+        }
         tv_tag_count.text = "${tagList.size}"
         val realTagList = mutableListOf<UserTagBean>()
         if (tagList.size >= 4) {
@@ -366,13 +393,20 @@ class HomePageInformationFragment : BaseFragment() {
             tv_more_tag.hide()
             realTagList.addAll(tagList)
         }
-        if (realTagList.size < 4) {
-            //添加引导布局
-            realTagList.add(UserTagBean())
+        if (!mHomePageViewModel.mineHomePage) {
+            if (realTagList.size < 4) {
+                //添加引导布局
+                realTagList.add(UserTagBean())
+            }
         }
+
         mTagAdapter.setList(realTagList)
 
-        val likeTagList = bean.likeTagList
+        val likeTagList = if (mHomePageViewModel.mineHomePage) {
+            bean.myLikeTag.showTagList
+        } else {
+            bean.likeTagList
+        }
         tv_like_tag_count.text = "${likeTagList.size}"
         val realLikeTagList = mutableListOf<UserTagBean>()
         if (likeTagList.size >= 4) {
@@ -384,22 +418,17 @@ class HomePageInformationFragment : BaseFragment() {
             tv_more_like_tag.hide()
             realLikeTagList.addAll(likeTagList)
         }
-        if (realLikeTagList.size < 4) {
-            //添加引导布局
-            realLikeTagList.add(UserTagBean())
+        if (mHomePageViewModel.mineHomePage) {
+            if (realLikeTagList.size < 4) {
+                //添加引导布局
+                realLikeTagList.add(UserTagBean())
+            }
         }
+
         mLikeTagAdapter.setList(realLikeTagList)
 
         tv_user_id.text = "欢鹊ID ${bean.userId}"
 
-        if (mHomePageViewModel.mineHomePage) {
-            //我的主页
-            tv_tag_title.text = "我拥有的标签"
-            tv_like_tag_title.text = "我喜欢的标签"
-        } else {
-            //他人主页
-            tv_tag_title.text = "TA拥有的标签"
-            tv_like_tag_title.text = "TA喜欢的标签"
-        }
+
     }
 }

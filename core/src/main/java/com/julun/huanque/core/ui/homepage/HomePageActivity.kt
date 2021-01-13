@@ -830,14 +830,16 @@ class HomePageActivity : BaseActivity() {
      * 显示心动状态
      */
     private fun showHeartView(heartStatus: String) {
-        if (heartStatus == BusiConstant.True) {
-            //已经心动
-            view_heart.hide()
-            tv_home_heart.hide()
-        } else {
-            //未心动
-            view_heart.show()
-            tv_home_heart.show()
+        if (!mHomePageViewModel.mineHomePage) {
+            if (heartStatus == BusiConstant.True) {
+                //已经心动
+                view_heart.hide()
+                tv_home_heart.hide()
+            } else {
+                //未心动
+                view_heart.show()
+                tv_home_heart.show()
+            }
         }
     }
 
