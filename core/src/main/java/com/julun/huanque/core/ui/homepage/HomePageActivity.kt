@@ -422,7 +422,7 @@ class HomePageActivity : BaseActivity() {
 
 
     private fun initViewPager() {
-        mPagerAdapter = HomePageAdapter(supportFragmentManager, this)
+        mPagerAdapter = HomePageAdapter(supportFragmentManager,mHomePageViewModel.targetUserId )
         view_pager.adapter = mPagerAdapter
         //配置预加载页数
 //        view_pager.offscreenPageLimit = 2
