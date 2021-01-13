@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.julun.huanque.common.widgets.refreshlayout.VpSwipeRefreshLayout
+        android:id="@+id/mRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.julun.huanque.common.widgets.ImageRecyclerView
+            android:id="@+id/postList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.julun.huanque.common.widgets.refreshlayout.VpSwipeRefreshLayout>
+
+    <ImageView
+        android:id="@+id/publish_dynamic"
+        android:layout_width="@dimen/dimen_45"
+        android:layout_height="@dimen/dimen_45"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="@dimen/dimen_15"
+        android:layout_marginBottom="@dimen/dimen_40"
+        android:src="@mipmap/icon_publish_dynamic" />
+
+    <com.julun.huanque.common.widgets.statepage.StatePageView
+        android:id="@+id/state_pager_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/dimen_12"
+        android:visibility="gone" />
+</FrameLayout>

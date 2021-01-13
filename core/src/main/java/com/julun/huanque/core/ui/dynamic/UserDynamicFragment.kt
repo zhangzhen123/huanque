@@ -10,9 +10,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
-import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
-import com.julun.huanque.common.base.BaseVMActivity
+import com.julun.huanque.common.base.BaseVMFragment
 import com.julun.huanque.common.base.dialog.BottomActionDialog
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.NetState
@@ -29,35 +28,35 @@ import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.ui.image.ImageActivity
-import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.DynamicListAdapter
-import com.julun.huanque.core.ui.homepage.HomePageActivity
 import com.julun.huanque.core.ui.publish_dynamic.PublishStateActivity
 import com.julun.huanque.core.ui.share.LiveShareActivity
-import kotlinx.android.synthetic.main.activity_dynamic_details.mRefreshLayout
-import kotlinx.android.synthetic.main.activity_dynamic_list.*
-import kotlinx.android.synthetic.main.fragment_dynamic_tab.postList
-import kotlinx.android.synthetic.main.fragment_dynamic_tab.state_pager_view
+import kotlinx.android.synthetic.main.fragment_user_dynamic_list.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.jetbrains.anko.backgroundResource
 
 /**
  *
  *@Anchor: zhangzhen
  *
- *@Date: 2020/11/24 14:26
+ *@Date: 2021/1/13 10:54
  *
- *@Description: 用户动态列表
+ *@Description: UserDynamicFragment
  *
  */
-@Route(path = ARouterConstant.USER_DYNAMIC_ACTIVITY)
-class UserDynamicActivity : BaseVMActivity<UserDynamicViewModel>() {
+class UserDynamicFragment : BaseVMFragment<UserDynamicViewModel>() {
 
     companion object {
+        fun newInstance(userId:Long): UserDynamicFragment{
+            val args = Bundle()
+            args.putLong(IntentParamKey.USER_ID.name,userId)
+            val fragment = UserDynamicFragment()
+            fragment.arguments = args
+            return fragment
+        }
 
         const val PublishRequestCode = 0x9836
     }
@@ -73,7 +72,7 @@ class UserDynamicActivity : BaseVMActivity<UserDynamicViewModel>() {
                 when (action.code) {
                     BottomActionCode.DELETE -> {
                         logger.info("删除动态 ${currentItem?.postId}")
-                        MyAlertDialog(this@UserDynamicActivity).showAlertWithOKAndCancel(
+                        MyAlertDialog(requireActivity()).showAlertWithOKAndCancel(
                             "确定删除该动态内容？",
                             MyAlertDialog.MyDialogCallback(onRight = {
                                 //删除动态
@@ -98,28 +97,22 @@ class UserDynamicActivity : BaseVMActivity<UserDynamicViewModel>() {
         return true
     }
 
-    override fun getLayoutId(): Int = R.layout.activity_dynamic_list
+    override fun getLayoutId(): Int = R.layout.fragment_user_dynamic_list
 
     var currentUserId: Long? = null
     private var isMe: Boolean = false
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
-        currentUserId = intent.getLongExtra(IntentParamKey.USER_ID.name, 0L)
+        currentUserId = arguments?.getLong(IntentParamKey.USER_ID.name, 0L)
         initViewModel()
         isMe = currentUserId == SessionUtils.getUserId()
         if (isMe) {
-            headerPageView.initHeaderView(titleTxt = "我的动态")
             dynamicAdapter.showType = DynamicListAdapter.POST_LIST_ME
             publish_dynamic.show()
         } else {
-            headerPageView.initHeaderView(titleTxt = "Ta的动态")
             dynamicAdapter.showType = DynamicListAdapter.POST_LIST_OTHER
             publish_dynamic.hide()
         }
-        headerPageView.imageViewBack.onClickNew {
-            finish()
-        }
-
-        postList.layoutManager = LinearLayoutManager(this)
+        postList.layoutManager = LinearLayoutManager(requireContext())
         dynamicAdapter.loadMoreModule.setOnLoadMoreListener {
             logger.info(" postList.stopScroll()")
             postList.stopScroll()
@@ -131,11 +124,11 @@ class UserDynamicActivity : BaseVMActivity<UserDynamicViewModel>() {
         postList.adapter = dynamicAdapter
         dynamicAdapter.setEmptyView(
             MixedHelper.getEmptyView(
-                this,
-                "暂无动态，快去发一条吧~")
+                requireContext(),
+                "暂无动态，快去发一条吧~"
+            )
         )
 
-        postList.isNestedScrollingEnabled = false
 
 
         mRefreshLayout.setOnRefreshListener {
@@ -143,7 +136,6 @@ class UserDynamicActivity : BaseVMActivity<UserDynamicViewModel>() {
         }
         MixedHelper.setSwipeRefreshStyle(mRefreshLayout)
 
-        mViewModel.requestPostList(QueryType.INIT, currentUserId)
 
     }
 
@@ -152,14 +144,14 @@ class UserDynamicActivity : BaseVMActivity<UserDynamicViewModel>() {
 
         dynamicAdapter.onAdapterClickNew { _, _, position ->
             val item = dynamicAdapter.getItemOrNull(position) ?: return@onAdapterClickNew
-            DynamicDetailActivity.start(this, item.postId)
+            DynamicDetailActivity.start(requireActivity(), item.postId)
         }
         dynamicAdapter.mOnItemAdapterListener = object : DynamicListAdapter.OnItemAdapterListener {
             override fun onPhotoClick(index: Int, position: Int, list: MutableList<PhotoBean>) {
                 logger.info("index=$index position=$position ")
                 val item = dynamicAdapter.getItemOrNull(index)
                 ImageActivity.start(
-                    this@UserDynamicActivity,
+                    requireActivity(),
                     position,
                     list.map { StringHelper.getOssImgUrl(it.url) },
                     item?.userId
@@ -173,9 +165,9 @@ class UserDynamicActivity : BaseVMActivity<UserDynamicViewModel>() {
             when (view.id) {
                 R.id.user_info_holder -> {
                     logger.info("打开个人主页")
-                    if (!item.userAnonymous) {
-                        HomePageActivity.newInstance(this, item.userId)
-                    }
+//                    if (!item.userAnonymous) {
+//                        HomePageActivity.newInstance(this, item.userId)
+//                    }
 
                 }
                 R.id.btn_action -> {
@@ -185,7 +177,7 @@ class UserDynamicActivity : BaseVMActivity<UserDynamicViewModel>() {
                 R.id.sdv_photo -> {
                     logger.info("大图")
                     ImageActivity.start(
-                        this,
+                        requireActivity(),
                         0,
                         item.pics.map { StringHelper.getOssImgUrl(it) },
                         item.userId
@@ -203,11 +195,11 @@ class UserDynamicActivity : BaseVMActivity<UserDynamicViewModel>() {
                 }
                 R.id.tv_comment_num -> {
                     logger.info("评论")
-                    DynamicDetailActivity.start(this, item.postId, true)
+                    DynamicDetailActivity.start(requireActivity(), item.postId, true)
                 }
                 R.id.tv_share_num -> {
                     logger.info("分享")
-                    LiveShareActivity.newInstance(this, ShareFromType.Share_Dynamic, item.postId)
+                    LiveShareActivity.newInstance(requireActivity(), ShareFromType.Share_Dynamic, item.postId)
                 }
                 R.id.iv_more_action -> {
                     logger.info("更多操作")
@@ -226,26 +218,25 @@ class UserDynamicActivity : BaseVMActivity<UserDynamicViewModel>() {
                         bottomDialog?.setActions(actions)
                     }
                     bottomDialog?.listener = bottomDialogListener
-                    bottomDialog?.show(this, "bottomDialog")
+                    bottomDialog?.show(requireActivity(), "bottomDialog")
                 }
                 R.id.tv_circle_name -> {
                     reportClick(StatisticCode.EnterGroup + StatisticCode.Post)
-                    CircleDynamicActivity.start(this, item.group?.groupId ?: return@onAdapterChildClickNew)
+                    CircleDynamicActivity.start(requireActivity(), item.group?.groupId ?: return@onAdapterChildClickNew)
                 }
             }
 
         }
 
-        headerPageView.textOperation.onClickNew {
-            huanQueViewModel.follow(currentUserId ?: return@onClickNew)
-        }
 
         publish_dynamic.onClickNew {
             logger.info("跳转到交友")
             reportClick(
                 StatisticCode.PubPost + StatisticCode.MyPost
             )
-            ARouter.getInstance().build(ARouterConstant.PUBLISH_STATE_ACTIVITY).navigation(this, PublishRequestCode)
+//            ARouter.getInstance().build(ARouterConstant.PUBLISH_STATE_ACTIVITY).navigation(requireActivity(), PublishRequestCode)
+            val intent=Intent(requireActivity(),PublishStateActivity::class.java)
+            startActivityForResult(intent,PublishRequestCode)
         }
 
         postList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -273,16 +264,16 @@ class UserDynamicActivity : BaseVMActivity<UserDynamicViewModel>() {
             mRefreshLayout.isRefreshing = false
         })
 
-        huanQueViewModel.userInfoStatusChange.observe(this, Observer {
-            if (it.isSuccess()) {
-                //处理关注状态
-                val value = it.requireT()
-                if ((value.follow == FollowStatus.True || value.follow == FollowStatus.Mutual) && value.userId == currentUserId) {
-                    headerPageView.textOperation.hide()
-                }
-            }
-
-        })
+//        huanQueViewModel.userInfoStatusChange.observe(this, Observer {
+//            if (it.isSuccess()) {
+//                //处理关注状态
+//                val value = it.requireT()
+//                if ((value.follow == FollowStatus.True || value.follow == FollowStatus.Mutual) && value.userId == currentUserId) {
+//
+//                }
+//            }
+//
+//        })
         huanQueViewModel.dynamicChangeResult.observe(this, Observer {
             if (it != null) {
                 val result = dynamicAdapter.data.firstOrNull { item -> item.postId == it.postId } ?: return@Observer
@@ -368,18 +359,7 @@ class UserDynamicActivity : BaseVMActivity<UserDynamicViewModel>() {
     }
 
     private fun renderDynamicData(listData: DynamicListInfo<DynamicItemBean>) {
-        if (currentUserId != SessionUtils.getUserId()) {
-            if (listData.extData?.follow == true) {
-                headerPageView.textOperation.hide()
-            } else {
-                headerPageView.textOperation.show()
-                headerPageView.textOperation.text = "关注"
-                headerPageView.textOperation.height = dp2px(24)
-                headerPageView.textOperation.width = dp2px(52)
-                headerPageView.textOperation.backgroundResource = R.drawable.bg_solid_btn1
-            }
 
-        }
         var isEmpty: Boolean = false
         if (listData.isPull) {
             val list = listData.list.distinct()
@@ -405,21 +385,20 @@ class UserDynamicActivity : BaseVMActivity<UserDynamicViewModel>() {
 
         }
         if (dynamicAdapter.data.isEmpty()) {
-            mRefreshLayout.hide()
             if (isMe) {
                 state_pager_view.showEmpty(emptyTxt = "暂无动态，快去发一条吧~", btnTex = "去发布", onClick = View.OnClickListener {
                     //跳转发布页面
                     reportClick(
                         StatisticCode.PubPost + StatisticCode.MyPost
                     )
-                    ARouter.getInstance().build(ARouterConstant.PUBLISH_STATE_ACTIVITY).navigation(this, PublishRequestCode)
+                    val intent=Intent(requireActivity(),PublishStateActivity::class.java)
+                    startActivityForResult(intent,PublishRequestCode)
                 })
             } else {
                 state_pager_view.showEmpty(emptyTxt = "暂无动态")
             }
 
         } else {
-            mRefreshLayout.show()
             state_pager_view.showSuccess()
         }
     }
@@ -444,7 +423,6 @@ class UserDynamicActivity : BaseVMActivity<UserDynamicViewModel>() {
 //                mRefreshLayout.show()
             }
             NetStateType.LOADING -> {//showLoading()
-                mRefreshLayout.hide()
                 state_pager_view.showLoading()
             }
             NetStateType.ERROR, NetStateType.NETWORK_ERROR -> {
@@ -469,6 +447,10 @@ class UserDynamicActivity : BaseVMActivity<UserDynamicViewModel>() {
             //刷新
             mViewModel.requestPostList(QueryType.REFRESH, currentUserId)
         }
+    }
+
+    override fun lazyLoadData() {
+        mViewModel.requestPostList(QueryType.INIT, currentUserId)
     }
 
 }
