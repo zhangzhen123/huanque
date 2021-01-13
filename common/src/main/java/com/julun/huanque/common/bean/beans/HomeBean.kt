@@ -389,7 +389,7 @@ data class NearbyUserBean(
     var age: Int = 0,
     var area: String = "",
     var coverPic: String = "",
-    var coverPicList: List<String> = listOf(),
+    var coverPicList: MutableList<String> = mutableListOf(),
     var distance: Int = 0,
     var hasRealName: String = "",
     var lat: String = "",
@@ -400,7 +400,7 @@ data class NearbyUserBean(
     var tagList: MutableList<UserTagBean> = mutableListOf(),
     var userId: Long = 0L,
     var interactTips: String = ""
-)
+) : Serializable
 
 data class FavoriteUserBean(
     var age: Int = 0,

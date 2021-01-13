@@ -4,6 +4,7 @@ import android.Manifest
 import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.text.SpannableString
@@ -17,7 +18,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.animation.addListener
+import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -38,6 +41,7 @@ import com.julun.huanque.common.bean.beans.NearbyUserBean
 import com.julun.huanque.common.constant.BooleanType
 import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.constant.HomeTabType
+import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.ForceUtils
@@ -240,12 +244,32 @@ class NearbyFragment : BaseLazyFragment() {
                     }
 
                 }
-                R.id.iv_super_like->{
+                R.id.iv_super_like -> {
                     //todo
                     logger.info("超级喜欢")
                 }
-                R.id.card_img->{
-                    HomePageActivity.newInstance(requireActivity(),item.userId)
+                R.id.card_img -> {
+                    val parentView = view.parent as? View ?: return@setOnItemChildClickListener
+                    val tempBean = cardsAdapter.getItemOrNull(position) ?: return@setOnItemChildClickListener
+                    val shareView = parentView.findViewById<View>(R.id.card_img)
+                    val tv_user_name = parentView.findViewById<View>(R.id.tv_user_name)
+
+                    val intent = Intent(requireActivity(), HomePageActivity::class.java)
+                    val pair1: androidx.core.util.Pair<View, String> =
+                        androidx.core.util.Pair(shareView, ViewCompat.getTransitionName(shareView) ?: "")
+                    val pair2: androidx.core.util.Pair<View, String> =
+                        androidx.core.util.Pair(tv_user_name, ViewCompat.getTransitionName(tv_user_name) ?: "")
+
+                    /**
+                     * 4、生成带有共享元素的Bundle，这样系统才会知道这几个元素需要做动画
+                     */
+                    val activityOptionsCompat: ActivityOptionsCompat =
+                        ActivityOptionsCompat.makeSceneTransitionAnimation(requireActivity(), pair1,pair2)
+
+                    intent.putExtra(ParamConstant.UserId, tempBean.userId)
+                    intent.putExtra(ParamConstant.NearByBean, tempBean)
+                    startActivity(intent, activityOptionsCompat.toBundle())
+//                    HomePageActivity.newInstance(requireActivity(), item.userId)
                 }
             }
         }
@@ -638,6 +662,18 @@ class NearbyFragment : BaseLazyFragment() {
                     R.id.ani_tag_04,
                     R.id.iv_super_like
                 )
+            }
+
+            override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
+                super.onBindViewHolder(holder, position)
+                val tempData = getItemOrNull(position)
+                if (tempData != null) {
+                    val card_img = holder.getView<SimpleDraweeView>(R.id.card_img)
+                    ViewCompat.setTransitionName(card_img, "Image${tempData.userId}")
+                    val tv_user_name = holder.getView<TextView>(R.id.tv_user_name)
+                    ViewCompat.setTransitionName(tv_user_name, "TextView${tempData.userId}")
+                }
+
             }
 
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {

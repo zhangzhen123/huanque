@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.fragment_user_card.*
  *@描述 标签图片列表Adapter
  */
 class TagListAdapter : BaseQuickAdapter<UserTagBean, BaseViewHolder>(R.layout.recycler_item_tag_list) {
-    private val likeDrawable = GlobalUtils.getDrawable(R.mipmap.icon_tag_like)
+    private val likeDrawable = GlobalUtils.getDrawable(R.mipmap.icon_tag_like_heart)
     private val gettedDrawable = GlobalUtils.getDrawable(R.mipmap.icon_tag_getted)
 
     //是否是喜欢的标签
