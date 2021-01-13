@@ -30,6 +30,12 @@ interface TagService {
     suspend fun manageList(@Body body: EmptyForm = EmptyForm()): Root<ManagerListData>
 
     /**
+     * 我的标签
+     */
+    @POST("social/user/tag/my")
+    suspend fun myList(@Body body: MyTagForm ): Root<MyTagListData>
+
+    /**
      * 管理标签标记喜欢
      */
     @POST("social/user/tag/like")

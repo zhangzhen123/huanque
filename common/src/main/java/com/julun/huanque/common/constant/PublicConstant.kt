@@ -83,19 +83,15 @@ object StatisticCode {
 }
 
 
-object TagTabType {
-    const val Beauty = "Beauty"
-    const val goodFigure = "goodFigure"
-    const val Style = "Style"
-    const val Sport = "Sport"
-    const val Game = "Game"
-    const val Character = "Character"
-
+object MyTagType {
+    const val AUTH = "Auth"
+    const val LIKE = "Like"
 }
 
 object ManagerTagCode {
     const val TAG_LIST = "tag_list"
     const val TAG_INFO= "tag_info"
+    const val MANAGER_PAGER_TYPE= "manager_pager_type"
 }
 
 /**

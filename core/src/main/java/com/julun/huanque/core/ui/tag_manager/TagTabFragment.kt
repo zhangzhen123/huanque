@@ -64,8 +64,10 @@ class TagTabFragment : BaseLazyFragment() {
                 sdvTag.loadImage(item.tagIcon, 18f, 18f)
                 if (item.like) {
                     holder.setImageResource(R.id.iv_tag_like, R.mipmap.icon_tag_like)
+                    sdv.alpha = 1f
                 } else {
                     holder.setImageResource(R.id.iv_tag_like, R.mipmap.icon_tag_dislike)
+                    sdv.alpha = 0.5f
                 }
                 holder.setText(R.id.tv_tag_name, item.tagName)
 
@@ -148,7 +150,7 @@ class TagTabFragment : BaseLazyFragment() {
                     })
                 }
                 val tag = it.requireT()
-                if (tag.tagId != currentTab?.tagId) {
+                if (tag.parentTagId != currentTab?.tagId) {
                     return@Observer
                 }
                 val result = mAdapter.data.firstOrNull { item -> item.tagId == tag.tagId } ?: return@Observer
