@@ -80,6 +80,15 @@ class ProfessionActivity : BaseActivity() {
     //特性弹窗
     private val mProfessionMarkFragment: ProfessionMarkFragment by lazy { ProfessionMarkFragment() }
 
+    //积极的列表
+    private val upList = mutableListOf<SingleProfessionFeatureConfig>()
+
+    //中性的列表
+    private val middleList = mutableListOf<SingleProfessionFeatureConfig>()
+
+    //消极的列表
+    private val downList = mutableListOf<SingleProfessionFeatureConfig>()
+
     override fun getLayoutId() = R.layout.act_profession
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
@@ -157,19 +166,19 @@ class ProfessionActivity : BaseActivity() {
 
             val curTypesStr = StringBuilder()
             curFeatureTypes.forEach {
-                if (it.isNotEmpty()) {
+                if (curTypesStr.isNotEmpty()) {
                     curTypesStr.append(",")
                 }
                 curTypesStr.append(it)
             }
             val oriTypesStr = StringBuilder()
             mViewModel.oriFeatureTypes.forEach {
-                if (it.isNotEmpty()) {
+                if (oriTypesStr.isNotEmpty()) {
                     oriTypesStr.append(",")
                 }
                 oriTypesStr.append(it)
             }
-            if (oriTypesStr != curTypesStr) {
+            if (oriTypesStr.toString() != curTypesStr.toString()) {
                 //职业特性数据有变化
                 form.professionFeatureCodes = curTypesStr.toString()
             }
@@ -252,6 +261,7 @@ class ProfessionActivity : BaseActivity() {
             val tempIncome = adapter.getItem(position) as? SingleIncome ?: return@setOnItemClickListener
             if (mIncomeAdapter.incomeCode == tempIncome.incomeCode) {
                 mIncomeAdapter.incomeCode = ""
+                mViewModel.professionData.value?.incomeCode = ""
                 mIncomeAdapter.notifyDataSetChanged()
                 return@setOnItemClickListener
             }
@@ -272,7 +282,21 @@ class ProfessionActivity : BaseActivity() {
             val tempData = mFeatureAdapter.getItemOrNull(position) ?: return@setOnItemClickListener
             tempData.mark = BusiConstant.True
 
-            val totalList = mViewModel.featureData.value ?: return@setOnItemClickListener
+            val totalList = when (tempData.professionFeatureType) {
+                SingleProfessionFeatureConfig.Positive -> {
+                    //积极
+                    upList
+                }
+                SingleProfessionFeatureConfig.Middle -> {
+                    //中性
+                    middleList
+                }
+                else -> {
+                    //消极
+                    downList
+                }
+            }
+
             val replaceData = getReplaceData(totalList, data)
             if (replaceData == null) {
                 //没有可以替换的数据
@@ -338,25 +362,65 @@ class ProfessionActivity : BaseActivity() {
      */
     private fun showFeatureView(featureList: MutableList<SingleProfessionFeatureConfig>) {
         showTotalFeatureNum(featureList)
-
-        val placeNoMarkList = mutableListOf<SingleProfessionFeatureConfig>()
-
-        featureList.filter { it.mark != BusiConstant.True }
-            .forEach {
-                placeNoMarkList.add(it)
-            }
-        val noMarkList = mutableListOf<SingleProfessionFeatureConfig>()
-        if (placeNoMarkList.size <= 8) {
-            noMarkList.addAll(placeNoMarkList)
-        } else {
-            while (noMarkList.size < 8) {
-                val singleCulture = placeNoMarkList.random()
-                if (singleCulture !in noMarkList) {
-                    noMarkList.add(singleCulture)
+        upList.clear()
+        middleList.clear()
+        downList.clear()
+        featureList.forEach {
+            when (it.professionFeatureType) {
+                SingleProfessionFeatureConfig.Positive -> {
+                    //积极
+                    upList.add(it)
                 }
+                SingleProfessionFeatureConfig.Middle -> {
+                    //中性
+                    middleList.add(it)
+                }
+                SingleProfessionFeatureConfig.Negative -> {
+                    //消极
+                    downList.add(it)
+                }
+
             }
         }
-        mFeatureAdapter.setList(noMarkList)
+
+        val showList = mutableListOf<SingleProfessionFeatureConfig>()
+        //添加正向
+        if (upList.size <= 4) {
+            showList.addAll(upList)
+        } else {
+            //获取4个正向
+            upList.asSequence().take(4).forEach {
+                showList.add(it)
+            }
+        }
+        //添加中性
+        if (middleList.size <= 2) {
+            showList.addAll(middleList)
+        } else {
+            //获取两个中性
+            middleList.asSequence().take(2).forEach {
+                showList.add(it)
+            }
+        }
+        //添加负性
+        if (downList.size <= 2) {
+            showList.addAll(downList)
+        } else {
+            //获取两个负向
+            downList.asSequence().take(2).forEach {
+                showList.add(it)
+            }
+        }
+        //随机打乱
+        val realList = mutableListOf<SingleProfessionFeatureConfig>()
+        val count = showList.size
+        while (realList.size != count) {
+            val tempData = showList.random()
+            if (tempData !in realList) {
+                realList.add(tempData)
+            }
+        }
+        mFeatureAdapter.setList(realList)
         showChange(mFeatureAdapter, iv_profess_feature)
     }
 

@@ -437,10 +437,10 @@ class EditInfoActivity : BaseActivity() {
      * 显示数据
      */
     private fun showViewByData(info: EditPagerInfo) {
-        if(info.perfection == 100){
+        if (info.perfection == 100) {
             //隐藏进度条
             con_progress.hide()
-        }else{
+        } else {
             //显示进度条
             con_progress.show()
             updateProgress(info.perfection)
@@ -522,7 +522,7 @@ class EditInfoActivity : BaseActivity() {
         if (info.age != 0) {
             ageConstell.append(info.age)
             ageConstell.append("/")
-            ageConstell.append(info.constellationInfo.constellationName)
+            ageConstell.append(info.constellation)
         }
         showBasicInfo(tv_age_constellation, ageConstell.toString())
 
@@ -943,7 +943,7 @@ class EditInfoActivity : BaseActivity() {
                 mEditInfoViewModel.basicInfo.value?.let {
                     it.birthday = birthday
                     it.age = age
-                    it.constellationInfo.constellationName = constellationName
+                    it.constellation = constellationName
                 }
                 val ageConstell = StringBuilder()
                 ageConstell.append(age)
@@ -1037,6 +1037,7 @@ class EditInfoActivity : BaseActivity() {
                 picSb.append("${it.logId}")
             }
         }
+        //图片保存弹窗
         if (picSb.toString() != mEditInfoViewModel.originCoverPicIdStr) {
             //数据发生变化，需要提示
             MyAlertDialog(this).showAlertWithOKAndCancel(
@@ -1047,9 +1048,36 @@ class EditInfoActivity : BaseActivity() {
                     finish()
                 }), "修改未保存", "保存", noText = "放弃保存"
             )
-        } else {
-            super.onBackPressed()
+            return
         }
+
+        //资料弹窗
+        val basicData = mEditInfoViewModel.basicInfo.value
+        if (basicData != null) {
+            //签名
+            val sign = basicData.mySign
+            val homeTownId = basicData.homeTown.homeTownId
+            val age = basicData.age
+            val figure = basicData.figure.figure
+            val school = basicData.schoolInfo.school
+            val professionId = basicData.profession.professionId
+            if (sign.isEmpty() || homeTownId == 0 || age == 0 || figure.isEmpty() || school.isEmpty() || professionId == 0) {
+                //有数据未完成
+                MyAlertDialog(this).showAlertWithOKAndCancel(
+                    "资料完整度80%以上用户获得心动概率更高",
+                    MyAlertDialog.MyDialogCallback(onRight = {
+
+                    }, onCancel = {
+                        finish()
+                    }), "是否放弃填写资料？", "继续填写", noText = "放弃"
+                )
+                return
+            }
+
+        }
+
+        super.onBackPressed()
+
 
     }
 
