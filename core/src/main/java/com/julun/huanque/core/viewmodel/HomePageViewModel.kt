@@ -69,6 +69,9 @@ class HomePageViewModel : BaseViewModel() {
 
     //心动状态
     val heartStatus: MutableLiveData<String> by lazy { MutableLiveData<String>() }
+
+    //是否有共享元素跳转
+    var shareElement = false
 //
 //    //附近数据
 //    val nearByBeanData: MutableLiveData<NearbyUserBean> by lazy { MutableLiveData<NearbyUserBean>() }

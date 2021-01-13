@@ -503,8 +503,11 @@ class HomePageActivity : BaseActivity() {
         val nearByBean = intent.getSerializableExtra(ParamConstant.NearByBean) as? NearbyUserBean
 //        mHomePageViewModel.nearByBeanData.value = nearByBean
         if (nearByBean != null) {
+            mHomePageViewModel.shareElement = true
             showPic(nearByBean.coverPic, nearByBean.coverPicList)
             tv_nickname.text = nearByBean.nickname
+        } else {
+            mHomePageViewModel.shareElement = false
         }
 
         val userID = intent.getLongExtra(ParamConstant.UserId, 0)
@@ -674,7 +677,10 @@ class HomePageActivity : BaseActivity() {
      */
     private fun showViewByData(bean: HomePageInfo) {
         tv_user_name.text = bean.nickname
-//        showPic(bean.headPic, bean.picList)
+        if (!mHomePageViewModel.shareElement) {
+            showPic(bean.headPic, bean.picList)
+            tv_nickname.text = bean.nickname
+        }
         if (bean.authMark.isEmpty()) {
             sdv_real.hide()
         } else {
@@ -726,7 +732,6 @@ class HomePageActivity : BaseActivity() {
 
         }
 
-//        tv_nickname.text = bean.nickname
 
 
         if (bean.mySign.isEmpty()) {
