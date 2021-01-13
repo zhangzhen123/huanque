@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
@@ -122,6 +123,7 @@ class UserDynamicFragment : BaseVMFragment<UserDynamicViewModel>() {
         (postList.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         dynamicAdapter.headerWithEmptyEnable = true
         postList.adapter = dynamicAdapter
+        dynamicAdapter.addFooterView(LayoutInflater.from(context).inflate(R.layout.view_bottom_holder, null))
         dynamicAdapter.setEmptyView(
             MixedHelper.getEmptyView(
                 requireContext(),
@@ -386,20 +388,28 @@ class UserDynamicFragment : BaseVMFragment<UserDynamicViewModel>() {
         }
         if (dynamicAdapter.data.isEmpty()) {
             if (isMe) {
-                state_pager_view.showEmpty(emptyTxt = "暂无动态，快去发一条吧~", btnTex = "去发布", onClick = View.OnClickListener {
-                    //跳转发布页面
-                    reportClick(
-                        StatisticCode.PubPost + StatisticCode.MyPost
+                dynamicAdapter.setEmptyView(
+                    MixedHelper.getEmptyView(
+                        requireContext(),
+                        msg = "暂无动态，快去发布一条吧~", btnTex = "去发布", onClick = View.OnClickListener {
+                            //跳转发布页面
+                            reportClick(
+                                StatisticCode.PubPost + StatisticCode.MyPost
+                            )
+                            val intent=Intent(requireActivity(),PublishStateActivity::class.java)
+                            startActivityForResult(intent,PublishRequestCode)
+                        }
                     )
-                    val intent=Intent(requireActivity(),PublishStateActivity::class.java)
-                    startActivityForResult(intent,PublishRequestCode)
-                })
+                )
             } else {
-                state_pager_view.showEmpty(emptyTxt = "暂无动态")
+                dynamicAdapter.setEmptyView(
+                    MixedHelper.getEmptyView(
+                        requireContext(),
+                        msg = "暂无动态"
+                    )
+                )
             }
 
-        } else {
-            state_pager_view.showSuccess()
         }
     }
 
@@ -419,8 +429,7 @@ class UserDynamicFragment : BaseVMFragment<UserDynamicViewModel>() {
     override fun showLoadState(state: NetState) {
         when (state.state) {
             NetStateType.SUCCESS -> {//showSuccess()
-//                state_pager_view.showSuccess()
-//                mRefreshLayout.show()
+                state_pager_view.showSuccess()
             }
             NetStateType.LOADING -> {//showLoading()
                 state_pager_view.showLoading()

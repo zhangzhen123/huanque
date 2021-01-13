@@ -1,18 +1,12 @@
 package com.julun.huanque.core.adapter
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.util.SparseArray
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import com.julun.huanque.common.bean.beans.PagerTab
-import com.julun.huanque.common.constant.SquareTabType
-import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.core.ui.dynamic.UserDynamicFragment
 import com.julun.huanque.core.ui.homepage.HomePageInformationFragment
-import com.julun.huanque.core.ui.main.dynamic_square.DynamicTabFragment
-import com.julun.huanque.core.ui.main.heartbeat.FavoriteFragment
 
 /**
  *@创建者   dong

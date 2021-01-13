@@ -550,6 +550,7 @@ class HomePageActivity : BaseActivity() {
                 when (it.state) {
                     NetStateType.SUCCESS -> {
                         state_pager_view.showSuccess()
+                        mPagerAdapter?.notifyDataSetChanged()
                     }
                     NetStateType.NETWORK_ERROR -> {
 //                        state_pager_view.showError()
