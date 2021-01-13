@@ -15,7 +15,6 @@
         android:layout_marginBottom="7.5dp"
         android:background="@drawable/bg_edit_culture"
         android:gravity="center"
-        android:singleLine="true"
         android:textColor="@color/black_333"
         android:textSize="@dimen/sp_12"
         android:textStyle="bold"
