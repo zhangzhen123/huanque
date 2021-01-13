@@ -110,7 +110,7 @@ class ProfessionActivity : BaseActivity() {
         if (mViewModel.index >= 0) {
             header_page.textOperation.onClickNew {
                 //跳过
-                EditUtils.goToNext(this,mViewModel.index)
+                EditUtils.goToNext(this, mViewModel.index)
             }
         }
 
@@ -189,8 +189,8 @@ class ProfessionActivity : BaseActivity() {
             if (form.income != null || form.professionFeatureCodes != null || form.professionId != null) {
                 //数据有变动
                 mViewModel.saveProfession(form)
-            }else{
-                EditUtils.goToNext(this,mViewModel.index)
+            } else {
+                EditUtils.goToNext(this, mViewModel.index)
             }
 
         }
@@ -223,7 +223,7 @@ class ProfessionActivity : BaseActivity() {
         mViewModel.processData.observe(this, Observer {
             if (it != null) {
                 EventBus.getDefault().post(it)
-                EditUtils.goToNext(this,mViewModel.index)
+                EditUtils.goToNext(this, mViewModel.index)
             }
         })
     }
@@ -250,6 +250,11 @@ class ProfessionActivity : BaseActivity() {
         recycler_item_income.adapter = mIncomeAdapter
         mIncomeAdapter.setOnItemClickListener { adapter, view, position ->
             val tempIncome = adapter.getItem(position) as? SingleIncome ?: return@setOnItemClickListener
+            if (mIncomeAdapter.incomeCode == tempIncome.incomeCode) {
+                mIncomeAdapter.incomeCode = ""
+                mIncomeAdapter.notifyDataSetChanged()
+                return@setOnItemClickListener
+            }
             mIncomeAdapter.incomeCode = tempIncome.incomeCode
             mViewModel.professionData.value?.incomeCode = tempIncome.incomeCode
             mIncomeAdapter.notifyDataSetChanged()

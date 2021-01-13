@@ -437,7 +437,14 @@ class EditInfoActivity : BaseActivity() {
      * 显示数据
      */
     private fun showViewByData(info: EditPagerInfo) {
-        updateProgress(info.perfection)
+        if(info.perfection == 100){
+            //隐藏进度条
+            con_progress.hide()
+        }else{
+            //显示进度条
+            con_progress.show()
+            updateProgress(info.perfection)
+        }
 
         //显示图片相关
         val pics = info.picList
@@ -1035,10 +1042,10 @@ class EditInfoActivity : BaseActivity() {
             MyAlertDialog(this).showAlertWithOKAndCancel(
                 "要保存修改，请点击右上角【保存】按钮",
                 MyAlertDialog.MyDialogCallback(onRight = {
-
+                    header_page.textOperation.performClick()
                 }, onCancel = {
                     finish()
-                }), "修改未保存", "好的", noText = "放弃保存"
+                }), "修改未保存", "保存", noText = "放弃保存"
             )
         } else {
             super.onBackPressed()
