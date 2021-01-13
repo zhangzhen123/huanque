@@ -58,6 +58,7 @@ class CustomCoordinatorLayout(context: Context, attrs: AttributeSet?) :
         this.mZoomView = mZoomView
     }
 
+
     fun setmMoveView(mMoveView1: View?, mMoveView2: View, mMoveView3: View?) {
         mMoveView = mMoveView1
         this.mMoveView2 = mMoveView2
@@ -68,6 +69,9 @@ class CustomCoordinatorLayout(context: Context, attrs: AttributeSet?) :
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        if(true){
+            return super.dispatchTouchEvent(ev)
+        }
         val location = IntArray(2)
         mZoomView?.getLocationOnScreen(location)
         val y = location[1]

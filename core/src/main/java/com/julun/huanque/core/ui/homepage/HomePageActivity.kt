@@ -8,6 +8,9 @@ import android.graphics.Typeface
 import android.media.MediaPlayer
 import android.os.Build
 import android.os.Bundle
+import android.transition.ChangeBounds
+import android.transition.ChangeTransform
+import android.transition.TransitionSet
 import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
@@ -15,6 +18,7 @@ import android.widget.ImageView
 import androidx.activity.viewModels
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,12 +28,14 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.facebook.drawee.view.SimpleDraweeView
 import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.transition.platform.Hold
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.bean.beans.HomePageInfo
 import com.julun.huanque.common.bean.beans.HomePagePicBean
+import com.julun.huanque.common.bean.beans.NearbyUserBean
 import com.julun.huanque.common.bean.beans.VoiceBean
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.StringHelper
@@ -116,8 +122,34 @@ class HomePageActivity : BaseActivity() {
     override fun getLayoutId() = R.layout.act_home_page
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
+        intent?.let { tent ->
+            resetView(tent)
+        }
         val statusHeight = StatusBarUtil.getStatusBarHeight(this)
         mStartChange = ScreenUtils.getScreenWidth() * 308 / 375 - dp2px(44) - statusHeight
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            /**
+             * 1、设置相同的TransitionName
+             */
+            ViewCompat.setTransitionName(bga_banner, "Image${mHomePageViewModel.targetUserId}")
+            ViewCompat.setTransitionName(tv_nickname, "TextView${mHomePageViewModel.targetUserId}")
+            /**
+             * 2、设置WindowTransition,除指定的ShareElement外，其它所有View都会执行这个Transition动画
+             */
+//            window.enterTransition = Hold()
+//            window.exitTransition = Hold()
+            /**
+             * 3、设置ShareElementTransition,指定的ShareElement会执行这个Transiton动画
+             */
+            val transitionSet = TransitionSet()
+            transitionSet.addTransition(ChangeBounds())
+            transitionSet.addTransition(ChangeTransform())
+            transitionSet.addTarget(bga_banner)
+//            transitionSet.duration = 100
+            window.sharedElementEnterTransition = transitionSet
+            window.sharedElementExitTransition = transitionSet
+        }
 
         window.decorView.systemUiVisibility =
             View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
@@ -138,9 +170,6 @@ class HomePageActivity : BaseActivity() {
         val params = view_top.layoutParams as? ConstraintLayout.LayoutParams
         params?.topMargin = statusHeight
         view_top.layoutParams = params
-        intent?.let { tent ->
-            resetView(tent)
-        }
 
 
         //半秒回调一次
@@ -470,6 +499,14 @@ class HomePageActivity : BaseActivity() {
      * 重置页面
      */
     private fun resetView(intent: Intent) {
+        //附近数据
+        val nearByBean = intent.getSerializableExtra(ParamConstant.NearByBean) as? NearbyUserBean
+//        mHomePageViewModel.nearByBeanData.value = nearByBean
+        if (nearByBean != null) {
+            showPic(nearByBean.coverPic, nearByBean.coverPicList)
+            tv_nickname.text = nearByBean.nickname
+        }
+
         val userID = intent.getLongExtra(ParamConstant.UserId, 0)
         mHomePageViewModel.targetUserId = userID
         //是否是我的主页
@@ -509,10 +546,10 @@ class HomePageActivity : BaseActivity() {
                         state_pager_view.showSuccess()
                     }
                     NetStateType.NETWORK_ERROR -> {
-                        state_pager_view.showError()
+//                        state_pager_view.showError()
                     }
                     NetStateType.LOADING -> {
-                        state_pager_view.showLoading()
+//                        state_pager_view.showLoading()
                     }
 
 
@@ -628,9 +665,7 @@ class HomePageActivity : BaseActivity() {
                 if (change.userId == mHomePageViewModel.targetUserId) {
                     mHomePageViewModel.followStatus.value = change.follow
                 }
-
             }
-
         })
     }
 
@@ -639,13 +674,7 @@ class HomePageActivity : BaseActivity() {
      */
     private fun showViewByData(bean: HomePageInfo) {
         tv_user_name.text = bean.nickname
-        val picList = mutableListOf<HomePagePicBean>()
-        picList.add(HomePagePicBean(bean.headPic, bean.headRealPeople, BusiConstant.True))
-        bean.picList.forEach {
-            picList.add(HomePagePicBean(it))
-        }
-        showBanner(picList)
-        mPicAdapter.setList(picList)
+//        showPic(bean.headPic, bean.picList)
         if (bean.authMark.isEmpty()) {
             sdv_real.hide()
         } else {
@@ -653,7 +682,12 @@ class HomePageActivity : BaseActivity() {
 //            sdv_real.loadImage(bean.authMark, 18f, 18f)
         }
 
-        tv_xd_time.text = bean.interactTips
+        if (bean.interactTips.isNotEmpty()) {
+            tv_xd_time.text = bean.interactTips
+            tv_xd_time.show()
+        } else {
+            tv_xd_time.hide()
+        }
 
         val voiceStatus = bean.voice.voiceStatus
         if (voiceStatus == VoiceBean.Pass) {
@@ -692,7 +726,7 @@ class HomePageActivity : BaseActivity() {
 
         }
 
-        tv_nickname.text = bean.nickname
+//        tv_nickname.text = bean.nickname
 
 
         if (bean.mySign.isEmpty()) {
@@ -777,6 +811,19 @@ class HomePageActivity : BaseActivity() {
         }
     }
 
+    /**
+     * 显示图片数据
+     */
+    private fun showPic(headerPic: String, coverPicList: MutableList<String>) {
+        val picList = mutableListOf<HomePagePicBean>()
+        picList.add(HomePagePicBean(headerPic, selected = BusiConstant.True))
+        coverPicList.forEach {
+            picList.add(HomePagePicBean(it))
+        }
+        showBanner(picList)
+        mPicAdapter.setList(picList)
+    }
+
 
     /**
      * 显示心动状态
@@ -799,12 +846,12 @@ class HomePageActivity : BaseActivity() {
             val pic = itemView?.findViewById<SimpleDraweeView>(R.id.sdv) ?: return@Adapter
 
             ImageUtils.loadImageNoResize(pic, "${model?.coverPic}")
-            val icWater = itemView?.findViewById<ImageView>(R.id.iv_water) ?: return@Adapter
-            if (model?.realPic == BusiConstant.True) {
-                icWater.show()
-            } else {
-                icWater.hide()
-            }
+//            val icWater = itemView?.findViewById<ImageView>(R.id.iv_water) ?: return@Adapter
+//            if (model?.realPic == BusiConstant.True) {
+//                icWater.show()
+//            } else {
+//                icWater.hide()
+//            }
         }
     }
 

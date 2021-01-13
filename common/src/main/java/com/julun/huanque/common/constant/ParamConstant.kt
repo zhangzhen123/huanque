@@ -193,4 +193,7 @@ object ParamConstant {
 
     //数量
     const val Count = "Count"
+
+    //附近数据
+    const val NearByBean = "NearByBean"
 }

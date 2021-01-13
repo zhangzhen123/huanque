@@ -2,10 +2,7 @@ package com.julun.huanque.core.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.julun.huanque.common.bean.beans.AppraiseBean
-import com.julun.huanque.common.bean.beans.CloseConfidantBean
-import com.julun.huanque.common.bean.beans.EvaluateTags
-import com.julun.huanque.common.bean.beans.HomePageInfo
+import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.forms.EvaluateForm
 import com.julun.huanque.common.bean.forms.FriendIdForm
 import com.julun.huanque.common.bean.forms.UserIdForm
@@ -72,6 +69,9 @@ class HomePageViewModel : BaseViewModel() {
 
     //心动状态
     val heartStatus: MutableLiveData<String> by lazy { MutableLiveData<String>() }
+//
+//    //附近数据
+//    val nearByBeanData: MutableLiveData<NearbyUserBean> by lazy { MutableLiveData<NearbyUserBean>() }
 
     //评论列表
     var targetUserId = 0L
