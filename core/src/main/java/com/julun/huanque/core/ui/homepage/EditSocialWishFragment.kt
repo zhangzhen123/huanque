@@ -9,6 +9,7 @@ import com.julun.huanque.common.bean.beans.SocialWishBean
 import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.EditSocialWishAdapter
 import com.julun.huanque.core.viewmodel.EditInfoViewModel
@@ -90,6 +91,7 @@ class EditSocialWishFragment : BaseBottomSheetFragment() {
                 //取消选中
                 val selectCount = getSelectCount()
                 if (selectCount <= 1) {
+                    ToastUtils.show("最少选择一个社交意愿")
                     return@setOnItemClickListener
                 }
 

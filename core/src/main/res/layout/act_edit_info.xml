@@ -68,13 +68,13 @@
                     style="?android:attr/progressBarStyleHorizontal"
                     android:layout_width="0px"
                     android:layout_height="8dp"
-                    android:layout_marginLeft="76dp"
-                    android:layout_marginRight="35dp"
+                    android:layout_marginLeft="14dp"
+                    android:layout_marginRight="14dp"
                     android:max="100"
                     android:progressDrawable="@drawable/bg_edit_progress"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintLeft_toRightOf="@id/tv_progressbar"
+                    app:layout_constraintRight_toLeftOf="@id/iv_close_progress"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <View

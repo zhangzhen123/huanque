@@ -797,7 +797,12 @@ class HomePageActivity : BaseActivity() {
         } else {
             "女"
         }
-        tv_age.text = "${bean.distanceCity.curryCityName} /${bean.age}岁 ${sexName}"
+        val age = bean.age
+        if(age > 0){
+            tv_age.text = "${bean.distanceCity.curryCityName} /${bean.age}岁 ${sexName}"
+        }else{
+            tv_age.text = "${bean.distanceCity.curryCityName} /${sexName}"
+        }
 
 
         if (mHomePageViewModel.mineHomePage) {

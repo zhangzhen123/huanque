@@ -71,6 +71,9 @@ class SchoolViewModel : BaseViewModel() {
         if (form.startYear == null && form.schoolId == null && form.education == null) {
             return
         }
+        if(form.schoolId == 0){
+            form.schoolId = null
+        }
         viewModelScope.launch {
             request({
                 processData.value = userService.saveSchool(form).dataConvert()

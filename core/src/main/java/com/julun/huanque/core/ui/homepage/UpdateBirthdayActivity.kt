@@ -99,7 +99,7 @@ class UpdateBirthdayActivity : BaseActivity() {
         }
         tv_constellation.onClickNew {
             //点击星座
-            val constellType = ConstellationUtils.getConstellation(mViewModel.originalDate ?: return@onClickNew).type
+            val constellType = ConstellationUtils.getConstellation(mViewModel.birthdayData.value ?: return@onClickNew).type
             if (constellType.isNotEmpty()) {
                 //星座弹窗
                 ConstellationFragment.newInstance(constellType).show(supportFragmentManager, "ConstellationFragment")
@@ -157,16 +157,17 @@ class UpdateBirthdayActivity : BaseActivity() {
         val selTime = mViewModel.originalDate
         if (selTime != null) {
             selectedDate.time = selTime
-        }else{
-            if(SessionUtils.getSex() == Sex.MALE){
+        } else {
+            if (SessionUtils.getSex() == Sex.MALE) {
                 //男
-                selectedDate.set(currentYear - 25, currentMonth, currentDay)
-            }else{
+//                selectedDate.set(currentYear - 25, currentMonth, currentDay)
+                selectedDate.set(currentYear - 25, 0, 1)
+            } else {
                 //女
-                selectedDate.set(currentYear - 22, currentMonth, currentDay)
+//                selectedDate.set(currentYear - 22, currentMonth, currentDay)
+                selectedDate.set(currentYear - 22, 0, 1)
             }
         }
-
 
 
 //        val startDate = Calendar.getInstance()

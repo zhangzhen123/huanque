@@ -10,6 +10,7 @@ import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.bean.events.FinishToLoginEvent
 import com.julun.huanque.common.constant.Sex
+import com.julun.huanque.common.manager.ActivitiesManager
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.common.utils.GlobalUtils
@@ -129,7 +130,8 @@ class SelectSexActivity : BaseActivity() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun toLoginEvent(event: FinishToLoginEvent) {
-        finish()
+//        finish()
+        ActivitiesManager.INSTANCE.finishApp()
     }
 
     override fun onBackPressed() {

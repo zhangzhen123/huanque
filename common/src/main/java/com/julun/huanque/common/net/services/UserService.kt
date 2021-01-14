@@ -304,6 +304,13 @@ interface UserService {
     @POST("user/acct/data/update")
     suspend fun updateUserInfo(@Body form: UpdateUserInfoForm): Root<UserProcessBean>
 
+
+    /**
+     * 更新用户数据
+     */
+    @POST("user/acct/data/update")
+    suspend fun updateNickname(@Body form: UpdateUserInfoForm): Root<VoidResult>
+
     /**
      * 家乡初始化
      */

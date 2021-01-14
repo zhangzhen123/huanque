@@ -682,7 +682,7 @@ class WelcomeActivity : BaseActivity() {
             val sessionId = SessionUtils.getSessionId()
             if (sessionId.isNotEmpty()) {
                 if (SessionUtils.getRegComplete()) {
-                    startActivity(Intent(this, MainActivity::class.java))
+                    startActivity(Intent( this, MainActivity::class.java))
                 } else {
                     SelectSexActivity.newInstance(this)
                 }

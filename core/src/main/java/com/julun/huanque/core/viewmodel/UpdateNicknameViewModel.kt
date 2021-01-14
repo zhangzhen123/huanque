@@ -2,7 +2,6 @@ package com.julun.huanque.core.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.julun.huanque.common.bean.beans.UserProcessBean
 import com.julun.huanque.common.bean.forms.UpdateUserInfoForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.net.Requests
@@ -24,7 +23,7 @@ class UpdateNicknameViewModel : BaseViewModel() {
     var mOriginalNickname = ""
 
     //昵称更新成功标识位
-    val perfectionData: MutableLiveData<UserProcessBean> by lazy { MutableLiveData<UserProcessBean>() }
+    val nicknameUpdateSuccessData: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
     //是否正在更新昵称
     private var updateing = false
@@ -40,8 +39,9 @@ class UpdateNicknameViewModel : BaseViewModel() {
         viewModelScope.launch {
             request({
                 val form = UpdateUserInfoForm(nickname)
-                perfectionData.value = userService.updateUserInfo(form).dataConvert()
-                //通知外界，基础数据有变化
+                userService.updateNickname(form).dataConvert()
+                nicknameUpdateSuccessData.value = true
+                        //通知外界，基础数据有变化
                 EventBus.getDefault().post(form)
                 mOriginalNickname = nickname
             }, {}, { updateing = false })

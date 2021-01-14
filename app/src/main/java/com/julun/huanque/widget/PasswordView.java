@@ -405,15 +405,20 @@ public class PasswordView extends View {
         paint.setStrokeWidth(borderWidth);
         paint.setStyle(Paint.Style.FILL);
         for (int i = 0; i < passwordLength; i++) {
-            String curPw = password[i];
+//            String curPw = password[i];
             if (error) {
                 paint.setColor(errorBorderColor);
             } else {
-                if (curPw == null || curPw.isEmpty()) {
-                    paint.setColor(borderColor);
-                } else {
+                if(i <= cursorPosition){
                     paint.setColor(fullBorderColor);
+                }else {
+                    paint.setColor(borderColor);
                 }
+//                if (curPw == null || curPw.isEmpty()) {
+//                    paint.setColor(borderColor);
+//                } else {
+//                    paint.setColor(fullBorderColor);
+//                }
             }
 
             //根据密码位数for循环绘制直线

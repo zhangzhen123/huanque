@@ -124,7 +124,17 @@ class HomePageInformationFragment : BaseFragment() {
 
         view_stature.onClickNew {
             //身材
-            mFigureFragment.show(childFragmentManager, "FigureFragment")
+            if ((mHomePageViewModel.homeInfoBean.value?.figure?.height ?: 0) > 0) {
+                //有身材数据
+                mFigureFragment.show(childFragmentManager, "FigureFragment")
+            } else {
+                //无身材数据,邀请填写
+                if (mHomePageViewModel.mineHomePage) {
+                    return@onClickNew
+                }
+                mInviteViewModel.mType = InviteCompleteForm.Information
+                mInviteFillFragment.show(childFragmentManager, "InviteFillFragment")
+            }
         }
 
         view_constellation.onClickNew {
@@ -224,7 +234,11 @@ class HomePageInformationFragment : BaseFragment() {
                     //我的主页
                     AuthTagPicActivity.start(requireActivity(), item.tagId, mHomePageViewModel.mineHomePage, false, true)
                 } else {
-                    TagPicsActivity.start(requireActivity(), item, mHomePageViewModel.targetUserId)
+                    if (isSameSex) {
+                        AuthTagPicActivity.start(requireActivity(), item.tagId, mHomePageViewModel.mineHomePage, false, isSameSex)
+                    } else {
+                        TagPicsActivity.start(requireActivity(), item, mHomePageViewModel.targetUserId)
+                    }
                 }
             }
 
@@ -246,7 +260,8 @@ class HomePageInformationFragment : BaseFragment() {
             } else {
                 if (mHomePageViewModel.mineHomePage) {
                     //我的主页
-                    AuthTagPicActivity.start(requireActivity(), item.tagId, mHomePageViewModel.mineHomePage, true, false)
+//                    AuthTagPicActivity.start(requireActivity(), item.tagId, mHomePageViewModel.mineHomePage, true, false)
+                    TagPicsActivity.start(requireActivity(), item, mHomePageViewModel.targetUserId)
                 } else {
                     if (isSameSex) {
                         //同性

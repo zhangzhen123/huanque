@@ -90,10 +90,9 @@ class UpdateNicknameActivity : BaseActivity() {
      * 初始化ViewModel
      */
     private fun initViewModel() {
-        mViewModel.perfectionData.observe(this, Observer {
-            if (it != null) {
+        mViewModel.nicknameUpdateSuccessData.observe(this, Observer {
+            if (it == true) {
                 ToastUtils.show("昵称保存成功")
-                EventBus.getDefault().post(it)
                 finish()
             }
         })

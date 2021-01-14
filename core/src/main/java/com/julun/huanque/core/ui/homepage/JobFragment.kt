@@ -7,6 +7,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.julun.huanque.common.base.BaseBottomSheetFragment
 import com.julun.huanque.common.bean.beans.ProfessionInfo
+import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.ProfessionPeculiarityAdapter
@@ -57,6 +58,7 @@ class JobFragment : BaseBottomSheetFragment() {
     private fun initRecyclerView() {
         recycler_view_peculiarity.layoutManager = GridLayoutManager(requireContext(), 3)
         recycler_view_peculiarity.adapter = mAdapter
+        mAdapter.setEmptyView(MixedHelper.getEmptyView(requireContext(),"TA还没有填写职业特点哦",true))
     }
 
     /**
@@ -66,7 +68,7 @@ class JobFragment : BaseBottomSheetFragment() {
         tv_industry.text = info.professionTypeText
         tv_profession.text = info.professionName
         val incomeText = info.incomeText
-        if (incomeText.isEmpty()) {
+        if (incomeText.isNotEmpty()) {
             tv_income.text = incomeText
         } else {
             tv_income.text = "-"

@@ -32,6 +32,7 @@ import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.manager.FastLoginManager
 import com.julun.huanque.support.LoginManager
+import com.julun.huanque.support.WXApiManager
 import com.julun.huanque.viewmodel.LoginViewModel
 import com.julun.huanque.viewmodel.PhoneNumLoginViewModel
 import com.julun.huanque.widget.PasswordView
@@ -40,6 +41,8 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.android.synthetic.main.frag_login.*
+import org.jetbrains.anko.backgroundColor
+import org.jetbrains.anko.textColor
 import java.util.concurrent.TimeUnit
 
 
@@ -95,7 +98,7 @@ class LoginActivity2 : BaseActivity() {
 
     override fun initEvents(rootView: View) {
         super.initEvents(rootView)
-        view_weixin.onClickNew {
+        con_weixin.onClickNew {
             mLoginViewModel.weixinLoginFlag.value = true
 //            val intent = Intent(requireActivity(), TestAnimationActivity::class.java)
 //            startActivity(intent)
@@ -137,8 +140,12 @@ class LoginActivity2 : BaseActivity() {
                     tv_phone_code.isSelected = phneNum.length >= 11
                     if (it.isNotEmpty()) {
                         phone_num_clear.visibility = View.VISIBLE
+                        tv_formar.textColor = GlobalUtils.getColor(R.color.black_333)
+                        view_line.backgroundColor = GlobalUtils.getColor(R.color.black_333)
                     } else {
                         phone_num_clear.visibility = View.INVISIBLE
+                        tv_formar.textColor = GlobalUtils.getColor(R.color.black_999)
+                        view_line.backgroundColor = GlobalUtils.getColor(R.color.black_999)
                     }
                 }
             }
@@ -247,6 +254,13 @@ class LoginActivity2 : BaseActivity() {
             }
         })
 
+        mLoginViewModel.weixinLoginFlag.observe(this, Observer {
+            if (it == true) {
+                //点击了微信登录
+                WXApiManager.doLogin(this)
+            }
+        })
+
         mLoginViewModel.loginData.observe(this, Observer {
             if (it != null) {
                 loginSuccess()
@@ -263,6 +277,7 @@ class LoginActivity2 : BaseActivity() {
             if (it == true) {
                 //验证码发送成功
                 tv_resend.isClickable = it == true
+                password_view.clearPassword()
             }
         })
 
@@ -294,6 +309,7 @@ class LoginActivity2 : BaseActivity() {
                     .subscribe({
                         password_view.error = false
                         password_view.clearPassword()
+                        password_view.requestFocus()
                     }, {})
             }
         })
@@ -418,6 +434,7 @@ class LoginActivity2 : BaseActivity() {
             })
         }
         mShowCodeSet.start()
+        con_weixin.hide()
     }
 
     private val mShowInfoSet: AnimatorSet = AnimatorSet()
@@ -455,6 +472,7 @@ class LoginActivity2 : BaseActivity() {
             })
         }
         mShowInfoSet.start()
+        con_weixin.show()
     }
 
 
