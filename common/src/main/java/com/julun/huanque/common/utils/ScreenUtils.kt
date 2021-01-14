@@ -120,13 +120,15 @@ class ScreenUtils private constructor() {
         /**
          * 通过反射，获取包含虚拟键的整体屏幕高度
 
-         * @return
+         *   "目前最低版本就是17 不再需要反射" 使用[getRealScreenHeight]代替
          */
+
         fun getScreenHeightHasVirtualKey(): Int {
             var dpi = 0
             val wmManager = CommonInit.getInstance().getApp()
                 .getSystemService(Context.WINDOW_SERVICE) as WindowManager
             val display = wmManager.defaultDisplay
+
             val dm = DisplayMetrics()
             val c: Class<*>
             try {
@@ -139,6 +141,21 @@ class ScreenUtils private constructor() {
             }
 
             return dpi
+        }
+
+        /**
+         *
+         * 由于现在最低版本是17 所以可以直接使用getRealMetrics方法获取真实的屏幕高度了
+         *
+         */
+        fun getRealScreenHeight(): Int {
+            val wmManager = CommonInit.getInstance().getApp()
+                .getSystemService(Context.WINDOW_SERVICE) as WindowManager
+            val display = wmManager.defaultDisplay
+
+            val dm = DisplayMetrics()
+            display.getRealMetrics(dm)
+            return dm.heightPixels
         }
 
         /**

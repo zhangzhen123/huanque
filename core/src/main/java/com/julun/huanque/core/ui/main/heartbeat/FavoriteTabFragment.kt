@@ -5,10 +5,11 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.DecelerateInterpolator
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.core.animation.addListener
 import androidx.core.app.ActivityOptionsCompat
@@ -19,7 +20,6 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.alibaba.android.arouter.launcher.ARouter
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
@@ -27,8 +27,13 @@ import com.julun.huanque.common.base.BaseVMFragment
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.QueryType
-import com.julun.huanque.common.bean.beans.*
-import com.julun.huanque.common.constant.*
+import com.julun.huanque.common.bean.beans.FavoriteUserBean
+import com.julun.huanque.common.bean.beans.HomePagePicBean
+import com.julun.huanque.common.bean.beans.UserTagBean
+import com.julun.huanque.common.constant.BooleanType
+import com.julun.huanque.common.constant.IntentParamKey
+import com.julun.huanque.common.constant.ParamConstant
+import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.utils.ToastUtils
@@ -39,9 +44,10 @@ import com.julun.huanque.core.adapter.NearbyPicListAdapter
 import com.julun.huanque.core.manager.VideoPlayerManager
 import com.julun.huanque.core.ui.homepage.HomePageActivity
 import kotlinx.android.synthetic.main.fragment_favorite_tab.*
-import kotlinx.android.synthetic.main.layout_bottom_favorite.view.*
+import org.jetbrains.anko.imageResource
 import java.math.RoundingMode
 import java.text.DecimalFormat
+import kotlin.random.Random
 
 
 /**
@@ -70,9 +76,9 @@ class FavoriteTabFragment : BaseVMFragment<FavoriteTabViewModel>() {
 
     private var currentTab: UserTagBean? = null
 
-    private val bottomLayout: View by lazy {
-        LayoutInflater.from(requireContext()).inflate(R.layout.layout_bottom_favorite, null)
-    }
+//    private val bottomLayout: View by lazy {
+//        LayoutInflater.from(requireContext()).inflate(R.layout.layout_bottom_favorite, null)
+//    }
 
     override fun getLayoutId(): Int = R.layout.fragment_favorite_tab
 
@@ -328,11 +334,7 @@ class FavoriteTabFragment : BaseVMFragment<FavoriteTabViewModel>() {
     }
 
     private fun loadDataFail(isPull: Boolean) {
-        if (isPull) {
-            ToastUtils.show2("刷新失败")
-        } else {
-            bottomLayout.bottom_title.show()
-        }
+        ToastUtils.show2("加载失败")
     }
 
     private fun outAnimators(view: View, index: Int): Animator {
@@ -389,7 +391,7 @@ class FavoriteTabFragment : BaseVMFragment<FavoriteTabViewModel>() {
 //            authorAdapter.setList(programList)
 //        }
         authorAdapter.setList(listData)
-        bottomLayout.bottom_title.show()
+//        bottomLayout.bottom_title.show()
         setEmpty()
 
     }
@@ -397,12 +399,7 @@ class FavoriteTabFragment : BaseVMFragment<FavoriteTabViewModel>() {
     private fun setEmpty() {
         if (authorAdapter.data.isEmpty()) {
             mRefreshLayout.hide()
-            state_pager_view.showEmpty(emptyTxt = "没有开播的主播，去交友看看吧", btnTex = "前往",
-                onClick = View.OnClickListener {
-                    logger.info("跳转到交友")
-                    ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY)
-                        .withInt(IntentParamKey.TARGET_INDEX.name, MainPageIndexConst.MAIN_FRAGMENT_INDEX).navigation()
-                })
+            state_pager_view.showEmpty(emptyTxt = "${currentTab?.tagName} 没有更多人了，去看看其他的吧")
         } else {
             mRefreshLayout.show()
             state_pager_view.showSuccess()
@@ -442,12 +439,8 @@ class FavoriteTabFragment : BaseVMFragment<FavoriteTabViewModel>() {
 
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-    }
-
     //去掉底部栏49 顶部tab=53 中间tab=40 其他边距20
-    private val itemHeight = (ScreenUtils.getScreenHeight() - ScreenUtils.statusHeight - dp2px(49 + 53 + 40 + 20)) / 2
+    private val itemHeight = (ScreenUtils.getRealScreenHeight() - ScreenUtils.statusHeight - dp2px(49 + 53 + 40 + 20)) / 2
     private val authorAdapter: BaseQuickAdapter<FavoriteUserBean, BaseViewHolder> by lazy {
         object : BaseQuickAdapter<FavoriteUserBean, BaseViewHolder>(R.layout.item_favorite_user_list) {
 
@@ -455,18 +448,23 @@ class FavoriteTabFragment : BaseVMFragment<FavoriteTabViewModel>() {
                 super.onBindViewHolder(holder, position)
                 val tempData = getItemOrNull(position)
                 if (tempData != null) {
-                    val card_img = holder.getView<SimpleDraweeView>(R.id.card_img)
-                    ViewCompat.setTransitionName(card_img, "Image${tempData.userId}")
+                    val card_img = holder.getViewOrNull<SimpleDraweeView>(R.id.card_img)
+                    if(card_img!=null){
+                        ViewCompat.setTransitionName(card_img, "Image${tempData.userId}")
 //                    val tv_user_name = holder.getView<TextView>(R.id.tv_user_name)
 //                    ViewCompat.setTransitionName(tv_user_name, "TextView${tempData.userId}")
+                    }
                 }
             }
 
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
                 val holder = super.onCreateViewHolder(parent, viewType)
-                val cardView = holder.getView<CardView>(R.id.card_view)
-                val sdvLp = cardView.layoutParams
-                sdvLp.height = itemHeight
+                if(viewType==0){
+                    val cardView = holder.getView<CardView>(R.id.card_view)
+                    val sdvLp = cardView.layoutParams
+                    sdvLp.height = itemHeight
+                }
+
                 return holder
             }
 
@@ -484,33 +482,55 @@ class FavoriteTabFragment : BaseVMFragment<FavoriteTabViewModel>() {
                 holder.setText(R.id.tv_tag, "${item.tagName} ${item.picCnt}")
 
                 holder.setText(R.id.tv_age, age)
-                if (item.distance != 0) {
-                    //todo 距离加狗屎emoji
-                    when {
-                        item.distance < 1000 -> {
-                            holder.setText(R.id.tv_distance, "${item.distance}")
-                                .setVisible(R.id.tv_distance, true)
-                            holder.setText(R.id.tv_location, "m ${item.area}")
-                        }
-                        item.distance < 100000 -> {
-                            val format = DecimalFormat("#.0")
-                            format.roundingMode = RoundingMode.DOWN
-                            val dt = format.format((item.distance / 1000.0))
-                            holder.setText(R.id.tv_distance, dt)
-                                .setVisible(R.id.tv_distance, true)
-                            holder.setText(R.id.tv_location, "km ${item.area}")
-                        }
-                        item.distance < 800000 -> {
 
+                val tvDistance = holder.getView<TextView>(R.id.tv_distance)
+                val ivDistance = holder.getView<ImageView>(R.id.iv_distance)
+                if (item.distance != -1) {
+                    if (item.sameCity) {
+                        tvDistance.show()
+                        ivDistance.hide()
+                        when {
+                            item.distance < 1000 -> {
+                                holder.setText(R.id.tv_distance, "${item.distance}")
+                                holder.setText(R.id.tv_location, "m ${item.area}")
+                            }
+                            else -> {
+                                val format = DecimalFormat("#.0")
+                                format.roundingMode = RoundingMode.DOWN
+                                val dt = format.format((item.distance / 1000.0))
+                                holder.setText(R.id.tv_distance, dt)
+                                holder.setText(R.id.tv_location, "km ${item.area}")
+                            }
                         }
-                        else -> {
+                    } else {
+                        tvDistance.hide()
+                        ivDistance.show()
+                        holder.setText(R.id.tv_location, item.area)
+                        when {
+                            item.distance < 100000 -> {
+                                ivDistance.imageResource = R.mipmap.icon_home_distance_car
+                            }
+                            item.distance < 800000 -> {
 
+                                //显示动车
+                                ivDistance.imageResource = R.mipmap.icon_home_distance_rail_way
+                            }
+                            else -> {
+                                ivDistance.show()
+                                //显示飞机
+                                ivDistance.imageResource = R.mipmap.icon_home_distance_air_plan
+                            }
                         }
+
                     }
 
                 } else {
-                    holder.setText(R.id.tv_location, item.area)
-                        .setGone(R.id.tv_distance, true)
+                    tvDistance.hide()
+                    ivDistance.show()
+                    val starList = mutableListOf<String>("金星", "木星", "水星", "火星", "土星")
+                    val currentStar = starList.random()
+                    ivDistance.imageResource = R.mipmap.icon_home_distance_rocket
+                    holder.setText(R.id.tv_location, currentStar)
                 }
                 if (item.interactTips.isNotEmpty()) {
                     holder.setText(R.id.tv_top_right_tips, item.interactTips).setGone(R.id.tv_top_right_tips, false)
@@ -529,7 +549,7 @@ class FavoriteTabFragment : BaseVMFragment<FavoriteTabViewModel>() {
                 }
                 if (rvPics.itemDecorationCount <= 0) {
                     rvPics.addItemDecoration(
-                        HorizontalItemDecoration(dp2px(6))
+                        HorizontalItemDecoration(dp2px(4))
                     )
                 }
                 val list = mutableListOf<HomePagePicBean>()

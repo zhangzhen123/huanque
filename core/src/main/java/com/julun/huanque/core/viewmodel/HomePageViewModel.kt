@@ -3,6 +3,7 @@ package com.julun.huanque.core.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.julun.huanque.common.bean.beans.*
+import com.julun.huanque.common.bean.events.LikeEvent
 import com.julun.huanque.common.bean.forms.EvaluateForm
 import com.julun.huanque.common.bean.forms.FriendIdForm
 import com.julun.huanque.common.bean.forms.UserIdForm
@@ -16,6 +17,7 @@ import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.request
 import com.julun.huanque.common.utils.ToastUtils
 import kotlinx.coroutines.launch
+import org.greenrobot.eventbus.EventBus
 
 /**
  *@创建者   dong
@@ -251,6 +253,7 @@ class HomePageViewModel : BaseViewModel() {
                 val result = service.like(FriendIdForm(userId)).dataConvert()
                 heartStatus.value = BusiConstant.True
                 homeInfoBean.value?.heartTouch = BusiConstant.True
+                EventBus.getDefault().post(LikeEvent(userId,true))
             })
         }
 

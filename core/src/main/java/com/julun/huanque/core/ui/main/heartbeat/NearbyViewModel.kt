@@ -6,6 +6,7 @@ import com.julun.huanque.common.basic.ReactiveData
 import com.julun.huanque.common.bean.beans.NearbyListData
 import com.julun.huanque.common.bean.beans.NearbyUserBean
 import com.julun.huanque.common.bean.beans.ProgramListInfo
+import com.julun.huanque.common.bean.events.LikeEvent
 import com.julun.huanque.common.bean.forms.FriendIdForm
 import com.julun.huanque.common.bean.forms.NearbyForm
 import com.julun.huanque.common.bean.forms.ProgramListForm
@@ -33,6 +34,8 @@ class NearbyViewModel : BaseViewModel() {
     //用于通知界面刷新次数
     val likeTag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
+    //通过viewModel响应 防止多次执行
+    val likeEvent:  MutableLiveData<LikeEvent> by lazy { MutableLiveData<LikeEvent>() }
     //记录当前总供滑动的次数
     var currentRemainTimes: Int = 0
 
