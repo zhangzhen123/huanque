@@ -563,7 +563,7 @@ data class HomePageInfo(
     //真人标识
     var authMark: String = "",
     //他人主页认证的标签列表
-    var authTagList: MutableList<UserTagBean> = mutableListOf(),
+    var authTagList: ArrayList<UserTagBean> = arrayListOf(),
     //我认证的标签
     var myAuthTag: MineTagBean = MineTagBean(),
     //生日
@@ -599,7 +599,7 @@ data class HomePageInfo(
     //是否是密友
     var intimate: String = "",
     //他人主页喜欢的标签列表
-    var likeTagList: MutableList<UserTagBean> = mutableListOf(),
+    var likeTagList: ArrayList<UserTagBean> = arrayListOf(),
     //我喜欢的标签
     var myLikeTag: MineTagBean = MineTagBean(),
     //昵称

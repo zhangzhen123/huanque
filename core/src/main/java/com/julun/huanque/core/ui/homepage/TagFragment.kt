@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.julun.huanque.common.base.BaseBottomSheetFragment
+import com.julun.huanque.common.bean.beans.UserTagBean
 import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.onAdapterClickNew
@@ -33,23 +34,66 @@ class TagFragment : BaseBottomSheetFragment() {
 
         //同性
         private const val SameSex = "SameSex"
-        fun newInstance(like: Boolean, sameSex: Boolean): TagFragment {
+        private const val IsMe = "IsMe"
+        private const val TargetUserId = "targetUserId"
+
+        private const val TagList = "tagList"
+        fun newInstance(): TagFragment {
+            val bundle = Bundle()
+            val fragment = TagFragment()
+            fragment.arguments = bundle
+            return fragment
+        }
+
+        fun newInstance(
+            like: Boolean,
+            sameSex: Boolean,
+            isMe: Boolean,
+            targetUserId: Long,
+            tagList: ArrayList<UserTagBean>
+        ): TagFragment {
             val bundle = Bundle()
             val fragment = TagFragment()
             fragment.arguments = bundle.apply {
                 putBoolean(LikeTag, like)
                 putBoolean(SameSex, sameSex)
+                putBoolean(IsMe, isMe)
+                putLong(TargetUserId, targetUserId)
+
+                putSerializable(TagList, tagList)
             }
             return fragment
         }
     }
+
+    fun setParams(
+        like: Boolean,
+        sameSex: Boolean,
+        isMe: Boolean,
+        targetUserId: Long, tagList: ArrayList<UserTagBean>
+    ) {
+        arguments?.apply {
+            putBoolean(LikeTag, like)
+            putBoolean(SameSex, sameSex)
+            putBoolean(IsMe, isMe)
+            putLong(TargetUserId, targetUserId)
+            putSerializable(TagList, tagList)
+        }
+    }
+
+    private var tagList: ArrayList<UserTagBean>? = null
 
     //喜欢的标签 标记位
     private var mLike = false
 
     //同性
     private var mSameSex = false
-    private val mHomeViewModel: HomePageViewModel by activityViewModels()
+
+    private var targetUserId: Long = 0L
+
+    private var isMe: Boolean = false
+
+    //    private val mHomeViewModel: HomePageViewModel by activityViewModels()
     private val mAdapter = TagListAdapter()
     private var mBottomSheetBehavior: BottomSheetBehavior<View>? = null
 
@@ -66,11 +110,14 @@ class TagFragment : BaseBottomSheetFragment() {
     override fun getLayoutId() = R.layout.frag_tag
 
 
-    override fun initViews() {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         mLike = arguments?.getBoolean(LikeTag) ?: false
         mAdapter.like = mLike
         mSameSex = arguments?.getBoolean(SameSex) ?: false
-
+        isMe = arguments?.getBoolean(IsMe) ?: false
+        targetUserId = arguments?.getLong(TargetUserId, 0) ?: 0
+        tagList = arguments?.getSerializable(TagList) as? ArrayList<UserTagBean>
         if (mLike) {
             tv_title.text = "TA喜欢的标签"
 
@@ -97,6 +144,23 @@ class TagFragment : BaseBottomSheetFragment() {
             }
 
         }
+//        val authTagList =
+//            if (mLike) {
+//                it.likeTagList
+//            } else {
+//                it.authTagList
+//            }
+        var likeCount = 0
+        tagList?.forEach {
+            if (it.mark == BusiConstant.True) {
+                likeCount++
+            }
+        }
+        mAdapter.setList(tagList)
+        tv_love_count.text = "$likeCount"
+    }
+
+    override fun initViews() {
         initRecyclerView()
     }
 
@@ -114,14 +178,14 @@ class TagFragment : BaseBottomSheetFragment() {
                 //喜欢的标签
                 if (mSameSex) {
                     //同性 跳转列表页
-                    TagPicsActivity.start(requireActivity(), item, mHomeViewModel.targetUserId)
+                    TagPicsActivity.start(requireActivity(), item, targetUserId)
                 } else {
                     //异性 跳转认证标签页
-                    AuthTagPicActivity.start(requireActivity(), item.tagId, mHomeViewModel.mineHomePage, true, mSameSex)
+                    AuthTagPicActivity.start(requireActivity(), item.tagId, isMe, true, mSameSex)
                 }
             } else {
                 //拥有的标签
-                TagPicsActivity.start(requireActivity(), item, mHomeViewModel.targetUserId)
+                TagPicsActivity.start(requireActivity(), item, targetUserId)
             }
         }
     }
@@ -145,24 +209,24 @@ class TagFragment : BaseBottomSheetFragment() {
      * 初始化ViewModel
      */
     private fun initViewModel() {
-        mHomeViewModel.homeInfoBean.observe(this, Observer {
-            if (it != null) {
-                val authTagList =
-                    if (mLike) {
-                        it.likeTagList
-                    } else {
-                        it.authTagList
-                    }
-                var likeCount = 0
-                authTagList.forEach {
-                    if (it.mark == BusiConstant.True) {
-                        likeCount++
-                    }
-                }
-                mAdapter.setList(authTagList)
-                tv_love_count.text = "$likeCount"
-            }
-        })
+//        mHomeViewModel.homeInfoBean.observe(this, Observer {
+//            if (it != null) {
+//                val authTagList =
+//                    if (mLike) {
+//                        it.likeTagList
+//                    } else {
+//                        it.authTagList
+//                    }
+//                var likeCount = 0
+//                authTagList.forEach {
+//                    if (it.mark == BusiConstant.True) {
+//                        likeCount++
+//                    }
+//                }
+//                mAdapter.setList(authTagList)
+//                tv_love_count.text = "$likeCount"
+//            }
+//        })
     }
 
 }

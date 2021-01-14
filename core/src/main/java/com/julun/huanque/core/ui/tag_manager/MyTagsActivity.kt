@@ -47,7 +47,6 @@ class MyTagsActivity : BaseVMActivity<MyTagViewModel>() {
     companion object {
 
 
-
         fun start(act: Activity, type: String) {
             act.startActivity<MyTagsActivity>(ManagerTagCode.MANAGER_PAGER_TYPE to type)
         }
@@ -57,14 +56,9 @@ class MyTagsActivity : BaseVMActivity<MyTagViewModel>() {
 
     private var showType: String = "" //Auth（认证的标签）、Like（喜欢的标签）
 
-    //    private var state: CollapsingToolbarLayoutState? = null
-
-    private var deleteEnsureDialog: BaseDialogFragment? = null
     private lateinit var mCommonNavigator: CommonNavigator
     private var mFragmentList = SparseArray<Fragment>()
     private val mTabTitles = arrayListOf<TagTypeTag>()
-
-    private var currentSelect: Int = -1
 
     override fun getLayoutId(): Int {
         return R.layout.activity_my_tag
@@ -73,7 +67,7 @@ class MyTagsActivity : BaseVMActivity<MyTagViewModel>() {
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
 
-        showType = intent.getStringExtra(ManagerTagCode.MANAGER_PAGER_TYPE)
+        showType = intent.getStringExtra(ManagerTagCode.MANAGER_PAGER_TYPE) ?: ""
         //
         //设置头部边距
         initmViewModel()

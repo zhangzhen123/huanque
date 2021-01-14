@@ -393,7 +393,7 @@ data class NearbyUserBean(
     var distance: Int = 0,
     var hasRealName: String = "",
     var lat: String = "",
-    var likeTagList: List<UserTagBean> = listOf(),
+    var likeTagList: ArrayList<UserTagBean> = arrayListOf(),
     var lon: String = "",
     var nickname: String = "",
     var sex: String = "",

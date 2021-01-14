@@ -119,10 +119,10 @@ class TagManagerViewModel : BaseViewModel() {
      *这里的ManagerTagBean代表一级标签 子级的标签不会传到这里
      */
     fun addTag(itemBean: UserTagBean) {
-        if (currentTagList.isEmpty()) {
-            logger("当前的全局标签列表数据为空！！")
-            return
-        }
+//        if (currentTagList.isEmpty()) {
+//            logger("当前的全局标签列表数据为空！！")
+//            return
+//        }
         tagHasChange = true
         var isExist = false
         currentTagList.forEach {

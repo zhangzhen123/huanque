@@ -30,7 +30,7 @@
             android:id="@+id/tv_top_right_tips"
             android:layout_width="wrap_content"
             android:layout_height="16dp"
-            android:layout_marginTop="@dimen/dimen_10"
+            android:layout_marginTop="@dimen/dimen_7"
             android:layout_marginEnd="@dimen/dimen_13"
             android:background="@drawable/bg_shape_card_tag_02"
             android:gravity="start|center_vertical"
@@ -47,7 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="@dimen/dimen_18"
             android:layout_marginStart="@dimen/dimen_8"
-            android:layout_marginTop="@dimen/dimen_5"
+            android:layout_marginTop="@dimen/dimen_6"
             android:background="@drawable/bg_shape_card_tag_03"
             android:gravity="center"
             android:paddingStart="@dimen/dimen_6"
@@ -57,8 +57,8 @@
 
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/sdv_tag"
-                android:layout_width="@dimen/dimen_16"
-                android:layout_height="@dimen/dimen_16"
+                android:layout_width="@dimen/dimen_15"
+                android:layout_height="@dimen/dimen_15"
                 app:actualImageScaleType="centerCrop"
                 app:placeholderImage="@mipmap/logo_placeholder_small" />
 

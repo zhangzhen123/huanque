@@ -49,6 +49,7 @@ import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.utils.SessionUtils
+import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.utils.device.PhoneUtils
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
 import com.julun.huanque.common.widgets.cardlib.CardLayoutManager
@@ -60,6 +61,7 @@ import com.julun.huanque.common.widgets.recycler.decoration.HorizontalItemDecora
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.NearbyPicListAdapter
 import com.julun.huanque.core.ui.homepage.HomePageActivity
+import com.julun.huanque.core.ui.homepage.TagFragment
 import com.julun.huanque.core.ui.tag_manager.TagUserPicsActivity
 import com.julun.huanque.core.viewmodel.MainConnectViewModel
 import com.julun.huanque.core.widgets.HomeCardTagView
@@ -77,6 +79,7 @@ class NearbyFragment : BaseLazyFragment() {
     companion object {
         fun newInstance() = NearbyFragment()
     }
+
 
     private val mViewModel: NearbyViewModel by viewModels()
 
@@ -282,6 +285,20 @@ class NearbyFragment : BaseLazyFragment() {
                     intent.putExtra(ParamConstant.NearByBean, tempBean)
                     startActivity(intent, activityOptionsCompat.toBundle())
 //                    HomePageActivity.newInstance(requireActivity(), item.userId)
+                }
+                R.id.tv_bottom_tips -> {
+                    if (item.likeTagList.isEmpty()) {
+                        ToastUtils.show("已邀请TA添加喜欢的标签")
+                    } else {
+                        val tagFragment = TagFragment.newInstance(
+                            true,
+                            item.sex == SessionUtils.getSex(),
+                            item.userId == SessionUtils.getUserId(),
+                            item.userId,
+                            item.likeTagList
+                        )
+                        tagFragment.show(childFragmentManager, "tagFragment")
+                    }
                 }
             }
         }
@@ -708,7 +725,8 @@ class NearbyFragment : BaseLazyFragment() {
                     R.id.ani_tag_02,
                     R.id.ani_tag_03,
                     R.id.ani_tag_04,
-                    R.id.iv_super_like
+                    R.id.iv_super_like,
+                    R.id.tv_bottom_tips
                 )
             }
 
@@ -716,21 +734,25 @@ class NearbyFragment : BaseLazyFragment() {
                 super.onBindViewHolder(holder, position)
                 val tempData = getItemOrNull(position)
                 if (tempData != null) {
-                    val card_img = holder.getView<SimpleDraweeView>(R.id.card_img)
-                    ViewCompat.setTransitionName(card_img, "Image${tempData.userId}")
-//                    val tv_user_name = holder.getView<TextView>(R.id.tv_user_name)
+                    val card_img = holder.getViewOrNull<SimpleDraweeView>(R.id.card_img)
+                    if (card_img != null) {
+                        ViewCompat.setTransitionName(card_img, "Image${tempData.userId}")
+                        //                    val tv_user_name = holder.getView<TextView>(R.id.tv_user_name)
 //                    ViewCompat.setTransitionName(tv_user_name, "TextView${tempData.userId}")
+                    }
                 }
 
             }
 
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
                 val holder = super.onCreateViewHolder(parent, viewType)
-                holder.getView<HomeCardTagView>(R.id.ani_tag_01).setLeftDot(true)
-                holder.getView<HomeCardTagView>(R.id.ani_tag_02).setLeftDot(false)
-                holder.getView<HomeCardTagView>(R.id.ani_tag_03).setLeftDot(true)
-                holder.getView<HomeCardTagView>(R.id.ani_tag_04).setLeftDot(false)
-
+                //注意viewType 普通类型默认是0 如果有其他空白页或者头部底部就会不同type 这里就会找不到
+                if (viewType == 0) {
+                    holder.getView<HomeCardTagView>(R.id.ani_tag_01).setLeftDot(true)
+                    holder.getView<HomeCardTagView>(R.id.ani_tag_02).setLeftDot(false)
+                    holder.getView<HomeCardTagView>(R.id.ani_tag_03).setLeftDot(true)
+                    holder.getView<HomeCardTagView>(R.id.ani_tag_04).setLeftDot(false)
+                }
 
                 return holder
             }
@@ -755,7 +777,7 @@ class NearbyFragment : BaseLazyFragment() {
                     holder.setGone(R.id.tv_top_right_tips, true)
                 }
                 if (item.likeTagList.isEmpty()) {
-                    holder.setText(R.id.tv_bottom_tips, "TA还没有喜欢的标签，邀请TA填写吧>")
+                    holder.setText(R.id.tv_bottom_tips, "TA还没有喜欢的标签，邀请TA填写吧")
                 } else {
                     val sameList = mutableListOf<UserTagBean>()
                     item.likeTagList.forEach {
@@ -765,8 +787,6 @@ class NearbyFragment : BaseLazyFragment() {
                     }
                     var tagsStr: String = ""
                     when {
-                        sameList.isEmpty() -> {
-                        }
                         sameList.size == 1 -> {
                             tagsStr = item.likeTagList[0].tagName + "等"
                         }
@@ -774,7 +794,7 @@ class NearbyFragment : BaseLazyFragment() {
                             tagsStr = item.likeTagList[0].tagName + "、" + item.likeTagList[1].tagName + "等"
                         }
                     }
-                    val content = "你有TA喜欢的${tagsStr}${item.likeTagList.size}个标签 看TA还喜欢什么>"
+                    val content = "你有TA喜欢的${tagsStr}${sameList.size}个标签，看TA还喜欢什么"
                     val styleSpan1A = RelativeSizeSpan(1.1f)
                     val styleSpan1B = ForegroundColorSpan(Color.parseColor("#FFCC00"))
                     val start = content.indexOf(tagsStr)

@@ -82,20 +82,25 @@
                 app:layout_constraintTop_toTopOf="@+id/rv_pics"
                 tools:text="1/5" />
 
-            <TextView
+            <com.julun.huanque.core.widgets.MarqueeTextView
                 android:id="@+id/tv_bottom_tips"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="24dp"
+                app:layout_constrainedWidth="true"
                 android:layout_margin="@dimen/dimen_10"
                 android:background="@drawable/bg_shape_white_p10"
-                android:gravity="start|center_vertical"
-                android:paddingStart="@dimen/dimen_12"
-                android:paddingEnd="@dimen/dimen_12"
+                android:gravity="center"
+                android:paddingStart="@dimen/dimen_8"
+                android:paddingEnd="@dimen/dimen_8"
                 android:textColor="#D9FFFFFF"
+                android:singleLine="true"
                 android:textSize="@dimen/sp_12"
+                android:ellipsize="marquee"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+                android:drawableEnd="@mipmap/icon_forward_grey_02"
+                android:drawablePadding="@dimen/dimen_5"
                 tools:text="你有TA喜欢的 XX、XX等X个标签 Ta还喜欢什么" />
 
             <TextView

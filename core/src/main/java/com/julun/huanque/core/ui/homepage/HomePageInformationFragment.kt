@@ -52,7 +52,7 @@ class HomePageInformationFragment : BaseFragment() {
     private val mLikeTagAdapter = HomePageTagAdapter()
 
     //拥有的标签
-    private val mTagFragment: TagFragment by lazy { TagFragment() }
+    private val mTagFragment: TagFragment by lazy { TagFragment.newInstance() }
 
     //身材弹窗
     private val mFigureFragment: FigureFragment by lazy { FigureFragment() }
@@ -64,7 +64,7 @@ class HomePageInformationFragment : BaseFragment() {
     private val mSchoolFragment: SchoolFragment by lazy { SchoolFragment() }
 
     //喜欢的标签
-    private val mLikeTagFragment: TagFragment by lazy { TagFragment.newInstance(true, isSameSex) }
+//    private val mLikeTagFragment: TagFragment by lazy { TagFragment.newInstance() }
 
     //邀请弹窗
     private val mInviteFillFragment: InviteFillFragment by lazy { InviteFillFragment() }
@@ -86,7 +86,12 @@ class HomePageInformationFragment : BaseFragment() {
                     MyTagsActivity.start(requireActivity(), MyTagType.AUTH)
                 } else {
                     //显示他拥有的标签弹窗
-                    mTagFragment.show(childFragmentManager, "TagFragment")
+                    val list=mHomePageViewModel.homeInfoBean.value?.authTagList
+                    if (list != null) {
+                        mTagFragment.setParams(false,isSameSex,mHomePageViewModel.mineHomePage,mHomePageViewModel.targetUserId,list)
+                        mTagFragment.show(childFragmentManager, "TagFragment")
+                    }
+
                 }
             }
         }
@@ -101,7 +106,12 @@ class HomePageInformationFragment : BaseFragment() {
                     MyTagsActivity.start(requireActivity(), MyTagType.LIKE)
                 } else {
                     mInviteViewModel.mType = InviteCompleteForm.Information
-                    mLikeTagFragment.show(childFragmentManager, "TagFragment")
+                    val list=mHomePageViewModel.homeInfoBean.value?.likeTagList
+                    if (list != null) {
+                        mTagFragment.setParams(true,isSameSex,mHomePageViewModel.mineHomePage,mHomePageViewModel.targetUserId,list)
+                        mTagFragment.show(childFragmentManager, "TagFragment")
+                    }
+
                 }
 
             }
