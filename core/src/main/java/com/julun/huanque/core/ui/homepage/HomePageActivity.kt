@@ -589,13 +589,31 @@ class HomePageActivity : BaseActivity() {
         })
 
         mHomePageViewModel.blackStatus.observe(this, Observer {
-            val bean =
-                if (it == BusiConstant.True && mHomePageViewModel.homeInfoBean.value?.playProgram?.living != BusiConstant.True) {
-                    //拉黑状态
+            if (it != null) {
+                //我是否被对方拉黑
+                val targetBlack = mHomePageViewModel.homeInfoBean.value?.targetBlack ?: ""
+                if (it == BusiConstant.True || targetBlack == BusiConstant.True) {
+                    //拉黑关系
                     tv_black_status.show()
                 } else {
                     tv_black_status.hide()
                 }
+                if (it == BusiConstant.True) {
+                    //我拉黑对方
+                    if (targetBlack == BusiConstant.True) {
+                        //互相拉黑
+                        tv_black_status.text = "已添加至黑名单，不能互发消息和心动"
+                    } else {
+                        //我把对方拉黑
+                        tv_black_status.text = "已添加至黑名单，不能互发消息和心动"
+                    }
+                } else {
+                    if (targetBlack == BusiConstant.True) {
+                        //被对方拉黑
+                        tv_black_status.text = "已被对方添加至黑名单，不能互发消息和心动"
+                    }
+                }
+            }
         })
 
         mHomePageViewModel.actionData.observe(this, Observer {

@@ -574,8 +574,10 @@ data class HomePageInfo(
     var interactTips: String = "",
     //是否可以互动
     var canInteractive: String = "",
-    //是否拉黑
+    //我是否拉黑对方
     var black: String = "",
+    //对方是否拉黑我
+    var targetBlack: String = "",
     //星座code
     var constellationType: String = "",
     //星座名称
