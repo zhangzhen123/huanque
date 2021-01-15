@@ -116,7 +116,7 @@ class TagPicsActivity : BaseVMActivity<TagPicsViewModel>() {
             val item = picListAdapter.getItemOrNull(position)
             if (item != null) {
                 logger.info("查看大图")
-                TagUserPicsActivity.start(this, item.tagId, item.userId)
+                TagUserPicsActivity.start(this, item.tagId, item.userId,item.applyPic)
             }
         }
 

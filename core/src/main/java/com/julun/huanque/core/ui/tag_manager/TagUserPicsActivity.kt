@@ -49,8 +49,12 @@ import org.jetbrains.anko.startActivity
 class TagUserPicsActivity : BaseVMActivity<TagUserPicsViewModel>() {
 
     companion object {
-        fun start(act: Activity, tagId: Int, likeUserId: Long) {
-            act.startActivity<TagUserPicsActivity>(ManagerTagCode.TAG_INFO to tagId, IntentParamKey.USER_ID.name to likeUserId)
+        fun start(act: Activity, tagId: Int, likeUserId: Long, showPic: String = "") {
+            act.startActivity<TagUserPicsActivity>(
+                ManagerTagCode.TAG_INFO to tagId,
+                IntentParamKey.USER_ID.name to likeUserId,
+                ManagerTagCode.ShowPic to showPic
+            )
         }
     }
 
@@ -59,6 +63,9 @@ class TagUserPicsActivity : BaseVMActivity<TagUserPicsViewModel>() {
     private val tagManagerViewModel: TagManagerViewModel = HuanViewModelManager.tagManagerViewModel
     private var currentTagId: Int? = null
     private var currentLikeUserId: Long? = null
+
+    //需要显示的图片
+    private var mShowPic: String = ""
 
     private val picList = mutableListOf<TagUserPic>()
 
@@ -83,6 +90,8 @@ class TagUserPicsActivity : BaseVMActivity<TagUserPicsViewModel>() {
         overridePendingTransition(0, 0)
         currentTagId = intent.extras?.getInt(ManagerTagCode.TAG_INFO)
         currentLikeUserId = intent.extras?.getLong(IntentParamKey.USER_ID.name)
+        mShowPic = intent?.getStringExtra(ManagerTagCode.ShowPic) ?: ""
+
         val config = StackLayoutConfig()
         config.secondaryScale = 1f
         config.scaleRatio = 0.4f
@@ -148,8 +157,8 @@ class TagUserPicsActivity : BaseVMActivity<TagUserPicsViewModel>() {
                 if (it.requireT()) {
                     info.praiseNum++
                     zan_num.text = "${info.praiseNum}"
-                    val like=mViewModel.tagUserPics.value?.getT()?.like?:false
-                    if(!like){
+                    val like = mViewModel.tagUserPics.value?.getT()?.like ?: false
+                    if (!like) {
                         playGuideAni()
                     }
 
@@ -172,7 +181,7 @@ class TagUserPicsActivity : BaseVMActivity<TagUserPicsViewModel>() {
                     })
                 }
                 val tag = it.requireT()
-                if(tag.tagId!=currentTagId){
+                if (tag.tagId != currentTagId) {
                     return@Observer
                 }
                 if (tag.like) {
@@ -198,11 +207,11 @@ class TagUserPicsActivity : BaseVMActivity<TagUserPicsViewModel>() {
     }
 
     private fun playGuideAni() {
-        val ani= ObjectAnimator.ofFloat(add_tag_guide_layout, View.TRANSLATION_Y, ScreenUtils.screenHeightFloat/2,0f)
-        ani.duration=300
+        val ani = ObjectAnimator.ofFloat(add_tag_guide_layout, View.TRANSLATION_Y, ScreenUtils.screenHeightFloat / 2, 0f)
+        ani.duration = 300
         ani.addListener(object : AnimatorListenerAdapter() {
             override fun onAnimationStart(animation: Animator?) {
-                val info=mViewModel.tagUserPics.value?.getT()
+                val info = mViewModel.tagUserPics.value?.getT()
                 add_tag_guide_layout.show()
                 tv_tag_name.text = info?.tagName
                 zan_layout.hide()
@@ -210,11 +219,26 @@ class TagUserPicsActivity : BaseVMActivity<TagUserPicsViewModel>() {
         })
         ani.start()
     }
+
     private fun renderData(info: TagUserPicListBean) {
         picList.addAll(info.authPicList)
         picListAdapter.notifyDataSetChanged()
+        var tempIndex = -1
+        if (mShowPic.isNotEmpty()) {
+            info.authPicList.forEachIndexed { index, tagUserPic ->
+                if (tagUserPic.applyPic == mShowPic) {
+                    tempIndex = index
+                    return@forEachIndexed
+                }
+            }
+        }
+
         rv_pics.post {
-            rv_pics.scrollToPosition(picListAdapter.data.size)
+            if (tempIndex >= 0) {
+                rv_pics.scrollToPosition(tempIndex)
+            } else {
+                rv_pics.scrollToPosition(picListAdapter.data.size)
+            }
         }
 
         zan_num.text = "${info.praiseNum}"

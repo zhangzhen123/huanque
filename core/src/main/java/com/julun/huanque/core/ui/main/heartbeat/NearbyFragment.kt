@@ -834,7 +834,10 @@ class NearbyFragment : BaseLazyFragment() {
                     val sameList = mutableListOf<UserTagBean>()
                     item.likeTagList.forEach {
                         if (myTagList.contains(it)) {
+                            it.mark = BusiConstant.True
                             sameList.add(it)
+                        } else {
+                            it.mark = BusiConstant.False
                         }
                     }
                     var tagsStr: String = ""

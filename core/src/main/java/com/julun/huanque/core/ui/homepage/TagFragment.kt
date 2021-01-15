@@ -193,11 +193,11 @@ class TagFragment : BaseBottomSheetFragment() {
                     if (mLike) {
                         TagPicsActivity.start(requireActivity(), item, targetUserId)
                     } else {
-                        AuthTagPicActivity.start(requireActivity(), item.tagId, isMe, true, mSameSex)
+                        AuthTagPicActivity.start(requireActivity(), item.tagId, isMe, mLike, mSameSex)
                     }
                 } else {
                     if (mLike) {
-                        AuthTagPicActivity.start(requireActivity(), item.tagId, isMe, true, mSameSex)
+                        AuthTagPicActivity.start(requireActivity(), item.tagId, isMe, mLike, mSameSex)
                     } else {
                         TagPicsActivity.start(requireActivity(), item, targetUserId)
                     }

@@ -363,6 +363,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginBottom="10dp"
         android:background="@drawable/bg_enable"
+        android:layout_marginRight="15dp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/view_action"
         app:layout_constraintHorizontal_weight="235"
