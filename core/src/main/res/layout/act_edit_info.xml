@@ -16,6 +16,7 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="0px"
         android:layout_height="0px"
+        android:descendantFocusability="blocksDescendants"
         android:overScrollMode="never"
         android:scrollbars="none"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -25,7 +26,9 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:focusableInTouchMode="true">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/con_progress"
@@ -68,13 +71,13 @@
                     style="?android:attr/progressBarStyleHorizontal"
                     android:layout_width="0px"
                     android:layout_height="8dp"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="14dp"
+                    android:layout_marginLeft="88dp"
+                    android:layout_marginRight="37dp"
                     android:max="100"
                     android:progressDrawable="@drawable/bg_edit_progress"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toRightOf="@id/tv_progressbar"
-                    app:layout_constraintRight_toLeftOf="@id/iv_close_progress"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <View
@@ -582,6 +585,7 @@
                     android:layout_height="110dp"
                     android:layout_marginLeft="12dp"
                     android:layout_marginRight="12dp"
+                    android:overScrollMode="never"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent" />
 

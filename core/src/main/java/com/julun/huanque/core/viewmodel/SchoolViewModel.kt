@@ -68,7 +68,7 @@ class SchoolViewModel : BaseViewModel() {
      * 保存学校数据
      */
     fun saveSchool(form: SaveSchoolForm, schoolName: String, educationName: String) {
-        if (form.startYear == null && form.schoolId == null && form.education == null) {
+        if (form.startYear == null && schoolName == originalSchoolInfo?.school && form.education == null) {
             return
         }
         if(form.schoolId == 0){

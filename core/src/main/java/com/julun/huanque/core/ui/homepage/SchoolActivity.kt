@@ -96,7 +96,7 @@ class SchoolActivity : BaseActivity() {
             header_page.textOperation.show()
             if (index == 4) {
                 header_page.textOperation.text = "完成"
-            }else{
+            } else {
                 header_page.textOperation.text = "跳过"
             }
             progressBar.progress = (100 / 5) * (index + 1)
@@ -165,6 +165,7 @@ class SchoolActivity : BaseActivity() {
                         mAdapter.setList(null)
                     }
                 } else {
+                    mViewModel.selectSchool = null
                     recycler_view.hide()
                     mAdapter.setList(null)
                     phone_num_clear.hide()
@@ -190,10 +191,10 @@ class SchoolActivity : BaseActivity() {
                 //学历发生变化
                 form.education = educationCode
             }
-            if (schoolId != null && schoolName != null && schoolName != originalData?.school) {
-                //学校发生变化
-                form.schoolId = schoolId
-            }
+//            if (schoolId != null && schoolName != null && schoolName != originalData?.school) {
+            //学校发生变化
+            form.schoolId = schoolId
+//            }
 
             if (currentDate != null) {
                 val dateStr = TimeUtils.formatTime(currentDate.time, TimeUtils.TIME_FORMAT_YEAR_4)
@@ -204,7 +205,7 @@ class SchoolActivity : BaseActivity() {
             }
 
 
-            if (form.education == null && form.schoolId == null && form.startYear == null) {
+            if (form.education == null && schoolName == originalData?.school && form.startYear == null) {
                 //数据没有变化，直接返回
                 EditUtils.goToNext(this, mViewModel.index)
             } else {

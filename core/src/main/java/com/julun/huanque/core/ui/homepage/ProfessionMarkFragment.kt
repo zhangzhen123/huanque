@@ -67,7 +67,7 @@ class ProfessionMarkFragment : BaseBottomSheetFragment() {
             if (it != null) {
                 mTotalList = mutableListOf()
                 it.forEach { oscc ->
-                    val scc = SingleProfessionFeatureConfig(oscc.professionFeatureCode, oscc.professionFeatureText, oscc.mark)
+                    val scc = SingleProfessionFeatureConfig(oscc.professionFeatureCode, oscc.professionFeatureText,oscc.professionFeatureType, oscc.mark)
                     mTotalList.add(scc)
                 }
                 showRecyclerView()

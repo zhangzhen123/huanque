@@ -697,6 +697,25 @@ class HomePageActivity : BaseActivity() {
 //            sdv_real.loadImage(bean.authMark, 18f, 18f)
         }
 
+        val onLineBean = bean.online
+        if (onLineBean == null) {
+            tv_online.hide()
+        } else {
+            tv_online.show()
+            if (onLineBean.onlineStatus == "Online") {
+                tv_online.text = "在线"
+                tv_online.isSelected = true
+            } else {
+                if(onLineBean.onlineStatusText.isNotEmpty()){
+                    tv_online.text = onLineBean.onlineStatusText
+                    tv_online.isSelected = false
+                }else{
+                    tv_online.hide()
+                }
+            }
+        }
+
+
         if (bean.interactTips.isNotEmpty()) {
             tv_xd_time.text = bean.interactTips
             tv_xd_time.show()
@@ -798,9 +817,9 @@ class HomePageActivity : BaseActivity() {
             "女"
         }
         val age = bean.age
-        if(age > 0){
+        if (age > 0) {
             tv_age.text = "${bean.distanceCity.curryCityName} /${bean.age}岁 ${sexName}"
-        }else{
+        } else {
             tv_age.text = "${bean.distanceCity.curryCityName} /${sexName}"
         }
 

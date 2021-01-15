@@ -150,7 +150,7 @@
         android:layout_marginLeft="4dp"
         android:drawablePadding="4dp"
         android:gravity="center"
-        android:text=""
+        android:text="0"
         android:textColor="@color/black_333"
         android:textSize="@dimen/sp_14"
         android:textStyle="bold"

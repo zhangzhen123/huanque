@@ -1,9 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="#2EDB85" />
-    <corners android:radius="3dp" />
-    <size
-        android:width="3dp"
-        android:height="3dp" />
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_selected="true">
+        <shape>
+            <solid android:color="#2EDB85" />
+            <corners android:radius="3dp" />
+            <size android:width="3dp" android:height="3dp" />
 
-</shape>
+        </shape>
+    </item>
+    <item>
+        <shape>
+            <solid android:color="@color/black_999" />
+            <corners android:radius="3dp" />
+            <size android:width="3dp" android:height="3dp" />
+
+        </shape>
+
+    </item>
+
+</selector>

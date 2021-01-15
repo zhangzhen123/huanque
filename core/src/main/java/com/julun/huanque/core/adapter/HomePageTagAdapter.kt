@@ -24,7 +24,11 @@ class HomePageTagAdapter : BaseQuickAdapter<UserTagBean, BaseViewHolder>(R.layou
 
     //是否是我的标签
     var mine = false
+
+    //缺省页面的数据
+    var emptyContent = ""
     override fun convert(holder: BaseViewHolder, item: UserTagBean) {
+        holder.setText(R.id.tv_empty, emptyContent)
         //认证标识
         val iv_tag_auth = holder.getView<ImageView>(R.id.iv_tag_auth)
         //遮罩

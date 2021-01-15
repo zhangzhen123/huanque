@@ -102,7 +102,7 @@ class ProfessionActivity : BaseActivity() {
             header_page.textOperation.show()
             if (index == 4) {
                 header_page.textOperation.text = "完成"
-            }else{
+            } else {
                 header_page.textOperation.text = "跳过"
             }
             progressBar.progress = (100 / 5) * (index + 1)
@@ -301,7 +301,6 @@ class ProfessionActivity : BaseActivity() {
                     downList
                 }
             }
-
             val replaceData = getReplaceData(totalList, data)
             if (replaceData == null) {
                 //没有可以替换的数据
@@ -310,7 +309,7 @@ class ProfessionActivity : BaseActivity() {
                 data[position] = replaceData
                 mFeatureAdapter.notifyItemChanged(position)
             }
-            showTotalFeatureNum(totalList)
+            showTotalFeatureNum()
         }
     }
 
@@ -321,9 +320,6 @@ class ProfessionActivity : BaseActivity() {
         wholeList: MutableList<SingleProfessionFeatureConfig>,
         showList: MutableList<SingleProfessionFeatureConfig>
     ): SingleProfessionFeatureConfig? {
-        if (wholeList.size <= showList.size) {
-            return null
-        }
 
         val canChooseList = mutableListOf<SingleProfessionFeatureConfig>()
         wholeList.forEach {
@@ -343,21 +339,22 @@ class ProfessionActivity : BaseActivity() {
     /**
      * 显示数量
      */
-    private fun showTotalFeatureNum(list: List<SingleProfessionFeatureConfig>) {
+    private fun showTotalFeatureNum() {
+        val totalList = mViewModel.featureData.value ?: return
         showChange(mFeatureAdapter, iv_profess_feature)
 
         var markCount = 0
-        list.forEach {
+        totalList.forEach {
             if (it.mark == BusiConstant.True) {
                 markCount++
             }
         }
         mViewModel.curFeatureCount = markCount
-        if (markCount == 0) {
-            tv_profess_feature_num.text = ""
-        } else {
-            tv_profess_feature_num.text = "$markCount"
-        }
+//        if (markCount == 0) {
+//            tv_profess_feature_num.text = ""
+//        } else {
+        tv_profess_feature_num.text = "$markCount"
+//        }
     }
 
 
@@ -366,7 +363,7 @@ class ProfessionActivity : BaseActivity() {
      * @param featureList 职业特点列表
      */
     private fun showFeatureView(featureList: MutableList<SingleProfessionFeatureConfig>) {
-        showTotalFeatureNum(featureList)
+        showTotalFeatureNum()
         upList.clear()
         middleList.clear()
         downList.clear()

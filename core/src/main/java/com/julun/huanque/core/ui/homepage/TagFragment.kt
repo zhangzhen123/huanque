@@ -2,11 +2,7 @@ package com.julun.huanque.core.ui.homepage
 
 import android.graphics.Color
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.julun.huanque.common.base.BaseBottomSheetFragment
@@ -14,12 +10,10 @@ import com.julun.huanque.common.bean.beans.UserTagBean
 import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.onAdapterClickNew
-import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.TagListAdapter
 import com.julun.huanque.core.ui.tag_manager.AuthTagPicActivity
 import com.julun.huanque.core.ui.tag_manager.TagPicsActivity
-import com.julun.huanque.core.viewmodel.HomePageViewModel
 import kotlinx.android.synthetic.main.frag_tag.*
 
 /**
@@ -113,13 +107,31 @@ class TagFragment : BaseBottomSheetFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mLike = arguments?.getBoolean(LikeTag) ?: false
-        mAdapter.like = mLike
         mSameSex = arguments?.getBoolean(SameSex) ?: false
         isMe = arguments?.getBoolean(IsMe) ?: false
         targetUserId = arguments?.getLong(TargetUserId, 0) ?: 0
         tagList = arguments?.getSerializable(TagList) as? ArrayList<UserTagBean>
+
+        if (!isMe) {
+            if (mSameSex) {
+                if (mLike) {
+                    mAdapter.mLikeStyle = true
+                } else {
+                    mAdapter.mLikeStyle = false
+                }
+            } else {
+                if (mLike) {
+                    mAdapter.mLikeStyle = false
+                } else {
+                    mAdapter.mLikeStyle = true
+                }
+            }
+
+        }
+//        mAdapter.mLikeStyle = mLike
+
         if (mLike) {
-            tv_title.text = "TA喜欢的标签"
+            tv_title.text = "TA喜欢的标签 ${tagList?.size ?: 0}"
 
             if (mSameSex) {
                 //同性
@@ -132,7 +144,7 @@ class TagFragment : BaseBottomSheetFragment() {
             }
         } else {
             //Ta拥有的标签
-            tv_title.text = "TA拥有的标签"
+            tv_title.text = "TA拥有的标签 ${tagList?.size ?: 0}"
             if (mSameSex) {
                 //同性
                 tv_like_former.text = "你已认证 "
@@ -174,19 +186,37 @@ class TagFragment : BaseBottomSheetFragment() {
         mAdapter.onAdapterClickNew { _, _, position ->
             val item = mAdapter.getItemOrNull(position) ?: return@onAdapterClickNew
 //            AuthTagPicActivity.start(requireActivity(), item.tagId, mHomeViewModel.mineHomePage, mLike, isSameSex)
-            if (mLike) {
-                //喜欢的标签
+
+
+            if (!isMe) {
                 if (mSameSex) {
-                    //同性 跳转列表页
-                    TagPicsActivity.start(requireActivity(), item, targetUserId)
+                    if (mLike) {
+                        TagPicsActivity.start(requireActivity(), item, targetUserId)
+                    } else {
+                        AuthTagPicActivity.start(requireActivity(), item.tagId, isMe, true, mSameSex)
+                    }
                 } else {
-                    //异性 跳转认证标签页
-                    AuthTagPicActivity.start(requireActivity(), item.tagId, isMe, true, mSameSex)
+                    if (mLike) {
+                        AuthTagPicActivity.start(requireActivity(), item.tagId, isMe, true, mSameSex)
+                    } else {
+                        TagPicsActivity.start(requireActivity(), item, targetUserId)
+                    }
                 }
-            } else {
-                //拥有的标签
-                TagPicsActivity.start(requireActivity(), item, targetUserId)
+
             }
+//            if (mLike) {
+//                //喜欢的标签
+//                if (mSameSex) {
+//                    //同性 跳转列表页
+//                    TagPicsActivity.start(requireActivity(), item, targetUserId)
+//                } else {
+//                    //异性 跳转认证标签页
+//                    AuthTagPicActivity.start(requireActivity(), item.tagId, isMe, true, mSameSex)
+//                }
+//            } else {
+//                //拥有的标签
+//                TagPicsActivity.start(requireActivity(), item, targetUserId)
+//            }
         }
     }
 

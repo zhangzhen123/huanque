@@ -66,7 +66,7 @@ class EditInfoActivity : BaseActivity() {
     private val mEditInfoViewModel: EditInfoViewModel by viewModels()
 
     //进度条的总宽度
-    private val TOTAL_PROGRESS_WIDTH = ScreenUtils.getScreenWidth() - dp2px(141f)
+    private var TOTAL_PROGRESS_WIDTH = ScreenUtils.getScreenWidth() - dp2px(155f)
 
     //标签adapter
     private val mTagAdapter = HomePageTagAdapter()
@@ -153,6 +153,7 @@ class EditInfoActivity : BaseActivity() {
             iv_demo.performClick()
             SPUtils.commitBoolean(SPParamKey.First_Edit, false)
         }
+        progressBar.post { }
         mTagAdapter.mine = true
         mLikeTagAdapter.mine = true
         mLikeTagAdapter.like = true
@@ -619,7 +620,7 @@ class EditInfoActivity : BaseActivity() {
     /**
      * 显示签名
      */
-    private fun showSign(sign : String){
+    private fun showSign(sign: String) {
         val normalColor = GlobalUtils.getColor(R.color.black_333)
         val greyColor = GlobalUtils.getColor(R.color.black_999)
         //签名
@@ -627,16 +628,14 @@ class EditInfoActivity : BaseActivity() {
             tv_sign.text = "编辑个签，展示我的独特态度"
             tv_sign.textColor = greyColor
         } else {
-
             tv_sign.textColor = normalColor
             if (sign.length <= 15) {
                 tv_sign.text = sign
             } else {
-                tv_sign.text = sign.substring(1, 15).plus("...")
+                tv_sign.text = sign.substring(0, 15).plus("...")
             }
         }
     }
-
 
 
     /**
@@ -661,7 +660,6 @@ class EditInfoActivity : BaseActivity() {
      * 设置进度条宽度
      */
     private fun updateProgress(progress: Int) {
-        view_progress_placeholder
         progressBar.progress = progress
         val placeViewWidtth = TOTAL_PROGRESS_WIDTH * progress / 100
         val placeParams = view_progress_placeholder.layoutParams
@@ -784,7 +782,7 @@ class EditInfoActivity : BaseActivity() {
         recycler_view_like_tag.layoutManager = GridLayoutManager(this, 4)
         recycler_view_like_tag.adapter = mLikeTagAdapter
         mLikeTagAdapter.setOnItemClickListener { adapter, view, position ->
-            val item = mTagAdapter.getItemOrNull(position) ?: return@setOnItemClickListener
+            val item = mLikeTagAdapter.getItemOrNull(position) ?: return@setOnItemClickListener
             TagPicsActivity.start(this, item, SessionUtils.getUserId())
             mEditInfoViewModel.needFresh = true
         }
@@ -1030,8 +1028,9 @@ class EditInfoActivity : BaseActivity() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun schoolChange(bean: SchoolInfo) {
-        tv_school.text = bean.school
-        tv_school.textColor = GlobalUtils.getColor(R.color.black_333)
+        showBasicInfo(tv_school, bean.school)
+//        tv_school.text = bean.school
+//        tv_school.textColor = GlobalUtils.getColor(R.color.black_333)
         mEditInfoViewModel.basicInfo.value?.schoolInfo?.let {
             if (bean.startYear.isNotEmpty()) {
                 it.startYear = bean.startYear
@@ -1042,9 +1041,9 @@ class EditInfoActivity : BaseActivity() {
             if (bean.education.isNotEmpty()) {
                 it.education = bean.education
             }
-            if (bean.school.isNotEmpty()) {
-                it.school = bean.school
-            }
+//            if (bean.school.isNotEmpty()) {
+            it.school = bean.school
+//            }
         }
     }
 
@@ -1118,16 +1117,16 @@ class EditInfoActivity : BaseActivity() {
         }
 
         //资料弹窗
-        val basicData = mEditInfoViewModel.basicInfo.value
-        if (basicData != null) {
+        val perfection = mEditInfoViewModel.basicInfo.value?.perfection ?: 0
+        if (perfection != null) {
             //签名
-            val sign = basicData.mySign
-            val homeTownId = basicData.homeTown.homeTownId
-            val age = basicData.age
-            val figure = basicData.figure.figure
-            val school = basicData.schoolInfo.school
-            val professionId = basicData.profession.professionId
-            if (sign.isEmpty() || homeTownId == 0 || age == 0 || figure.isEmpty() || school.isEmpty() || professionId == 0) {
+//            val sign = basicData.mySign
+//            val homeTownId = basicData.homeTown.homeTownId
+//            val age = basicData.age
+//            val figure = basicData.figure.figure
+//            val school = basicData.schoolInfo.school
+//            val professionId = basicData.profession.professionId
+            if (perfection < 100) {
                 //有数据未完成
                 MyAlertDialog(this).showAlertWithOKAndCancel(
                     "资料完整度80%以上用户获得心动概率更高",

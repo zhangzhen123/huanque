@@ -8,6 +8,7 @@ import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.UserService
 import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.request
+import com.julun.huanque.common.utils.ToastUtils
 import kotlinx.coroutines.launch
 
 /**
@@ -27,12 +28,31 @@ class InviteFillViewModel : BaseViewModel() {
 
     /**
      * 邀请填写
+     * @param dialog 是否在dialog中使用
      */
-    fun inviteFill() {
+    fun inviteFill(dialog: Boolean = true) {
         viewModelScope.launch {
             request({
                 userService.inviteComplete(InviteCompleteForm(userId, mType)).dataConvert()
-                inviteSuccess.value = true
+                if (dialog) {
+                    inviteSuccess.value = true
+                }
+                when (mType) {
+                    InviteCompleteForm.Information -> {
+                        ToastUtils.show("已邀请TA填写资料")
+                    }
+                    InviteCompleteForm.AuthTag -> {
+                        //认证标签
+                        ToastUtils.show("已邀请TA上传拥有的标签")
+                    }
+                    InviteCompleteForm.LikeTag -> {
+                        //喜欢标签
+                        ToastUtils.show("已邀请TA添加喜欢的标签")
+                    }
+                    else -> {
+                    }
+                }
+
             }, {})
         }
     }
