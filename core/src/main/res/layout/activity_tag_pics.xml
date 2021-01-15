@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,7 +9,10 @@
     <com.julun.huanque.common.widgets.HeaderPageView
         android:id="@+id/headerPageView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/ct_head_layout"
@@ -18,10 +21,13 @@
         android:layout_marginStart="@dimen/dimen_10"
         android:layout_marginEnd="@dimen/dimen_10"
         android:layout_marginBottom="@dimen/dimen_10"
-        android:visibility="gone"
-        tools:visibility="visible"
         android:background="@drawable/shape_search_edit_text"
-        android:padding="@dimen/dimen_11">
+        android:padding="@dimen/dimen_11"
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/headerPageView"
+        tools:visibility="visible">
 
         <LinearLayout
             android:id="@+id/ll_tag"
@@ -112,9 +118,13 @@
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/mRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0px"
         android:layout_marginStart="@dimen/dimen_5"
-        android:layout_marginEnd="@dimen/dimen_5">
+        android:layout_marginEnd="@dimen/dimen_5"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="@id/ct_head_layout"
+        app:layout_constraintRight_toRightOf="@id/ct_head_layout"
+        app:layout_constraintTop_toBottomOf="@id/ct_head_layout">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_pics"
@@ -123,7 +133,37 @@
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-</LinearLayout>
+    <View
+        android:id="@+id/view_bottom"
+        android:layout_width="0px"
+        android:layout_height="70dp"
+        android:background="@drawable/bg_tag_detail_bottom"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_like_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:background="@drawable/bg_enable"
+        android:drawableLeft="@mipmap/icon_star_white"
+        android:drawablePadding="4dp"
+        android:gravity="center"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_16"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/view_bottom"
+        app:layout_constraintLeft_toLeftOf="@id/view_bottom"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/view_bottom"
+        tools:text="喜欢肌肉"
+        tools:visibility="visible" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
 
 
 

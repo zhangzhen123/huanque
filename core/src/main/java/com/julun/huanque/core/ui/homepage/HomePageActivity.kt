@@ -506,11 +506,11 @@ class HomePageActivity : BaseActivity() {
         when {
             nearByBean != null -> {
                 mHomePageViewModel.shareElement = true
-                showPic(nearByBean.coverPic, nearByBean.coverPicList)
+                showPic("", nearByBean.coverPicList)
             }
             favoriteBean != null -> {
                 mHomePageViewModel.shareElement = true
-                showPic(favoriteBean.coverPic, favoriteBean.coverPicList)
+                showPic("", favoriteBean.coverPicList)
             }
             else -> {
                 mHomePageViewModel.shareElement = false
@@ -706,10 +706,10 @@ class HomePageActivity : BaseActivity() {
                 tv_online.text = "在线"
                 tv_online.isSelected = true
             } else {
-                if(onLineBean.onlineStatusText.isNotEmpty()){
+                if (onLineBean.onlineStatusText.isNotEmpty()) {
                     tv_online.text = onLineBean.onlineStatusText
                     tv_online.isSelected = false
-                }else{
+                } else {
                     tv_online.hide()
                 }
             }
@@ -847,7 +847,9 @@ class HomePageActivity : BaseActivity() {
      */
     private fun showPic(headerPic: String, coverPicList: MutableList<String>) {
         val picList = mutableListOf<HomePagePicBean>()
-        picList.add(HomePagePicBean(headerPic, selected = BusiConstant.True))
+        if (headerPic.isNotEmpty()) {
+            picList.add(HomePagePicBean(headerPic, selected = BusiConstant.True))
+        }
         coverPicList.forEach {
             picList.add(HomePagePicBean(it))
         }

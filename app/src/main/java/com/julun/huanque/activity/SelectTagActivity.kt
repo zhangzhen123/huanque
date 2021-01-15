@@ -11,6 +11,7 @@ import com.julun.huanque.adapter.LoginTagTabAdapter
 import com.julun.huanque.adapter.TagFragmentAdapter
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.bean.beans.LoginTagInfo
+import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.common.utils.GlobalUtils
@@ -79,6 +80,9 @@ class SelectTagActivity : BaseActivity() {
 
 
     override fun initEvents(rootView: View) {
+        con_hide.onClickNew {
+            con_hide.hide()
+        }
         tv_next.onClickNew {
             //下一步
             val currentIndex = mViewModel.currentSelectIndex.value ?: 0
