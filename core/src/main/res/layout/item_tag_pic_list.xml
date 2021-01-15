@@ -36,7 +36,7 @@
                 android:layout_width="@dimen/dimen_16"
                 android:layout_height="@dimen/dimen_16"
                 app:actualImageScaleType="centerCrop"
-                app:placeholderImage="@mipmap/logo_placeholder_small" />
+                app:placeholderImage="@mipmap/ic_tag_pic_more" />
         </LinearLayout>
 
 

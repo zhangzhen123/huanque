@@ -83,11 +83,20 @@ class TagUserPicsActivity : BaseVMActivity<TagUserPicsViewModel>() {
         }
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        overridePendingTransition(R.anim.fade_in_center, 0)
+    }
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(0, 0)
+    }
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
 
 
-        overridePendingTransition(0, 0)
+//        overridePendingTransition(0, 0)
         currentTagId = intent.extras?.getInt(ManagerTagCode.TAG_INFO)
         currentLikeUserId = intent.extras?.getLong(IntentParamKey.USER_ID.name)
         mShowPic = intent?.getStringExtra(ManagerTagCode.ShowPic) ?: ""

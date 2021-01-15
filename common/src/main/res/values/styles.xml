@@ -74,6 +74,19 @@
         <!--<item name="android:activityCloseEnterAnimation">@anim/slide_out_to_bottom</item>-->
         <item name="android:activityCloseExitAnimation">@anim/slide_out_to_bottom</item>
     </style>
+    <style name="CenterInWindowAnim" parent="@android:style/Animation.Translucent">
+        <item name="android:activityOpenEnterAnimation">@anim/slide_in_from_bottom</item>
+        <!--<item name="android:activityOpenExitAnimation">@anim/slide_out_to_bottom</item>-->
+        <!--<item name="android:activityCloseEnterAnimation">@anim/slide_out_to_bottom</item>-->
+        <item name="android:activityCloseExitAnimation">@anim/slide_out_to_bottom</item>
+    </style>
+    <style name="CenterWindowAnim" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/scale_in_center</item>
+        <item name="android:activityOpenExitAnimation">@null</item>
+        <item name="android:activityCloseEnterAnimation">@null</item>
+        <item name="android:activityCloseExitAnimation">@null</item>
+
+    </style>
 
     <style name="CustomToolBarTheme" parent="BaseAppTheme">
         <!--状态栏设置纯白色-->
