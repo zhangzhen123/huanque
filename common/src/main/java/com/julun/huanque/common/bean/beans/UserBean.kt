@@ -485,7 +485,7 @@ data class FilterGroupTag(
     var tagList: MutableList<FilterTag> = mutableListOf(),
     var tagType: String = "",
     var tagTypeText: String = "",
-    var isFold: Boolean = false//是否展开
+    var isFold: Boolean = true//是否展开
 )
 
 

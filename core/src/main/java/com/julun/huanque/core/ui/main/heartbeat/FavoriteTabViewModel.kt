@@ -34,7 +34,7 @@ class FavoriteTabViewModel : BaseViewModel() {
         offset += list.size
         currentList.addAll(list)
         if (currentList.size >= 4) {
-            val subList = currentList.sliceFromStart(4,removeSource = true)
+            val subList = currentList.sliceFromStart(4, removeSource = true)
             dataList.value = subList.convertRtData()
         }
     }
@@ -43,7 +43,7 @@ class FavoriteTabViewModel : BaseViewModel() {
         //先从本地去取 然后再请求网络
         if (currentList.size >= 4) {
             logger("有缓存队列 直接使用=${currentList.size}")
-            val subList = currentList.sliceFromStart(4,true)
+            val subList = currentList.sliceFromStart(4, true)
             dataList.value = subList.convertRtData()
             return
         }
@@ -60,10 +60,8 @@ class FavoriteTabViewModel : BaseViewModel() {
                 currentList.removeDuplicate()
                 offset += result.list.size
 //                result.isPull = queryType != QueryType.LOAD_MORE
-                if (currentList.size >= 4) {
-                    val subList = currentList.sliceFromStart(4,true)
-                    dataList.value = subList.convertRtData()
-                }
+                val subList = currentList.sliceFromStart(4, true)
+                dataList.value = subList.convertRtData()
             }, error = {
                 dataList.value = it.convertListError(queryType = queryType)
             }, needLoadState = queryType == QueryType.INIT)

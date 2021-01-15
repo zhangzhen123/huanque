@@ -30,6 +30,14 @@
                 android:layout_height="180dp"
                 android:background="@drawable/bg_shape_card_shadow"
                 app:layout_constraintBottom_toBottomOf="parent" />
+            <ImageView
+                android:id="@+id/iv_distance"
+                android:layout_width="@dimen/dimen_20"
+                android:layout_height="@dimen/dimen_20"
+                android:gravity="center"
+                app:layout_constraintBottom_toTopOf="@+id/rv_pics"
+                app:layout_constraintStart_toStartOf="@+id/rv_pics"
+                android:scaleType="fitCenter" />
 
             <TextView
                 android:id="@+id/tv_distance"
@@ -40,8 +48,8 @@
                 android:textColor="#FFCC00"
                 android:textSize="@dimen/sp_16"
                 android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/iv_distance"
                 app:layout_constraintBottom_toTopOf="@+id/rv_pics"
-                app:layout_constraintStart_toStartOf="@+id/rv_pics"
                 tools:text="23.3" />
 
             <TextView

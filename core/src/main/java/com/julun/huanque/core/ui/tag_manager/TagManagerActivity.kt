@@ -2,7 +2,6 @@ package com.julun.huanque.core.ui.tag_manager
 
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
 import android.util.SparseArray
@@ -26,20 +25,16 @@ import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.base.dialog.CustomDialogFragment
 import com.julun.huanque.common.basic.NetStateType
-import com.julun.huanque.common.bean.beans.UserTagBean
 import com.julun.huanque.common.bean.beans.ManagerTagTabBean
-import com.julun.huanque.common.constant.ActivityRequestCode
-import com.julun.huanque.common.constant.ManagerTagCode
+import com.julun.huanque.common.bean.beans.UserTagBean
 import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.suger.dp2pxf
-import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.loadImage
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.widgets.indicator.ScaleTransitionPagerTitleView
 import com.julun.huanque.core.R
 import kotlinx.android.synthetic.main.activity_favorite_tag_manager.*
-import kotlinx.android.synthetic.main.activity_favorite_tag_manager.tv_title
 import kotlinx.android.synthetic.main.dialog_tag_cancel_ensure.view.*
 import net.lucode.hackware.magicindicator.ViewPagerHelper
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
@@ -49,7 +44,6 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTit
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator
 import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.startActivity
-import org.jetbrains.anko.startActivityForResult
 import kotlin.properties.Delegates
 
 /**
@@ -74,7 +68,6 @@ class TagManagerActivity : BaseActivity() {
     //    private var state: CollapsingToolbarLayoutState? = null
     private var viewModel = HuanViewModelManager.tagManagerViewModel
 
-    private var deleteEnsureDialog: BaseDialogFragment? = null
     private lateinit var mCommonNavigator: CommonNavigator
     private var mFragmentList = SparseArray<Fragment>()
     private val mTabTitles = arrayListOf<ManagerTagTabBean>()
@@ -140,7 +133,6 @@ class TagManagerActivity : BaseActivity() {
             }
 
             override fun onItemDragEnd(viewHolder: RecyclerView.ViewHolder, pos: Int) {
-                viewModel.tagHasChange = true
                 viewModel.tagSequenceHasChange = true
                 val holder = viewHolder as BaseViewHolder
                 currentSelect = -1
@@ -181,32 +173,32 @@ class TagManagerActivity : BaseActivity() {
             val item = tagAdapter.getItemOrNull(position) ?: return@setOnItemClickListener
             if (deleteMode) {
 //                viewModel.tagCancelGroupLike(item)
-                deleteEnsureDialog =
-                    deleteEnsureDialog ?: CustomDialogFragment(
-                        builder = CustomDialogFragment.FDBuilder(
-                            layoutId = {
-                                return@FDBuilder R.layout.dialog_tag_cancel_ensure
-                            },
-                            onStart = { dialog ->
-                                dialog.setDialogSize(
-                                    gravity = Gravity.CENTER,
-                                    height = ViewGroup.LayoutParams.WRAP_CONTENT,
-                                    padding = 20
-                                )
-                            },
-                            initViews = { dialog, rootView ->
-                                rootView.sdv_tag_pic.loadImage(item.tagPic, 120f, 120f)
-                                rootView.tv_content.text = "取消喜欢后，将取消【${item.tagName}】下的${item.likeCnt}个标签"
-                                rootView.tv_btn_ok.onClickNew {
-                                    viewModel.tagCancelGroupLike(item)
-                                    dialog.dismiss()
-                                }
-                                rootView.tv_btn_cancel.onClickNew {
-                                    dialog.dismiss()
-                                }
-                            })
-                    )
-                deleteEnsureDialog?.show(supportFragmentManager, "deleteEnsureDialog")
+
+                val deleteEnsureDialog = CustomDialogFragment(
+                    builder = CustomDialogFragment.FDBuilder(
+                        layoutId = {
+                            return@FDBuilder R.layout.dialog_tag_cancel_ensure
+                        },
+                        onStart = { dialog ->
+                            dialog.setDialogSize(
+                                gravity = Gravity.CENTER,
+                                height = ViewGroup.LayoutParams.WRAP_CONTENT,
+                                padding = 20
+                            )
+                        },
+                        initViews = { dialog, rootView ->
+                            rootView.sdv_tag_pic.loadImage(item.tagPic, 120f, 120f)
+                            rootView.tv_content.text = "取消喜欢后，将取消【${item.tagName}】下的${item.likeCnt}个标签"
+                            rootView.tv_btn_ok.onClickNew {
+                                viewModel.tagCancelGroupLike(item)
+                                dialog.dismiss()
+                            }
+                            rootView.tv_btn_cancel.onClickNew {
+                                dialog.dismiss()
+                            }
+                        })
+                )
+                deleteEnsureDialog.show(supportFragmentManager, "deleteEnsureDialog")
 
             }
         }
@@ -232,7 +224,7 @@ class TagManagerActivity : BaseActivity() {
 
     private fun initViewModel() {
         viewModel.tabList.observe(this, Observer {
-            if (it.state == NetStateType.SUCCESS) {
+            if (it.state == NetStateType.SUCCESS && it.isNew()) {
                 mTabTitles.clear()
                 mTabTitles.addAll(it.requireT())
                 refreshTabList()
@@ -246,7 +238,7 @@ class TagManagerActivity : BaseActivity() {
 
         })
         viewModel.saveTagList.observe(this, Observer {
-            if (it != null && it.isSuccess()) {
+            if (it != null && it.isSuccess()&&it.isNew()) {
                 ToastUtils.show("标签保存成功")
             }
 
@@ -261,16 +253,6 @@ class TagManagerActivity : BaseActivity() {
         }
 
         super.onBackPressed()
-    }
-
-    override fun finish() {
-        val intent = this.intent
-
-        if (viewModel.tagHasChange) {
-//            intent.putExtra(ManagerTagCode.TAG_LIST, viewModel.currentTagList)
-//            setResult(Activity.RESULT_OK, intent)
-        }
-        super.finish()
     }
 
     /**

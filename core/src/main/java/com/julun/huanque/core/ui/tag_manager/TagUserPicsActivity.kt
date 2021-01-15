@@ -1,11 +1,15 @@
 package com.julun.huanque.core.ui.tag_manager
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ObjectAnimator
 import android.app.Activity
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.view.ViewCompat
 import androidx.lifecycle.Observer
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.module.LoadMoreModule
@@ -25,10 +29,12 @@ import com.julun.huanque.common.widgets.layoutmanager.stacklayout.StackLayoutCon
 import com.julun.huanque.common.widgets.layoutmanager.stacklayout.StackLayoutManager
 import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.suger.*
+import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.viewmodel.TagManagerViewModel
 import com.julun.huanque.core.R
 import kotlinx.android.synthetic.main.activity_tag_user_pics.*
+import kotlinx.android.synthetic.main.view_runway_simple.view.*
 import org.jetbrains.anko.startActivity
 
 /**
@@ -88,7 +94,9 @@ class TagUserPicsActivity : BaseVMActivity<TagUserPicsViewModel>() {
 
 
         rv_pics.adapter = picListAdapter
-
+        picListAdapter.onAdapterClickNew { _, _, position ->
+            finish()
+        }
         initViewModel()
 
         ct_root_layout.onClickNew {
@@ -96,7 +104,6 @@ class TagUserPicsActivity : BaseVMActivity<TagUserPicsViewModel>() {
         }
 
         tv_btn_like.onClickNew {
-            //todo
             cTagUserPicListBean ?: return@onClickNew
             tagManagerViewModel.tagLike(
                 UserTagBean(
@@ -110,7 +117,8 @@ class TagUserPicsActivity : BaseVMActivity<TagUserPicsViewModel>() {
             val tagId = currentTagId ?: return@onClickNew
             currentLikeUserId ?: return@onClickNew
             if (info.praise) {
-                mViewModel.tagCancelPraise(tagId, currentLikeUserId!!)
+                ToastUtils.show2("你已经赞过了哦")
+//                mViewModel.tagCancelPraise(tagId, currentLikeUserId!!)
             } else {
                 mViewModel.tagPraise(tagId, currentLikeUserId!!)
             }
@@ -140,6 +148,11 @@ class TagUserPicsActivity : BaseVMActivity<TagUserPicsViewModel>() {
                 if (it.requireT()) {
                     info.praiseNum++
                     zan_num.text = "${info.praiseNum}"
+                    val like=mViewModel.tagUserPics.value?.getT()?.like?:false
+                    if(!like){
+                        playGuideAni()
+                    }
+
                 } else {
                     info.praiseNum--
                     zan_num.text = "${info.praiseNum}"
@@ -184,6 +197,19 @@ class TagUserPicsActivity : BaseVMActivity<TagUserPicsViewModel>() {
         mViewModel.requestTagUserList(QueryType.INIT, tagId = currentTagId!!, friendId = currentLikeUserId!!)
     }
 
+    private fun playGuideAni() {
+        val ani= ObjectAnimator.ofFloat(add_tag_guide_layout, View.TRANSLATION_Y, ScreenUtils.screenHeightFloat/2,0f)
+        ani.duration=300
+        ani.addListener(object : AnimatorListenerAdapter() {
+            override fun onAnimationStart(animation: Animator?) {
+                val info=mViewModel.tagUserPics.value?.getT()
+                add_tag_guide_layout.show()
+                tv_tag_name.text = info?.tagName
+                zan_layout.hide()
+            }
+        })
+        ani.start()
+    }
     private fun renderData(info: TagUserPicListBean) {
         picList.addAll(info.authPicList)
         picListAdapter.notifyDataSetChanged()
@@ -194,15 +220,16 @@ class TagUserPicsActivity : BaseVMActivity<TagUserPicsViewModel>() {
         zan_num.text = "${info.praiseNum}"
 
         iv_zan.isActivated = info.praise
-
-        if (info.like) {
-            add_tag_guide_layout.hide()
-            zan_layout.show()
-        } else {
-            add_tag_guide_layout.show()
-            tv_tag_name.text = info.tagName
-            zan_layout.hide()
-        }
+        add_tag_guide_layout.hide()
+        zan_layout.show()
+//        if (info.like) {
+//            add_tag_guide_layout.hide()
+//            zan_layout.show()
+//        } else {
+//            add_tag_guide_layout.show()
+//            tv_tag_name.text = info.tagName
+//            zan_layout.hide()
+//        }
 
     }
 

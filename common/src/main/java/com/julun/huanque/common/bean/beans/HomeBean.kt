@@ -399,7 +399,8 @@ data class NearbyUserBean(
     var sex: String = "",
     var tagList: MutableList<UserTagBean> = mutableListOf(),
     var userId: Long = 0L,
-    var interactTips: String = ""
+    var interactTips: String = "",
+    var sameCity: Boolean = false
 ) : Serializable
 
 data class FavoriteUserBean(
@@ -417,7 +418,7 @@ data class FavoriteUserBean(
     var tagName: String = "",
     var userId: Long = 0,
     var interactTips: String = "",
-    var sameCity:Boolean=false
+    var sameCity: Boolean = false
 ) : Serializable
 
 class FavoriteListData<T> : RootListData<T>() {

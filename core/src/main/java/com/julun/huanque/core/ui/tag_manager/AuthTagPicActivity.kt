@@ -137,7 +137,7 @@ class AuthTagPicActivity : BaseVMActivity<AuthTagPicViewModel>() {
                         TagPicAuthStatus.Reject -> {
                             holder.setGone(R.id.rl_status, false)
                             holder.setText(R.id.tv_add_pic, "重新上传")
-                            holder.setText(R.id.tv_fail_reason, item.auditReason).setVisible(R.id.tv_fail_reason, true)
+                            holder.setText(R.id.tv_fail_reason, "原因：" + item.auditReason).setVisible(R.id.tv_fail_reason, true)
                             tv_verify_status.show()
                             tv_verify_status.backgroundResource = R.drawable.bg_shape_auth_tag_error
                             tv_verify_status.text = "审核失败"
@@ -179,7 +179,9 @@ class AuthTagPicActivity : BaseVMActivity<AuthTagPicViewModel>() {
         header_page_view.textOperation.onClickNew {
             checkPicPermissions()
         }
-
+        iv_zan.onClickNew {
+            ToastUtils.show("不能给自己认证的标签点赞哦～")
+        }
         rv_add_pics.setOrientation(DSVOrientation.HORIZONTAL)
         rv_add_pics.setItemTransitionTimeMillis(150)
         rv_add_pics.setItemTransformer(

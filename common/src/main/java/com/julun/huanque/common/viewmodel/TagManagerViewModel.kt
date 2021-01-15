@@ -34,6 +34,9 @@ class TagManagerViewModel : BaseViewModel() {
      */
     val tagChange: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
+    //标签总体有没有变动 用于关闭返回时是否通知数据更新
+    val tagHasChange: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+
     val currentTagList = arrayListOf<UserTagBean>()
 
     /**
@@ -123,7 +126,7 @@ class TagManagerViewModel : BaseViewModel() {
 //            logger("当前的全局标签列表数据为空！！")
 //            return
 //        }
-        tagHasChange = true
+
         var isExist = false
         currentTagList.forEach {
             if (it.tagId == itemBean.tagId) {
@@ -135,6 +138,7 @@ class TagManagerViewModel : BaseViewModel() {
             currentTagList.add(itemBean)
         }
         tagChange.value = true
+        tagHasChange.value = true
     }
 
     fun removeTag(itemBean: UserTagBean) {
@@ -142,7 +146,7 @@ class TagManagerViewModel : BaseViewModel() {
             logger("当前的全局标签列表数据为空！！")
             return
         }
-        tagHasChange = true
+
         val iterator = currentTagList.iterator()
         while (iterator.hasNext()) {
             val item = iterator.next()
@@ -154,11 +158,12 @@ class TagManagerViewModel : BaseViewModel() {
             }
         }
         tagChange.value = true
+        tagHasChange.value = true
     }
 
 
     fun tagCancelGroupLike(tag: UserTagBean) {
-        tagHasChange = true
+
         viewModelScope.launch {
 
             request({
@@ -173,9 +178,6 @@ class TagManagerViewModel : BaseViewModel() {
         }
 
     }
-
-    //标签总体有没有变动 用于关闭返回时是否通知数据更新
-    var tagHasChange = false
 
     //标记是否有标签顺序变动 用于保存顺序
     var tagSequenceHasChange = false
@@ -201,6 +203,7 @@ class TagManagerViewModel : BaseViewModel() {
                 val tags = tagsBuilder.toString()
                 val result = service.saveTagManage(TagListForm(tags)).dataConvert()
                 saveTagList.value = result.convertRtData()
+                tagHasChange.value = true
                 tagSequenceHasChange = false
             }, error = {
                 saveTagList.value = it.convertError()

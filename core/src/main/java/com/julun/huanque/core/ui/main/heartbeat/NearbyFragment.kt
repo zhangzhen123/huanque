@@ -69,6 +69,9 @@ import com.julun.maplib.LocationService
 import kotlinx.android.synthetic.main.fragment_nearby.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.jetbrains.anko.imageResource
+import java.math.RoundingMode
+import java.text.DecimalFormat
 import java.util.*
 import kotlin.math.abs
 import kotlin.math.max
@@ -760,13 +763,62 @@ class NearbyFragment : BaseLazyFragment() {
             override fun convert(holder: BaseViewHolder, item: NearbyUserBean) {
                 val sdv = holder.getView<SimpleDraweeView>(R.id.card_img)
                 sdv.loadImageNoResize(item.coverPic)
-                if (item.distance != 0) {
-                    holder.setText(R.id.tv_distance, "${item.distance}")
-                        .setVisible(R.id.tv_distance, true)
-                    holder.setText(R.id.tv_locationAge, "km ${item.area} / ${item.age}岁")
+//                if (item.distance != 0) {
+//                    holder.setText(R.id.tv_distance, "${item.distance}")
+//                        .setVisible(R.id.tv_distance, true)
+//                    holder.setText(R.id.tv_locationAge, "km ${item.area} / ${item.age}岁")
+//                } else {
+//                    holder.setText(R.id.tv_locationAge, "${item.area} / ${item.age}岁")
+//                        .setGone(R.id.tv_distance, true)
+//                }
+                val tvDistance = holder.getView<TextView>(R.id.tv_distance)
+                val ivDistance = holder.getView<ImageView>(R.id.iv_distance)
+                if (item.distance != -1) {
+                    if (item.sameCity) {
+                        tvDistance.show()
+                        ivDistance.hide()
+                        when {
+                            item.distance < 1000 -> {
+                                tvDistance.text = "${item.distance}"
+                                holder.setText(R.id.tv_locationAge, "m ${item.area} / ${item.age}岁")
+                            }
+                            else -> {
+                                val format = DecimalFormat("#.0")
+                                format.roundingMode = RoundingMode.DOWN
+                                val dt = format.format((item.distance / 1000.0))
+                                tvDistance.text = dt
+                                holder.setText(R.id.tv_locationAge, "km ${item.area} / ${item.age}岁")
+                            }
+                        }
+                    } else {
+                        tvDistance.hide()
+                        ivDistance.show()
+                        holder.setText(R.id.tv_locationAge, "${item.area} / ${item.age}岁")
+                        when {
+                            item.distance < 100000 -> {
+                                ivDistance.imageResource = R.mipmap.icon_home_distance_car
+                            }
+                            item.distance < 800000 -> {
+
+                                //显示动车
+                                ivDistance.imageResource = R.mipmap.icon_home_distance_rail_way
+                            }
+                            else -> {
+                                ivDistance.show()
+                                //显示飞机
+                                ivDistance.imageResource = R.mipmap.icon_home_distance_air_plan
+                            }
+                        }
+
+                    }
+
                 } else {
-                    holder.setText(R.id.tv_locationAge, "${item.area} / ${item.age}岁")
-                        .setGone(R.id.tv_distance, true)
+                    tvDistance.hide()
+                    ivDistance.show()
+                    val starList = mutableListOf<String>("金星", "木星", "水星", "火星", "土星")
+                    val currentStar = starList.random()
+                    ivDistance.imageResource = R.mipmap.icon_home_distance_rocket
+                    holder.setText(R.id.tv_locationAge, "$currentStar / ${item.age}岁")
                 }
 
 
