@@ -37,6 +37,10 @@ class TagPicAdapter() :
         ImageUtils.loadImageInPx(headImage, item.tagPic, viewWidth, params.height)
         val iv_sel = holder.getView<View>(R.id.iv_sel)
         iv_sel.isSelected = item.selected
+
+        val sdv_tag = holder.getView<SimpleDraweeView>(R.id.sdv_tag)
+        sdv_tag.loadImage(item.tagIcon, 20f, 20f)
+        holder.setText(R.id.tv_tag, item.tagName)
     }
 
 

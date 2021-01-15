@@ -1,6 +1,5 @@
 package com.julun.huanque.core.adapter
 
-import android.view.View
 import android.widget.TextView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
@@ -10,7 +9,6 @@ import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.suger.loadImageNoResize
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.core.R
-import kotlinx.android.synthetic.main.fragment_user_card.*
 
 /**
  *@创建者   dong
@@ -21,8 +19,8 @@ class TagListAdapter : BaseQuickAdapter<UserTagBean, BaseViewHolder>(R.layout.re
     private val likeDrawable = GlobalUtils.getDrawable(R.mipmap.icon_tag_like_heart)
     private val gettedDrawable = GlobalUtils.getDrawable(R.mipmap.icon_tag_getted)
 
-    //是否是喜欢的标签
-    var like: Boolean = false
+    //是否是喜欢的样式
+    var mLikeStyle: Boolean = false
     override fun convert(holder: BaseViewHolder, item: UserTagBean) {
         val adapterPosition = holder.adapterPosition
         if (adapterPosition % 4 == 0) {
@@ -42,21 +40,21 @@ class TagListAdapter : BaseQuickAdapter<UserTagBean, BaseViewHolder>(R.layout.re
         tv_like_statue.isSelected = item.mark == BusiConstant.True
         if (item.mark == BusiConstant.True) {
             //显示like图标
-            val drawable = if (like) {
+            val drawable = if (!mLikeStyle) {
                 gettedDrawable
             } else {
                 likeDrawable
             }
             drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
             tv_like_statue.setCompoundDrawables(drawable, null, null, null)
-            if (like) {
+            if (!mLikeStyle) {
                 tv_like_statue.text = "已认证"
             } else {
                 tv_like_statue.text = "已喜欢"
             }
         } else {
             tv_like_statue.setCompoundDrawables(null, null, null, null)
-            if (like) {
+            if (!mLikeStyle) {
                 tv_like_statue.text = "去认证"
             } else {
                 tv_like_statue.text = "去喜欢"

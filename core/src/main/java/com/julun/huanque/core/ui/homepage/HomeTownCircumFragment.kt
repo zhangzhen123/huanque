@@ -3,14 +3,19 @@ package com.julun.huanque.core.ui.homepage
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.HomeTownCircumListAdapter
+import com.julun.huanque.core.viewmodel.HomePageViewModel
 import com.julun.huanque.core.viewmodel.HomeTownViewModel
+import com.trello.rxlifecycle4.android.lifecycle.kotlin.bindUntilEvent
+import io.reactivex.rxjava3.core.Observable
 import kotlinx.android.synthetic.main.frag_home_towm_circum.*
+import java.util.concurrent.TimeUnit
 
 /**
  *@创建者   dong
@@ -28,6 +33,7 @@ class HomeTownCircumFragment : BaseFragment() {
 
     //家乡ViewModel
     private val mHomeTownViewModel: HomeTownViewModel by activityViewModels()
+    private val mHomePageViewModel: HomePageViewModel by activityViewModels()
     private var mType = ""
     private val mAdapter = HomeTownCircumListAdapter()
     override fun getLayoutId() = R.layout.frag_home_towm_circum
@@ -36,10 +42,20 @@ class HomeTownCircumFragment : BaseFragment() {
         mType = arguments?.getString(ParamConstant.TYPE, "") ?: ""
         mAdapter.markContent = when (mType) {
             "Food" -> {
-                "TA吃过"
+                if (mHomePageViewModel.mineHomePage) {
+                    "吃过"
+                } else {
+                    "TA吃过"
+                }
+
             }
             "Place" -> {
-                "TA去过"
+                if (mHomePageViewModel.mineHomePage) {
+                    "去过"
+                } else {
+                    "TA去过"
+                }
+
             }
             else -> {
                 ""
@@ -57,6 +73,7 @@ class HomeTownCircumFragment : BaseFragment() {
     private fun initRecyclerView() {
         recycler_view.layoutManager = GridLayoutManager(requireContext(), 2)
         recycler_view.adapter = mAdapter
+        recycler_view.isNestedScrollingEnabled = false
     }
 
     /**
@@ -64,6 +81,7 @@ class HomeTownCircumFragment : BaseFragment() {
      */
     private fun initViewModel() {
         mHomeTownViewModel.homeTownInfo.observe(this, Observer {
+            logger.info("Culture 显示数据")
             it?.cultureList?.forEach { sc ->
                 if (sc.cultureType == mType) {
                     mAdapter.setList(sc.cultureConfigList)

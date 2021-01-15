@@ -47,7 +47,6 @@ class InviteFillFragment : BaseDialogFragment() {
     private fun initViewModel() {
         mViewModel.inviteSuccess.observe(this, Observer {
             if (it == true) {
-                ToastUtils.show("已邀请TA填写资料")
                 mViewModel.inviteSuccess.value = null
                 dismiss()
             }

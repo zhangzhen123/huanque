@@ -73,6 +73,7 @@ import java.util.concurrent.TimeUnit
 @Route(path = ARouterConstant.Welcome_Activity)
 class WelcomeActivity : BaseActivity() {
     private val mLoginViewModel: LoginViewModel by viewModels()
+
     //是否同意过隐私弹窗
     private var mShowFragment = false
 
@@ -174,6 +175,58 @@ class WelcomeActivity : BaseActivity() {
             add(LoginPicBean(R.mipmap.tag_6, 22, "南京", "看v"))
             add(LoginPicBean(R.mipmap.tag_7, 23, "天津", "啃维"))
             add(LoginPicBean(R.mipmap.tag_8, 24, "北京", "一环"))
+            add(LoginPicBean(R.mipmap.tag_9, 24, "北京", "一环"))
+            add(LoginPicBean(R.mipmap.tag_10, 24, "北京", "一环"))
+            add(LoginPicBean(R.mipmap.tag_11, 17, "杭州", "乐网"))
+            add(LoginPicBean(R.mipmap.tag_12, 18, "上海", "勒沃"))
+            add(LoginPicBean(R.mipmap.tag_13, 19, "苏州", "推图"))
+            add(LoginPicBean(R.mipmap.tag_14, 20, "无锡", "离领"))
+            add(LoginPicBean(R.mipmap.tag_15, 21, "常州", "匹配"))
+            add(LoginPicBean(R.mipmap.tag_16, 22, "南京", "看v"))
+            add(LoginPicBean(R.mipmap.tag_17, 23, "天津", "啃维"))
+            add(LoginPicBean(R.mipmap.tag_18, 24, "北京", "一环"))
+            add(LoginPicBean(R.mipmap.tag_19, 24, "北京", "一环"))
+            add(LoginPicBean(R.mipmap.tag_20, 24, "北京", "一环"))
+            add(LoginPicBean(R.mipmap.tag_21, 17, "杭州", "乐网"))
+            add(LoginPicBean(R.mipmap.tag_22, 18, "上海", "勒沃"))
+            add(LoginPicBean(R.mipmap.tag_23, 19, "苏州", "推图"))
+            add(LoginPicBean(R.mipmap.tag_24, 20, "无锡", "离领"))
+            add(LoginPicBean(R.mipmap.tag_25, 21, "常州", "匹配"))
+            add(LoginPicBean(R.mipmap.tag_26, 22, "南京", "看v"))
+            add(LoginPicBean(R.mipmap.tag_27, 23, "天津", "啃维"))
+            add(LoginPicBean(R.mipmap.tag_28, 24, "北京", "一环"))
+            add(LoginPicBean(R.mipmap.tag_29, 24, "北京", "一环"))
+            add(LoginPicBean(R.mipmap.tag_30, 24, "北京", "一环"))
+            add(LoginPicBean(R.mipmap.tag_31, 17, "杭州", "乐网"))
+            add(LoginPicBean(R.mipmap.tag_32, 18, "上海", "勒沃"))
+            add(LoginPicBean(R.mipmap.tag_33, 19, "苏州", "推图"))
+            add(LoginPicBean(R.mipmap.tag_34, 20, "无锡", "离领"))
+            add(LoginPicBean(R.mipmap.tag_35, 21, "常州", "匹配"))
+            add(LoginPicBean(R.mipmap.tag_36, 22, "南京", "看v"))
+            add(LoginPicBean(R.mipmap.tag_37, 23, "天津", "啃维"))
+            add(LoginPicBean(R.mipmap.tag_38, 24, "北京", "一环"))
+            add(LoginPicBean(R.mipmap.tag_39, 24, "北京", "一环"))
+            add(LoginPicBean(R.mipmap.tag_40, 24, "北京", "一环"))
+            add(LoginPicBean(R.mipmap.tag_41, 17, "杭州", "乐网"))
+            add(LoginPicBean(R.mipmap.tag_42, 18, "上海", "勒沃"))
+            add(LoginPicBean(R.mipmap.tag_43, 19, "苏州", "推图"))
+            add(LoginPicBean(R.mipmap.tag_44, 20, "无锡", "离领"))
+            add(LoginPicBean(R.mipmap.tag_45, 21, "常州", "匹配"))
+            add(LoginPicBean(R.mipmap.tag_46, 22, "南京", "看v"))
+            add(LoginPicBean(R.mipmap.tag_47, 23, "天津", "啃维"))
+            add(LoginPicBean(R.mipmap.tag_48, 24, "北京", "一环"))
+            add(LoginPicBean(R.mipmap.tag_49, 24, "北京", "一环"))
+            add(LoginPicBean(R.mipmap.tag_50, 24, "北京", "一环"))
+            add(LoginPicBean(R.mipmap.tag_51, 17, "杭州", "乐网"))
+            add(LoginPicBean(R.mipmap.tag_52, 18, "上海", "勒沃"))
+            add(LoginPicBean(R.mipmap.tag_53, 19, "苏州", "推图"))
+            add(LoginPicBean(R.mipmap.tag_54, 20, "无锡", "离领"))
+            add(LoginPicBean(R.mipmap.tag_55, 21, "常州", "匹配"))
+            add(LoginPicBean(R.mipmap.tag_56, 22, "南京", "看v"))
+            add(LoginPicBean(R.mipmap.tag_57, 23, "天津", "啃维"))
+            add(LoginPicBean(R.mipmap.tag_58, 24, "北京", "一环"))
+            add(LoginPicBean(R.mipmap.tag_59, 24, "北京", "一环"))
+            add(LoginPicBean(R.mipmap.tag_60, 24, "北京", "一环"))
         }
         recycler_view.adapter = mAdapter.apply { setList(tagPic) }
         recycler_view.layoutManager = StaggeredGridLayoutManager(2, RecyclerView.VERTICAL)
@@ -535,8 +588,8 @@ class WelcomeActivity : BaseActivity() {
             if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
 //                mLoginViewModel.currentFragmentState.value = LoginViewModel.Fragment_State_Phone
 //                mLoginFragment.show(supportFragmentManager, "LoginFragment")
-                val intent = Intent(this,LoginActivity2::class.java)
-                if(ForceUtils.activityMatch(intent)){
+                val intent = Intent(this, LoginActivity2::class.java)
+                if (ForceUtils.activityMatch(intent)) {
                     startActivity(intent)
                 }
             }
@@ -651,8 +704,8 @@ class WelcomeActivity : BaseActivity() {
                     } else {
 //                        mLoginViewModel.mShowLoginFragment = true
 //                        mLoginFragment.show(supportFragmentManager, "LoginFragment")
-                        val intent = Intent(this@WelcomeActivity,LoginActivity2::class.java)
-                        if(ForceUtils.activityMatch(intent)){
+                        val intent = Intent(this@WelcomeActivity, LoginActivity2::class.java)
+                        if (ForceUtils.activityMatch(intent)) {
                             startActivity(intent)
                         }
                     }

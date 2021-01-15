@@ -72,7 +72,8 @@ class HomePageInformationFragment : BaseFragment() {
     override fun getLayoutId() = R.layout.frag_home_page_information
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
-
+        mTagAdapter.emptyContent = "邀请TA上传\n拥有的标签"
+        mLikeTagAdapter.emptyContent = "邀请TA添加喜\n欢的标签"
         initRecyclerView()
 
     }
@@ -86,9 +87,9 @@ class HomePageInformationFragment : BaseFragment() {
                     MyTagsActivity.start(requireActivity(), MyTagType.AUTH)
                 } else {
                     //显示他拥有的标签弹窗
-                    val list=mHomePageViewModel.homeInfoBean.value?.authTagList
+                    val list = mHomePageViewModel.homeInfoBean.value?.authTagList
                     if (list != null) {
-                        mTagFragment.setParams(false,isSameSex,mHomePageViewModel.mineHomePage,mHomePageViewModel.targetUserId,list)
+                        mTagFragment.setParams(false, isSameSex, mHomePageViewModel.mineHomePage, mHomePageViewModel.targetUserId, list)
                         mTagFragment.show(childFragmentManager, "TagFragment")
                     }
 
@@ -105,10 +106,10 @@ class HomePageInformationFragment : BaseFragment() {
                 if (mHomePageViewModel.mineHomePage) {
                     MyTagsActivity.start(requireActivity(), MyTagType.LIKE)
                 } else {
-                    mInviteViewModel.mType = InviteCompleteForm.Information
-                    val list=mHomePageViewModel.homeInfoBean.value?.likeTagList
+//                    mInviteViewModel.mType = InviteCompleteForm.Information
+                    val list = mHomePageViewModel.homeInfoBean.value?.likeTagList
                     if (list != null) {
-                        mTagFragment.setParams(true,isSameSex,mHomePageViewModel.mineHomePage,mHomePageViewModel.targetUserId,list)
+                        mTagFragment.setParams(true, isSameSex, mHomePageViewModel.mineHomePage, mHomePageViewModel.targetUserId, list)
                         mTagFragment.show(childFragmentManager, "TagFragment")
                     }
 
@@ -134,7 +135,17 @@ class HomePageInformationFragment : BaseFragment() {
 
         view_stature.onClickNew {
             //身材
-            mFigureFragment.show(childFragmentManager, "FigureFragment")
+            if ((mHomePageViewModel.homeInfoBean.value?.figure?.height ?: 0) > 0) {
+                //有身材数据
+                mFigureFragment.show(childFragmentManager, "FigureFragment")
+            } else {
+                //无身材数据,邀请填写
+                if (mHomePageViewModel.mineHomePage) {
+                    return@onClickNew
+                }
+                mInviteViewModel.mType = InviteCompleteForm.Information
+                mInviteFillFragment.show(childFragmentManager, "InviteFillFragment")
+            }
         }
 
         view_constellation.onClickNew {
@@ -228,13 +239,18 @@ class HomePageInformationFragment : BaseFragment() {
                     return@setOnItemClickListener
                 }
                 mInviteViewModel.mType = InviteCompleteForm.AuthTag
-                mInviteFillFragment.show(childFragmentManager, "InviteFillFragment")
+//                mInviteFillFragment.show(childFragmentManager, "InviteFillFragment")
+                mInviteViewModel.inviteFill(false)
             } else {
                 if (mHomePageViewModel.mineHomePage) {
                     //我的主页
                     AuthTagPicActivity.start(requireActivity(), item.tagId, mHomePageViewModel.mineHomePage, false, true)
                 } else {
-                    TagPicsActivity.start(requireActivity(), item, mHomePageViewModel.targetUserId)
+                    if (isSameSex) {
+                        AuthTagPicActivity.start(requireActivity(), item.tagId, mHomePageViewModel.mineHomePage, false, isSameSex)
+                    } else {
+                        TagPicsActivity.start(requireActivity(), item, mHomePageViewModel.targetUserId)
+                    }
                 }
             }
 
@@ -252,11 +268,13 @@ class HomePageInformationFragment : BaseFragment() {
                     return@setOnItemClickListener
                 }
                 mInviteViewModel.mType = InviteCompleteForm.AuthTag
-                mInviteFillFragment.show(childFragmentManager, "InviteFillFragment")
+                mInviteViewModel.inviteFill(false)
+//                mInviteFillFragment.show(childFragmentManager, "InviteFillFragment")
             } else {
                 if (mHomePageViewModel.mineHomePage) {
                     //我的主页
-                    AuthTagPicActivity.start(requireActivity(), item.tagId, mHomePageViewModel.mineHomePage, true, false)
+//                    AuthTagPicActivity.start(requireActivity(), item.tagId, mHomePageViewModel.mineHomePage, true, false)
+                    TagPicsActivity.start(requireActivity(), item, mHomePageViewModel.targetUserId)
                 } else {
                     if (isSameSex) {
                         //同性
@@ -392,7 +410,11 @@ class HomePageInformationFragment : BaseFragment() {
         } else {
             bean.authTagList
         }
-        tv_tag_count.text = "${tagList.size}"
+        if (mHomePageViewModel.mineHomePage) {
+            tv_tag_count.text = "${bean.myAuthTag.markTagNum}"
+        } else {
+            tv_tag_count.text = "${tagList.size}"
+        }
         val realTagList = mutableListOf<UserTagBean>()
         if (tagList.size >= 4) {
             tv_more_tag.show()
@@ -417,7 +439,11 @@ class HomePageInformationFragment : BaseFragment() {
         } else {
             bean.likeTagList
         }
-        tv_like_tag_count.text = "${likeTagList.size}"
+        if(mHomePageViewModel.mineHomePage){
+            tv_like_tag_count.text = "${bean.myLikeTag.markTagNum}"
+        }else{
+            tv_like_tag_count.text = "${likeTagList.size}"
+        }
         val realLikeTagList = mutableListOf<UserTagBean>()
         if (likeTagList.size >= 4) {
             tv_more_like_tag.show()
@@ -428,7 +454,7 @@ class HomePageInformationFragment : BaseFragment() {
             tv_more_like_tag.hide()
             realLikeTagList.addAll(likeTagList)
         }
-        if (mHomePageViewModel.mineHomePage) {
+        if (!mHomePageViewModel.mineHomePage) {
             if (realLikeTagList.size < 4) {
                 //添加引导布局
                 realLikeTagList.add(UserTagBean())

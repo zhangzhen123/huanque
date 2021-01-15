@@ -19,6 +19,7 @@ import com.julun.huanque.common.base.dialog.LoadingDialog
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.bean.beans.*
+import com.julun.huanque.common.bean.forms.InviteCompleteForm
 import com.julun.huanque.common.bean.forms.UpdateUserInfoForm
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.interfaces.routerservice.IRealNameService
@@ -34,6 +35,9 @@ import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.EditPicAdapter
 import com.julun.huanque.core.adapter.HomePageTagAdapter
 import com.julun.huanque.core.ui.record_voice.VoiceSignActivity
+import com.julun.huanque.core.ui.tag_manager.AuthTagPicActivity
+import com.julun.huanque.core.ui.tag_manager.MyTagsActivity
+import com.julun.huanque.core.ui.tag_manager.TagPicsActivity
 import com.julun.huanque.core.utils.EditUtils
 import com.julun.huanque.core.viewmodel.EditInfoViewModel
 import com.luck.picture.lib.PictureSelector
@@ -62,7 +66,7 @@ class EditInfoActivity : BaseActivity() {
     private val mEditInfoViewModel: EditInfoViewModel by viewModels()
 
     //进度条的总宽度
-    private val TOTAL_PROGRESS_WIDTH = ScreenUtils.getScreenWidth() - dp2px(141f)
+    private var TOTAL_PROGRESS_WIDTH = ScreenUtils.getScreenWidth() - dp2px(155f)
 
     //标签adapter
     private val mTagAdapter = HomePageTagAdapter()
@@ -111,6 +115,7 @@ class EditInfoActivity : BaseActivity() {
 //                            MyAlertDialog.MyDialogCallback(onRight = {
 //                            }), "真人照片未认证", okText = "去认证", noText = "取消"
 //                        )
+                        mEditInfoViewModel.needFresh = true
                         (ARouter.getInstance().build(ARouterConstant.REALNAME_SERVICE)
                             .navigation() as? IRealNameService)?.checkRealHead { e ->
                             if (e is ResponseError && e.busiCode == ErrorCodes.REAL_HEAD_ERROR) {
@@ -148,6 +153,10 @@ class EditInfoActivity : BaseActivity() {
             iv_demo.performClick()
             SPUtils.commitBoolean(SPParamKey.First_Edit, false)
         }
+        progressBar.post { }
+        mTagAdapter.mine = true
+        mLikeTagAdapter.mine = true
+        mLikeTagAdapter.like = true
 
         mBarHeiht = StatusBarUtil.getStatusBarHeight(this)
         header_page.textTitle.text = "编辑资料"
@@ -175,7 +184,7 @@ class EditInfoActivity : BaseActivity() {
                     picSb.append("${it.logId}")
                 }
             }
-            if (picSb.toString() != mEditInfoViewModel.originCoverPicIdStr) {
+            if (picSb.toString() != mEditInfoViewModel.getOriginPicStr()) {
                 //数据发生变化，需要请求接口
                 mEditInfoViewModel.saveConverOrder(picSb.toString())
             } else {
@@ -282,6 +291,14 @@ class EditInfoActivity : BaseActivity() {
             mPicDemoFragment.show(supportFragmentManager, "PicDemoFragment")
         }
 
+        ll_tag.onClickNew {
+            mEditInfoViewModel.needFresh = true
+            MyTagsActivity.start(this, MyTagType.AUTH)
+        }
+        ll_like_tag.onClickNew {
+            mEditInfoViewModel.needFresh = true
+            MyTagsActivity.start(this, MyTagType.LIKE)
+        }
     }
 
     /**
@@ -450,7 +467,7 @@ class EditInfoActivity : BaseActivity() {
         val pics = info.picList
         //用来显示的数据
         val showPics = mutableListOf<HomePagePicBean>()
-        showPics.add(HomePagePicBean(info.headPic, info.authMark, headerPic = BusiConstant.True))
+        showPics.add(HomePagePicBean(info.headPic, info.headRealPeople, headerPic = BusiConstant.True))
         pics.forEach {
             showPics.add(it)
         }
@@ -462,23 +479,24 @@ class EditInfoActivity : BaseActivity() {
 //originCoverPicList
         mEditPicAdapter.setList(showPics)
 
+        showSign(info.mySign)
         val normalColor = GlobalUtils.getColor(R.color.black_333)
         val greyColor = GlobalUtils.getColor(R.color.black_999)
         tv_nickname.text = info.nickname
-        //签名
-        val sign = info.mySign
-        if (sign.isEmpty()) {
-            tv_sign.text = "编辑个签，展示我的独特态度"
-            tv_sign.textColor = greyColor
-        } else {
-
-            tv_sign.textColor = normalColor
-            if (sign.length <= 20) {
-                tv_sign.text = sign
-            } else {
-                tv_sign.text = sign.substring(1, 20).plus("...")
-            }
-        }
+//        //签名
+//        val sign = info.mySign
+//        if (sign.isEmpty()) {
+//            tv_sign.text = "编辑个签，展示我的独特态度"
+//            tv_sign.textColor = greyColor
+//        } else {
+//
+//            tv_sign.textColor = normalColor
+//            if (sign.length <= 15) {
+//                tv_sign.text = sign
+//            } else {
+//                tv_sign.text = sign.substring(1, 15).plus("...")
+//            }
+//        }
 
         //语音签名
         val voiceBean = info.voice
@@ -599,6 +617,26 @@ class EditInfoActivity : BaseActivity() {
         }
     }
 
+    /**
+     * 显示签名
+     */
+    private fun showSign(sign: String) {
+        val normalColor = GlobalUtils.getColor(R.color.black_333)
+        val greyColor = GlobalUtils.getColor(R.color.black_999)
+        //签名
+        if (sign.isEmpty()) {
+            tv_sign.text = "编辑个签，展示我的独特态度"
+            tv_sign.textColor = greyColor
+        } else {
+            tv_sign.textColor = normalColor
+            if (sign.length <= 15) {
+                tv_sign.text = sign
+            } else {
+                tv_sign.text = sign.substring(0, 15).plus("...")
+            }
+        }
+    }
+
 
     /**
      * 显示社交意愿数据
@@ -622,7 +660,6 @@ class EditInfoActivity : BaseActivity() {
      * 设置进度条宽度
      */
     private fun updateProgress(progress: Int) {
-        view_progress_placeholder
         progressBar.progress = progress
         val placeViewWidtth = TOTAL_PROGRESS_WIDTH * progress / 100
         val placeParams = view_progress_placeholder.layoutParams
@@ -676,7 +713,26 @@ class EditInfoActivity : BaseActivity() {
                 return true
             }
 
+            override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
+                //取到swipe、drag开始和结束时机，viewHolder 不为空的时候是开始，空的时候是结束
+                val firstData = mEditPicAdapter.getItemOrNull(0) ?: return
+                if (viewHolder == null) {
+                    //结束
+                    if (firstData.headerPic == BusiConstant.True) {
+                        firstData.showNoMoveAttention = BusiConstant.False
+                    }
+                } else {
+                    //开始
+                    if (firstData.headerPic == BusiConstant.True) {
+                        firstData.showNoMoveAttention = BusiConstant.True
+                    }
+                }
+                mEditPicAdapter.notifyItemChanged(0)
+                super.onSelectedChanged(viewHolder, actionState)
+            }
+
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+
             }
 
             override fun canDropOver(
@@ -707,7 +763,7 @@ class EditInfoActivity : BaseActivity() {
                 if (tempData.headerPic == BusiConstant.True) {
                     //头像 显示提示
                     tempData.showNoMoveAttention = BusiConstant.True
-                    mEditPicAdapter.notifyItemChanged(position)
+                    mEditPicAdapter.notifyItemChanged(0)
                     timerHideAttention()
                 }
 
@@ -718,11 +774,18 @@ class EditInfoActivity : BaseActivity() {
         recycler_view_tag.layoutManager = GridLayoutManager(this, 4)
         recycler_view_tag.adapter = mTagAdapter
         mTagAdapter.setOnItemClickListener { adapter, view, position ->
-//            ll_tag.performClick()
+            val item = mTagAdapter.getItemOrNull(position) ?: return@setOnItemClickListener
+            AuthTagPicActivity.start(this, item.tagId, true, false, true)
+            mEditInfoViewModel.needFresh = true
         }
 
         recycler_view_like_tag.layoutManager = GridLayoutManager(this, 4)
         recycler_view_like_tag.adapter = mLikeTagAdapter
+        mLikeTagAdapter.setOnItemClickListener { adapter, view, position ->
+            val item = mLikeTagAdapter.getItemOrNull(position) ?: return@setOnItemClickListener
+            TagPicsActivity.start(this, item, SessionUtils.getUserId())
+            mEditInfoViewModel.needFresh = true
+        }
 
     }
 
@@ -916,9 +979,10 @@ class EditInfoActivity : BaseActivity() {
         val sign = info.mySign
         if (sign?.isNotEmpty() == true) {
             //个性签名变动
-            tv_sign.text = sign
-            tv_sign.textColor = GlobalUtils.getColor(R.color.black_333)
+            showSign(sign)
             mEditInfoViewModel.basicInfo.value?.mySign = sign
+//            tv_sign.text = sign
+//            tv_sign.textColor = GlobalUtils.getColor(R.color.black_333)
         }
         val cityName = info.cityName
         val provinceName = info.provinceName
@@ -964,8 +1028,9 @@ class EditInfoActivity : BaseActivity() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun schoolChange(bean: SchoolInfo) {
-        tv_school.text = bean.school
-        tv_school.textColor = GlobalUtils.getColor(R.color.black_333)
+        showBasicInfo(tv_school, bean.school)
+//        tv_school.text = bean.school
+//        tv_school.textColor = GlobalUtils.getColor(R.color.black_333)
         mEditInfoViewModel.basicInfo.value?.schoolInfo?.let {
             if (bean.startYear.isNotEmpty()) {
                 it.startYear = bean.startYear
@@ -976,9 +1041,9 @@ class EditInfoActivity : BaseActivity() {
             if (bean.education.isNotEmpty()) {
                 it.education = bean.education
             }
-            if (bean.school.isNotEmpty()) {
-                it.school = bean.school
-            }
+//            if (bean.school.isNotEmpty()) {
+            it.school = bean.school
+//            }
         }
     }
 
@@ -1038,7 +1103,7 @@ class EditInfoActivity : BaseActivity() {
             }
         }
         //图片保存弹窗
-        if (picSb.toString() != mEditInfoViewModel.originCoverPicIdStr) {
+        if (picSb.toString() != mEditInfoViewModel.getOriginPicStr()) {
             //数据发生变化，需要提示
             MyAlertDialog(this).showAlertWithOKAndCancel(
                 "要保存修改，请点击右上角【保存】按钮",
@@ -1052,16 +1117,16 @@ class EditInfoActivity : BaseActivity() {
         }
 
         //资料弹窗
-        val basicData = mEditInfoViewModel.basicInfo.value
-        if (basicData != null) {
+        val perfection = mEditInfoViewModel.basicInfo.value?.perfection ?: 0
+        if (perfection != null) {
             //签名
-            val sign = basicData.mySign
-            val homeTownId = basicData.homeTown.homeTownId
-            val age = basicData.age
-            val figure = basicData.figure.figure
-            val school = basicData.schoolInfo.school
-            val professionId = basicData.profession.professionId
-            if (sign.isEmpty() || homeTownId == 0 || age == 0 || figure.isEmpty() || school.isEmpty() || professionId == 0) {
+//            val sign = basicData.mySign
+//            val homeTownId = basicData.homeTown.homeTownId
+//            val age = basicData.age
+//            val figure = basicData.figure.figure
+//            val school = basicData.schoolInfo.school
+//            val professionId = basicData.profession.professionId
+            if (perfection < 100) {
                 //有数据未完成
                 MyAlertDialog(this).showAlertWithOKAndCancel(
                     "资料完整度80%以上用户获得心动概率更高",

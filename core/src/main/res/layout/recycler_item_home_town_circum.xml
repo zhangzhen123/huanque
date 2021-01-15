@@ -12,13 +12,13 @@
         android:layout_marginLeft="3dp"
         android:layout_marginTop="5dp"
         android:layout_marginRight="3dp"
-        app:roundedCornerRadius="10dp"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:placeholderImage="@mipmap/logo_placeholder_medium"
-        app:placeholderImageScaleType="centerCrop" />
+        app:placeholderImageScaleType="centerCrop"
+        app:roundedCornerRadius="10dp" />
 
     <TextView
         android:id="@+id/tv_status"
@@ -42,8 +42,8 @@
         android:layout_height="40dp"
         android:background="@drawable/bg_culture_shader"
         app:layout_constraintBottom_toBottomOf="@id/sdv_pic"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintLeft_toLeftOf="@id/sdv_pic"
+        app:layout_constraintRight_toRightOf="@id/sdv_pic" />
 
 
     <TextView

@@ -26,7 +26,6 @@
         android:maxLength="50"
         android:padding="10dp"
         android:paddingLeft="15dp"
-        android:singleLine="true"
         android:textColor="@color/black_333"
         android:textColorHint="@color/black_999"
         android:textSize="@dimen/sp_15"

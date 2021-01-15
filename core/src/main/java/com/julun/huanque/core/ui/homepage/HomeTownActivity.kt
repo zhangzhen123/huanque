@@ -203,6 +203,9 @@ class HomeTownActivity : BaseActivity() {
         mHomeTownEditViewModel.homeTownData.observe(this, Observer {
             if (it != null) {
                 showCityName(it.homeTownProvince, it.homeTownCity)
+                if (it.homeTownId == 0) {
+                    tv_profression_title.performClick()
+                }
             }
         })
         mHomeTownEditViewModel.foodCultureData.observe(this, Observer {
@@ -331,7 +334,7 @@ class HomeTownActivity : BaseActivity() {
      * 显示美食布局
      */
     private fun showFoodView(foodBean: SingleCulture) {
-        tv_income.text = foodBean.cultureTypeText
+//        tv_income.text = foodBean.cultureTypeText
         showTotalFoodNum(foodBean.cultureConfigList, tv_eat_food_num)
         val foodNoMarkList = mutableListOf<SingleCultureConfig>()
 
@@ -354,7 +357,7 @@ class HomeTownActivity : BaseActivity() {
         }
 
         mFoodAdapter.setList(noMarkList)
-        showChange(mFoodAdapter, iv_food_change)
+        showChange(foodBean.cultureConfigList, iv_food_change)
     }
 
     /**
@@ -363,9 +366,9 @@ class HomeTownActivity : BaseActivity() {
     private fun showTotalFoodNum(list: List<SingleCultureConfig>, tv: TextView) {
         if (tv == tv_eat_food_num) {
             //美食
-            showChange(mFoodAdapter, iv_food_change)
+            showChange(list, iv_food_change)
         } else {
-            showChange(mPlaceAdapter, iv_view_change)
+            showChange(list, iv_view_change)
         }
 
         var markCount = 0
@@ -374,11 +377,11 @@ class HomeTownActivity : BaseActivity() {
                 markCount++
             }
         }
-        if (markCount == 0) {
-            tv.text = ""
-        } else {
-            tv.text = "$markCount"
-        }
+//        if (markCount == 0) {
+//            tv.text = ""
+//        } else {
+        tv.text = "$markCount"
+//        }
     }
 
 
@@ -386,7 +389,7 @@ class HomeTownActivity : BaseActivity() {
      * 显示景点数据
      */
     private fun showPlaceView(placeBean: SingleCulture) {
-        tv_view_watch.text = placeBean.cultureTypeText
+//        tv_view_watch.text = placeBean.cultureTypeText
         showTotalFoodNum(placeBean.cultureConfigList, tv_view_num)
 
         val placeNoMarkList = mutableListOf<SingleCultureConfig>()
@@ -407,14 +410,20 @@ class HomeTownActivity : BaseActivity() {
             }
         }
         mPlaceAdapter.setList(noMarkList)
-        showChange(mPlaceAdapter, iv_view_change)
+        showChange(placeBean.cultureConfigList, iv_view_change)
     }
 
     /**
      * 判断 换一批功能是否显示
      */
-    private fun showChange(adapter: HomeTownFoodAdapter, iv: ImageView) {
-        if (adapter.itemCount >= 8) {
+    private fun showChange(list: List<SingleCultureConfig>, iv: ImageView) {
+        var noMarkCount = 0
+        list.forEach {
+            if (it.mark != BusiConstant.True) {
+                noMarkCount++
+            }
+        }
+        if (noMarkCount > 8) {
             iv.show()
         } else {
             iv.hide()

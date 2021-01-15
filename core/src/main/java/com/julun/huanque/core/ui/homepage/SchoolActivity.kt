@@ -94,7 +94,11 @@ class SchoolActivity : BaseActivity() {
         } else {
             con_progress.show()
             header_page.textOperation.show()
-            header_page.textOperation.text = "跳过"
+            if (index == 4) {
+                header_page.textOperation.text = "完成"
+            } else {
+                header_page.textOperation.text = "跳过"
+            }
             progressBar.progress = (100 / 5) * (index + 1)
         }
         mViewModel.index = index
@@ -120,7 +124,7 @@ class SchoolActivity : BaseActivity() {
         if (mViewModel.index >= 0) {
             header_page.textOperation.onClickNew {
                 //跳过
-                EditUtils.goToNext(this,mViewModel.index)
+                EditUtils.goToNext(this, mViewModel.index)
             }
         }
         tv_education_title.onClickNew {
@@ -141,7 +145,7 @@ class SchoolActivity : BaseActivity() {
                     }
                 }
             } else {
-                pvOptions?.setSelectOptions(configList.size - 1)
+                pvOptions?.setSelectOptions(0)
             }
             pvOptions?.show()
         }
@@ -161,6 +165,7 @@ class SchoolActivity : BaseActivity() {
                         mAdapter.setList(null)
                     }
                 } else {
+                    mViewModel.selectSchool = null
                     recycler_view.hide()
                     mAdapter.setList(null)
                     phone_num_clear.hide()
@@ -186,10 +191,10 @@ class SchoolActivity : BaseActivity() {
                 //学历发生变化
                 form.education = educationCode
             }
-            if (schoolId != null && schoolName != null && schoolName != originalData?.school) {
-                //学校发生变化
-                form.schoolId = schoolId
-            }
+//            if (schoolId != null && schoolName != null && schoolName != originalData?.school) {
+            //学校发生变化
+            form.schoolId = schoolId
+//            }
 
             if (currentDate != null) {
                 val dateStr = TimeUtils.formatTime(currentDate.time, TimeUtils.TIME_FORMAT_YEAR_4)
@@ -200,9 +205,9 @@ class SchoolActivity : BaseActivity() {
             }
 
 
-            if (form.education == null && form.schoolId == null && form.startYear == null) {
+            if (form.education == null && schoolName == originalData?.school && form.startYear == null) {
                 //数据没有变化，直接返回
-                EditUtils.goToNext(this,mViewModel.index)
+                EditUtils.goToNext(this, mViewModel.index)
             } else {
                 mViewModel.saveSchool(form, schoolName ?: "", mViewModel.schoolData.value?.educationText ?: "")
             }
@@ -230,12 +235,12 @@ class SchoolActivity : BaseActivity() {
         mAdapter.setOnItemClickListener { adapter, view, position ->
             val tempSchool = adapter.getItem(position) as? SingleSchool ?: return@setOnItemClickListener
             val schoolName = mViewModel.selectSchool?.schoolName ?: ""
-            if (tempSchool.schoolName != schoolName) {
-                //选择新的学校
-                mViewModel.selectSchool = tempSchool
-                et.setText(tempSchool.schoolName)
-                et.setSelection(et.text.length)
-            }
+//            if (tempSchool.schoolName != schoolName) {
+            //选择新的学校
+            mViewModel.selectSchool = tempSchool
+            et.setText(tempSchool.schoolName)
+            et.setSelection(et.text.length)
+//            }
             //隐藏输入法
             ScreenUtils.hideSoftInput(this)
         }
@@ -261,7 +266,7 @@ class SchoolActivity : BaseActivity() {
         mViewModel.processData.observe(this, androidx.lifecycle.Observer {
             if (it != null) {
                 EventBus.getDefault().post(it)
-                EditUtils.goToNext(this,mViewModel.index)
+                EditUtils.goToNext(this, mViewModel.index)
             }
         })
     }

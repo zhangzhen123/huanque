@@ -41,13 +41,12 @@ class HomeTownFragment : BaseBottomSheetFragment() {
     override fun getLayoutId() = R.layout.frag_home_town
 
     override fun initViews() {
-        initMagicIndicator()
 
         val userIdListBean = mHomeViewModel.homeInfoBean.value?.userId ?: return
         mHomeTownViewModel.queryHomeTownInfo(userIdListBean)
     }
 
-    override fun getHeight() = dp2px(423)
+    override fun getHeight() = dp2px(523)
 
     override fun onStart() {
         super.onStart()
@@ -84,8 +83,9 @@ class HomeTownFragment : BaseBottomSheetFragment() {
                 mTabTitles.clear()
                 it.cultureList.forEach { sc ->
                     mTypeList.add(sc.cultureType)
-                    mTabTitles.add("${sc.cultureTypeText} (${sc.num})")
+                    mTabTitles.add("${sc.cultureTypeText} ${sc.num}")
                 }
+                initMagicIndicator()
                 initViewPager2(mTypeList)
             }
         })

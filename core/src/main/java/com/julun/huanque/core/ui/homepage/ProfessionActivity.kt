@@ -43,6 +43,7 @@ import kotlinx.android.synthetic.main.act_profession.progressBar
 import kotlinx.android.synthetic.main.act_profession.tv_profression_title
 import kotlinx.android.synthetic.main.act_profession.tv_save
 import kotlinx.android.synthetic.main.act_profession.view_profess_feature
+import kotlinx.android.synthetic.main.act_school.*
 import org.greenrobot.eventbus.EventBus
 import java.lang.StringBuilder
 
@@ -99,7 +100,11 @@ class ProfessionActivity : BaseActivity() {
         } else {
             con_progress.show()
             header_page.textOperation.show()
-            header_page.textOperation.text = "跳过"
+            if (index == 4) {
+                header_page.textOperation.text = "完成"
+            } else {
+                header_page.textOperation.text = "跳过"
+            }
             progressBar.progress = (100 / 5) * (index + 1)
         }
         mViewModel.index = index
@@ -296,7 +301,6 @@ class ProfessionActivity : BaseActivity() {
                     downList
                 }
             }
-
             val replaceData = getReplaceData(totalList, data)
             if (replaceData == null) {
                 //没有可以替换的数据
@@ -305,7 +309,7 @@ class ProfessionActivity : BaseActivity() {
                 data[position] = replaceData
                 mFeatureAdapter.notifyItemChanged(position)
             }
-            showTotalFeatureNum(totalList)
+            showTotalFeatureNum()
         }
     }
 
@@ -316,9 +320,6 @@ class ProfessionActivity : BaseActivity() {
         wholeList: MutableList<SingleProfessionFeatureConfig>,
         showList: MutableList<SingleProfessionFeatureConfig>
     ): SingleProfessionFeatureConfig? {
-        if (wholeList.size <= showList.size) {
-            return null
-        }
 
         val canChooseList = mutableListOf<SingleProfessionFeatureConfig>()
         wholeList.forEach {
@@ -338,21 +339,22 @@ class ProfessionActivity : BaseActivity() {
     /**
      * 显示数量
      */
-    private fun showTotalFeatureNum(list: List<SingleProfessionFeatureConfig>) {
+    private fun showTotalFeatureNum() {
+        val totalList = mViewModel.featureData.value ?: return
         showChange(mFeatureAdapter, iv_profess_feature)
 
         var markCount = 0
-        list.forEach {
+        totalList.forEach {
             if (it.mark == BusiConstant.True) {
                 markCount++
             }
         }
         mViewModel.curFeatureCount = markCount
-        if (markCount == 0) {
-            tv_profess_feature_num.text = ""
-        } else {
-            tv_profess_feature_num.text = "$markCount"
-        }
+//        if (markCount == 0) {
+//            tv_profess_feature_num.text = ""
+//        } else {
+        tv_profess_feature_num.text = "$markCount"
+//        }
     }
 
 
@@ -361,7 +363,7 @@ class ProfessionActivity : BaseActivity() {
      * @param featureList 职业特点列表
      */
     private fun showFeatureView(featureList: MutableList<SingleProfessionFeatureConfig>) {
-        showTotalFeatureNum(featureList)
+        showTotalFeatureNum()
         upList.clear()
         middleList.clear()
         downList.clear()
@@ -475,7 +477,6 @@ class ProfessionActivity : BaseActivity() {
             .setTitleText("城市选择")
             .setContentTextSize(20)//设置滚轮文字大小
             .setDividerColor(Color.LTGRAY)//设置分割线的颜色
-            .setSelectOptions(0, 1)//默认选中项
             .setBgColor(Color.WHITE)
             .isDialog(true) //默认设置false ，内部实现将DecorView 作为它的父控件。
             .setTitleBgColor(Color.DKGRAY)
@@ -484,7 +485,7 @@ class ProfessionActivity : BaseActivity() {
             .setSubmitColor(Color.YELLOW)
             .setTextColorCenter(GlobalUtils.getColor(R.color.black_333))
             .setTextColorOut(GlobalUtils.getColor(R.color.black_999))
-            .setLayoutRes(R.layout.dialog_edit_city, CustomListener { view ->
+            .setLayoutRes(R.layout.view_edit_profession, CustomListener { view ->
                 val tvSubmit = view.findViewById<View>(R.id.tv_certain)
                 tvSubmit.setOnClickListener {
                     pvOptions?.returnData()
@@ -500,6 +501,7 @@ class ProfessionActivity : BaseActivity() {
             .setOutSideColor(0x33000000) //设置外部遮罩颜色
             .build()
         pvOptions?.setPicker(firstList, secondList) //二级选择器
+        setDefault()
 
         val mDialog: Dialog = pvOptions?.dialog ?: return
         val params = FrameLayout.LayoutParams(
@@ -514,5 +516,32 @@ class ProfessionActivity : BaseActivity() {
         dialogWindow.setDimAmount(0.3f)
 
     }
+
+    private fun setDefault() {
+        //职业数据
+        val professionData = mViewModel.professionData.value ?: return
+        //职业大类别列表
+        val perfessionConfigList = mViewModel.professionData.value?.professionConfigList ?: return
+        if (professionData.professionId == 0) {
+            pvOptions?.setSelectOptions(0, 0)//默认选中项
+        } else {
+            //
+            var firstPosition = 0
+            var secondPosition = 0
+            perfessionConfigList.forEachIndexed { index, singleProfessionConfig ->
+                singleProfessionConfig.professionList.forEachIndexed { innerIndex, singleProfession ->
+                    if (singleProfession.professionId == professionData.professionId) {
+                        //找到对应的职业
+                        firstPosition = index
+                        secondPosition = innerIndex
+                        pvOptions?.setSelectOptions(firstPosition, secondPosition)//默认选中项
+                        return
+                    }
+                }
+            }
+            pvOptions?.setSelectOptions(0, 0)//默认选中项
+        }
+    }
+
 
 }

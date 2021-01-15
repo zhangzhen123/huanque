@@ -28,7 +28,7 @@ class EditInfoViewModel : BaseViewModel() {
     private val userService: UserService by lazy { Requests.create(UserService::class.java) }
 
     //原始的封面列表
-    var originCoverPicIdStr = ""
+    private var originConverPicIdList = mutableListOf<Long>()
 
     //基础数据
     val basicInfo: MutableLiveData<EditPagerInfo> by lazy { MutableLiveData<EditPagerInfo>() }
@@ -54,6 +54,21 @@ class EditInfoViewModel : BaseViewModel() {
     var needFresh = false
 
     /**
+     * 获取最初的图片ID（增加和移除同步更新）
+     */
+    fun getOriginPicStr(): String {
+        val str = StringBuilder()
+
+        originConverPicIdList.forEach {
+            if (str.isNotEmpty()) {
+                str.append(",")
+            }
+            str.append(it)
+        }
+        return str.toString()
+    }
+
+    /**
      * 获取基础信息
      */
     fun getBasicInfo() {
@@ -64,12 +79,8 @@ class EditInfoViewModel : BaseViewModel() {
                 wishData.value = data.wishList
                 val idSb = StringBuilder()
                 data.picList.forEach {
-                    if (idSb.isNotEmpty()) {
-                        idSb.append(",")
-                    }
-                    idSb.append("${it.logId}")
+                    originConverPicIdList.add(it.logId)
                 }
-                originCoverPicIdStr = idSb.toString()
             })
         }
     }
@@ -112,6 +123,14 @@ class EditInfoViewModel : BaseViewModel() {
                 if (picBean.logId > 0L) {
                     //需要更新数据
                     homePagePicChangeBean.value = picBean
+                }
+                if (coverPic == null && logId != null) {
+                    //删除图片
+                    originConverPicIdList.remove(logId)
+                }
+                if (result.logId != 0L) {
+                    //新增图片
+                    originConverPicIdList.add(result.logId)
                 }
             })
         }

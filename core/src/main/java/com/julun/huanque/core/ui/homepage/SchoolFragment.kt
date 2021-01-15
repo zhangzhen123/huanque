@@ -58,7 +58,11 @@ class SchoolFragment : BaseBottomSheetFragment() {
         } else {
             tv_education.text = "-"
         }
-        tv_start_year.text = info.startYear
+        if (info.startYear.isEmpty()) {
+            tv_start_year.text = "-"
+        } else {
+            tv_start_year.text = info.startYear
+        }
     }
 
 

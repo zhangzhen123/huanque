@@ -16,7 +16,7 @@ import com.julun.huanque.common.utils.ScreenUtils
  */
 class LoginPicAdapter() : BaseQuickAdapter<LoginPicBean, BaseViewHolder>(R.layout.recycler_item_login_pic) {
     val viewWidth = ScreenUtils.getScreenWidth() / 2
-    val normalHeight = viewWidth * 500 /376
+    val normalHeight = viewWidth * 500 / 376
     val smallHeight = normalHeight / 3
     override fun convert(holder: BaseViewHolder, item: LoginPicBean) {
         val params = holder.itemView.layoutParams
@@ -41,8 +41,8 @@ class LoginPicAdapter() : BaseQuickAdapter<LoginPicBean, BaseViewHolder>(R.layou
     }
 
     override fun getItem(position: Int): LoginPicBean {
-        val count = data.size
-        return data[position % count]
+//        val count = data.size
+        return data.random()
     }
 
     override fun getItemViewType(position: Int): Int {

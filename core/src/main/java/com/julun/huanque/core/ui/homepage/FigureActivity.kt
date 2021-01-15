@@ -126,7 +126,7 @@ class FigureActivity : BaseActivity() {
     /**
      * 获取默认高度
      */
-    private fun getDefaultHeight() = if (SessionUtils.getSex() == Sex.MALE) 170 else 165
+    private fun getDefaultHeight() = if (SessionUtils.getSex() == Sex.MALE) 170 else 160
 
     /**
      * 获取默认体重
