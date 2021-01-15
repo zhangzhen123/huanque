@@ -26,13 +26,13 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 
-    <View
-        android:layout_width="0px"
-        android:layout_height="4dp"
-        android:background="@drawable/divider_main"
-        app:layout_constraintBottom_toTopOf="@id/view_bottom"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+    <!--    <View-->
+    <!--        android:layout_width="0px"-->
+    <!--        android:layout_height="4dp"-->
+    <!--        android:background="@drawable/divider_main"-->
+    <!--        app:layout_constraintBottom_toTopOf="@id/view_bottom"-->
+    <!--        app:layout_constraintLeft_toLeftOf="parent"-->
+    <!--        app:layout_constraintRight_toRightOf="parent" />-->
 
 
     <View
@@ -43,6 +43,7 @@
         app:layout_constraintLeft_toLeftOf="@+id/view_bottom"
         app:layout_constraintRight_toLeftOf="@+id/view_dynamic_square"
         app:layout_constraintTop_toTopOf="@+id/view_bottom" />
+
     <View
         android:id="@+id/view_dynamic_square"
         android:layout_width="0px"
@@ -90,10 +91,10 @@
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/lottie_make_friends"
-            android:layout_width="43dp"
-            android:layout_height="43dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="17dp"
+            android:layout_marginBottom="14dp"
             app:lottie_fileName="json/make_friends.json"
             app:lottie_imageAssetsFolder="image/make_friends" />
 
@@ -109,6 +110,7 @@
             android:textColor="@color/selector_home_tab_text_color"
             android:textSize="10sp" />
     </FrameLayout>
+
     <FrameLayout
         android:id="@+id/fl_square"
         android:layout_width="wrap_content"
@@ -122,13 +124,13 @@
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/lottie_square"
-            android:layout_width="43dp"
-            android:layout_height="43dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="17dp"
+            android:layout_marginBottom="14dp"
             app:lottie_fileName="json/leyuan.json"
-            app:lottie_imageAssetsFolder="image/leyuan"
-            app:lottie_scale="0.5" />
+            app:lottie_imageAssetsFolder="image/leyuan" />
+
         <TextView
             android:id="@+id/item_square"
             android:layout_width="wrap_content"
@@ -156,13 +158,13 @@
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/lottie_program"
-            android:layout_width="43dp"
-            android:layout_height="43dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="17dp"
+            android:layout_marginBottom="14dp"
             app:lottie_fileName="json/live.json"
-            app:lottie_imageAssetsFolder="image/live"
-            app:lottie_scale="0.5" />
+            app:lottie_imageAssetsFolder="image/live" />
+
         <TextView
             android:id="@+id/item_program"
             android:layout_width="wrap_content"
@@ -191,13 +193,12 @@
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/lottie_message"
-            android:layout_width="43dp"
-            android:layout_height="43dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="17dp"
+            android:layout_marginBottom="14dp"
             app:lottie_fileName="json/message.json"
-            app:lottie_imageAssetsFolder="image/message"
-            app:lottie_scale="0.5" />
+            app:lottie_imageAssetsFolder="image/message" />
 
         <TextView
             android:id="@+id/item_message"
@@ -243,13 +244,12 @@
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/lottie_mine"
-            android:layout_width="43dp"
-            android:layout_height="43dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="17dp"
+            android:layout_marginBottom="14dp"
             app:lottie_fileName="json/mine.json"
-            app:lottie_imageAssetsFolder="image/mine"
-            app:lottie_scale="0.5" />
+            app:lottie_imageAssetsFolder="image/mine" />
 
         <TextView
             android:id="@+id/item_mine"
@@ -267,9 +267,9 @@
             android:layout_width="9dp"
             android:layout_height="9dp"
             android:layout_gravity="right|bottom"
+            android:layout_marginRight="6dp"
             android:layout_marginBottom="33dp"
             android:background="@drawable/bg_unread_count"
-            android:layout_marginRight="6dp"
             android:gravity="center"
             android:includeFontPadding="false"
             android:textColor="@color/white"
