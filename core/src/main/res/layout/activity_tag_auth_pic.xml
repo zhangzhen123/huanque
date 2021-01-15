@@ -114,7 +114,7 @@
                     android:layout_height="@dimen/dimen_26"
                     android:layout_marginTop="@dimen/dimen_10"
                     android:layout_marginEnd="@dimen/dimen_8"
-                    android:src="@mipmap/icon_tag_like"
+                    android:src="@mipmap/ic_tag_zan"
                     app:layout_constraintBottom_toTopOf="@+id/tv_zan_num"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
