@@ -132,6 +132,13 @@ class TagPicsActivity : BaseVMActivity<TagPicsViewModel>() {
 
     }
 
+    override fun initEvents(rootView: View) {
+        super.initEvents(rootView)
+        tv_like_bottom.onClickNew {
+            iv_like.performClick()
+        }
+    }
+
     private fun switchLike() {
         val detail = mViewModel.tagDetail.value?.getT() ?: return
         if (detail.like) {
@@ -172,9 +179,11 @@ class TagPicsActivity : BaseVMActivity<TagPicsViewModel>() {
                 if (tag.like) {
                     iv_like.setImageResource(R.mipmap.icon_tag_like)
                     tv_like.text = "取消喜欢"
+                    showBottomView(true)
                 } else {
                     iv_like.setImageResource(R.mipmap.icon_tag_dislike)
                     tv_like.text = "喜欢"
+                    showBottomView(false)
                 }
 
             } else if (it.state == NetStateType.ERROR) {
@@ -184,6 +193,20 @@ class TagPicsActivity : BaseVMActivity<TagPicsViewModel>() {
             }
         })
     }
+
+    /**
+     * 显示底部视图
+     */
+    private fun showBottomView(like: Boolean) {
+        if (like) {
+            tv_like_bottom.hide()
+            view_bottom.hide()
+        } else {
+            tv_like_bottom.show()
+            view_bottom.show()
+        }
+    }
+
 
     private fun loadDataFail(isPull: Boolean) {
         if (isPull) {
@@ -201,8 +224,10 @@ class TagPicsActivity : BaseVMActivity<TagPicsViewModel>() {
         if (listData.authPage.isPull) {
             sdv_tag.loadImage(listData.tagIcon, 15f, 15f)
             tv_tag.text = listData.tagName
+            tv_like_bottom.text = "喜欢${listData.tagName}"
             tv_num.text = "认证${listData.authNum}人"
             tv_desc.text = listData.tagDesc
+            showBottomView(listData.like)
             if (listData.like) {
                 iv_like.setImageResource(R.mipmap.icon_tag_like)
                 tv_like.text = "取消喜欢"
