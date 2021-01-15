@@ -43,6 +43,8 @@ import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.NearbyPicListAdapter
 import com.julun.huanque.core.manager.VideoPlayerManager
 import com.julun.huanque.core.ui.homepage.HomePageActivity
+import com.julun.huanque.core.ui.tag_manager.TagUserPicsActivity
+import com.julun.huanque.core.widgets.HomeCardTagView
 import kotlinx.android.synthetic.main.fragment_favorite_tab.*
 import org.jetbrains.anko.imageResource
 import java.math.RoundingMode
@@ -114,6 +116,16 @@ class FavoriteTabFragment : BaseVMFragment<FavoriteTabViewModel>() {
             intent.putExtra(ParamConstant.UserId, item.userId)
             intent.putExtra(ParamConstant.FavoriteUserBean, item)
             startActivity(intent, activityOptionsCompat.toBundle())
+        }
+        authorAdapter.onAdapterChildClickNew { adapter, view, position ->
+            val item=authorAdapter.getItemOrNull(position)
+            when (view.id) {
+                R.id.ll_top_tag -> {
+                    if (item != null) {
+                        TagUserPicsActivity.start(requireActivity(), item.tagId, item.userId)
+                    }
+                }
+            }
         }
         authorList.itemAnimator = null
         authorAdapter.animationEnable = true
@@ -443,13 +455,16 @@ class FavoriteTabFragment : BaseVMFragment<FavoriteTabViewModel>() {
     private val itemHeight = (ScreenUtils.getRealScreenHeight() - ScreenUtils.statusHeight - dp2px(49 + 53 + 40 + 20)) / 2
     private val authorAdapter: BaseQuickAdapter<FavoriteUserBean, BaseViewHolder> by lazy {
         object : BaseQuickAdapter<FavoriteUserBean, BaseViewHolder>(R.layout.item_favorite_user_list) {
+            init {
+                addChildClickViewIds(R.id.ll_top_tag)
+            }
 
             override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
                 super.onBindViewHolder(holder, position)
                 val tempData = getItemOrNull(position)
                 if (tempData != null) {
                     val card_img = holder.getViewOrNull<SimpleDraweeView>(R.id.card_img)
-                    if(card_img!=null){
+                    if (card_img != null) {
                         ViewCompat.setTransitionName(card_img, "Image${tempData.userId}")
 //                    val tv_user_name = holder.getView<TextView>(R.id.tv_user_name)
 //                    ViewCompat.setTransitionName(tv_user_name, "TextView${tempData.userId}")
@@ -459,7 +474,7 @@ class FavoriteTabFragment : BaseVMFragment<FavoriteTabViewModel>() {
 
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
                 val holder = super.onCreateViewHolder(parent, viewType)
-                if(viewType==0){
+                if (viewType == 0) {
                     val cardView = holder.getView<CardView>(R.id.card_view)
                     val sdvLp = cardView.layoutParams
                     sdvLp.height = itemHeight
@@ -472,7 +487,7 @@ class FavoriteTabFragment : BaseVMFragment<FavoriteTabViewModel>() {
                 val sdv = holder.getView<SimpleDraweeView>(R.id.card_img)
                 sdv.loadImageNoResize(item.coverPic)
 
-                val age = if (item.age == 0) {
+                val age = if (item.age != 0) {
                     "${item.age}岁"
                 } else {
                     "秘密"

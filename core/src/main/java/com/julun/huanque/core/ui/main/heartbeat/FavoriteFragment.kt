@@ -138,9 +138,13 @@ class FavoriteFragment : BaseLazyFragment() {
         })
         viewModel.loadState.observe(this, observer)
 
-        tagManagerViewModel.tagChange.observe(this, Observer {
+        tagManagerViewModel.tagHasChange.observe(this, Observer {
             val list = tagManagerViewModel.currentTagList
             logger.info("我是选择的结果=${list}")
+            if(viewModel.firstListData.value==null){
+                logger.info("基础数据还没就位 这里直接返回")
+                return@Observer
+            }
             list.removeDuplicate()
             val first = mTabTitles.firstOrNull()
             mTabTitles.clear()

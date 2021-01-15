@@ -19,7 +19,9 @@ import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.bean.beans.PagerTab
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.suger.dp2pxf
+import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.widgets.indicator.ScaleTransitionPagerTitleView
 import com.julun.huanque.core.R
 import com.julun.huanque.core.viewmodel.MainConnectViewModel
@@ -97,6 +99,12 @@ class HomeHeartbeatFragment : BaseFragment() {
 
             override fun onPageSelected(position: Int) {
                 view_pager.noScroll = position == 0
+                if (position == 1) {
+                    tv_filter_tag.hide()
+                } else {
+                    tv_filter_tag.show()
+                }
+
 
             }
 
@@ -114,9 +122,9 @@ class HomeHeartbeatFragment : BaseFragment() {
 
         })
         mMainConnectViewModel.heartBeatSwitch.observe(viewLifecycleOwner, Observer {
-            if(it!=null){
+            if (it != null) {
                 switchToTab(it)
-                mMainConnectViewModel.heartBeatSwitch.value=null
+                mMainConnectViewModel.heartBeatSwitch.value = null
             }
         })
         viewModel.queryInfo()

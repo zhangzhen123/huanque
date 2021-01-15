@@ -7,6 +7,7 @@ import com.julun.huanque.common.base.BaseDialogFragment
 /**
  * 自定义弹窗 如果是简单的弹窗 无需网络请求或者其他复杂逻辑的 可以使用这个去直接创建 无需创建具体子类
  * 通过[builder]去建造
+ * 不建议复用 复用的话[builder]要重新创建 所有回调都是重新走一遍 还不如直接创建新的DialogFragment
  */
 class CustomDialogFragment(var builder: FDBuilder) : BaseDialogFragment() {
 
