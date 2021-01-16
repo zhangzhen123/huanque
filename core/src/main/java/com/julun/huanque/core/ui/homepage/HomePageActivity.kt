@@ -156,9 +156,9 @@ class HomePageActivity : BaseActivity() {
 //        shaderParams.height = statusHeight + dp2px(44)
 //        view_shader.layoutParams = shaderParams
 
-        custom_coordinator.setmZoomView(view_holder)
-        custom_coordinator.setZoom(0f)
-        custom_coordinator.setmMoveView(toolbar, view_pager, con_header)
+//        custom_coordinator.setmZoomView(view_holder)
+//        custom_coordinator.setZoom(0f)
+//        custom_coordinator.setmMoveView(toolbar, view_pager, con_header)
 
         initViewModel()
         initRecyclerView()
@@ -272,13 +272,13 @@ class HomePageActivity : BaseActivity() {
 //        iv_close_black.onClickNew {
 //            finish()
 //        }
-        custom_coordinator.mListener = object : ScrollMarginListener {
-            override fun scroll(distance: Int) {
-                val params = view_shader.layoutParams as? ConstraintLayout.LayoutParams ?: return
-                params.topMargin = distance
-                view_shader.layoutParams = params
-            }
-        }
+//        custom_coordinator.mListener = object : ScrollMarginListener {
+//            override fun scroll(distance: Int) {
+//                val params = view_shader.layoutParams as? ConstraintLayout.LayoutParams ?: return
+//                params.topMargin = distance
+//                view_shader.layoutParams = params
+//            }
+//        }
 
         appBarLayout.addOnOffsetChangedListener(object : AppBarLayout.OnOffsetChangedListener {
             override fun onOffsetChanged(appBarLayout: AppBarLayout?, verticalOffset: Int) {
@@ -573,11 +573,11 @@ class HomePageActivity : BaseActivity() {
                 showViewByData(it)
             }
 
-            con_header.post {
-                val holderParams = view_holder.layoutParams
-                holderParams.height = con_header.height - 1
-                view_holder.layoutParams = holderParams
-            }
+//            con_header.post {
+//                val holderParams = view_holder.layoutParams
+//                holderParams.height = con_header.height - 1
+//                view_holder.layoutParams = holderParams
+//            }
         })
 
 
@@ -920,7 +920,8 @@ class HomePageActivity : BaseActivity() {
 //
 //            imageList.forEach { picList.add(StringHelper.getOssImgUrl(it)) }
             logger.info("State = ${lifecycle.currentState}")
-            if (!isFinishing && !custom_coordinator.isScrolling()) {
+            //&& !custom_coordinator.isScrolling()
+            if (!isFinishing ) {
                 ImageActivity.start(
                     this, posisiton, picList,
                     from = ImageActivityFrom.HOME,

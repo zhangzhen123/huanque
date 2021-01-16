@@ -52,8 +52,7 @@ class TagUserPicsActivity : BaseVMActivity<TagUserPicsViewModel>() {
         fun start(act: Activity, tagId: Int, likeUserId: Long, showPic: String = "") {
             act.startActivity<TagUserPicsActivity>(
                 ManagerTagCode.TAG_INFO to tagId,
-                IntentParamKey.USER_ID.name to likeUserId,
-                ManagerTagCode.ShowPic to showPic
+                IntentParamKey.USER_ID.name to likeUserId
             )
         }
     }
@@ -64,8 +63,6 @@ class TagUserPicsActivity : BaseVMActivity<TagUserPicsViewModel>() {
     private var currentTagId: Int? = null
     private var currentLikeUserId: Long? = null
 
-    //需要显示的图片
-    private var mShowPic: String = ""
 
     private val picList = mutableListOf<TagUserPic>()
 
@@ -99,7 +96,6 @@ class TagUserPicsActivity : BaseVMActivity<TagUserPicsViewModel>() {
 //        overridePendingTransition(0, 0)
         currentTagId = intent.extras?.getInt(ManagerTagCode.TAG_INFO)
         currentLikeUserId = intent.extras?.getLong(IntentParamKey.USER_ID.name)
-        mShowPic = intent?.getStringExtra(ManagerTagCode.ShowPic) ?: ""
 
         val config = StackLayoutConfig()
         config.secondaryScale = 1f
@@ -233,22 +229,14 @@ class TagUserPicsActivity : BaseVMActivity<TagUserPicsViewModel>() {
         picList.addAll(info.authPicList)
         picListAdapter.notifyDataSetChanged()
         var tempIndex = -1
-        if (mShowPic.isNotEmpty()) {
-            info.authPicList.forEachIndexed { index, tagUserPic ->
-                if (tagUserPic.applyPic == mShowPic) {
-                    tempIndex = index
-                    return@forEachIndexed
-                }
-            }
-        }
 
-        rv_pics.post {
-            if (tempIndex >= 0) {
-                rv_pics.scrollToPosition(tempIndex)
-            } else {
-                rv_pics.scrollToPosition(picListAdapter.data.size)
-            }
-        }
+//        rv_pics.post {
+//            if (tempIndex >= 0) {
+//                rv_pics.scrollToPosition(tempIndex)
+//            } else {
+//                rv_pics.scrollToPosition(picListAdapter.data.size)
+//            }
+//        }
 
         zan_num.text = "${info.praiseNum}"
 

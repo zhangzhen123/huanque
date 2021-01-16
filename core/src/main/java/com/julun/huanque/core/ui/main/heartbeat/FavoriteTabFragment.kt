@@ -98,27 +98,28 @@ class FavoriteTabFragment : BaseVMFragment<FavoriteTabViewModel>() {
 
         authorAdapter.setOnItemClickListener { _, view, position ->
             val item = authorAdapter.getItemOrNull(position) ?: return@setOnItemClickListener
-            val shareView = view.findViewById<View>(R.id.card_img)
-//                    val tv_user_name = parentView.findViewById<View>(R.id.tv_user_name)
-
-            val intent = Intent(requireActivity(), HomePageActivity::class.java)
-            val pair1: androidx.core.util.Pair<View, String> =
-                androidx.core.util.Pair(shareView, ViewCompat.getTransitionName(shareView) ?: "")
-//                    val pair2: androidx.core.util.Pair<View, String> =
-//                        androidx.core.util.Pair(tv_user_name, ViewCompat.getTransitionName(tv_user_name) ?: "")
-
-            /**
-             * 4、生成带有共享元素的Bundle，这样系统才会知道这几个元素需要做动画
-             */
-            val activityOptionsCompat: ActivityOptionsCompat =
-                ActivityOptionsCompat.makeSceneTransitionAnimation(requireActivity(), pair1)
-
-            intent.putExtra(ParamConstant.UserId, item.userId)
-            intent.putExtra(ParamConstant.FavoriteUserBean, item)
-            startActivity(intent, activityOptionsCompat.toBundle())
+//            val shareView = view.findViewById<View>(R.id.card_img)
+////                    val tv_user_name = parentView.findViewById<View>(R.id.tv_user_name)
+//
+//            val intent = Intent(requireActivity(), HomePageActivity::class.java)
+//            val pair1: androidx.core.util.Pair<View, String> =
+//                androidx.core.util.Pair(shareView, ViewCompat.getTransitionName(shareView) ?: "")
+////                    val pair2: androidx.core.util.Pair<View, String> =
+////                        androidx.core.util.Pair(tv_user_name, ViewCompat.getTransitionName(tv_user_name) ?: "")
+//
+//            /**
+//             * 4、生成带有共享元素的Bundle，这样系统才会知道这几个元素需要做动画
+//             */
+//            val activityOptionsCompat: ActivityOptionsCompat =
+//                ActivityOptionsCompat.makeSceneTransitionAnimation(requireActivity(), pair1)
+//
+//            intent.putExtra(ParamConstant.UserId, item.userId)
+//            intent.putExtra(ParamConstant.FavoriteUserBean, item)
+//            startActivity(intent, activityOptionsCompat.toBundle())
+            HomePageActivity.newInstance(requireActivity(), item.userId)
         }
         authorAdapter.onAdapterChildClickNew { adapter, view, position ->
-            val item=authorAdapter.getItemOrNull(position)
+            val item = authorAdapter.getItemOrNull(position)
             when (view.id) {
                 R.id.ll_top_tag -> {
                     if (item != null) {

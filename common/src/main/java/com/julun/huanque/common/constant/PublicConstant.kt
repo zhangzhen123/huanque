@@ -92,8 +92,6 @@ object ManagerTagCode {
     const val TAG_LIST = "tag_list"
     const val TAG_INFO= "tag_info"
     const val MANAGER_PAGER_TYPE= "manager_pager_type"
-    //显示的图片地址
-    const val ShowPic = "ShowPic"
 }
 
 /**
