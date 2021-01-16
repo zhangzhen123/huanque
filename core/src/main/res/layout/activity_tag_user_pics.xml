@@ -12,7 +12,6 @@
         android:id="@+id/rv_pics"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:overScrollMode="never"
         app:layout_constraintBottom_toTopOf="@+id/bottom_layout"
         app:layout_constraintDimensionRatio="w,1.34"
         app:layout_constraintTop_toTopOf="parent"
