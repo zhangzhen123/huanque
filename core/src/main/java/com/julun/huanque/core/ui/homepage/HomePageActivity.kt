@@ -760,6 +760,19 @@ class HomePageActivity : BaseActivity() {
                     tv_record.show()
                     tv_time.hide()
                     sdv_voice_state.hide()
+                    when {
+                        voiceStatus == VoiceBean.Wait -> {
+                            //审核中
+                            tv_record.text = "语音审核中"
+                        }
+                        voiceStatus == VoiceBean.Reject -> {
+                            //已拒绝
+                        }
+                        voiceStatus.isEmpty() -> {
+                            //未录制
+                            tv_record.text = "语音录制"
+                        }
+                    }
                 }
             } else {
                 //他人主页 不显示语音签名
@@ -921,7 +934,7 @@ class HomePageActivity : BaseActivity() {
 //            imageList.forEach { picList.add(StringHelper.getOssImgUrl(it)) }
             logger.info("State = ${lifecycle.currentState}")
             //&& !custom_coordinator.isScrolling()
-            if (!isFinishing ) {
+            if (!isFinishing) {
                 ImageActivity.start(
                     this, posisiton, picList,
                     from = ImageActivityFrom.HOME,

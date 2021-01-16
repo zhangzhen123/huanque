@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="305dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_white_10">
+
+    <TextView
+        android:id="@+id/tv_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_18"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="审核通过" />
+
+    <View
+        android:id="@+id/view_voice"
+        android:layout_width="120dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/bg_enable"
+        app:layout_constraintLeft_toLeftOf="@id/tv_state"
+        app:layout_constraintRight_toRightOf="@id/tv_state"
+        app:layout_constraintTop_toBottomOf="@id/tv_state" />
+
+    <TextView
+        android:id="@+id/tv_attention"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="每周只能修改一次语音签名"
+        android:textColor="@color/black_999"
+        android:textSize="@dimen/sp_12"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view_voice" />
+
+    <TextView
+        android:id="@+id/tv_left"
+        android:layout_width="0px"
+        android:layout_height="40dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/bg_stroke_black_de"
+        android:gravity="center"
+        android:text="取消"
+        android:textColor="@color/black_999"
+        android:textSize="@dimen/sp_16"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/tv_right"
+        app:layout_constraintTop_toBottomOf="@id/tv_attention" />
+
+    <TextView
+        android:id="@+id/tv_right"
+        android:layout_width="0px"
+        android:layout_height="40dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/bg_enable"
+        android:gravity="center"
+        android:text="重新录制"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_16"
+        app:layout_constraintLeft_toRightOf="@id/tv_left"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_left" />
+
+    <View
+        android:layout_width="1px"
+        android:layout_height="1px"
+        android:layout_marginTop="20dp"
+        app:layout_constraintLeft_toLeftOf="@id/tv_left"
+        app:layout_constraintTop_toBottomOf="@id/tv_left" />
+</androidx.constraintlayout.widget.ConstraintLayout>

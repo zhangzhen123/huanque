@@ -84,6 +84,9 @@ class EditInfoActivity : BaseActivity() {
 
     private val mLoadingDialog: LoadingDialog by lazy { LoadingDialog(this) }
 
+    //语音状态弹窗
+    private val mVoiceStatusFragment: VoiceStatusFragment by lazy { VoiceStatusFragment() }
+
     //
     private var currentPicBean: HomePagePicBean? = null
 
@@ -199,11 +202,24 @@ class EditInfoActivity : BaseActivity() {
             UpdateSignActivity.newInstance(this, mEditInfoViewModel.basicInfo.value?.mySign ?: "")
         }
         tv_voice_title.onClickNew {
-            val intent = Intent(this, VoiceSignActivity::class.java)
-            if (ForceUtils.activityMatch(intent)) {
-                mEditInfoViewModel.needFresh = true
-                startActivity(intent)
+            val voiceBean = mEditInfoViewModel.basicInfo.value?.voice ?: return@onClickNew
+            val status = voiceBean.voiceStatus
+            if (status.isEmpty() && voiceBean.voiceUrl.isEmpty()) {
+                val intent = Intent(this, VoiceSignActivity::class.java)
+                if (ForceUtils.activityMatch(intent)) {
+                    mEditInfoViewModel.needFresh = true
+                    startActivity(intent)
+                }
+                return@onClickNew
             }
+            if (voiceBean.voiceStatus == VoiceBean.Wait) {
+                //审核中
+                ToastUtils.show("语音签名正在审核中")
+            } else {
+                mVoiceStatusFragment.show(supportFragmentManager, "VoiceStatusFragment")
+            }
+
+
         }
         iv_close_progress.onClickNew {
             //隐藏资料完成度布局
@@ -510,15 +526,18 @@ class EditInfoActivity : BaseActivity() {
             when (voiceBean.voiceStatus) {
                 VoiceBean.Wait -> {
                     //等待审核
-                    tv_voice.text = "等待审核"
+                    tv_voice.text = "审核中"
                 }
                 VoiceBean.Reject -> {
                     //被拒绝
                     tv_voice.text = "审核不通过"
+                    tv_voice.textColor = GlobalUtils.formatColor("#FF2207")
                 }
                 VoiceBean.Pass -> {
                     //审核通过
                     tv_voice.text = "${info.voice.length}秒录音"
+                }
+                else -> {
                 }
             }
 

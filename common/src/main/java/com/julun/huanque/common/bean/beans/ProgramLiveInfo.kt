@@ -514,7 +514,9 @@ data class VoiceBean(
     //是否点赞
     var like: String = "",
     //点赞数量
-    var likeCount: Int = 0
+    var likeCount: Int = 0,
+    //拒绝原因
+    var remark: String = ""
 
 
 ) : Serializable {
