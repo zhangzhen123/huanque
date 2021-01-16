@@ -75,7 +75,7 @@ class TagPicsActivity : BaseVMActivity<TagPicsViewModel>() {
                 sdvLp.height = h
                 sdv.requestLayout()
                 sdv.loadImageInPx(item.applyPic, w, h)
-                if (item.picNum == 0) {
+                if (item.picNum == 1) {
                     holder.setGone(R.id.ll_top_tag, true)
                 } else {
                     holder.setGone(R.id.ll_top_tag, false)

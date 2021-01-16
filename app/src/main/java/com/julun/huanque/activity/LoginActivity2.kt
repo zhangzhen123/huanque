@@ -155,36 +155,49 @@ class LoginActivity2 : BaseActivity() {
 
             override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
                 if (charSequence == null || charSequence.isEmpty()) return
-                val stringBuilder = StringBuilder()
-                for (i in charSequence.indices) {
-                    if (i != 3 && i != 8 && charSequence.get(i) === ' ') {
-                        continue
-                    } else {
-                        stringBuilder.append(charSequence.get(i))
-                        if ((stringBuilder.length == 4 || stringBuilder.length == 9)
-                            && stringBuilder[stringBuilder.length - 1] != ' '
-                        ) {
-                            stringBuilder.insert(stringBuilder.length - 1, ' ')
-                        }
-                    }
-                }
-                if (stringBuilder.toString() != charSequence.toString()) {
-                    var index = start + 1
-                    if (stringBuilder[start] == ' ') {
-                        if (before == 0) {
-                            index++
+                //总长度
+                val length = charSequence.length
+                if (length > start) {
+                    //增加
+                    val stringBuilder = StringBuilder()
+                    for (i in charSequence.indices) {
+                        if (i != 3 && i != 8 && charSequence.get(i) === ' ') {
+                            continue
                         } else {
-                            index--
-                        }
-                    } else {
-                        if (before == 1) {
-                            index--
+                            stringBuilder.append(charSequence.get(i))
+                            if ((stringBuilder.length == 4 || stringBuilder.length == 9)
+                                && stringBuilder[stringBuilder.length - 1] != ' '
+                            ) {
+                                stringBuilder.insert(stringBuilder.length - 1, ' ')
+                            }
                         }
                     }
-                    phone_num.setText(stringBuilder.toString())
-                    phone_num.setSelection(phone_num.text.length)
+                    if (stringBuilder.toString() != charSequence.toString()) {
+                        var index = start + 1
+                        if (stringBuilder[start] == ' ') {
+                            if (before == 0) {
+                                index++
+                            } else {
+                                index--
+                            }
+                        } else {
+                            if (before == 1) {
+                                index--
+                            }
+                        }
+                        phone_num.setText(stringBuilder.toString())
+                        phone_num.setSelection(phone_num.text.length)
+                    }
+                } else {
+                    //删除
+                    if (charSequence.endsWith(" ")) {
+                        //空格结尾，删除空格
+                        val sb = StringBuilder(charSequence)
+                        val showContent = sb.deleteCharAt(sb.length - 1)
+                        phone_num.setText(showContent)
+                        phone_num.setSelection(showContent.length)
+                    }
                 }
-
             }
 
         })

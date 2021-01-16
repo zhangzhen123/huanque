@@ -196,7 +196,7 @@ class EditInfoActivity : BaseActivity() {
         }
         tv_nickname_title.onClickNew {
             //昵称
-            if(mEditInfoViewModel.basicInfo.value?.userType == UserType.Anchor){
+            if (mEditInfoViewModel.basicInfo.value?.userType == UserType.Anchor) {
                 ToastUtils.show("主播修改昵称请联系官方")
                 return@onClickNew
             }
@@ -1129,7 +1129,7 @@ class EditInfoActivity : BaseActivity() {
         if (picSb.toString() != mEditInfoViewModel.getOriginPicStr()) {
             //数据发生变化，需要提示
             MyAlertDialog(this).showAlertWithOKAndCancel(
-                "要保存修改，请点击右上角【保存】按钮",
+                "封面图有调整，要保存修改吗？\n要保存请点击【保存】",
                 MyAlertDialog.MyDialogCallback(onRight = {
                     header_page.textOperation.performClick()
                 }, onCancel = {

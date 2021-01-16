@@ -809,43 +809,50 @@ class HomePageActivity : BaseActivity() {
             mTabTitles.add(postStr)
             mCommonNavigator.adapter?.notifyDataSetChanged()
         }
-        val distance = bean.distanceCity.distance
-        if (bean.distanceCity.curryCityName.isEmpty()) {
-            //没有城市，显示星球
-            val starList = mutableListOf<String>("金星", "木星", "水星", "火星", "土星")
-            val currentStar = starList.random()
-            tv_distance.text = currentStar
-            iv_vehicle.show()
-            iv_vehicle.imageResource = R.mipmap.icon_home_distance_rocket
+        if (mHomePageViewModel.mineHomePage) {
+            tv_distance.hide()
+            iv_vehicle.hide()
+
         } else {
-            //有城市
-            if (distance >= 1000) {
-                val df = DecimalFormat("#.0")
-                df.roundingMode = RoundingMode.DOWN
-                tv_distance.text = "${df.format(distance / 1000.0)}km"
-            } else {
-                tv_distance.text = "${distance}m"
-            }
-            if (bean.distanceCity.sameCity == BusiConstant.True) {
-                //同市
-                iv_vehicle.hide()
-            } else {
-                //不同市
+
+
+            val distance = bean.distanceCity.distance
+            if (bean.distanceCity.curryCityName.isEmpty()) {
+                //没有城市，显示星球
+                val starList = mutableListOf<String>("金星", "木星", "水星", "火星", "土星")
+                val currentStar = starList.random()
+                tv_distance.text = currentStar
                 iv_vehicle.show()
-                if (distance < 100 * 1000) {
-                    //显示汽车
-                    iv_vehicle.imageResource = R.mipmap.icon_home_distance_car
-                } else if (distance > 800 * 1000) {
-                    //显示飞机
-                    iv_vehicle.imageResource = R.mipmap.icon_home_distance_air_plan
+                iv_vehicle.imageResource = R.mipmap.icon_home_distance_rocket
+            } else {
+                //有城市
+                if (distance >= 1000) {
+                    val df = DecimalFormat("#.0")
+                    df.roundingMode = RoundingMode.DOWN
+                    tv_distance.text = "${df.format(distance / 1000.0)}km"
                 } else {
-                    //显示动车
-                    iv_vehicle.imageResource = R.mipmap.icon_home_distance_rail_way
+                    tv_distance.text = "${distance}m"
                 }
+                if (bean.distanceCity.sameCity == BusiConstant.True) {
+                    //同市
+                    iv_vehicle.hide()
+                } else {
+                    //不同市
+                    iv_vehicle.show()
+                    if (distance < 100 * 1000) {
+                        //显示汽车
+                        iv_vehicle.imageResource = R.mipmap.icon_home_distance_car
+                    } else if (distance > 800 * 1000) {
+                        //显示飞机
+                        iv_vehicle.imageResource = R.mipmap.icon_home_distance_air_plan
+                    } else {
+                        //显示动车
+                        iv_vehicle.imageResource = R.mipmap.icon_home_distance_rail_way
+                    }
+                }
+
             }
-
         }
-
 
         val sexName = if (bean.sex == Sex.MALE) {
             "男"
