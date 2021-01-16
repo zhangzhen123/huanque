@@ -144,6 +144,10 @@ class NearbyFragment : BaseLazyFragment() {
             override fun getStackDirection(): Int {
                 return ReItemTouchHelper.DOWN
             }
+
+            override fun getShowCount(): Int {
+                return 2
+            }
         }
         setting.setSwipeListener(object : OnSwipeCardListener<NearbyUserBean> {
             var currentDirection: Int = 0
@@ -293,6 +297,8 @@ class NearbyFragment : BaseLazyFragment() {
                         item.likeTagList.forEach {
                             if (myTagList.contains(it)) {
                                 it.mark = BooleanType.TRUE
+                            }else{
+                                it.mark = BooleanType.FALSE
                             }
                         }
                         val tagFragment = TagFragment.newInstance(
@@ -842,6 +848,11 @@ class NearbyFragment : BaseLazyFragment() {
 //                }
                 val tvDistance = holder.getView<TextView>(R.id.tv_distance)
                 val ivDistance = holder.getView<ImageView>(R.id.iv_distance)
+                val age=if(item.age>0){
+                    " / ${item.age}岁"
+                }else{
+                    ""
+                }
                 if (item.distance != -1) {
                     if (item.sameCity) {
                         tvDistance.show()
@@ -849,20 +860,20 @@ class NearbyFragment : BaseLazyFragment() {
                         when {
                             item.distance < 1000 -> {
                                 tvDistance.text = "${item.distance}"
-                                holder.setText(R.id.tv_locationAge, "m ${item.area} / ${item.age}岁")
+                                holder.setText(R.id.tv_locationAge, "m ${item.area}${age}")
                             }
                             else -> {
                                 val format = DecimalFormat("#.0")
                                 format.roundingMode = RoundingMode.DOWN
                                 val dt = format.format((item.distance / 1000.0))
                                 tvDistance.text = dt
-                                holder.setText(R.id.tv_locationAge, "km ${item.area} / ${item.age}岁")
+                                holder.setText(R.id.tv_locationAge, "km ${item.area}${age}")
                             }
                         }
                     } else {
                         tvDistance.hide()
                         ivDistance.show()
-                        holder.setText(R.id.tv_locationAge, "${item.area} / ${item.age}岁")
+                        holder.setText(R.id.tv_locationAge, "${item.area}${age}")
                         when {
                             item.distance < 100000 -> {
                                 ivDistance.imageResource = R.mipmap.icon_home_distance_car
@@ -887,7 +898,7 @@ class NearbyFragment : BaseLazyFragment() {
                     val starList = mutableListOf<String>("金星", "木星", "水星", "火星", "土星")
                     val currentStar = starList.random()
                     ivDistance.imageResource = R.mipmap.icon_home_distance_rocket
-                    holder.setText(R.id.tv_locationAge, "$currentStar / ${item.age}岁")
+                    holder.setText(R.id.tv_locationAge, "$currentStar${age}")
                 }
 
 
@@ -902,6 +913,11 @@ class NearbyFragment : BaseLazyFragment() {
                 } else {
 //                    val sameList = mutableListOf<UserTagBean>()
                     item.likeTagList.sortList(Comparator { i1, i2 ->
+                        if(item.sex==SessionUtils.getSex()){
+
+                        }else{
+
+                        }
                         val e1 = if (myTagList.contains(i1)) {
                             1
                         } else {
