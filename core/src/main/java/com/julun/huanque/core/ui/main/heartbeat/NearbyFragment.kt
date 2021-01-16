@@ -992,19 +992,20 @@ class NearbyFragment : BaseLazyFragment() {
                 mPicsAdapter.onAdapterClickNew { _, _, position ->
                     selectPic(position, mPicsAdapter, sdv, tvPicCount)
                     val manager = rvPics.layoutManager as LinearLayoutManager
-                    if (mPicsAdapter.data.size > 4) {
-                        val first = manager.findFirstCompletelyVisibleItemPosition()
-                        val last = manager.findLastCompletelyVisibleItemPosition()
-                        if (abs(last - position) < 1) {
-                            //向后滑动4个或者滑到底
-                            val target = min(position + 4, mPicsAdapter.data.size - 1)
-                            rvPics.scrollToPosition(target)
-                        } else if (position - first < 1) {
-                            //向前滑动4个或者滑到头
-                            val target = max(position - 4, 0)
-                            rvPics.scrollToPosition(target)
-                        }
-                    }
+//                    if (mPicsAdapter.data.size > 4) {
+//                        val first = manager.findFirstCompletelyVisibleItemPosition()
+//                        val last = manager.findLastCompletelyVisibleItemPosition()
+//                        if (abs(last - position) < 1) {
+//                            //向后滑动4个或者滑到底
+//                            val target = min(position + 4, mPicsAdapter.data.size - 1)
+//                            rvPics.scrollToPosition(target)
+//                        } else if (position - first < 1) {
+//                            //向前滑动4个或者滑到头
+//                            val target = max(position - 4, 0)
+//                            rvPics.scrollToPosition(target)
+//                        }
+//                    }
+                    rvPics.smoothScrollToPosition(position)
 
                 }
 
