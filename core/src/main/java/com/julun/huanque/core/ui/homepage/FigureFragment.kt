@@ -1,21 +1,14 @@
 package com.julun.huanque.core.ui.homepage
 
 import android.graphics.Color
-import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.GridLayoutManager
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.julun.huanque.common.base.BaseBottomSheetFragment
 import com.julun.huanque.common.bean.beans.FigureBean
-import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.constant.Sex
 import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.loadImage
-import com.julun.huanque.common.suger.loadImageNoResize
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.TagListAdapter
 import com.julun.huanque.core.viewmodel.HomePageViewModel
@@ -84,7 +77,7 @@ class FigureFragment : BaseBottomSheetFragment() {
             suggest.append(it)
         }
         tv_suggest.text = suggest.toString()
-        tv_figure.text = data.figure
+        tv_figure.text = data.myFigure
     }
 
 

@@ -28,14 +28,15 @@
         android:layout_width="match_parent"
         android:layout_height="420dp"
         android:layout_marginTop="@dimen/dimen_46"
-        android:layout_marginBottom="@dimen/dimen_50">
+        android:overScrollMode="never">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dimen_15"
             android:layout_marginEnd="@dimen/dimen_15"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingBottom="50dp">
 
             <TextView
                 android:layout_width="match_parent"
@@ -212,6 +213,12 @@
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_gravity="bottom"
+        android:background="@drawable/bg_filter_bottom" />
 
     <TextView
         android:id="@+id/ensure_filter"

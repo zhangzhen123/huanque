@@ -514,7 +514,9 @@ data class VoiceBean(
     //是否点赞
     var like: String = "",
     //点赞数量
-    var likeCount: Int = 0
+    var likeCount: Int = 0,
+    //拒绝原因
+    var remark: String = ""
 
 
 ) : Serializable {
@@ -574,8 +576,10 @@ data class HomePageInfo(
     var interactTips: String = "",
     //是否可以互动
     var canInteractive: String = "",
-    //是否拉黑
+    //我是否拉黑对方
     var black: String = "",
+    //对方是否拉黑我
+    var targetBlack: String = "",
     //星座code
     var constellationType: String = "",
     //星座名称
@@ -862,7 +866,7 @@ data class FigureBean(
     //体重
     var weight: Int = 0,
     //身材
-    var figure: String = "",
+    var myFigure: String = "",
     //身材图片，主页使用
     var figurePic: String = "",
     //建议

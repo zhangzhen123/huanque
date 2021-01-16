@@ -267,7 +267,7 @@ class HomePageInformationFragment : BaseFragment() {
                 if (mHomePageViewModel.mineHomePage) {
                     return@setOnItemClickListener
                 }
-                mInviteViewModel.mType = InviteCompleteForm.AuthTag
+                mInviteViewModel.mType = InviteCompleteForm.LikeTag
                 mInviteViewModel.inviteFill(false)
 //                mInviteFillFragment.show(childFragmentManager, "InviteFillFragment")
             } else {

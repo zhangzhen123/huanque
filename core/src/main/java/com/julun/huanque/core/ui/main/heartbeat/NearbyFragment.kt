@@ -290,6 +290,11 @@ class NearbyFragment : BaseLazyFragment() {
                     if (item.likeTagList.isEmpty()) {
                         ToastUtils.show("已邀请TA添加喜欢的标签")
                     } else {
+                        item.likeTagList.forEach {
+                            if (myTagList.contains(it)) {
+                                it.mark = BooleanType.TRUE
+                            }
+                        }
                         val tagFragment = TagFragment.newInstance(
                             true,
                             item.sex == SessionUtils.getSex(),
@@ -896,11 +901,6 @@ class NearbyFragment : BaseLazyFragment() {
                     holder.setText(R.id.tv_bottom_tips, "TA还没有喜欢的标签，邀请TA填写吧")
                 } else {
 //                    val sameList = mutableListOf<UserTagBean>()
-//                    item.likeTagList.forEach {
-//                        if (myTagList.contains(it)) {
-//                            sameList.add(it)
-//                        }
-//                    }
                     item.likeTagList.sortList(Comparator { i1, i2 ->
                         val e1 = if (myTagList.contains(i1)) {
                             1

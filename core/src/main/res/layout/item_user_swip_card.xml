@@ -130,6 +130,7 @@
                 android:layout_width="@dimen/dimen_16"
                 android:layout_height="@dimen/dimen_16"
                 android:layout_marginStart="@dimen/dimen_6"
+                android:visibility="gone"
                 app:actualImageResource="@mipmap/icon_real_people"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_user_name"
                 app:layout_constraintStart_toEndOf="@+id/tv_user_name"

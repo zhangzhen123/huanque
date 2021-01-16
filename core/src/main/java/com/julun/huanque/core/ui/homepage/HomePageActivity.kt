@@ -1,6 +1,7 @@
 package com.julun.huanque.core.ui.homepage
 
 import android.Manifest
+import android.animation.ValueAnimator
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -63,6 +64,7 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerInd
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator
 import org.jetbrains.anko.*
+import java.math.RoundingMode
 import java.text.DecimalFormat
 import kotlin.math.abs
 
@@ -125,28 +127,28 @@ class HomePageActivity : BaseActivity() {
         val statusHeight = StatusBarUtil.getStatusBarHeight(this)
         mStartChange = ScreenUtils.getScreenWidth() * 308 / 375 - dp2px(44) - statusHeight
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            /**
-             * 1、设置相同的TransitionName
-             */
-            ViewCompat.setTransitionName(bga_banner, "Image${mHomePageViewModel.targetUserId}")
-//            ViewCompat.setTransitionName(tv_nickname, "TextView${mHomePageViewModel.targetUserId}")
-            /**
-             * 2、设置WindowTransition,除指定的ShareElement外，其它所有View都会执行这个Transition动画
-             */
-//            window.enterTransition = Hold()
-//            window.exitTransition = Hold()
-            /**
-             * 3、设置ShareElementTransition,指定的ShareElement会执行这个Transiton动画
-             */
-            val transitionSet = TransitionSet()
-            transitionSet.addTransition(ChangeBounds())
-            transitionSet.addTransition(ChangeTransform())
-            transitionSet.addTarget(bga_banner)
-//            transitionSet.duration = 100
-            window.sharedElementEnterTransition = transitionSet
-            window.sharedElementExitTransition = transitionSet
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            /**
+//             * 1、设置相同的TransitionName
+//             */
+//            ViewCompat.setTransitionName(bga_banner, "Image${mHomePageViewModel.targetUserId}")
+////            ViewCompat.setTransitionName(tv_nickname, "TextView${mHomePageViewModel.targetUserId}")
+//            /**
+//             * 2、设置WindowTransition,除指定的ShareElement外，其它所有View都会执行这个Transition动画
+//             */
+////            window.enterTransition = Hold()
+////            window.exitTransition = Hold()
+//            /**
+//             * 3、设置ShareElementTransition,指定的ShareElement会执行这个Transiton动画
+//             */
+//            val transitionSet = TransitionSet()
+//            transitionSet.addTransition(ChangeBounds())
+//            transitionSet.addTransition(ChangeTransform())
+//            transitionSet.addTarget(bga_banner)
+////            transitionSet.duration = 100
+//            window.sharedElementEnterTransition = transitionSet
+//            window.sharedElementExitTransition = transitionSet
+//        }
 
         window.decorView.systemUiVisibility =
             View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
@@ -156,9 +158,9 @@ class HomePageActivity : BaseActivity() {
 //        shaderParams.height = statusHeight + dp2px(44)
 //        view_shader.layoutParams = shaderParams
 
-        custom_coordinator.setmZoomView(view_holder)
-        custom_coordinator.setZoom(0f)
-        custom_coordinator.setmMoveView(toolbar, view_pager, con_header)
+//        custom_coordinator.setmZoomView(view_holder)
+//        custom_coordinator.setZoom(0f)
+//        custom_coordinator.setmMoveView(toolbar, view_pager, con_header)
 
         initViewModel()
         initRecyclerView()
@@ -272,13 +274,13 @@ class HomePageActivity : BaseActivity() {
 //        iv_close_black.onClickNew {
 //            finish()
 //        }
-        custom_coordinator.mListener = object : ScrollMarginListener {
-            override fun scroll(distance: Int) {
-                val params = view_shader.layoutParams as? ConstraintLayout.LayoutParams ?: return
-                params.topMargin = distance
-                view_shader.layoutParams = params
-            }
-        }
+//        custom_coordinator.mListener = object : ScrollMarginListener {
+//            override fun scroll(distance: Int) {
+//                val params = view_shader.layoutParams as? ConstraintLayout.LayoutParams ?: return
+//                params.topMargin = distance
+//                view_shader.layoutParams = params
+//            }
+//        }
 
         appBarLayout.addOnOffsetChangedListener(object : AppBarLayout.OnOffsetChangedListener {
             override fun onOffsetChanged(appBarLayout: AppBarLayout?, verticalOffset: Int) {
@@ -573,11 +575,11 @@ class HomePageActivity : BaseActivity() {
                 showViewByData(it)
             }
 
-            con_header.post {
-                val holderParams = view_holder.layoutParams
-                holderParams.height = con_header.height - 1
-                view_holder.layoutParams = holderParams
-            }
+//            con_header.post {
+//                val holderParams = view_holder.layoutParams
+//                holderParams.height = con_header.height - 1
+//                view_holder.layoutParams = holderParams
+//            }
         })
 
 
@@ -589,13 +591,31 @@ class HomePageActivity : BaseActivity() {
         })
 
         mHomePageViewModel.blackStatus.observe(this, Observer {
-            val bean =
-                if (it == BusiConstant.True && mHomePageViewModel.homeInfoBean.value?.playProgram?.living != BusiConstant.True) {
-                    //拉黑状态
+            if (it != null) {
+                //我是否被对方拉黑
+                val targetBlack = mHomePageViewModel.homeInfoBean.value?.targetBlack ?: ""
+                if (it == BusiConstant.True || targetBlack == BusiConstant.True) {
+                    //拉黑关系
                     tv_black_status.show()
                 } else {
                     tv_black_status.hide()
                 }
+                if (it == BusiConstant.True) {
+                    //我拉黑对方
+                    if (targetBlack == BusiConstant.True) {
+                        //互相拉黑
+                        tv_black_status.text = "已添加至黑名单，不能互发消息和心动"
+                    } else {
+                        //我把对方拉黑
+                        tv_black_status.text = "已添加至黑名单，不能互发消息和心动"
+                    }
+                } else {
+                    if (targetBlack == BusiConstant.True) {
+                        //被对方拉黑
+                        tv_black_status.text = "已被对方添加至黑名单，不能互发消息和心动"
+                    }
+                }
+            }
         })
 
         mHomePageViewModel.actionData.observe(this, Observer {
@@ -667,7 +687,9 @@ class HomePageActivity : BaseActivity() {
 
         mHomePageViewModel.heartStatus.observe(this, Observer {
             if (it != null) {
+                //执行伸长动画
                 showHeartView(it)
+                showGrowthAnimation()
             }
         })
 
@@ -742,6 +764,19 @@ class HomePageActivity : BaseActivity() {
                     tv_record.show()
                     tv_time.hide()
                     sdv_voice_state.hide()
+                    when {
+                        voiceStatus == VoiceBean.Wait -> {
+                            //审核中
+                            tv_record.text = "语音审核中"
+                        }
+                        voiceStatus == VoiceBean.Reject -> {
+                            //已拒绝
+                        }
+                        voiceStatus.isEmpty() -> {
+                            //未录制
+                            tv_record.text = "语音录制"
+                        }
+                    }
                 }
             } else {
                 //他人主页 不显示语音签名
@@ -785,8 +820,9 @@ class HomePageActivity : BaseActivity() {
         } else {
             //有城市
             if (distance >= 1000) {
-                val df = DecimalFormat("#.00")
-                tv_distance.text = "${df.format(distance / 1000)}km"
+                val df = DecimalFormat("#.0")
+                df.roundingMode = RoundingMode.DOWN
+                tv_distance.text = "${df.format(distance / 1000.0)}km"
             } else {
                 tv_distance.text = "${distance}m"
             }
@@ -823,7 +859,7 @@ class HomePageActivity : BaseActivity() {
             tv_age.text = "${bean.distanceCity.curryCityName} /${sexName}"
         }
 
-
+        showHeartView(bean.heartTouch)
         if (mHomePageViewModel.mineHomePage) {
             rl_edit_info.show()
             //隐藏底部
@@ -875,6 +911,31 @@ class HomePageActivity : BaseActivity() {
         }
     }
 
+    //伸长动画
+    private var mGrowthAnimation: ValueAnimator? = null
+
+    /**
+     * 伸长动画
+     */
+    private fun showGrowthAnimation() {
+        val startWidth = view_private_chat.width
+        val targetWidth = ScreenUtils.getScreenWidth() - dp2px(30)
+        mGrowthAnimation?.cancel()
+        mGrowthAnimation = ValueAnimator.ofFloat(startWidth.toFloat(), targetWidth.toFloat())
+        mGrowthAnimation?.apply {
+            duration = 200
+        }
+        mGrowthAnimation?.addUpdateListener {
+            val tempWidth = it.animatedValue as? Float ?: return@addUpdateListener
+            logger.info("Animation 当前数值:${tempWidth}")
+            val heartParams = view_private_chat.layoutParams as? ConstraintLayout.LayoutParams
+            heartParams?.width = tempWidth.toInt()
+            view_private_chat.layoutParams = heartParams
+        }
+        mGrowthAnimation?.start()
+
+    }
+
 
     private val bannerAdapter by lazy {
         BGABanner.Adapter<View, HomePagePicBean> { _, itemView, model, _ ->
@@ -902,7 +963,8 @@ class HomePageActivity : BaseActivity() {
 //
 //            imageList.forEach { picList.add(StringHelper.getOssImgUrl(it)) }
             logger.info("State = ${lifecycle.currentState}")
-            if (!isFinishing && !custom_coordinator.isScrolling()) {
+            //&& !custom_coordinator.isScrolling()
+            if (!isFinishing) {
                 ImageActivity.start(
                     this, posisiton, picList,
                     from = ImageActivityFrom.HOME,
@@ -1134,6 +1196,7 @@ class HomePageActivity : BaseActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        mGrowthAnimation?.cancel()
         audioPlayerManager.destroy()
     }
 

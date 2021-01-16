@@ -50,8 +50,11 @@ import org.jetbrains.anko.startActivity
 class TagUserPicsActivity : BaseVMActivity<TagUserPicsViewModel>() {
 
     companion object {
-        fun start(act: Activity, tagId: Int, likeUserId: Long) {
-            act.startActivity<TagUserPicsActivity>(ManagerTagCode.TAG_INFO to tagId, IntentParamKey.USER_ID.name to likeUserId)
+        fun start(act: Activity, tagId: Int, likeUserId: Long, showPic: String = "") {
+            act.startActivity<TagUserPicsActivity>(
+                ManagerTagCode.TAG_INFO to tagId,
+                IntentParamKey.USER_ID.name to likeUserId
+            )
         }
     }
 
@@ -60,6 +63,7 @@ class TagUserPicsActivity : BaseVMActivity<TagUserPicsViewModel>() {
     private val tagManagerViewModel: TagManagerViewModel = HuanViewModelManager.tagManagerViewModel
     private var currentTagId: Int? = null
     private var currentLikeUserId: Long? = null
+
 
     private val picList = mutableListOf<TagUserPic>()
 
@@ -94,6 +98,7 @@ class TagUserPicsActivity : BaseVMActivity<TagUserPicsViewModel>() {
 //        overridePendingTransition(0, 0)
         currentTagId = intent.extras?.getInt(ManagerTagCode.TAG_INFO)
         currentLikeUserId = intent.extras?.getLong(IntentParamKey.USER_ID.name)
+
         val config = StackLayoutConfig()
         config.secondaryScale = 1f
         config.scaleRatio = 0.4f
@@ -228,9 +233,17 @@ class TagUserPicsActivity : BaseVMActivity<TagUserPicsViewModel>() {
     private fun renderData(info: TagUserPicListBean) {
         picList.addAll(info.authPicList)
         picListAdapter.notifyDataSetChanged()
+        var tempIndex = -1
         rv_pics.post {
             rv_pics.scrollToPosition(picListAdapter.data.size)
         }
+//        rv_pics.post {
+//            if (tempIndex >= 0) {
+//                rv_pics.scrollToPosition(tempIndex)
+//            } else {
+//                rv_pics.scrollToPosition(picListAdapter.data.size)
+//            }
+//        }
 
         zan_num.text = "${info.praiseNum}"
 
