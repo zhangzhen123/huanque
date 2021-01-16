@@ -232,4 +232,16 @@ class CreateAccountSuccess() : Serializable
 /**
  * 喜欢后发个通知
  */
-class LikeEvent(var userId: Long,var like:Boolean)
+class LikeEvent(var userId: Long, var like: Boolean)
+
+/**
+ * 图片切换地址
+ */
+class PicChangeEvent(
+    //用户Id
+    var userId: Long = 0L,
+    //图片地址
+    var imageUrl: String = "",
+    //图片下标（主页中的下标）
+    var imageIndexInHomePage: Int = -1
+) : Serializable

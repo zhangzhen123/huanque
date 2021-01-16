@@ -199,4 +199,7 @@ object ParamConstant {
 
     //喜欢的数据
     const val FavoriteUserBean = "FavoriteUserBean"
+    
+    //显示的图片
+    const val ShowPic = "ShowPic"
 }
