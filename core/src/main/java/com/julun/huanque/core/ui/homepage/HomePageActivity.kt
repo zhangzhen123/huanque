@@ -1,6 +1,7 @@
 package com.julun.huanque.core.ui.homepage
 
 import android.Manifest
+import android.animation.ValueAnimator
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -126,28 +127,28 @@ class HomePageActivity : BaseActivity() {
         val statusHeight = StatusBarUtil.getStatusBarHeight(this)
         mStartChange = ScreenUtils.getScreenWidth() * 308 / 375 - dp2px(44) - statusHeight
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            /**
-             * 1、设置相同的TransitionName
-             */
-            ViewCompat.setTransitionName(bga_banner, "Image${mHomePageViewModel.targetUserId}")
-//            ViewCompat.setTransitionName(tv_nickname, "TextView${mHomePageViewModel.targetUserId}")
-            /**
-             * 2、设置WindowTransition,除指定的ShareElement外，其它所有View都会执行这个Transition动画
-             */
-//            window.enterTransition = Hold()
-//            window.exitTransition = Hold()
-            /**
-             * 3、设置ShareElementTransition,指定的ShareElement会执行这个Transiton动画
-             */
-            val transitionSet = TransitionSet()
-            transitionSet.addTransition(ChangeBounds())
-            transitionSet.addTransition(ChangeTransform())
-            transitionSet.addTarget(bga_banner)
-//            transitionSet.duration = 100
-            window.sharedElementEnterTransition = transitionSet
-            window.sharedElementExitTransition = transitionSet
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            /**
+//             * 1、设置相同的TransitionName
+//             */
+//            ViewCompat.setTransitionName(bga_banner, "Image${mHomePageViewModel.targetUserId}")
+////            ViewCompat.setTransitionName(tv_nickname, "TextView${mHomePageViewModel.targetUserId}")
+//            /**
+//             * 2、设置WindowTransition,除指定的ShareElement外，其它所有View都会执行这个Transition动画
+//             */
+////            window.enterTransition = Hold()
+////            window.exitTransition = Hold()
+//            /**
+//             * 3、设置ShareElementTransition,指定的ShareElement会执行这个Transiton动画
+//             */
+//            val transitionSet = TransitionSet()
+//            transitionSet.addTransition(ChangeBounds())
+//            transitionSet.addTransition(ChangeTransform())
+//            transitionSet.addTarget(bga_banner)
+////            transitionSet.duration = 100
+//            window.sharedElementEnterTransition = transitionSet
+//            window.sharedElementExitTransition = transitionSet
+//        }
 
         window.decorView.systemUiVisibility =
             View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
@@ -686,7 +687,9 @@ class HomePageActivity : BaseActivity() {
 
         mHomePageViewModel.heartStatus.observe(this, Observer {
             if (it != null) {
+                //执行伸长动画
                 showHeartView(it)
+                showGrowthAnimation()
             }
         })
 
@@ -856,7 +859,7 @@ class HomePageActivity : BaseActivity() {
             tv_age.text = "${bean.distanceCity.curryCityName} /${sexName}"
         }
 
-
+        showHeartView(bean.heartTouch)
         if (mHomePageViewModel.mineHomePage) {
             rl_edit_info.show()
             //隐藏底部
@@ -906,6 +909,31 @@ class HomePageActivity : BaseActivity() {
                 tv_home_heart.show()
             }
         }
+    }
+
+    //伸长动画
+    private var mGrowthAnimation: ValueAnimator? = null
+
+    /**
+     * 伸长动画
+     */
+    private fun showGrowthAnimation() {
+        val startWidth = view_private_chat.width
+        val targetWidth = ScreenUtils.getScreenWidth() - dp2px(30)
+        mGrowthAnimation?.cancel()
+        mGrowthAnimation = ValueAnimator.ofFloat(startWidth.toFloat(), targetWidth.toFloat())
+        mGrowthAnimation?.apply {
+            duration = 200
+        }
+        mGrowthAnimation?.addUpdateListener {
+            val tempWidth = it.animatedValue as? Float ?: return@addUpdateListener
+            logger.info("Animation 当前数值:${tempWidth}")
+            val heartParams = view_private_chat.layoutParams as? ConstraintLayout.LayoutParams
+            heartParams?.width = tempWidth.toInt()
+            view_private_chat.layoutParams = heartParams
+        }
+        mGrowthAnimation?.start()
+
     }
 
 
@@ -1168,6 +1196,7 @@ class HomePageActivity : BaseActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        mGrowthAnimation?.cancel()
         audioPlayerManager.destroy()
     }
 

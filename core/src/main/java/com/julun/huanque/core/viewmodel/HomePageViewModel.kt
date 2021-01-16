@@ -94,7 +94,7 @@ class HomePageViewModel : BaseViewModel() {
                 homeInfoBean.value = result
                 blackStatus.value = result.black
                 followStatus.value = result.follow
-                heartStatus.value = result.heartTouch
+//                heartStatus.value = result.heartTouch
             }, {}, needLoadState = true)
         }
     }
