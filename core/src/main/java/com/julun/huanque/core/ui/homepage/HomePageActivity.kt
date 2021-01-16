@@ -35,6 +35,7 @@ import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.bean.beans.*
+import com.julun.huanque.common.bean.events.PicChangeEvent
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.interfaces.ScrollMarginListener
@@ -63,6 +64,7 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNav
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerIndicator
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator
+import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.*
 import java.math.RoundingMode
 import java.text.DecimalFormat
@@ -76,10 +78,11 @@ import kotlin.math.abs
 @Route(path = ARouterConstant.HOME_PAGE_ACTIVITY)
 class HomePageActivity : BaseActivity() {
     companion object {
-        fun newInstance(act: Activity, userId: Long) {
+        fun newInstance(act: Activity, userId: Long, showPic: String = "") {
             val intent = Intent(act, HomePageActivity::class.java)
             if (ForceUtils.activityMatch(intent)) {
                 intent.putExtra(ParamConstant.UserId, userId)
+                intent.putExtra(ParamConstant.ShowPic, showPic)
                 act.startActivity(intent)
             }
         }
@@ -117,6 +120,8 @@ class HomePageActivity : BaseActivity() {
     private val mTabTitles = arrayListOf<String>("资料", "动态")
 
     private val audioPlayerManager: AudioPlayerManager by lazy { AudioPlayerManager(this) }
+
+    private var mShowPic: String = ""
 
     override fun getLayoutId() = R.layout.act_home_page
 
@@ -501,24 +506,7 @@ class HomePageActivity : BaseActivity() {
      * 重置页面
      */
     private fun resetView(intent: Intent) {
-        //附近数据
-        val nearByBean = intent.getSerializableExtra(ParamConstant.NearByBean) as? NearbyUserBean
-        val favoriteBean = intent.getSerializableExtra(ParamConstant.FavoriteUserBean) as? FavoriteUserBean
-//        mHomePageViewModel.nearByBeanData.value = nearByBean
-        when {
-            nearByBean != null -> {
-                mHomePageViewModel.shareElement = true
-                showPic("", nearByBean.coverPicList)
-            }
-            favoriteBean != null -> {
-                mHomePageViewModel.shareElement = true
-                showPic("", favoriteBean.coverPicList)
-            }
-            else -> {
-                mHomePageViewModel.shareElement = false
-            }
-        }
-
+        mShowPic = intent.getStringExtra(ParamConstant.ShowPic) ?: ""
 
         val userID = intent.getLongExtra(ParamConstant.UserId, 0)
         mHomePageViewModel.targetUserId = userID
@@ -898,6 +886,16 @@ class HomePageActivity : BaseActivity() {
         }
         showBanner(picList)
         mPicAdapter.setList(picList)
+        if (mShowPic.isNotEmpty()) {
+            //定位到特定的图片
+            picList.forEachIndexed { index, homePagePicBean ->
+                if (homePagePicBean.coverPic == mShowPic) {
+                    //找到需要选中的图片
+                    bga_banner.currentItem = index
+                    return
+                }
+            }
+        }
     }
 
 
@@ -1205,6 +1203,28 @@ class HomePageActivity : BaseActivity() {
         super.onDestroy()
         mGrowthAnimation?.cancel()
         audioPlayerManager.destroy()
+    }
+
+    override fun onViewDestroy() {
+        super.onViewDestroy()
+        if (mShowPic.isEmpty()) {
+            return
+        }
+        val userId = mHomePageViewModel.targetUserId
+        var tempIndex = -1
+        var tempUrl = ""
+        mPicAdapter.data.forEachIndexed { index, homePagePicBean ->
+            if (homePagePicBean.selected == BusiConstant.True) {
+                //正在展示的图片
+                tempIndex = index
+                tempUrl = homePagePicBean.coverPic
+            }
+        }
+        if (mShowPic.isNotEmpty() && tempUrl != mShowPic) {
+            if (userId > 0 && tempIndex >= 0) {
+                EventBus.getDefault().post(PicChangeEvent(mHomePageViewModel.targetUserId, tempUrl, tempIndex))
+            }
+        }
     }
 
     override fun onNewIntent(intent: Intent?) {

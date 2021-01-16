@@ -75,7 +75,8 @@ class TagUserPicsActivity : BaseVMActivity<TagUserPicsViewModel>() {
                 val sdv_tag = holder.getView<SimpleDraweeView>(R.id.sdv_tag)
                 sdv_tag.loadImage(cTagUserPicListBean?.tagIcon ?: "", 16f, 16f)
                 holder.setText(R.id.tv_tag, cTagUserPicListBean?.tagName)
-                holder.setText(R.id.tv_index, "${holder.adapterPosition + 1}/${picListAdapter.data.size}")
+                val totalCount = picListAdapter.data.size
+                holder.setText(R.id.tv_index, "${totalCount - holder.adapterPosition}/${totalCount}")
             }
 
         }
@@ -231,12 +232,13 @@ class TagUserPicsActivity : BaseVMActivity<TagUserPicsViewModel>() {
     }
 
     private fun renderData(info: TagUserPicListBean) {
-        picList.addAll(info.authPicList)
+        val tuthPicList = info.authPicList.reversed()
+        picList.addAll(tuthPicList)
         picListAdapter.notifyDataSetChanged()
-        var tempIndex = -1
-        rv_pics.post {
-            rv_pics.scrollToPosition(picListAdapter.data.size)
-        }
+//        var tempIndex = -1
+//        rv_pics.post {
+//            rv_pics.scrollToPosition(picListAdapter.data.size)
+//        }
 //        rv_pics.post {
 //            if (tempIndex >= 0) {
 //                rv_pics.scrollToPosition(tempIndex)
