@@ -18,10 +18,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="17dp"
+        android:layout_marginTop="@dimen/dimen_10"
         android:gravity="center"
         android:text="@string/empty_data"
-        android:textColor="@color/text_03"
-        android:textSize="@dimen/small1_size" />
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_12" />
 
     <TextView
         android:id="@+id/tv_button"

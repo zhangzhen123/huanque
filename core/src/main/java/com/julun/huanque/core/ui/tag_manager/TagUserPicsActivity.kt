@@ -30,6 +30,7 @@ import com.julun.huanque.common.widgets.layoutmanager.stacklayout.StackLayoutMan
 import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.ScreenUtils
+import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.viewmodel.TagManagerViewModel
 import com.julun.huanque.core.R
@@ -81,6 +82,7 @@ class TagUserPicsActivity : BaseVMActivity<TagUserPicsViewModel>() {
 
         overridePendingTransition(R.anim.fade_in_center, 0)
     }
+
     override fun finish() {
         super.finish()
         overridePendingTransition(0, 0)
@@ -157,10 +159,13 @@ class TagUserPicsActivity : BaseVMActivity<TagUserPicsViewModel>() {
                 if (it.requireT()) {
                     info.praiseNum++
                     zan_num.text = "${info.praiseNum}"
-                    val like=mViewModel.tagUserPics.value?.getT()?.like?:false
-                    if(!like){
-                        playGuideAni()
+                    val user = mViewModel.tagUserPics.value?.getT()
+                    if (user != null) {
+                        if (!user.like && user.friendSex != SessionUtils.getSex()) {
+                            playGuideAni()
+                        }
                     }
+
 
                 } else {
                     info.praiseNum--
@@ -181,7 +186,7 @@ class TagUserPicsActivity : BaseVMActivity<TagUserPicsViewModel>() {
                     })
                 }
                 val tag = it.requireT()
-                if(tag.tagId!=currentTagId){
+                if (tag.tagId != currentTagId) {
                     return@Observer
                 }
                 if (tag.like) {
@@ -207,11 +212,11 @@ class TagUserPicsActivity : BaseVMActivity<TagUserPicsViewModel>() {
     }
 
     private fun playGuideAni() {
-        val ani= ObjectAnimator.ofFloat(add_tag_guide_layout, View.TRANSLATION_Y, ScreenUtils.screenHeightFloat/2,0f)
-        ani.duration=300
+        val ani = ObjectAnimator.ofFloat(add_tag_guide_layout, View.TRANSLATION_Y, ScreenUtils.screenHeightFloat / 2, 0f)
+        ani.duration = 300
         ani.addListener(object : AnimatorListenerAdapter() {
             override fun onAnimationStart(animation: Animator?) {
-                val info=mViewModel.tagUserPics.value?.getT()
+                val info = mViewModel.tagUserPics.value?.getT()
                 add_tag_guide_layout.show()
                 tv_tag_name.text = info?.tagName
                 zan_layout.hide()
@@ -219,6 +224,7 @@ class TagUserPicsActivity : BaseVMActivity<TagUserPicsViewModel>() {
         })
         ani.start()
     }
+
     private fun renderData(info: TagUserPicListBean) {
         picList.addAll(info.authPicList)
         picListAdapter.notifyDataSetChanged()

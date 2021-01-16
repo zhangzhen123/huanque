@@ -20,9 +20,9 @@
 
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/card_img"
-                app:roundedCornerRadius="@dimen/dimen_8"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                app:roundedCornerRadius="@dimen/dimen_8" />
 
             <View
                 android:id="@+id/shadow_view"
@@ -30,14 +30,15 @@
                 android:layout_height="180dp"
                 android:background="@drawable/bg_shape_card_shadow"
                 app:layout_constraintBottom_toBottomOf="parent" />
+
             <ImageView
                 android:id="@+id/iv_distance"
                 android:layout_width="@dimen/dimen_20"
                 android:layout_height="@dimen/dimen_20"
                 android:gravity="center"
+                android:scaleType="fitCenter"
                 app:layout_constraintBottom_toTopOf="@+id/rv_pics"
-                app:layout_constraintStart_toStartOf="@+id/rv_pics"
-                android:scaleType="fitCenter" />
+                app:layout_constraintStart_toStartOf="@+id/rv_pics" />
 
             <TextView
                 android:id="@+id/tv_distance"
@@ -48,8 +49,8 @@
                 android:textColor="#FFCC00"
                 android:textSize="@dimen/sp_16"
                 android:textStyle="bold"
-                app:layout_constraintStart_toEndOf="@+id/iv_distance"
                 app:layout_constraintBottom_toTopOf="@+id/rv_pics"
+                app:layout_constraintStart_toEndOf="@+id/iv_distance"
                 tools:text="23.3" />
 
             <TextView
@@ -94,21 +95,21 @@
                 android:id="@+id/tv_bottom_tips"
                 android:layout_width="wrap_content"
                 android:layout_height="24dp"
-                app:layout_constrainedWidth="true"
                 android:layout_margin="@dimen/dimen_10"
                 android:background="@drawable/bg_shape_white_p10"
+                android:drawableEnd="@mipmap/icon_forward_grey_02"
+                android:drawablePadding="@dimen/dimen_5"
+                android:ellipsize="marquee"
                 android:gravity="center"
                 android:paddingStart="@dimen/dimen_8"
                 android:paddingEnd="@dimen/dimen_8"
-                android:textColor="#D9FFFFFF"
                 android:singleLine="true"
+                android:textColor="#D9FFFFFF"
                 android:textSize="@dimen/sp_12"
-                android:ellipsize="marquee"
+                app:layout_constrainedWidth="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                android:drawableEnd="@mipmap/icon_forward_grey_02"
-                android:drawablePadding="@dimen/dimen_5"
                 tools:text="你有TA喜欢的 XX、XX等X个标签 Ta还喜欢什么" />
 
             <TextView
@@ -129,6 +130,7 @@
                 android:layout_width="@dimen/dimen_16"
                 android:layout_height="@dimen/dimen_16"
                 android:layout_marginStart="@dimen/dimen_6"
+                app:actualImageResource="@mipmap/icon_real_people"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_user_name"
                 app:layout_constraintStart_toEndOf="@+id/tv_user_name"
                 app:layout_constraintTop_toTopOf="@+id/tv_user_name" />
@@ -214,15 +216,16 @@
             android:layout_margin="@dimen/dimen_50"
             android:alpha="0"
             android:src="@mipmap/icon_card_like" />
+
         <ImageView
             android:id="@+id/iv_super_like"
             android:layout_width="@dimen/dimen_75"
             android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"
             android:layout_marginEnd="20dp"
-            android:visibility="gone"
             android:layout_marginBottom="@dimen/dimen_65"
-            android:src="@mipmap/icon_super_like" />
+            android:src="@mipmap/icon_super_like"
+            android:visibility="gone" />
 
     </androidx.cardview.widget.CardView>
 </com.julun.huanque.common.widgets.cardlib.SwipeTouchLayout>

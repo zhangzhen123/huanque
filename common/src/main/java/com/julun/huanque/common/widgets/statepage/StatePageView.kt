@@ -98,8 +98,8 @@ class StatePageView : FrameLayout {
     }
 
     fun showError(
-        @DrawableRes errorRes: Int = R.mipmap.icon_default_empty,
-        errorTxt: String = "",
+        @DrawableRes errorRes: Int = R.mipmap.icon_net_error,
+        errorTxt: String = "请检查网络设置或尝试重新加载",
         showBtn: Boolean = true,
         btnClick: OnClickListener? = null
     ) {

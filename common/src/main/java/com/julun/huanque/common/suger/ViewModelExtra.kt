@@ -157,7 +157,7 @@ fun <T>Throwable.convertError(): ReactiveData<T>{
     val err= if (this is ResponseError) {
         this
     } else {
-        ResponseError (OTHER_DEF_ERROR,"异常错误")
+        ResponseError (OTHER_DEF_ERROR,"网络错误")
     }
     return ReactiveData(state = NetStateType.ERROR,error = err)
 }
@@ -169,7 +169,7 @@ fun <T>Throwable.convertListError(queryType: QueryType): ReactiveData<T>{
     val err= if (this is ResponseError) {
         this
     } else {
-        ResponseError (OTHER_DEF_ERROR,"异常错误")
+        ResponseError (OTHER_DEF_ERROR,"网络错误")
     }
     return ReactiveData(state = NetStateType.ERROR,queryType = queryType,error = err)
 }

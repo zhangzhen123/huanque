@@ -147,7 +147,7 @@
         android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:background="@drawable/bg_enable"
-        android:drawableLeft="@mipmap/icon_star_white"
+        android:drawableLeft="@mipmap/icon_tag_star"
         android:drawablePadding="4dp"
         android:gravity="center"
         android:paddingLeft="15dp"

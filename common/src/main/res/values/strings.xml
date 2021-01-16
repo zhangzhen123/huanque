@@ -264,7 +264,7 @@
     <string name="watch_award_list">查看获奖名单</string>
     <string name="param_error">答题状态错误</string>
     <string name="pool_time">超级福弹\n剩余时间</string>
-    <string name="network_unenable">网络连接错误\n试试看刷新页面或检查网络连接</string>
+    <string name="network_unenable">请检查网络设置或尝试重新加载</string>
     <string name="load_error">加载失败，请重试</string>
     <string name="empty_data">一大波宝宝躺在数据库里\n我正在唤醒他们</string>
     <string name="reload">重新加载</string>

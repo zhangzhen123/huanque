@@ -46,10 +46,7 @@ import com.julun.huanque.common.constant.HomeTabType
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.suger.*
-import com.julun.huanque.common.utils.ForceUtils
-import com.julun.huanque.common.utils.ScreenUtils
-import com.julun.huanque.common.utils.SessionUtils
-import com.julun.huanque.common.utils.ToastUtils
+import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.utils.device.PhoneUtils
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
 import com.julun.huanque.common.widgets.cardlib.CardLayoutManager
@@ -117,7 +114,7 @@ class NearbyFragment : BaseLazyFragment() {
             }
 
             override fun getCardRotateDegree(): Float {
-                return 10f
+                return -8f
             }
 
             override fun getCardTranslateDistance(): Int {
@@ -129,7 +126,7 @@ class NearbyFragment : BaseLazyFragment() {
             }
 
             override fun getSwipeThreshold(): Float {
-                return 0.35f
+                return 0.15f
             }
 
             override fun getCardScale(): Float {
@@ -321,6 +318,7 @@ class NearbyFragment : BaseLazyFragment() {
             val mFilterTagFragment = FilterTagFragment()
             mFilterTagFragment.show(childFragmentManager, "FilterTagFragment")
         }
+
     }
 
     //收到其他地方的心都无感操作 自动滑出  后台已经过滤同一天对同一用户的多次喜欢操作或者无感操作做去重 所以这里触发接口没问题
@@ -362,8 +360,15 @@ class NearbyFragment : BaseLazyFragment() {
                 }
 
                 hideLoading()
+                state_layout_error.hide()
                 mRecyclerView.show()
-                list.addAll(bean.list)
+                if (it.isRefresh()) {
+                    list.clear()
+                    list.addAll(bean.list)
+                } else {
+                    list.addAll(bean.list)
+                }
+
                 if (bean.myTagList.isNotEmpty()) {
                     myTagList.clear()
                     myTagList.addAll(bean.myTagList)
@@ -378,7 +383,8 @@ class NearbyFragment : BaseLazyFragment() {
             } else {
                 val error = it.error
                 if (error != null) {
-                    showLoading(it.error)
+//                    showLoading(it.error)
+                    showLayoutError(1)
                 }
 
             }
@@ -386,7 +392,6 @@ class NearbyFragment : BaseLazyFragment() {
         mMainConnectViewModel.refreshNearby.observe(this, Observer {
             if (it != null) {
                 val loc = currentLocation ?: return@Observer
-                logger.info("当前的列表数目已经小于10 开始取数据")
                 mViewModel.requestNearbyList(
                     QueryType.INIT,
                     loc.latitude,
@@ -481,6 +486,7 @@ class NearbyFragment : BaseLazyFragment() {
     }
 
     private fun showLoading(state: ResponseError? = null) {
+        state_layout_error.hide()
         state_layout.show()
         mRecyclerView.hide()
         if (loadingSetAni?.isRunning == false) {
@@ -515,6 +521,62 @@ class NearbyFragment : BaseLazyFragment() {
         loadingAniPlay = false
         loadingSetAni?.cancel()
         waterRv.stopMoving()
+    }
+
+    /**
+     * 0代表位置异常 1代表网络错误
+     */
+    private fun showLayoutError(type: Int) {
+        hideLoading()
+        state_layout_error.show()
+        mRecyclerView.hide()
+        when (type) {
+            0 -> {
+                iv_error_pic.imageResource = R.mipmap.icon_location_fail
+                tv_error_title.text = "开启附近功能"
+                tv_error_content.text = "需要启用位置权限，才能看到附近心动的人，请到手机系统设置中开启"
+                tv_btn_ok.text = "一键开启"
+                tv_btn_ok.onClickNew {
+                    //开启定位
+                    PhoneUtils.getPermissionSetting(requireActivity().packageName).let {
+                        if (ForceUtils.activityMatch(it)) {
+                            try {
+                                checkPermissionTag = true
+                                startActivity(it)
+                            } catch (e: Exception) {
+                                reportCrash("跳转权限或者默认设置页失败", e)
+                            }
+                        }
+                    }
+
+                }
+            }
+            1 -> {
+                iv_error_pic.imageResource = R.mipmap.icon_net_error
+                tv_error_content.text = "请检查网络设置或尝试重新加载"
+                tv_btn_ok.text = "重新加载"
+                tv_btn_ok.onClickNew {
+                    if (!NetUtils.isNetConnected()) {
+                        ToastUtils.show("网络异常")
+                        return@onClickNew
+                    }
+                    checkPermission()
+//                    showLoading()
+//                    val loc = currentLocation
+//                    if (loc != null)
+//                        mViewModel.requestNearbyList(
+//                            QueryType.INIT,
+//                            loc.latitude,
+//                            loc.longitude,
+//                            loc.province,
+//                            loc.city,
+//                            loc.district
+//                        )
+                }
+
+            }
+        }
+
     }
 
     //封装百度地图相关的Service
@@ -561,11 +623,13 @@ class NearbyFragment : BaseLazyFragment() {
                     permission.shouldShowRequestPermissionRationale -> {
                         // Oups permission denied
                         logger.info("获取定位被拒绝")
-                        showOpenLocationDialog()
+//                        showOpenLocationDialog()
+                        showLayoutError(0)
                     }
                     else -> {
                         logger.info("获取定位被永久拒绝")
-                        showOpenLocationDialog()
+//                        showOpenLocationDialog()
+                        showLayoutError(0)
                     }
                 }
 
@@ -831,22 +895,41 @@ class NearbyFragment : BaseLazyFragment() {
                 if (item.likeTagList.isEmpty()) {
                     holder.setText(R.id.tv_bottom_tips, "TA还没有喜欢的标签，邀请TA填写吧")
                 } else {
-                    val sameList = mutableListOf<UserTagBean>()
-                    item.likeTagList.forEach {
-                        if (myTagList.contains(it)) {
-                            sameList.add(it)
+//                    val sameList = mutableListOf<UserTagBean>()
+//                    item.likeTagList.forEach {
+//                        if (myTagList.contains(it)) {
+//                            sameList.add(it)
+//                        }
+//                    }
+                    item.likeTagList.sortList(Comparator { i1, i2 ->
+                        val e1 = if (myTagList.contains(i1)) {
+                            1
+                        } else {
+                            0
                         }
-                    }
+                        val e2 = if (myTagList.contains(i2)) {
+                            1
+                        } else {
+                            0
+                        }
+                        e2 - e1
+                    })
                     var tagsStr: String = ""
-                    when {
-                        sameList.size == 1 -> {
-                            tagsStr = item.likeTagList[0].tagName + "等"
+                    tagsStr = when (item.likeTagList.size) {
+                        1 -> {
+                            item.likeTagList[0].tagName
                         }
-                        sameList.size > 1 -> {
-                            tagsStr = item.likeTagList[0].tagName + "、" + item.likeTagList[1].tagName + "等"
+                        2 -> {
+                            item.likeTagList[0].tagName + "、" + item.likeTagList[1].tagName
+                        }
+                        3 -> {
+                            item.likeTagList[0].tagName + "、" + item.likeTagList[1].tagName + "、" + item.likeTagList[2].tagName
+                        }
+                        else -> {
+                            item.likeTagList[0].tagName + "、" + item.likeTagList[1].tagName + "、" + item.likeTagList[2].tagName + "..."
                         }
                     }
-                    val content = "你有TA喜欢的${tagsStr}${sameList.size}个标签，看TA还喜欢什么"
+                    val content = "TA喜欢:${tagsStr}"
                     val styleSpan1A = RelativeSizeSpan(1.1f)
                     val styleSpan1B = ForegroundColorSpan(Color.parseColor("#FFCC00"))
                     val start = content.indexOf(tagsStr)

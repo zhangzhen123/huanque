@@ -41,8 +41,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dimen_60"
                 android:background="@drawable/bg_tag_pic_zan"
-                android:scaleType="centerInside"
-                android:src="@drawable/selector_tag_pic_zan" />
+                android:padding="@dimen/dimen_15"
+                android:scaleType="fitCenter"
+                android:src="@mipmap/ic_tag_zan_02" />
 
             <TextView
                 android:id="@+id/zan_num"
@@ -62,7 +63,7 @@
             android:layout_marginEnd="@dimen/dimen_33"
             android:background="@drawable/bg_solid_btn4"
             android:visibility="gone"
-            tools:visibility="visible">
+            tools:visibility="gone">
 
             <TextView
                 android:id="@+id/tv_tag_name"

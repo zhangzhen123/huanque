@@ -208,7 +208,7 @@
                         android:layout_width="18dp"
                         android:layout_height="18dp"
                         android:layout_marginLeft="6dp"
-                        app:actualImageResource="@mipmap/iocn_real_people"
+                        app:actualImageResource="@mipmap/icon_real_people"
                         app:layout_constraintBottom_toBottomOf="@id/tv_nickname"
                         app:layout_constraintLeft_toRightOf="@id/tv_nickname"
                         app:layout_constraintTop_toTopOf="@id/tv_nickname" />

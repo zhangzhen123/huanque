@@ -12,8 +12,7 @@
         android:id="@+id/customImage"
         android:layout_width="17dp"
         android:layout_height="17dp"
-        android:src="@mipmap/toast_success"
-        tools:visibility="visible" />
+        android:src="@mipmap/icon_tag_star" />
 
     <TextView
         android:id="@+id/toastContent"

@@ -411,7 +411,7 @@ class FavoriteTabFragment : BaseVMFragment<FavoriteTabViewModel>() {
     private fun setEmpty() {
         if (authorAdapter.data.isEmpty()) {
             mRefreshLayout.hide()
-            state_pager_view.showEmpty(emptyTxt = "${currentTab?.tagName} 没有更多人了，去看看其他的吧")
+            state_pager_view.showEmpty(emptyRes = R.mipmap.icon_no_data_01,emptyTxt = "${currentTab?.tagName}没有更多人了，去看看其他的吧")
         } else {
             mRefreshLayout.show()
             state_pager_view.showSuccess()

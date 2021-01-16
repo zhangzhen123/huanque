@@ -9,14 +9,15 @@
         android:id="@+id/state_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@mipmap/bg_nearby_searching">
+        android:background="@mipmap/bg_nearby_searching"
+        android:visibility="gone">
 
         <com.julun.huanque.common.widgets.rappleView.WaterRippleView
             android:id="@+id/waterRv"
             android:layout_width="@dimen/dimen_300"
             android:layout_height="@dimen/dimen_300"
-            app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginBottom="@dimen/dimen_30"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -70,15 +71,79 @@
             android:layout_marginTop="@dimen/dimen_10"
             android:gravity="center"
             android:text="扩大筛选范围"
-            android:visibility="gone"
             android:textColor="@color/black_333"
             android:textSize="@dimen/sp_14"
             android:textStyle="bold"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="@+id/waterRv"
             app:layout_constraintStart_toStartOf="@+id/waterRv"
             app:layout_constraintTop_toBottomOf="@+id/tv_go" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:id="@+id/state_layout_error"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_error_pic"
+            android:layout_width="@dimen/dimen_280"
+            android:layout_height="@dimen/dimen_230"
+            android:layout_marginBottom="@dimen/dimen_30"
+            android:src="@mipmap/icon_location_fail" />
+
+        <TextView
+            android:id="@+id/tv_error_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_15"
+            android:layout_marginEnd="@dimen/dimen_15"
+            android:layout_marginBottom="@dimen/dimen_10"
+            android:gravity="center"
+            android:textColor="@color/black_333"
+            android:textSize="@dimen/sp_16"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/waterRv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="描述" />
+
+        <TextView
+            android:id="@+id/tv_error_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_60"
+            android:layout_marginEnd="@dimen/dimen_60"
+            android:gravity="center"
+            android:textColor="@color/black_333"
+            android:textSize="@dimen/sp_12"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/waterRv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="需要启用位置权限，才能看到附近心动的人，请到手机系统设置中开启" />
+
+        <TextView
+            android:id="@+id/tv_btn_ok"
+            android:layout_width="220dp"
+            android:layout_height="@dimen/dimen_50"
+            android:layout_marginTop="@dimen/dimen_30"
+            android:background="@drawable/bg_solid_btn3"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_16"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/waterRv"
+            app:layout_constraintStart_toStartOf="@+id/waterRv"
+            app:layout_constraintTop_toBottomOf="@+id/tv_desc_title"
+            tools:text="一键开启" />
+
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/mRecyclerView"
@@ -86,9 +151,9 @@
         android:layout_height="match_parent"
         android:overScrollMode="never"
         android:visibility="gone"
-        tools:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
 
 
 </FrameLayout>
