@@ -196,6 +196,10 @@ class EditInfoActivity : BaseActivity() {
         }
         tv_nickname_title.onClickNew {
             //昵称
+            if(mEditInfoViewModel.basicInfo.value?.userType == UserType.Anchor){
+                ToastUtils.show("主播修改昵称请联系官方")
+                return@onClickNew
+            }
             UpdateNicknameActivity.newInstance(this, mEditInfoViewModel.basicInfo.value?.nickname ?: "")
         }
         tv_sign_title.onClickNew {

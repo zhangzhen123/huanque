@@ -98,7 +98,7 @@
         android:background="@drawable/bg_edit_school_input"
         android:drawableLeft="@mipmap/icon_search_small_01"
         android:drawablePadding="5dp"
-        android:hint="请输入学校"
+        android:hint="请选择你的学校"
         android:paddingLeft="10dp"
         android:singleLine="true"
         android:textColor="@color/black_333"

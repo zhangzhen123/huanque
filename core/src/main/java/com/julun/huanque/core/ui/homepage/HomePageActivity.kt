@@ -63,6 +63,7 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerInd
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator
 import org.jetbrains.anko.*
+import java.math.RoundingMode
 import java.text.DecimalFormat
 import kotlin.math.abs
 
@@ -816,8 +817,9 @@ class HomePageActivity : BaseActivity() {
         } else {
             //有城市
             if (distance >= 1000) {
-                val df = DecimalFormat("#.00")
-                tv_distance.text = "${df.format(distance / 1000)}km"
+                val df = DecimalFormat("#.0")
+                df.roundingMode = RoundingMode.DOWN
+                tv_distance.text = "${df.format(distance / 1000.0)}km"
             } else {
                 tv_distance.text = "${distance}m"
             }

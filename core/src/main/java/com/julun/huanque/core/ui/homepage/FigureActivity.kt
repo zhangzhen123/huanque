@@ -8,7 +8,6 @@ import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.bean.beans.FigureBean
-import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.constant.Sex
 import com.julun.huanque.common.suger.hide
@@ -20,17 +19,13 @@ import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.core.R
 import com.julun.huanque.core.utils.EditUtils
 import com.julun.huanque.core.viewmodel.FigureViewModel
-import kotlinx.android.synthetic.main.act_birthday.*
 import kotlinx.android.synthetic.main.act_figure.*
 import kotlinx.android.synthetic.main.act_figure.con_progress
 import kotlinx.android.synthetic.main.act_figure.header_page
 import kotlinx.android.synthetic.main.act_figure.progressBar
 import kotlinx.android.synthetic.main.act_figure.tv_save
-import kotlinx.android.synthetic.main.act_home_town.*
 import org.greenrobot.eventbus.EventBus
 import java.math.BigDecimal
-import java.util.ArrayList
-import kotlin.math.max
 
 /**
  *@创建者   dong
@@ -141,7 +136,7 @@ class FigureActivity : BaseActivity() {
         mViewModel.figureData.observe(this, Observer {
             if (it != null) {
                 sdv_figure.loadImage(it.myFigurePic)
-                tv_figure.text = it.figure
+                tv_figure.text = it.myFigure
             }
         })
 

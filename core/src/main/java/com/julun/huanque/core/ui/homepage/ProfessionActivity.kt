@@ -100,11 +100,11 @@ class ProfessionActivity : BaseActivity() {
         } else {
             con_progress.show()
             header_page.textOperation.show()
-            if (index == 4) {
-                header_page.textOperation.text = "完成"
-            } else {
-                header_page.textOperation.text = "跳过"
-            }
+//            if (index == 4) {
+//                header_page.textOperation.text = "完成"
+//            } else {
+            header_page.textOperation.text = "跳过"
+//            }
             progressBar.progress = (100 / 5) * (index + 1)
         }
         mViewModel.index = index

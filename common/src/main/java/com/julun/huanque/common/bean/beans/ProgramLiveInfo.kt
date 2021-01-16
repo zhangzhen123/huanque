@@ -866,7 +866,7 @@ data class FigureBean(
     //体重
     var weight: Int = 0,
     //身材
-    var figure: String = "",
+    var myFigure: String = "",
     //身材图片，主页使用
     var figurePic: String = "",
     //建议
