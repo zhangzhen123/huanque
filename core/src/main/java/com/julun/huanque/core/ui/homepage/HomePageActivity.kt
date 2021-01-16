@@ -817,9 +817,9 @@ class HomePageActivity : BaseActivity() {
                 if (distance >= 1000) {
                     val df = DecimalFormat("#.0")
                     df.roundingMode = RoundingMode.DOWN
-                    tv_distance.text = "${df.format(distance / 1000.0)}km"
+                    tv_distance.text = "${df.format(distance / 1000.0)}km ${bean.distanceCity.curryCityName} /"
                 } else {
-                    tv_distance.text = "${distance}m"
+                    tv_distance.text = "${distance}m ${bean.distanceCity.curryCityName} /"
                 }
                 if (bean.distanceCity.sameCity == BusiConstant.True) {
                     //同市
@@ -849,9 +849,9 @@ class HomePageActivity : BaseActivity() {
         }
         val age = bean.age
         if (age > 0) {
-            tv_age.text = "${bean.distanceCity.curryCityName} /${bean.age}岁 ${sexName}"
+            tv_age.text = "${bean.age}岁 ${sexName}"
         } else {
-            tv_age.text = "${bean.distanceCity.curryCityName} /${sexName}"
+            tv_age.text = "${sexName}"
         }
 
         showHeartView(bean.heartTouch)
