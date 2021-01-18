@@ -1207,6 +1207,28 @@ class HomePageActivity : BaseActivity() {
 
     override fun onViewDestroy() {
         super.onViewDestroy()
+//        if (mShowPic.isEmpty()) {
+//            return
+//        }
+//        val userId = mHomePageViewModel.targetUserId
+//        var tempIndex = -1
+//        var tempUrl = ""
+//        mPicAdapter.data.forEachIndexed { index, homePagePicBean ->
+//            if (homePagePicBean.selected == BusiConstant.True) {
+//                //正在展示的图片
+//                tempIndex = index
+//                tempUrl = homePagePicBean.coverPic
+//            }
+//        }
+//        if (mShowPic.isNotEmpty() && tempUrl != mShowPic) {
+//            if (userId > 0 && tempIndex >= 0) {
+//                EventBus.getDefault().post(PicChangeEvent(mHomePageViewModel.targetUserId, tempUrl, tempIndex))
+//            }
+//        }
+    }
+
+    override fun finish() {
+        super.finish()
         if (mShowPic.isEmpty()) {
             return
         }

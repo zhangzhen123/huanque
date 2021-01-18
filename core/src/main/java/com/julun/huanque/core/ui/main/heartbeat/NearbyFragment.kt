@@ -4,7 +4,6 @@ import android.Manifest
 import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
-import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.text.SpannableString
@@ -18,14 +17,12 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.animation.addListener
-import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.baidu.location.BDAbstractLocationListener
 import com.baidu.location.BDLocation
@@ -40,10 +37,10 @@ import com.julun.huanque.common.bean.beans.HomePagePicBean
 import com.julun.huanque.common.bean.beans.NearbyUserBean
 import com.julun.huanque.common.bean.beans.UserTagBean
 import com.julun.huanque.common.bean.events.LikeEvent
+import com.julun.huanque.common.bean.events.PicChangeEvent
 import com.julun.huanque.common.constant.BooleanType
 import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.constant.HomeTabType
-import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.*
@@ -71,9 +68,7 @@ import org.jetbrains.anko.imageResource
 import java.math.RoundingMode
 import java.text.DecimalFormat
 import java.util.*
-import kotlin.math.abs
 import kotlin.math.max
-import kotlin.math.min
 import kotlin.random.Random
 
 class NearbyFragment : BaseLazyFragment() {
@@ -271,6 +266,7 @@ class NearbyFragment : BaseLazyFragment() {
                 R.id.card_img -> {
                     val parentView = view.parent as? View ?: return@setOnItemChildClickListener
                     val tempBean = cardsAdapter.getItemOrNull(position) ?: return@setOnItemChildClickListener
+
 //                    val shareView = parentView.findViewById<View>(R.id.card_img)
 ////                    val tv_user_name = parentView.findViewById<View>(R.id.tv_user_name)
 //
@@ -289,7 +285,8 @@ class NearbyFragment : BaseLazyFragment() {
 //                    intent.putExtra(ParamConstant.UserId, tempBean.userId)
 //                    intent.putExtra(ParamConstant.NearByBean, tempBean)
 //                    startActivity(intent, activityOptionsCompat.toBundle())
-                    HomePageActivity.newInstance(requireActivity(), item.userId)
+                    val pic = tempBean.coverPicList.getOrNull(tempBean.selectIndex) ?: ""
+                    HomePageActivity.newInstance(requireActivity(), item.userId, showPic = pic)
                 }
                 R.id.tv_bottom_tips -> {
                     if (item.likeTagList.isEmpty()) {
@@ -298,7 +295,7 @@ class NearbyFragment : BaseLazyFragment() {
                         item.likeTagList.forEach {
                             if (myTagList.contains(it)) {
                                 it.mark = BooleanType.TRUE
-                            }else{
+                            } else {
                                 it.mark = BooleanType.FALSE
                             }
                         }
@@ -339,6 +336,48 @@ class NearbyFragment : BaseLazyFragment() {
         lifecycleScope.launchWhenResumed {
             mViewModel.likeEvent.value = event
         }
+    }
+
+    //收到主页切换图片index的事件
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun receiveIndexChange(event: PicChangeEvent) {
+        lifecycleScope.launchWhenStarted {
+            switchToTargetIndex(event.imageUrl)
+        }
+    }
+
+    /**
+     * 让最顶部的item切换指定的缩略图索引
+     */
+    private fun switchToTargetIndex(imageUrl: String) {
+        val holder = mRecyclerView?.findViewHolderForAdapterPosition(0) as? BaseViewHolder ?: return
+        val item = cardsAdapter.getItemOrNull(0) ?: return
+        val rvPics = holder.getViewOrNull<RecyclerView>(R.id.rv_pics)
+        val tvPicCount = holder.getViewOrNull<TextView>(R.id.tv_pic_count)
+        val sdv = holder.getViewOrNull<SimpleDraweeView>(R.id.card_img)
+        val picsAdapter = rvPics?.adapter as? NearbyPicListAdapter ?: return
+        val selectIndex: Int = picsAdapter.data.indexOfFirst { it.coverPic == imageUrl }
+        item.selectIndex = selectIndex
+        if (sdv != null && tvPicCount != null) {
+            val dataList = picsAdapter.data
+            dataList.forEachIndexed { index, homePagePicBean ->
+                if (index == selectIndex) {
+                    homePagePicBean.selected = BusiConstant.True
+                } else {
+                    homePagePicBean.selected = BusiConstant.False
+                }
+            }
+            picsAdapter.notifyDataSetChanged()
+
+            val pic = picsAdapter.getItemOrNull(selectIndex) ?: return
+            sdv.loadImageNoResize(pic.coverPic)
+            tvPicCount.text = "${selectIndex + 1}/${picsAdapter.data.size}"
+
+            val manager = rvPics.layoutManager as AutoCenterLayoutManager
+            manager.smoothScrollToPosition(rvPics, selectIndex)
+        }
+
+
     }
 
     private fun swipeAutoLike() {
@@ -849,9 +888,9 @@ class NearbyFragment : BaseLazyFragment() {
 //                }
                 val tvDistance = holder.getView<TextView>(R.id.tv_distance)
                 val ivDistance = holder.getView<ImageView>(R.id.iv_distance)
-                val age=if(item.age>0){
+                val age = if (item.age > 0) {
                     " / ${item.age}岁"
-                }else{
+                } else {
                     ""
                 }
                 if (item.distance != -1) {
@@ -914,9 +953,9 @@ class NearbyFragment : BaseLazyFragment() {
                 } else {
 //                    val sameList = mutableListOf<UserTagBean>()
                     item.likeTagList.sortList(Comparator { i1, i2 ->
-                        if(item.sex==SessionUtils.getSex()){
+                        if (item.sex == SessionUtils.getSex()) {
 
-                        }else{
+                        } else {
 
                         }
                         val e1 = if (myTagList.contains(i1)) {
@@ -991,26 +1030,15 @@ class NearbyFragment : BaseLazyFragment() {
                 val tvPicCount = holder.getView<TextView>(R.id.tv_pic_count)
 
                 mPicsAdapter.onAdapterClickNew { _, _, position ->
-                    val itemPic=mPicsAdapter.getItemOrNull(position)
-                    if(itemPic?.selected== BusiConstant.True){
+                    val itemPic = mPicsAdapter.getItemOrNull(position)
+                    if (itemPic?.selected == BusiConstant.True) {
                         return@onAdapterClickNew
                     }
+
+                    item.selectIndex = position
                     selectPic(position, mPicsAdapter, sdv, tvPicCount)
                     val manager = rvPics.layoutManager as AutoCenterLayoutManager
-//                    if (mPicsAdapter.data.size > 4) {
-//                        val first = manager.findFirstCompletelyVisibleItemPosition()
-//                        val last = manager.findLastCompletelyVisibleItemPosition()
-//                        if (abs(last - position) < 1) {
-//                            //向后滑动4个或者滑到底
-//                            val target = min(position + 4, mPicsAdapter.data.size - 1)
-//                            rvPics.scrollToPosition(target)
-//                        } else if (position - first < 1) {
-//                            //向前滑动4个或者滑到头
-//                            val target = max(position - 4, 0)
-//                            rvPics.scrollToPosition(target)
-//                        }
-//                    }
-                    manager.smoothScrollToPosition(rvPics,position)
+                    manager.smoothScrollToPosition(rvPics, position)
                 }
 
                 tvPicCount.text = "1/${mPicsAdapter.data.size}"
@@ -1033,6 +1061,7 @@ class NearbyFragment : BaseLazyFragment() {
                 sdv.loadImageNoResize(pic.coverPic)
                 tv.text = "${position + 1}/${mPicsAdapter.data.size}"
             }
+
         }
     }
 

@@ -32,6 +32,6 @@ class NearbyPicListAdapter : BaseQuickAdapter<HomePagePicBean, BaseViewHolder>(R
 //            .setRoundingParams(roundParams)
 //            .build()
 //        sdv.hierarchy = hierarchy
-        sdv.loadImage(item.coverPic+BusiConstant.OSS_120, 28f, 28f)
+        sdv.loadImage(item.coverPic + BusiConstant.OSS_120, 28f, 28f)
     }
 }
