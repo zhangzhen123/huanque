@@ -14,6 +14,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <View
+        android:layout_width="@dimen/dimen_10"
+        android:layout_height="0dp"
+        android:background="@drawable/bg_favorite_shadow"
+        app:layout_constraintTop_toTopOf="@+id/magic_indicator"
+        app:layout_constraintBottom_toBottomOf="@+id/magic_indicator"
+        app:layout_constraintEnd_toEndOf="@+id/magic_indicator" />
     <ImageView
         android:id="@+id/tag_manager"
         android:layout_width="@dimen/dimen_26"

@@ -53,15 +53,16 @@ class TagTabFragment : BaseLazyFragment() {
     private val mAdapter: BaseQuickAdapter<UserTagBean, BaseViewHolder> by lazy {
         object : BaseQuickAdapter<UserTagBean, BaseViewHolder>(R.layout.item_favorite_tag_list), LoadMoreModule {
 
-            init {
-                addChildClickViewIds(R.id.iv_tag_like)
-            }
+//            init {
+//                addChildClickViewIds(R.id.iv_tag_like)
+//            }
 
             override fun convert(holder: BaseViewHolder, item: UserTagBean) {
                 val sdv = holder.getView<SimpleDraweeView>(R.id.card_img)
                 val sdvTag = holder.getView<SimpleDraweeView>(R.id.sdv_tag)
                 sdv.loadImage(item.tagPic, 82f, 110f)
                 sdvTag.loadImage(item.tagIcon, 18f, 18f)
+
                 if (item.like) {
                     holder.setImageResource(R.id.iv_tag_like, R.mipmap.icon_tag_like)
                     sdv.alpha = 1f
@@ -69,6 +70,12 @@ class TagTabFragment : BaseLazyFragment() {
                     holder.setImageResource(R.id.iv_tag_like, R.mipmap.icon_tag_dislike)
                     sdv.alpha = 0.5f
                 }
+                if (deleteMode) {
+                    holder.setVisible(R.id.iv_tag_like, true)
+                } else {
+                    holder.setGone(R.id.iv_tag_like, true)
+                }
+
                 holder.setText(R.id.tv_tag_name, item.tagName)
 
             }
@@ -80,6 +87,10 @@ class TagTabFragment : BaseLazyFragment() {
     override fun getLayoutId(): Int = R.layout.fragment_favorite_tag_tab
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
+        val act = requireActivity()
+        if (act is TagManagerActivity) {
+            deleteMode = act.deleteMode
+        }
         currentTab = arguments?.getSerializable(IntentParamKey.TAB_TYPE.name) as? ManagerTagTabBean
         initViewModel()
         postList.layoutManager = GridLayoutManager(requireContext(), 4)
@@ -97,23 +108,40 @@ class TagTabFragment : BaseLazyFragment() {
         mAdapter.onAdapterClickNew { _, _, position ->
             val item = mAdapter.getItemOrNull(position) ?: return@onAdapterClickNew
             logger.info("跳转到标签详情")
-            TagPicsActivity.start(requireActivity(), item)
 
-
-        }
-        mAdapter.onAdapterChildClickNew { _, view, position ->
-            when (view.id) {
-                R.id.iv_tag_like -> {
-                    val item = mAdapter.getItemOrNull(position) ?: return@onAdapterChildClickNew
-                    val parentTag = currentTab ?: return@onAdapterChildClickNew
-                    if (!item.like) {
-                        tagManagerViewModel.tagLike(item/*, parentTag*/)
-                    } else {
-                        tagManagerViewModel.tagCancelLike(item/*, parentTag*/)
-                    }
+            if (deleteMode) {
+                val parentTag = currentTab ?: return@onAdapterClickNew
+                if (!item.like) {
+                    tagManagerViewModel.tagLike(item/*, parentTag*/)
+                } else {
+                    tagManagerViewModel.tagCancelLike(item/*, parentTag*/)
                 }
+            } else {
+                TagPicsActivity.start(requireActivity(), item)
             }
+
+
         }
+        mAdapter.setOnItemLongClickListener { adapter, view, position ->
+            val act = requireActivity()
+            if (act is TagManagerActivity) {
+                act.switchToDeleteMode()
+            }
+            true
+        }
+//        mAdapter.onAdapterChildClickNew { _, view, position ->
+//            when (view.id) {
+//                R.id.iv_tag_like -> {
+//                    val item = mAdapter.getItemOrNull(position) ?: return@onAdapterChildClickNew
+//                    val parentTag = currentTab ?: return@onAdapterChildClickNew
+//                    if (!item.like) {
+//                        tagManagerViewModel.tagLike(item/*, parentTag*/)
+//                    } else {
+//                        tagManagerViewModel.tagCancelLike(item/*, parentTag*/)
+//                    }
+//                }
+//            }
+//        }
     }
 
     override fun onResume() {
@@ -126,17 +154,16 @@ class TagTabFragment : BaseLazyFragment() {
         super.onPause()
     }
 
-    /**
-     * 该方法供父容器在显隐变化时调用
-     */
-    override fun onParentHiddenChanged(hidden: Boolean) {
-        logger.info("当前的界面开始显隐=${currentTab?.tagName} hide=$hidden")
-    }
 
     override fun lazyLoadData() {
         renderData(currentTab ?: return)
     }
 
+    private var deleteMode: Boolean = false
+    fun refreshMode(mode: Boolean) {
+        deleteMode = mode
+        mAdapter.notifyDataSetChanged()
+    }
 
     private fun initViewModel() {
         tagManagerViewModel.tagChangeStatus.observe(this, Observer {
