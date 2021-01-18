@@ -568,6 +568,8 @@ data class HomePageInfo(
     var authTagList: ArrayList<UserTagBean> = arrayListOf(),
     //我认证的标签
     var myAuthTag: MineTagBean = MineTagBean(),
+    //当前访问用户，头像认证状态
+    var currHeadRealPeople: String = "",
     //生日
     var birthday: String = "",
     //是否心动

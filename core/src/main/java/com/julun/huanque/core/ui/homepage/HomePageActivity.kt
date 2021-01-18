@@ -121,6 +121,9 @@ class HomePageActivity : BaseActivity() {
 
     private val audioPlayerManager: AudioPlayerManager by lazy { AudioPlayerManager(this) }
 
+    //实人认证邀请弹窗
+    private var mRealPeopleAttentionFragment: RealPeopleAttentionFragment? = null
+
     private var mShowPic: String = ""
 
     override fun getLayoutId() = R.layout.act_home_page
@@ -422,6 +425,14 @@ class HomePageActivity : BaseActivity() {
             //心动
             mHomePageViewModel.like(mHomePageViewModel.targetUserId)
         }
+
+        sdv_real.onClickNew {
+            //实人认证
+            if (mHomePageViewModel.homeInfoBean.value?.currHeadRealPeople != BusiConstant.True) {
+                mRealPeopleAttentionFragment = mRealPeopleAttentionFragment ?: RealPeopleAttentionFragment()
+                mRealPeopleAttentionFragment?.show(supportFragmentManager, "RealPeopleAttentionFragment")
+            }
+        }
     }
 
 
@@ -678,6 +689,12 @@ class HomePageActivity : BaseActivity() {
                 //执行伸长动画
                 showHeartView(it)
                 showGrowthAnimation()
+            }
+        })
+
+        mHomePageViewModel.realPeopleState.observe(this, Observer {
+            if (it == true) {
+                realHeader()
             }
         })
 
@@ -1140,6 +1157,30 @@ class HomePageActivity : BaseActivity() {
                 RNPageActivity.start(this, RnConstant.ANCHOR_LEVEL_PAGE)
             }
             else -> {
+            }
+        }
+    }
+
+    /**
+     * 实人认证
+     */
+    private fun realHeader() {
+        (ARouter.getInstance().build(ARouterConstant.REALNAME_SERVICE)
+            .navigation() as? IRealNameService)?.checkRealHead { e ->
+            if (e is ResponseError && e.busiCode == ErrorCodes.REAL_HEAD_ERROR) {
+                MyAlertDialog(this, false).showAlertWithOKAndCancel(
+                    e.busiMessage.toString(),
+                    title = "修改提示",
+                    okText = "修改头像",
+                    noText = "取消",
+                    callback = MyAlertDialog.MyDialogCallback(onRight = {
+                        RNPageActivity.start(
+                            this,
+                            RnConstant.EDIT_MINE_HOMEPAGE
+                        )
+                    })
+                )
+
             }
         }
     }
