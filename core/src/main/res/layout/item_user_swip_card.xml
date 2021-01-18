@@ -7,7 +7,7 @@
     android:paddingTop="@dimen/dimen_10"
     android:paddingStart="@dimen/dimen_10"
     android:paddingEnd="@dimen/dimen_10"
-    android:paddingBottom="@dimen/dimen_30">
+    android:paddingBottom="@dimen/dimen_20">
 
 <!--    <androidx.cardview.widget.CardView-->
 <!--        android:id="@+id/card_view"-->
@@ -26,6 +26,9 @@
                 android:id="@+id/card_img"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                app:placeholderImage="@drawable/logo_nearby_placeholder_bg"
+                android:background="@drawable/bg_white_10"
+                app:placeholderImageScaleType="fitXY"
                 app:roundedCornerRadius="@dimen/dimen_10" />
 
             <View

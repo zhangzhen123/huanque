@@ -12,6 +12,7 @@ import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.util.forEach
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.lifecycle.Observer
@@ -69,21 +70,26 @@ class TagManagerActivity : BaseActivity() {
     private var viewModel = HuanViewModelManager.tagManagerViewModel
 
     private lateinit var mCommonNavigator: CommonNavigator
-    private var mFragmentList = SparseArray<Fragment>()
+    private var mFragmentList = SparseArray<TagTabFragment>()
     private val mTabTitles = arrayListOf<ManagerTagTabBean>()
 
     private var currentSelect: Int = -1
-    private var deleteMode: Boolean by Delegates.observable(false) { _, _, newValue ->
+    var deleteMode: Boolean by Delegates.observable(false) { _, _, newValue ->
         if (newValue) {
             btn_action_tb.backgroundResource = R.drawable.bg_solid_btn1
             btn_action_tb.text = "完成"
             btn_action_tb.isActivated = true
+            tv_mode_des.text="点击管理或长按，可编辑排序"
         } else {
             btn_action_tb.backgroundResource = 0
             btn_action_tb.text = "管理"
             btn_action_tb.isActivated = false
+            tv_mode_des.text="点击可取消喜欢，长按可拖动"
         }
         tagAdapter.notifyDataSetChanged()
+        mFragmentList.forEach { _, value ->
+            value.refreshMode(newValue)
+        }
     }
     private val tagAdapter: BaseQuickAdapter<UserTagBean, BaseViewHolder> by lazy {
         object : BaseQuickAdapter<UserTagBean, BaseViewHolder>(R.layout.item_tag_manager, viewModel.currentTagList),
@@ -165,7 +171,7 @@ class TagManagerActivity : BaseActivity() {
             logger.info("长按")
             currentSelect = position
             deleteMode = true
-            tagAdapter.notifyDataSetChanged()
+//            tagAdapter.notifyDataSetChanged()
             false
         }
         tagAdapter.setOnItemClickListener { _, view, position ->
@@ -228,6 +234,9 @@ class TagManagerActivity : BaseActivity() {
                 mTabTitles.clear()
                 mTabTitles.addAll(it.requireT())
                 refreshTabList()
+                if(viewModel.currentTagList.isEmpty()){
+                    tv_mode_des.text="点击管理或长按，可添加喜欢的标签"
+                }
             }
 
         })
@@ -238,7 +247,7 @@ class TagManagerActivity : BaseActivity() {
 
         })
         viewModel.saveTagList.observe(this, Observer {
-            if (it != null && it.isSuccess()&&it.isNew()) {
+            if (it != null && it.isSuccess() && it.isNew()) {
                 ToastUtils.show("标签保存成功")
             }
 
@@ -248,6 +257,7 @@ class TagManagerActivity : BaseActivity() {
 
     override fun onBackPressed() {
         if (deleteMode) {
+            viewModel.saveTagList()
             deleteMode = false
             return
         }
@@ -350,6 +360,9 @@ class TagManagerActivity : BaseActivity() {
         }
     }
 
+    fun switchToDeleteMode() {
+        deleteMode = true
+    }
 
     private val mPagerAdapter: FragmentPagerAdapter by lazy {
         object : FragmentPagerAdapter(supportFragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
@@ -362,7 +375,7 @@ class TagManagerActivity : BaseActivity() {
             }
 
             private fun getFragment(position: Int): Fragment {
-                val fragment: Fragment = TagTabFragment.newInstance(mTabTitles[position])
+                val fragment: TagTabFragment = TagTabFragment.newInstance(mTabTitles[position])
                 mFragmentList.put(position, fragment)
                 return fragment
             }
