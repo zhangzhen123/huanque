@@ -854,26 +854,25 @@ class NearbyFragment : BaseLazyFragment() {
                     ""
                 }
                 if (item.distance != -1) {
-                    if (item.sameCity) {
-                        tvDistance.show()
-                        ivDistance.hide()
-                        when {
-                            item.distance < 1000 -> {
-                                tvDistance.text = "${item.distance}"
-                                holder.setText(R.id.tv_locationAge, "m ${item.area}${age}")
-                            }
-                            else -> {
-                                val format = DecimalFormat("#.0")
-                                format.roundingMode = RoundingMode.DOWN
-                                val dt = format.format((item.distance / 1000.0))
-                                tvDistance.text = dt
-                                holder.setText(R.id.tv_locationAge, "km ${item.area}${age}")
-                            }
+                    when {
+                        item.distance < 1000 -> {
+                            tvDistance.text = "${item.distance}"
+                            holder.setText(R.id.tv_locationAge, "m ${item.area}${age}")
                         }
+                        else -> {
+                            val format = DecimalFormat("#.0")
+                            format.roundingMode = RoundingMode.DOWN
+                            val dt = format.format((item.distance / 1000.0))
+                            tvDistance.text = dt
+                            holder.setText(R.id.tv_locationAge, "km ${item.area}${age}")
+                        }
+                    }
+                    tvDistance.show()
+                    if (item.sameCity) {
+                        ivDistance.hide()
                     } else {
-                        tvDistance.hide()
                         ivDistance.show()
-                        holder.setText(R.id.tv_locationAge, "${item.area}${age}")
+//                        holder.setText(R.id.tv_locationAge, "${item.area}${age}")
                         when {
                             item.distance < 100000 -> {
                                 ivDistance.imageResource = R.mipmap.icon_home_distance_car
