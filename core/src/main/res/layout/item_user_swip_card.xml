@@ -27,6 +27,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:placeholderImage="@drawable/logo_nearby_placeholder_bg"
+                android:background="@drawable/bg_white_10"
                 app:placeholderImageScaleType="fitXY"
                 app:roundedCornerRadius="@dimen/dimen_10" />
 

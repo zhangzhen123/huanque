@@ -54,6 +54,7 @@ import com.julun.huanque.common.widgets.cardlib.CardSetting
 import com.julun.huanque.common.widgets.cardlib.CardTouchHelperCallback
 import com.julun.huanque.common.widgets.cardlib.OnSwipeCardListener
 import com.julun.huanque.common.widgets.cardlib.utils.ReItemTouchHelper
+import com.julun.huanque.common.widgets.layoutmanager.AutoCenterLayoutManager
 import com.julun.huanque.common.widgets.recycler.decoration.HorizontalItemDecoration
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.NearbyPicListAdapter
@@ -964,7 +965,7 @@ class NearbyFragment : BaseLazyFragment() {
                 } else {
                     rvLp.width = dp2px(140)
                 }
-                rvPics.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+                rvPics.layoutManager = AutoCenterLayoutManager(context, RecyclerView.HORIZONTAL, false)
                 val mPicsAdapter: NearbyPicListAdapter
                 if (rvPics.adapter != null) {
                     mPicsAdapter = rvPics.adapter as NearbyPicListAdapter
@@ -990,8 +991,12 @@ class NearbyFragment : BaseLazyFragment() {
                 val tvPicCount = holder.getView<TextView>(R.id.tv_pic_count)
 
                 mPicsAdapter.onAdapterClickNew { _, _, position ->
+                    val itemPic=mPicsAdapter.getItemOrNull(position)
+                    if(itemPic?.selected== BusiConstant.True){
+                        return@onAdapterClickNew
+                    }
                     selectPic(position, mPicsAdapter, sdv, tvPicCount)
-                    val manager = rvPics.layoutManager as LinearLayoutManager
+                    val manager = rvPics.layoutManager as AutoCenterLayoutManager
 //                    if (mPicsAdapter.data.size > 4) {
 //                        val first = manager.findFirstCompletelyVisibleItemPosition()
 //                        val last = manager.findLastCompletelyVisibleItemPosition()
@@ -1005,8 +1010,7 @@ class NearbyFragment : BaseLazyFragment() {
 //                            rvPics.scrollToPosition(target)
 //                        }
 //                    }
-                    rvPics.smoothScrollToPosition(position)
-
+                    manager.smoothScrollToPosition(rvPics,position)
                 }
 
                 tvPicCount.text = "1/${mPicsAdapter.data.size}"
