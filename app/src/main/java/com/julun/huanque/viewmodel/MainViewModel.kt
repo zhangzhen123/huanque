@@ -219,16 +219,16 @@ class MainViewModel : BaseViewModel() {
         }
     }
 
-    /**
-     * 保存定位地址
-     */
-    fun saveLocation(form: SaveLocationForm) {
-        viewModelScope.launch {
-            request({
-                userService.saveLocation(form = form).dataConvert()
-            })
-        }
-    }
+//    /**
+//     * 保存定位地址
+//     */
+//    fun saveLocation(form: SaveLocationForm) {
+//        viewModelScope.launch {
+//            request({
+//                userService.saveLocation(form = form).dataConvert()
+//            })
+//        }
+//    }
 
     /**
      * 刷新语音通话结果

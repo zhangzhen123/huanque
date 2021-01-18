@@ -313,11 +313,10 @@ class NearbyFragment : BaseLazyFragment() {
         }
 
 
-
-        mLocationService = LocationService(requireContext().applicationContext)
-        mLocationService.registerListener(mLocationListener)
-        mLocationService.setLocationOption(mLocationService.defaultLocationClientOption.apply {
-        })
+//        mLocationService = LocationService(requireContext().applicationContext)
+//        mLocationService.registerListener(mLocationListener)
+//        mLocationService.setLocationOption(mLocationService.defaultLocationClientOption.apply {
+//        })
         sd_header.loadImage(SessionUtils.getHeaderPic(), 100f, 100f)
         tv_go.onClickNew {
             //
@@ -442,6 +441,20 @@ class NearbyFragment : BaseLazyFragment() {
         })
         mMainConnectViewModel.refreshNearby.observe(this, Observer {
             if (it != null) {
+                val loc = currentLocation ?: return@Observer
+                mViewModel.requestNearbyList(
+                    QueryType.INIT,
+                    loc.latitude,
+                    loc.longitude,
+                    loc.province,
+                    loc.city,
+                    loc.district
+                )
+            }
+        })
+        mMainConnectViewModel.locationTag.observe(this, Observer {
+            if (it != null) {
+                currentLocation=it
                 val loc = currentLocation ?: return@Observer
                 mViewModel.requestNearbyList(
                     QueryType.INIT,
@@ -612,17 +625,6 @@ class NearbyFragment : BaseLazyFragment() {
                         return@onClickNew
                     }
                     checkPermission()
-//                    showLoading()
-//                    val loc = currentLocation
-//                    if (loc != null)
-//                        mViewModel.requestNearbyList(
-//                            QueryType.INIT,
-//                            loc.latitude,
-//                            loc.longitude,
-//                            loc.province,
-//                            loc.city,
-//                            loc.district
-//                        )
                 }
 
             }
@@ -631,26 +633,29 @@ class NearbyFragment : BaseLazyFragment() {
     }
 
     //封装百度地图相关的Service
-    private lateinit var mLocationService: LocationService
+//    private lateinit var mLocationService: LocationService
 
 
     private var currentLocation: BDLocation? = null
 
     //百度地图监听的Listener
-    private var mLocationListener = object : BDAbstractLocationListener() {
-        override fun onReceiveLocation(location: BDLocation?) {
-            logger.info("location error=${location?.locTypeDescription}")
-            currentLocation = location
-            if (null != location && location.locType != BDLocation.TypeServerError) {
-                logger.info("location=${location.addrStr}")
-                //获得一次结果，就结束定位
-                stopLocation()
-
-                val loc = currentLocation ?: return
-                mViewModel.requestNearbyList(QueryType.INIT, loc.latitude, loc.longitude, loc.province, loc.city, loc.district)
-            }
-        }
-    }
+//    private var mLocationListener = object : BDAbstractLocationListener() {
+//        override fun onReceiveLocation(location: BDLocation?) {
+//            logger.info("location error=${location?.locTypeDescription}")
+//            currentLocation = location
+//            if (null != location && location.locType != BDLocation.TypeServerError && location.locType != BDLocation.TypeCriteriaException) {
+//                logger.info("location=${location.addrStr}")
+//                //获得一次结果，就结束定位
+//                stopLocation()
+//
+//                val loc = currentLocation ?: return
+//                mViewModel.requestNearbyList(QueryType.INIT, loc.latitude, loc.longitude, loc.province, loc.city, loc.district)
+//            } else {
+//                ToastUtils.show("无法获取定位 请确保已打开定位开关")
+//                checkPermissionTag = true
+//            }
+//        }
+//    }
 
 
     private var checkPermissionTag = false
@@ -669,7 +674,8 @@ class NearbyFragment : BaseLazyFragment() {
                 when {
                     permission.granted -> {
                         logger.info("获取权限成功")
-                        mLocationService.start()
+//                        mLocationService.start()
+                        mMainConnectViewModel.startLocation()
                     }
                     permission.shouldShowRequestPermissionRationale -> {
                         // Oups permission denied
@@ -715,9 +721,9 @@ class NearbyFragment : BaseLazyFragment() {
     /**
      * 停止定位
      */
-    private fun stopLocation() {
-        mLocationService.stop()
-    }
+//    private fun stopLocation() {
+////        mLocationService.stop()
+//    }
 
     override fun onResume() {
         super.onResume()
@@ -730,12 +736,11 @@ class NearbyFragment : BaseLazyFragment() {
 
     override fun onStop() {
         super.onStop()
-        stopLocation()
         stopAni()
     }
 
     override fun onDestroy() {
-        mLocationService.unregisterListener(mLocationListener)
+//        mLocationService.unregisterListener(mLocationListener)
         loadingAniPlay = false
         loadingSetAni?.cancel()
         super.onDestroy()

@@ -90,6 +90,8 @@ class MainActivity : BaseActivity() {
 
     private val mMessageViewModel: MessageViewModel by viewModels()
 
+    private val mainConnectViewModel: MainConnectViewModel by viewModels()
+
     //今日缘分ViewModel（男性）
     private val mTodayFateViewModel: TodayFateViewModel by viewModels()
 
@@ -103,28 +105,28 @@ class MainActivity : BaseActivity() {
     private var firstTime = 0L
 
     //封装百度地图相关的Service
-    private lateinit var mLocationService: LocationService
+//    private lateinit var mLocationService: LocationService
 
     //百度地图监听的Listener
-    private var mLocationListener = object : BDAbstractLocationListener() {
-        override fun onReceiveLocation(location: BDLocation?) {
-            logger.info("location error=${location?.locTypeDescription}")
-            if (null != location && location.locType != BDLocation.TypeServerError) {
-                logger.info("location=${location.addrStr}")
-                //获得一次结果，就结束定位
-                stopLocation()
-                mMainViewModel.saveLocation(
-                    SaveLocationForm(
-                        "${location.latitude}",
-                        "${location.longitude}",
-                        location.city ?: "",
-                        location.province,
-                        location.district
-                    )
-                )
-            }
-        }
-    }
+//    private var mLocationListener = object : BDAbstractLocationListener() {
+//        override fun onReceiveLocation(location: BDLocation?) {
+//            logger.info("location error=${location?.locTypeDescription}")
+//            if (null != location && location.locType != BDLocation.TypeServerError) {
+//                logger.info("location=${location.addrStr}")
+//                //获得一次结果，就结束定位
+//                stopLocation()
+//                mMainViewModel.saveLocation(
+//                    SaveLocationForm(
+//                        "${location.latitude}",
+//                        "${location.longitude}",
+//                        location.city ?: "",
+//                        location.province,
+//                        location.district
+//                    )
+//                )
+//            }
+//        }
+//    }
 
     override fun isRegisterEventBus(): Boolean = true
 
@@ -141,8 +143,8 @@ class MainActivity : BaseActivity() {
         if (SessionUtils.getIsRegUser() && SessionUtils.getSessionId().isNotEmpty()) {
             AppChecker.startCheck(true)
         } else {
-            val intent = Intent(this,WelcomeActivity::class.java)
-            if(ForceUtils.activityMatch(intent)){
+            val intent = Intent(this, WelcomeActivity::class.java)
+            if (ForceUtils.activityMatch(intent)) {
                 startActivity(intent)
             }
         }
@@ -189,13 +191,8 @@ class MainActivity : BaseActivity() {
         }
 
 
-
-        mLocationService = LocationService(this.applicationContext)
-        mLocationService.registerListener(mLocationListener)
-        mLocationService.setLocationOption(mLocationService.defaultLocationClientOption.apply {
-            //                            this.setScanSpan(0)
-//                            this.setIgnoreKillProcess(false)
-        })
+//        mLocationService = LocationService(this.applicationContext)
+//        mLocationService.registerListener(mLocationListener)
 
         registerMessage()
         //查询未读数
@@ -205,10 +202,10 @@ class MainActivity : BaseActivity() {
             mMainViewModel.getBlockedConversationList()
         }
         //延迟获取定位权限
-        Observable.timer(3, TimeUnit.SECONDS)
-            .bindUntilEvent(this, ActivityEvent.DESTROY)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ checkPermission() }, { it.printStackTrace() })
+//        Observable.timer(3, TimeUnit.SECONDS)
+//            .bindUntilEvent(this, ActivityEvent.DESTROY)
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .subscribe({ checkPermission() }, { it.printStackTrace() })
 
     }
 
@@ -254,10 +251,10 @@ class MainActivity : BaseActivity() {
     /**
      * 停止定位
      */
-    private fun stopLocation() {
-        mLocationService.stop()
-        mLocationService.unregisterListener(mLocationListener)
-    }
+//    private fun stopLocation() {
+//        mLocationService.stop()
+//        mLocationService.unregisterListener(mLocationListener)
+//    }
 
     /**
      * 判断是否显示更新用户数据弹窗
@@ -301,29 +298,29 @@ class MainActivity : BaseActivity() {
     /**
      * 检查定位权限
      */
-    private fun checkPermission() {
-        val rxPermissions = RxPermissions(this)
-        rxPermissions
-            .requestEachCombined(
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            )
-            .subscribe { permission ->
-                //不管有没有给权限 都不影响百度定位 只不过不给权限会不太准确
-                mLocationService.start()
-                when {
-                    permission.granted -> {
-                        logger.info("获取权限成功")
-                    }
-                    permission.shouldShowRequestPermissionRationale -> // Oups permission denied
-                        logger.info("获取定位被拒绝")
-                    else -> {
-                        logger.info("获取定位被永久拒绝")
-                    }
-                }
-
-            }
-    }
+//    fun checkPermission() {
+//        val rxPermissions = RxPermissions(this)
+//        rxPermissions
+//            .requestEachCombined(
+//                Manifest.permission.ACCESS_COARSE_LOCATION,
+//                Manifest.permission.ACCESS_FINE_LOCATION
+//            )
+//            .subscribe { permission ->
+//                //不管有没有给权限 都不影响百度定位 只不过不给权限会不太准确
+////                mLocationService.start()
+//                when {
+//                    permission.granted -> {
+//                        logger.info("获取权限成功")
+//                    }
+//                    permission.shouldShowRequestPermissionRationale -> // Oups permission denied
+//                        logger.info("获取定位被拒绝")
+//                    else -> {
+//                        logger.info("获取定位被永久拒绝")
+//                    }
+//                }
+//
+//            }
+//    }
 
     override fun onResume() {
         super.onResume()
@@ -332,7 +329,7 @@ class MainActivity : BaseActivity() {
 
     override fun onStop() {
         super.onStop()
-        stopLocation()
+        mainConnectViewModel.stopLocation()
     }
 
     override fun onDestroy() {
@@ -891,8 +888,8 @@ class MainActivity : BaseActivity() {
         ToastUtils.show(message)
         finish()
         //跳转登录页面
-        val intent = Intent(this,WelcomeActivity::class.java)
-        if(ForceUtils.activityMatch(intent)){
+        val intent = Intent(this, WelcomeActivity::class.java)
+        if (ForceUtils.activityMatch(intent)) {
             startActivity(intent)
         }
 //        MyAlertDialog(this@MainActivity, false).showAlertWithOK(
@@ -911,8 +908,10 @@ class MainActivity : BaseActivity() {
         if (event.result) {
             goToTab(MainPageIndexConst.MAIN_FRAGMENT_INDEX)
             //重新去定位地址
-            mLocationService.registerListener(mLocationListener)
-            mLocationService.start()
+//            mLocationService.registerListener(mLocationListener)
+//            mLocationService.start()
+            mainConnectViewModel.hasLocation = false
+            mainConnectViewModel.startLocation()
         } else {
             mMessageViewModel.unreadMsgCount.value = 0
         }
@@ -963,8 +962,8 @@ class MainActivity : BaseActivity() {
             finish()
             //退出登录成功
 //            ARouter.getInstance().build(ARouterConstant.LOGIN_ACTIVITY).navigation()
-            val intent = Intent(this,WelcomeActivity::class.java)
-            if(ForceUtils.activityMatch(intent)){
+            val intent = Intent(this, WelcomeActivity::class.java)
+            if (ForceUtils.activityMatch(intent)) {
                 startActivity(intent)
             }
         })
