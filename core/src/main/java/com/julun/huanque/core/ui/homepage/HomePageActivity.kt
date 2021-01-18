@@ -236,7 +236,7 @@ class HomePageActivity : BaseActivity() {
 
             override fun onCompletion(mediaPlayer: MediaPlayer?) {
                 logger.info("onCompletion mediaPlayer=${mediaPlayer.hashCode()}")
-                tv_time.text = "${mHomePageViewModel?.homeInfoBean?.value?.voice?.length}s"
+                tv_time.text = "${mHomePageViewModel?.homeInfoBean?.value?.voice?.length}″"
             }
 
             override fun onBufferingUpdate(mediaPlayer: MediaPlayer?, i: Int) {
@@ -250,7 +250,7 @@ class HomePageActivity : BaseActivity() {
             override fun onSeekBarProgress(progress: Int) {
 //                logger.info("onSeekBarProgress progress=${progress / 1000}")
                 val voiceLength = mHomePageViewModel?.homeInfoBean?.value?.voice?.length ?: return
-                tv_time.text = "${voiceLength - progress / 1000}s"
+                tv_time.text = "${voiceLength - progress / 1000}″"
             }
         })
 

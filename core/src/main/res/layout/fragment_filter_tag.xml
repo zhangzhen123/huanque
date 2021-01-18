@@ -56,11 +56,25 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/tv_male"
+                    android:id="@+id/tv_female"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="bottom"
                     android:layout_marginEnd="@dimen/dimen_15"
+                    android:layout_weight="1"
+                    android:background="@drawable/sel_bg_tag_filter_btn"
+                    android:gravity="center"
+                    android:text="女生"
+                    android:textColor="@color/selector_text_color"
+                    android:textSize="@dimen/sp_14"
+                    android:textStyle="bold" />
+
+
+                <TextView
+                    android:id="@+id/tv_male"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="bottom"
                     android:layout_weight="1"
                     android:background="@drawable/sel_bg_tag_filter_btn"
                     android:gravity="center"
@@ -69,18 +83,6 @@
                     android:textSize="@dimen/sp_14"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/tv_female"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="bottom"
-                    android:layout_weight="1"
-                    android:background="@drawable/sel_bg_tag_filter_btn"
-                    android:gravity="center"
-                    android:text="女生"
-                    android:textColor="@color/selector_text_color"
-                    android:textSize="@dimen/sp_14"
-                    android:textStyle="bold" />
 
             </LinearLayout>
 

@@ -853,7 +853,7 @@ class NearbyFragment : BaseLazyFragment() {
                 }else{
                     ""
                 }
-                if (item.distance != -1) {
+                if (item.distance > 0) {
                     when {
                         item.distance < 1000 -> {
                             tvDistance.text = "${item.distance}"
