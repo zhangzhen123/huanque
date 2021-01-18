@@ -72,6 +72,9 @@ class HomePageViewModel : BaseViewModel() {
     //心动状态
     val heartStatus: MutableLiveData<String> by lazy { MutableLiveData<String>() }
 
+    //真人认证标识为
+    val realPeopleState: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+
     //是否有共享元素跳转
     var shareElement = false
 //
@@ -253,7 +256,7 @@ class HomePageViewModel : BaseViewModel() {
                 val result = service.like(FriendIdForm(userId)).dataConvert()
                 heartStatus.value = BusiConstant.True
                 homeInfoBean.value?.heartTouch = BusiConstant.True
-                EventBus.getDefault().post(LikeEvent(userId,true))
+                EventBus.getDefault().post(LikeEvent(userId, true))
             })
         }
 
