@@ -389,7 +389,9 @@ data class AuthPic(
     var auditReason: String = "",
     var auditStatus: String = "",
     var logId: Int = 0,
-    var tagId: Int = 0
+    var tagId: Int = 0,
+    //待删除的logId(替换图片的时候使用)
+    var deleteLogId: Int = 0
 )
 
 data class TagPicBean(
