@@ -236,7 +236,7 @@ class HomePageActivity : BaseActivity() {
 
             override fun onCompletion(mediaPlayer: MediaPlayer?) {
                 logger.info("onCompletion mediaPlayer=${mediaPlayer.hashCode()}")
-                tv_time.text = "${mHomePageViewModel?.homeInfoBean?.value?.voice?.length}s"
+                tv_time.text = "${mHomePageViewModel?.homeInfoBean?.value?.voice?.length}″"
             }
 
             override fun onBufferingUpdate(mediaPlayer: MediaPlayer?, i: Int) {
@@ -250,7 +250,7 @@ class HomePageActivity : BaseActivity() {
             override fun onSeekBarProgress(progress: Int) {
 //                logger.info("onSeekBarProgress progress=${progress / 1000}")
                 val voiceLength = mHomePageViewModel?.homeInfoBean?.value?.voice?.length ?: return
-                tv_time.text = "${voiceLength - progress / 1000}s"
+                tv_time.text = "${voiceLength - progress / 1000}″"
             }
         })
 
@@ -817,9 +817,9 @@ class HomePageActivity : BaseActivity() {
                 if (distance >= 1000) {
                     val df = DecimalFormat("#.0")
                     df.roundingMode = RoundingMode.DOWN
-                    tv_distance.text = "${df.format(distance / 1000.0)}km"
+                    tv_distance.text = "${df.format(distance / 1000.0)}km ${bean.distanceCity.curryCityName} /"
                 } else {
-                    tv_distance.text = "${distance}m"
+                    tv_distance.text = "${distance}m ${bean.distanceCity.curryCityName} /"
                 }
                 if (bean.distanceCity.sameCity == BusiConstant.True) {
                     //同市
@@ -849,9 +849,9 @@ class HomePageActivity : BaseActivity() {
         }
         val age = bean.age
         if (age > 0) {
-            tv_age.text = "${bean.distanceCity.curryCityName} /${bean.age}岁 ${sexName}"
+            tv_age.text = "${bean.age}岁 ${sexName}"
         } else {
-            tv_age.text = "${bean.distanceCity.curryCityName} /${sexName}"
+            tv_age.text = "${sexName}"
         }
 
         showHeartView(bean.heartTouch)

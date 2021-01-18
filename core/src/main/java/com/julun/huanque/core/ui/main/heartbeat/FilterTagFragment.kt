@@ -381,10 +381,10 @@ class FilterTagFragment : BaseBottomSheetFragment() {
                 rv.adapter = fAdapter
                 rv.itemAnimator = null
                 if (item.isFold) {
-                    holder.setImageResource(R.id.iv_arrow, R.drawable.arrow_down)
+                    holder.setImageResource(R.id.iv_arrow, R.mipmap.arrow_down_grey)
                     fAdapter.setList(item.tagList.sliceFromStart(4, false))
                 } else {
-                    holder.setImageResource(R.id.iv_arrow, R.drawable.arrow_up)
+                    holder.setImageResource(R.id.iv_arrow, R.mipmap.arrow_up_grey)
                     fAdapter.setList(item.tagList)
                 }
                 fAdapter.setOnItemClickListener { _, view, position ->

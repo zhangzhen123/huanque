@@ -65,6 +65,9 @@ class AuthTagPicViewModel : BaseViewModel() {
 
             request({
                 val result = service.tagApply(TagApplyForm(tagId, applyPic, logId)).dataConvert()
+                if (logId != null) {
+                    result.deleteLogId = logId
+                }
                 applyResult.value = result.convertRtData()
             }, error = {
                 applyResult.value = it.convertError()

@@ -73,6 +73,9 @@ class AuthTagPicActivity : BaseVMActivity<AuthTagPicViewModel>() {
 
     override fun getLayoutId(): Int = R.layout.activity_tag_auth_pic
 
+    //认证失败弹窗
+    private var mTagAuthFailFragment: TagAuthFailFragment? = null
+
     private val mLoadingDialog: LoadingDialog by lazy { LoadingDialog(this) }
     private var bottomDialog: BottomActionDialog? = null
     private val bottomDialogListener: BottomActionDialog.OnActionListener by lazy {
@@ -112,7 +115,7 @@ class AuthTagPicActivity : BaseVMActivity<AuthTagPicViewModel>() {
     private val addPicAdapter: BaseQuickAdapter<AuthPic, BaseViewHolder> by lazy {
         object : BaseQuickAdapter<AuthPic, BaseViewHolder>(R.layout.item_tag_add_pic) {
             init {
-                addChildClickViewIds(R.id.tv_add_pic, R.id.sdv_add_img)
+                addChildClickViewIds(R.id.tv_fail_reason)
             }
 
             override fun convert(holder: BaseViewHolder, item: AuthPic) {
@@ -180,7 +183,18 @@ class AuthTagPicActivity : BaseVMActivity<AuthTagPicViewModel>() {
             checkPicPermissions()
         }
         iv_zan.onClickNew {
-            ToastUtils.show("不能给自己认证的标签点赞哦～")
+            val reTagDetail = mViewModel.tagDetail.value ?: return@onClickNew
+            if (reTagDetail.isSuccess()) {
+                val tagDetail = reTagDetail.getT() ?: return@onClickNew
+                val priseCount = tagDetail.praiseNum
+                if (priseCount > 0) {
+                    ToastUtils.show("你认证的${tagDetail.tagName}已获得${priseCount}个赞")
+                } else {
+                    ToastUtils.show("你认证的${tagDetail.tagName}还没获得赞哦")
+
+                }
+            }
+
         }
         rv_add_pics.setOrientation(DSVOrientation.HORIZONTAL)
         rv_add_pics.setItemTransitionTimeMillis(150)
@@ -221,6 +235,24 @@ class AuthTagPicActivity : BaseVMActivity<AuthTagPicViewModel>() {
                 }
             }
         }
+        addPicAdapter.setOnItemChildClickListener { adapter, view, position ->
+            val tempData = addPicAdapter.getItemOrNull(position) ?: return@setOnItemChildClickListener
+            when (view.id) {
+                R.id.tv_fail_reason -> {
+                    //认证失败
+                    mTagAuthFailFragment = TagAuthFailFragment.newInstance(tempData.auditReason)
+                    mTagAuthFailFragment?.show(supportFragmentManager, "TagAuthFailFragment")
+                }
+                R.id.tv_add_pic -> {
+                    logger.info("添加图片")
+                }
+                R.id.sdv_add_img -> {
+                    logger.info("添加image")
+                }
+                else -> {
+                }
+            }
+        }
         initViewModel()
 
 //        rv_other_tag_pics.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
@@ -245,16 +277,30 @@ class AuthTagPicActivity : BaseVMActivity<AuthTagPicViewModel>() {
                 var isReplace = false
                 kotlin.run {
                     addPicAdapter.data.forEachIndexed { index, pic ->
-                        if (pic.logId == res.logId) {
-                            isReplace = true
-                            pic.applyPic = res.applyPic
-                            pic.auditStatus = res.auditStatus
-                            pic.auditReason = res.auditReason
-                            pic.tagId = res.tagId
-                            addPicAdapter.notifyItemChanged(index)
-                            return@run
+                        //需要替换的logid
+                        val deleteLogId = res.deleteLogId
+                        if (deleteLogId > 0) {
+                            if (deleteLogId == pic.logId) {
+                                isReplace = true
+                                pic.applyPic = res.applyPic
+                                pic.auditStatus = res.auditStatus
+                                pic.auditReason = res.auditReason
+                                pic.tagId = res.tagId
+                                pic.logId = res.logId
+                                addPicAdapter.notifyItemChanged(index)
+                                return@run
+                            }
+                        } else {
+                            if (pic.logId == res.logId) {
+                                isReplace = true
+                                pic.applyPic = res.applyPic
+                                pic.auditStatus = res.auditStatus
+                                pic.auditReason = res.auditReason
+                                pic.tagId = res.tagId
+                                addPicAdapter.notifyItemChanged(index)
+                                return@run
+                            }
                         }
-
                     }
 
                 }
@@ -293,6 +339,7 @@ class AuthTagPicActivity : BaseVMActivity<AuthTagPicViewModel>() {
                 if (rm != null) {
                     addPicAdapter.remove(rm!!)
                 }
+                addPicAdapter.notifyDataSetChanged()
             }
         })
 

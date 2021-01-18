@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@drawable/bg_white_15">
 
     <com.facebook.drawee.view.SimpleDraweeView
@@ -10,19 +11,18 @@
         android:layout_width="0px"
         android:layout_height="0px"
         android:layout_marginTop="30dp"
-        app:actualImageResource="@mipmap/pic_invite_fill"
+        app:actualImageResource="@mipmap/pic_auth_fail"
         app:layout_constraintDimensionRatio="335:160"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:roundedCornerRadius="20dp" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
-        android:text="邀请TA填写个人资料"
+        android:text="审核失败原因"
         android:textColor="@color/black_333"
         android:textSize="@dimen/dimen_24"
         android:textStyle="bold"
@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:gravity="center"
-        android:text="看不到TA资料？邀请TA填写一下\n个人资料吧～"
+        tools:text="看不到TA资料？邀请TA填写一下\n个人资料吧～"
         android:textColor="@color/black_333"
         android:textSize="@dimen/sp_16"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -52,7 +52,7 @@
         android:layout_marginRight="25dp"
         android:background="@drawable/bg_enable"
         android:gravity="center"
-        android:text="邀请填写"
+        android:text="我知道了"
         android:textColor="@color/white"
         android:textSize="@dimen/sp_16"
         android:textStyle="bold"
@@ -60,23 +60,12 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_content" />
 
-    <TextView
-        android:id="@+id/tv_cancel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:text="取消"
-        android:textColor="@color/black_999"
-        android:textSize="@dimen/sp_16"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_invite" />
 
     <View
         android:layout_width="1px"
         android:layout_height="1px"
-        android:layout_marginTop="30dp"
-        app:layout_constraintLeft_toLeftOf="@id/tv_cancel"
-        app:layout_constraintTop_toBottomOf="@id/tv_cancel" />
+        android:layout_marginTop="20dp"
+        app:layout_constraintLeft_toLeftOf="@id/tv_invite"
+        app:layout_constraintTop_toBottomOf="@id/tv_invite" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

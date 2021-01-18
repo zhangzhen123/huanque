@@ -182,7 +182,7 @@ class VoiceStatusFragment : BaseDialogFragment() {
                     VoiceBean.Pass -> {
                         //审核通过
                         tv_state.text = "审核通过"
-                        tv_attention.text = "每周只能修改三次语音签名"
+                        tv_attention.text = "每周只能修改3次语音签名"
 
                     }
                     VoiceBean.Reject -> {

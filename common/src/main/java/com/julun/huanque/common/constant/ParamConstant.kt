@@ -202,4 +202,7 @@ object ParamConstant {
     
     //显示的图片
     const val ShowPic = "ShowPic"
+
+    //原因
+    const val REASON = "REASON"
 }

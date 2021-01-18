@@ -79,6 +79,7 @@ class EditInfoViewModel : BaseViewModel() {
                 wishData.value = data.wishList
                 val idSb = StringBuilder()
                 data.picList.forEach {
+                    originConverPicIdList.clear()
                     originConverPicIdList.add(it.logId)
                 }
             })
