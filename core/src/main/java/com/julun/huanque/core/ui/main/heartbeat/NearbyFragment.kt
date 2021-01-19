@@ -5,11 +5,13 @@ import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import android.text.style.RelativeSizeSpan
+import android.text.style.StyleSpan
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
@@ -129,7 +131,7 @@ class NearbyFragment : BaseLazyFragment() {
             }
 
             override fun getSwipeOutAnimDuration(): Int {
-                return 200
+                return 300
             }
 
             override fun isLoopCard(): Boolean {
@@ -842,7 +844,7 @@ class NearbyFragment : BaseLazyFragment() {
             )
             val rd1 = aniViewArray.random()
             val rd2 = aniViewArray.filter { it.id != rd1.id }.random()
-            logger.info("开始做标签显隐动画 rd1=${rd1.id} rd2=${rd2.id}")
+//            logger.info("开始做标签显隐动画 rd1=${rd1.id} rd2=${rd2.id}")
 
             rd1.removeListener()
             rd2.removeListener()
@@ -855,7 +857,7 @@ class NearbyFragment : BaseLazyFragment() {
                 }
 
                 override fun onAnimationEnd(animation: Animator?) {
-                    logger.info("一次动画完成")
+//                    logger.info("一次动画完成")
                     if (isCancelTag) {
                         isCancelTag = false
                     } else {
@@ -865,7 +867,7 @@ class NearbyFragment : BaseLazyFragment() {
                 }
 
                 override fun onAnimationCancel(animation: Animator?) {
-                    logger.info("一次动画取消")
+//                    logger.info("一次动画取消")
                     isCancelTag = true
                 }
 
@@ -1038,13 +1040,14 @@ class NearbyFragment : BaseLazyFragment() {
                         }
                     }
                     val content = "TA喜欢:${tagsStr}"
-                    val styleSpan1A = RelativeSizeSpan(1.1f)
-                    val styleSpan1B = ForegroundColorSpan(Color.parseColor("#FFCC00"))
+                    val styleSpan1A = StyleSpan(Typeface.BOLD)
+//                    val styleSpan1A = RelativeSizeSpan(1.1f)
+//                    val styleSpan1B = ForegroundColorSpan(Color.parseColor("#FFCC00"))
                     val start = content.indexOf(tagsStr)
                     val end = start + tagsStr.length
                     val sp = SpannableString(content)
                     sp.setSpan(styleSpan1A, start, end, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
-                    sp.setSpan(styleSpan1B, start, end, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
+//                    sp.setSpan(styleSpan1B, start, end, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
                     holder.setText(R.id.tv_bottom_tips, sp).setVisible(R.id.tv_bottom_tips, true)
                 }
 

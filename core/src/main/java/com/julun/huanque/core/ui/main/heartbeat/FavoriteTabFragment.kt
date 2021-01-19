@@ -491,7 +491,7 @@ class FavoriteTabFragment : BaseVMFragment<FavoriteTabViewModel>() {
                 val age = if (item.age != 0) {
                     "${item.age}岁"
                 } else {
-                    "秘密"
+                    "未知"
                 }
                 val sdvTag = holder.getView<SimpleDraweeView>(R.id.sdv_tag)
                 sdvTag.loadImage(item.tagIcon, 16f, 16f)
@@ -502,31 +502,36 @@ class FavoriteTabFragment : BaseVMFragment<FavoriteTabViewModel>() {
                 val tvDistance = holder.getView<TextView>(R.id.tv_distance)
                 val ivDistance = holder.getView<ImageView>(R.id.iv_distance)
                 if (item.distance != -1) {
+                    val area = if (item.area.length > 4) {
+                        item.area.substring(0,4) + "..."
+                    } else {
+                        item.area
+                    }
                     if (item.sameCity) {
                         tvDistance.show()
                         ivDistance.hide()
                         when {
                             item.distance < 1000 -> {
                                 holder.setText(R.id.tv_distance, "${item.distance}")
-                                holder.setText(R.id.tv_location, "m ${item.area}")
+                                holder.setText(R.id.tv_location, "m $area")
                             }
                             else -> {
                                 val format = DecimalFormat("#.0")
                                 format.roundingMode = RoundingMode.DOWN
                                 val dt = format.format((item.distance / 1000.0))
                                 holder.setText(R.id.tv_distance, dt)
-                                holder.setText(R.id.tv_location, "km ${item.area}")
+                                holder.setText(R.id.tv_location, "km $area")
                             }
                         }
                     } else {
                         tvDistance.hide()
                         ivDistance.show()
-                        holder.setText(R.id.tv_location, item.area)
+                        holder.setText(R.id.tv_location, area)
                         when {
-                            item.distance < 100000 -> {
+                            item.distance <= 100000 -> {
                                 ivDistance.imageResource = R.mipmap.icon_home_distance_car
                             }
-                            item.distance < 800000 -> {
+                            item.distance <= 800000 -> {
 
                                 //显示动车
                                 ivDistance.imageResource = R.mipmap.icon_home_distance_rail_way
@@ -554,35 +559,39 @@ class FavoriteTabFragment : BaseVMFragment<FavoriteTabViewModel>() {
                     holder.setGone(R.id.tv_top_right_tips, true)
                 }
                 val rvPics = holder.getView<RecyclerView>(R.id.rv_pics)
-                val rvLp = rvPics.layoutParams
-                rvPics.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
-                val mPicsAdapter: NearbyPicListAdapter
-                if (rvPics.adapter != null) {
-                    mPicsAdapter = rvPics.adapter as NearbyPicListAdapter
+                if (item.coverPicList.size <= 1) {
+                    rvPics.hide()
                 } else {
-                    mPicsAdapter = NearbyPicListAdapter()
-                    rvPics.adapter = mPicsAdapter
-                }
-                if (rvPics.itemDecorationCount <= 0) {
-                    rvPics.addItemDecoration(
-                        HorizontalItemDecoration(dp2px(4))
-                    )
-                }
-                val list = mutableListOf<HomePagePicBean>()
-                kotlin.run {
-                    item.coverPicList.forEachIndexed { index, pic ->
-                        if (index > 2) {
-                            return@run
-                        }
-                        if (index == 0) {
-                            list.add(HomePagePicBean(pic, selected = BooleanType.FALSE))
-                        } else {
-                            list.add(HomePagePicBean(pic, selected = BooleanType.FALSE))
-                        }
-
+                    rvPics.show()
+                    rvPics.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+                    val mPicsAdapter: NearbyPicListAdapter
+                    if (rvPics.adapter != null) {
+                        mPicsAdapter = rvPics.adapter as NearbyPicListAdapter
+                    } else {
+                        mPicsAdapter = NearbyPicListAdapter()
+                        rvPics.adapter = mPicsAdapter
                     }
+                    if (rvPics.itemDecorationCount <= 0) {
+                        rvPics.addItemDecoration(
+                            HorizontalItemDecoration(dp2px(4))
+                        )
+                    }
+                    val list = mutableListOf<HomePagePicBean>()
+                    kotlin.run {
+                        item.coverPicList.forEachIndexed { index, pic ->
+                            if (index > 2) {
+                                return@run
+                            }
+                            if (index == 0) {
+                                list.add(HomePagePicBean(pic, selected = BooleanType.FALSE))
+                            } else {
+                                list.add(HomePagePicBean(pic, selected = BooleanType.FALSE))
+                            }
+
+                        }
+                    }
+                    mPicsAdapter.setList(list)
                 }
-                mPicsAdapter.setList(list)
             }
 
             override fun startAnim(anim: Animator, index: Int) {

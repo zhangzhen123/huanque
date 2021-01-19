@@ -80,7 +80,7 @@ class HomeCardTagView : LinearLayout {
 //        this.show()
         tv_tag.text = data.tagName
         sdv_tag.loadImage(data.tagIcon, 18f, 18f)
-        logger.info("当前的动画值：$data")
+//        logger.info("当前的动画值：$data")
         aniSet?.cancel()
 //        if (aniSet == null) {
         val dotView =

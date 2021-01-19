@@ -105,8 +105,10 @@ class FilterTagFragment : BaseBottomSheetFragment() {
             val item = parentTagAdapter.getItemOrNull(position) ?: return@setOnItemChildClickListener
             when (view.id) {
                 R.id.fl_title -> {
-                    item.isFold = !item.isFold
-                    parentTagAdapter.notifyItemChanged(position)
+                    if(item.tagList.size>4){
+                        item.isFold = !item.isFold
+                        parentTagAdapter.notifyItemChanged(position)
+                    }
                 }
             }
         }
@@ -262,7 +264,7 @@ class FilterTagFragment : BaseBottomSheetFragment() {
         })
         viewModel.saveResult.observe(viewLifecycleOwner, Observer {
             if (it.isSuccess()) {
-                connectViewModel.refreshNearby.value=true
+                connectViewModel.refreshNearby.value = true
                 dismiss()
             }
 
@@ -380,12 +382,18 @@ class FilterTagFragment : BaseBottomSheetFragment() {
                 val fAdapter = rv.adapter as? FilterTagAdapter ?: FilterTagAdapter()
                 rv.adapter = fAdapter
                 rv.itemAnimator = null
-                if (item.isFold) {
-                    holder.setImageResource(R.id.iv_arrow, R.mipmap.arrow_down_grey)
-                    fAdapter.setList(item.tagList.sliceFromStart(4, false))
+                if (item.tagList.size <= 4) {
+                    holder.setGone(R.id.iv_arrow, true)
                 } else {
-                    holder.setImageResource(R.id.iv_arrow, R.mipmap.arrow_up_grey)
-                    fAdapter.setList(item.tagList)
+                    holder.setGone(R.id.iv_arrow, false)
+                    if (item.isFold) {
+                        holder.setImageResource(R.id.iv_arrow, R.mipmap.arrow_down_grey)
+                        fAdapter.setList(item.tagList.sliceFromStart(4, false))
+                    } else {
+                        holder.setImageResource(R.id.iv_arrow, R.mipmap.arrow_up_grey)
+                        fAdapter.setList(item.tagList)
+                    }
+
                 }
                 fAdapter.setOnItemClickListener { _, view, position ->
                     val tagItem = fAdapter.getItemOrNull(position)

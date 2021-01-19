@@ -79,12 +79,12 @@ class TagManagerActivity : BaseActivity() {
             btn_action_tb.backgroundResource = R.drawable.bg_solid_btn1
             btn_action_tb.text = "完成"
             btn_action_tb.isActivated = true
-            tv_mode_des.text="点击管理或长按，可编辑排序"
+            tv_mode_des.text="点击可取消喜欢，长按可拖动"
         } else {
             btn_action_tb.backgroundResource = 0
             btn_action_tb.text = "管理"
             btn_action_tb.isActivated = false
-            tv_mode_des.text="点击可取消喜欢，长按可拖动"
+            tv_mode_des.text="点击管理或长按，可编辑排序"
         }
         tagAdapter.notifyDataSetChanged()
         mFragmentList.forEach { _, value ->
