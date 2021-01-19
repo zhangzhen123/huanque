@@ -414,3 +414,22 @@ data class InviteCompleteForm(
     }
 
 }
+
+/**
+ * 观看历史的form
+ */
+data class WatchForm(
+    //访问类型
+    var visitType: String = "",
+    //分页
+    var offset: Int = 0
+) : Serializable {
+    companion object {
+        //谁看过我
+        const val SeenMe = "SeenMe"
+
+        //我看过谁
+        const val HaveSeen = "HaveSeen"
+    }
+
+}
