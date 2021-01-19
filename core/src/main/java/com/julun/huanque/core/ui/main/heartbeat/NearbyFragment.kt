@@ -24,7 +24,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
-import com.baidu.location.BDAbstractLocationListener
 import com.baidu.location.BDLocation
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
@@ -60,7 +59,6 @@ import com.julun.huanque.core.ui.homepage.TagFragment
 import com.julun.huanque.core.ui.tag_manager.TagUserPicsActivity
 import com.julun.huanque.core.viewmodel.MainConnectViewModel
 import com.julun.huanque.core.widgets.HomeCardTagView
-import com.julun.maplib.LocationService
 import kotlinx.android.synthetic.main.fragment_nearby.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -202,8 +200,7 @@ class NearbyFragment : BaseLazyFragment() {
                         mViewModel.like(o.userId)
                     }
                 }
-                currentAniIndex = 0
-                startPlayAni()
+                startPlayAni(reset = true)
                 checkToGetMore()
             }
 
@@ -424,7 +421,7 @@ class NearbyFragment : BaseLazyFragment() {
                             noMoreDataError = ResponseError(bean.remainTimes, "没有找到附近的人，去看看其他喜欢的人吧。")
                         }
                     }
-                    if (it.isRefresh()) {
+                    if (bean.isPull) {
                         showLoading(noMoreDataError)
                     }
                     return@Observer
@@ -465,9 +462,11 @@ class NearbyFragment : BaseLazyFragment() {
                 hideLoading()
                 state_layout_error.hide()
                 mRecyclerView.show()
-                if (it.isRefresh()) {
+                if (bean.isPull) {
                     list.clear()
                     list.addAll(bean.list)
+                    //首次加载自动播放动画
+                    startPlayAni(reset = true)
                 } else {
                     list.addAll(bean.list)
                 }
@@ -482,11 +481,7 @@ class NearbyFragment : BaseLazyFragment() {
                 }
 
                 cardsAdapter.notifyDataSetChanged()
-                if (it.isRefresh()) {
-                    //首次加载自动播放动画
-                    currentAniIndex = 0
-                    startPlayAni()
-                }
+
             } else {
                 val error = it.error
                 if (error != null) {
@@ -809,7 +804,7 @@ class NearbyFragment : BaseLazyFragment() {
         //随机位置
         val rdLp = rd.layoutParams as ConstraintLayout.LayoutParams
         val dist = max((randomDistance * Random.nextFloat()).toInt(), dp2px(10))
-        logger.info("随机的距离=$dist")
+//        logger.info("随机的距离=$dist")
         if (rd.id == R.id.ani_tag_01 || rd.id == R.id.ani_tag_02) {
             rdLp.topMargin = dist
         } else {
@@ -819,10 +814,25 @@ class NearbyFragment : BaseLazyFragment() {
 
     }
 
-    private fun startPlayAni() {
+    private fun startPlayAni(reset: Boolean = false) {
         mRecyclerView.postDelayed({
+            if (reset) {
+                currentAniIndex = 0
+            }
             //获取到当前最上方的item
             val item = cardsAdapter.getItemOrNull(0) ?: return@postDelayed
+            val tags = item.tagList
+            val first: UserTagBean? = tags.getOrNull(currentAniIndex)
+            currentAniIndex++
+            val second: UserTagBean? = tags.getOrNull(currentAniIndex)
+            currentAniIndex++
+
+            if (first == null && second == null) {
+                logger.info("没有数据了 停止动画")
+                startPlayAni(true)
+                return@postDelayed
+            }
+
             val holder = mRecyclerView?.findViewHolderForAdapterPosition(0) as? BaseViewHolder ?: return@postDelayed
             val aniViewArray = mutableListOf<HomeCardTagView>(
                 holder.getView<HomeCardTagView>(R.id.ani_tag_01),
@@ -834,32 +844,29 @@ class NearbyFragment : BaseLazyFragment() {
             val rd2 = aniViewArray.filter { it.id != rd1.id }.random()
             logger.info("开始做标签显隐动画 rd1=${rd1.id} rd2=${rd2.id}")
 
-            val tags = item.tagList
-            val first: UserTagBean? = tags.getOrNull(currentAniIndex)
-            currentAniIndex++
-            val second: UserTagBean? = tags.getOrNull(currentAniIndex)
-            currentAniIndex++
-
-            if (first == null && second == null) {
-                logger.info("没有数据了 停止动画")
-                return@postDelayed
-            }
-//            rd1.removeListener()
-//            rd2.removeListener()
+            rd1.removeListener()
+            rd2.removeListener()
             randomLocation(rd1)
             randomLocation(rd2)
 
             rd1.listener = object : Animator.AnimatorListener {
+                var isCancelTag = false
                 override fun onAnimationRepeat(animation: Animator?) {
                 }
 
                 override fun onAnimationEnd(animation: Animator?) {
                     logger.info("一次动画完成")
-                    startPlayAni()
+                    if (isCancelTag) {
+                        isCancelTag = false
+                    } else {
+                        startPlayAni()
+                    }
+
                 }
 
                 override fun onAnimationCancel(animation: Animator?) {
                     logger.info("一次动画取消")
+                    isCancelTag = true
                 }
 
                 override fun onAnimationStart(animation: Animator?) {
@@ -867,11 +874,12 @@ class NearbyFragment : BaseLazyFragment() {
                 }
             }
 
+            val delay = if (reset) 0 else 2000L
             if (first != null) {
-                rd1.startSetDataAndAni(first)
+                rd1.startSetDataAndAni(first, delay)
             }
             if (second != null) {
-                rd2.startSetDataAndAni(second)
+                rd2.startSetDataAndAni(second, delay)
             }
 
         }, 50)

@@ -8,6 +8,7 @@ package com.julun.huanque.common.basic
  * 专门处理列表
  **/
 open class RootListData<T>(
+    //todo isPull以后统一到ReactiveData queryType中
     var isPull: Boolean = false,
     var list: MutableList<T> = mutableListOf(),
     var hasMore: Boolean = false

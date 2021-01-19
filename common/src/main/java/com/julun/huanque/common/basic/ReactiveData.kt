@@ -19,6 +19,7 @@ open class ReactiveData<T>(
 ) {
     //该标记主要用于全局liveData多处响应时 监听处区分是不是第一次使用该事件 用于区分不同响应
     private var isOld: Boolean = false
+
     fun getT(): T? {
         isOld = true
         return data
@@ -38,6 +39,8 @@ open class ReactiveData<T>(
 
     /**
      * 该次请求的类型是不是刷新型的 主要用于列表请求
+     *
+     * 注：只会在列表数据错误返回
      */
     fun isRefresh(): Boolean {
         return queryType != QueryType.LOAD_MORE

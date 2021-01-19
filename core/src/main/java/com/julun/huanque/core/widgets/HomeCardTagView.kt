@@ -75,7 +75,7 @@ class HomeCardTagView : LinearLayout {
         return _currentData
     }
 
-    fun startSetDataAndAni(data: UserTagBean) {
+    fun startSetDataAndAni(data: UserTagBean, delay: Long = 0) {
         _currentData = data
 //        this.show()
         tv_tag.text = data.tagName
@@ -92,18 +92,19 @@ class HomeCardTagView : LinearLayout {
         val ani1 = ObjectAnimator.ofFloat(dotView, View.ALPHA, 0f, 1f)
         val ani2 = ObjectAnimator.ofFloat(dotView, View.SCALE_X, 0f, 1.2f, 1.0f)
         val ani3 = ObjectAnimator.ofFloat(dotView, View.SCALE_Y, 0f, 1.2f, 1.0f)
+
         val aniSet1 = AnimatorSet()
         aniSet1.duration = 500
         aniSet1.playTogether(ani1, ani2, ani3)
         //
 
         val ani21 = ObjectAnimator.ofFloat(ll_content, View.ALPHA, 0f, 1f)
-        ani21.duration = 300
+        ani21.duration = 350
         val width = dp2px(16 + 18 + 16) + (data.tagName).length * tv_tag.textSize
         val ani22 = ValueAnimator.ofInt(0, width.toInt())
-        logger.info("ll_content.width=${ll_content.width}")
+//        logger.info("ll_content.width=${ll_content.width}")
         val llp = ll_content.layoutParams
-        ani22.duration = 300
+        ani22.duration = 350
         ani22.addUpdateListener { value ->
 //                logger.info("value=${value.animatedValue}")
             llp.width = (value.animatedValue as Int)
@@ -117,9 +118,9 @@ class HomeCardTagView : LinearLayout {
 
         //消失动画
         val ani31 = ObjectAnimator.ofFloat(ll_content, View.ALPHA, 1f, 0f)
-        ani31.duration = 300
+        ani31.duration = 350
         val ani32 = ValueAnimator.ofInt(width.toInt(), 0)
-        ani32.duration = 300
+        ani32.duration = 350
         ani32.addUpdateListener { value ->
             llp.width = (value.animatedValue as Int)
             ll_content.requestLayout()
@@ -152,6 +153,7 @@ class HomeCardTagView : LinearLayout {
         if (listener != null) {
             aniSet!!.addListener(listener)
         }
+        aniSet?.startDelay = delay
         aniSet?.start()
     }
 
