@@ -118,7 +118,8 @@
             <com.jaygoo.widget.RangeSeekBar
                 android:id="@+id/sb_distance"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/dimen_25"
+                android:layout_marginTop="@dimen/dimen_15"
                 app:rsb_gravity="center"
                 app:rsb_max="100"
                 app:rsb_mode="single"
@@ -132,7 +133,7 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_30">
+                android:layout_marginTop="@dimen/dimen_25">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -161,7 +162,8 @@
             <com.jaygoo.widget.RangeSeekBar
                 android:id="@+id/sb_range_age"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/dimen_25"
+                android:layout_marginTop="@dimen/dimen_15"
                 app:rsb_gravity="center"
                 app:rsb_max="100"
                 app:rsb_mode="range"
@@ -175,6 +177,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_25"
                 android:drawableStart="@drawable/shape_tag_filter_dot"
                 android:drawablePadding="@dimen/dimen_5"
                 android:gravity="start"

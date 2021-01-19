@@ -98,7 +98,7 @@
                 app:layout_constraintTop_toTopOf="@+id/rv_pics"
                 tools:text="1/5" />
 
-            <com.julun.huanque.core.widgets.MarqueeTextView
+            <TextView
                 android:id="@+id/tv_bottom_tips"
                 android:layout_width="wrap_content"
                 android:layout_height="24dp"
@@ -106,7 +106,6 @@
                 android:background="@drawable/bg_shape_white_p10"
                 android:drawableEnd="@mipmap/icon_forward_grey_02"
                 android:drawablePadding="@dimen/dimen_5"
-                android:ellipsize="marquee"
                 android:gravity="center"
                 android:paddingStart="@dimen/dimen_8"
                 android:paddingEnd="@dimen/dimen_8"

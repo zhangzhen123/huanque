@@ -1,10 +1,14 @@
 package com.julun.huanque.core.ui.homepage
 
 import android.Manifest
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.animation.BounceInterpolator
+import android.view.animation.OvershootInterpolator
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.lifecycle.Lifecycle
@@ -782,6 +786,7 @@ class EditInfoActivity : BaseActivity() {
                 ?: return@setOnItemLongClickListener true
             if (tempData.headerPic != BusiConstant.True && tempData.coverPic.isNotEmpty()) {
                 helper.startDrag(recycler_view_pic.getChildViewHolder(view))
+                playItemAni(view)
             } else {
                 if (tempData.headerPic == BusiConstant.True) {
                     //头像 显示提示
@@ -793,7 +798,6 @@ class EditInfoActivity : BaseActivity() {
             }
             return@setOnItemLongClickListener true
         }
-
         recycler_view_tag.layoutManager = GridLayoutManager(this, 4)
         recycler_view_tag.adapter = mTagAdapter
         mTagAdapter.setOnItemClickListener { adapter, view, position ->
@@ -812,6 +816,15 @@ class EditInfoActivity : BaseActivity() {
 
     }
 
+    private fun playItemAni(view: View) {
+        val ani1 = ObjectAnimator.ofFloat(view, View.SCALE_X, 1.0f, 1.1f, 1.0f)
+        val ani2 = ObjectAnimator.ofFloat(view, View.SCALE_Y, 1.0f, 1.1f, 1.0f)
+        val aniSet = AnimatorSet()
+        aniSet.playTogether(ani1, ani2)
+        aniSet.interpolator = OvershootInterpolator()
+        aniSet.duration = 300
+        aniSet.start()
+    }
 
     private var mHideDisposable: Disposable? = null
 

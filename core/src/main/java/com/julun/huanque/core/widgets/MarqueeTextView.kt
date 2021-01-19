@@ -11,7 +11,7 @@ import android.widget.TextView
  * 不被任何外界事物影响的跑马灯
  */
 class MarqueeTextView(context: Context, attrs: AttributeSet?) : androidx.appcompat.widget.AppCompatTextView(context, attrs) {
-    private var isMarqueeEnable = false
+    private var isMarqueeEnable = true
 
 
     fun setMarqueeEnable(marqueEnable: Boolean) {

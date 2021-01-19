@@ -203,8 +203,6 @@
                 android:text="安徽的话牛逼的不行啊啊啊啊99999"
                 android:textColor="@color/colorAccent_lib"
                 android:textSize="16sp" />
-
-
         </LinearLayout>
 
     </ScrollView>

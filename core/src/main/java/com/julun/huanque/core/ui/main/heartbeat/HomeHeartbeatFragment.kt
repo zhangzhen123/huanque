@@ -178,7 +178,7 @@ class HomeHeartbeatFragment : BaseFragment() {
                 indicator.startInterpolator = AccelerateInterpolator()
                 indicator.endInterpolator = DecelerateInterpolator(2.0f)
                 indicator.yOffset = dp2pxf(4)
-                indicator.setColors(context.resources.getColor(R.color.primary_color))
+                indicator.setColors(ContextCompat.getColor(context,R.color.primary_color))
                 return indicator
             }
         }

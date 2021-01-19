@@ -15,9 +15,9 @@
             android:id="@+id/card_img"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:roundedCornerRadius="@dimen/dimen_10"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:roundedCornerRadius="@dimen/dimen_10" />
 
         <View
             android:id="@+id/shadow_view"
@@ -75,6 +75,14 @@
                 tools:text="测试" />
         </LinearLayout>
 
+        <View
+            android:id="@+id/ll_top_tag_holder"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dimen_35"
+            app:layout_constraintEnd_toEndOf="@+id/ll_top_tag"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <LinearLayout
             android:id="@+id/ll_bottom"
             android:layout_width="wrap_content"
@@ -85,6 +93,7 @@
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent">
+
             <ImageView
                 android:id="@+id/iv_distance"
                 android:layout_width="@dimen/dimen_20"
@@ -98,8 +107,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/dimen_3"
                 android:gravity="center"
-                android:maxLines="1"
                 android:includeFontPadding="false"
+                android:maxLines="1"
                 android:textColor="@color/colorAccent_lib"
                 android:textSize="@dimen/sp_16"
                 tools:text="shit" />

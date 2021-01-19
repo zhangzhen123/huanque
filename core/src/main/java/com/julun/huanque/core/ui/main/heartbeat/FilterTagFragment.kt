@@ -104,7 +104,7 @@ class FilterTagFragment : BaseBottomSheetFragment() {
         parentTagAdapter.setOnItemChildClickListener { _, view, position ->
             val item = parentTagAdapter.getItemOrNull(position) ?: return@setOnItemChildClickListener
             when (view.id) {
-                R.id.iv_arrow -> {
+                R.id.fl_title -> {
                     item.isFold = !item.isFold
                     parentTagAdapter.notifyItemChanged(position)
                 }
@@ -364,7 +364,7 @@ class FilterTagFragment : BaseBottomSheetFragment() {
 
         object : BaseQuickAdapter<FilterGroupTag, BaseViewHolder>(R.layout.item_filter_parent_tag) {
             init {
-                addChildClickViewIds(R.id.iv_arrow)
+                addChildClickViewIds(R.id.fl_title)
             }
 
             override fun convert(holder: BaseViewHolder, item: FilterGroupTag) {

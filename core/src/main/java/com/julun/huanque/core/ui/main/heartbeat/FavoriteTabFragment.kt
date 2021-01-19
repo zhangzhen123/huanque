@@ -121,7 +121,7 @@ class FavoriteTabFragment : BaseVMFragment<FavoriteTabViewModel>() {
         authorAdapter.onAdapterChildClickNew { adapter, view, position ->
             val item = authorAdapter.getItemOrNull(position)
             when (view.id) {
-                R.id.ll_top_tag -> {
+                R.id.ll_top_tag_holder -> {
                     if (item != null) {
                         TagUserPicsActivity.start(requireActivity(), item.tagId, item.userId)
                     }
@@ -351,9 +351,9 @@ class FavoriteTabFragment : BaseVMFragment<FavoriteTabViewModel>() {
     }
 
     private fun outAnimators(view: View, index: Int): Animator {
-        val animator = ObjectAnimator.ofFloat(view, "translationY", 0f, -ScreenUtils.screenHeightFloat)
-        animator.duration = 250L
-        animator.startDelay = 60L * index
+        val animator = ObjectAnimator.ofFloat(view, "translationY", 0f, -ScreenUtils.screenHeightFloat * 0.8f)
+        animator.duration = 450L
+        animator.startDelay = 100L * index
         animator.interpolator = DecelerateInterpolator(1.3f)
         return animator
     }
@@ -412,7 +412,7 @@ class FavoriteTabFragment : BaseVMFragment<FavoriteTabViewModel>() {
     private fun setEmpty() {
         if (authorAdapter.data.isEmpty()) {
             mRefreshLayout.hide()
-            state_pager_view.showEmpty(emptyRes = R.mipmap.icon_no_data_01,emptyTxt = "${currentTab?.tagName}没有更多人了，去看看其他的吧")
+            state_pager_view.showEmpty(emptyRes = R.mipmap.icon_no_data_01, emptyTxt = "${currentTab?.tagName}没有更多人了，去看看其他的吧")
         } else {
             mRefreshLayout.show()
             state_pager_view.showSuccess()
@@ -457,7 +457,7 @@ class FavoriteTabFragment : BaseVMFragment<FavoriteTabViewModel>() {
     private val authorAdapter: BaseQuickAdapter<FavoriteUserBean, BaseViewHolder> by lazy {
         object : BaseQuickAdapter<FavoriteUserBean, BaseViewHolder>(R.layout.item_favorite_user_list) {
             init {
-                addChildClickViewIds(R.id.ll_top_tag)
+                addChildClickViewIds(R.id.ll_top_tag_holder)
             }
 
             override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
@@ -575,7 +575,7 @@ class FavoriteTabFragment : BaseVMFragment<FavoriteTabViewModel>() {
                             return@run
                         }
                         if (index == 0) {
-                            list.add(HomePagePicBean(pic, selected = BooleanType.TRUE))
+                            list.add(HomePagePicBean(pic, selected = BooleanType.FALSE))
                         } else {
                             list.add(HomePagePicBean(pic, selected = BooleanType.FALSE))
                         }
