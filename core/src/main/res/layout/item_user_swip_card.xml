@@ -44,6 +44,7 @@
                 android:layout_height="@dimen/dimen_20"
                 android:gravity="center"
                 android:scaleType="fitCenter"
+                android:layout_marginBottom="@dimen/dimen_8"
                 app:layout_constraintBottom_toTopOf="@+id/rv_pics"
                 app:layout_constraintStart_toStartOf="@+id/rv_pics" />
 
@@ -56,6 +57,7 @@
                 android:textColor="#FFCC00"
                 android:textSize="@dimen/sp_16"
                 android:textStyle="bold"
+                android:layout_marginBottom="@dimen/dimen_8"
                 app:layout_constraintBottom_toTopOf="@+id/rv_pics"
                 app:layout_constraintStart_toEndOf="@+id/iv_distance"
                 tools:text="23.3" />
@@ -123,11 +125,12 @@
                 android:id="@+id/tv_user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/dimen_30"
+                android:layout_marginBottom="@dimen/dimen_38"
                 android:gravity="start|center_vertical"
                 android:includeFontPadding="false"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_20"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/rv_pics"
                 app:layout_constraintStart_toStartOf="@+id/rv_pics"
                 tools:text="清蝶泳" />

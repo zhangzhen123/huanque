@@ -282,7 +282,7 @@ class TagManagerActivity : BaseActivity() {
 
                 val simplePagerTitleView: ScaleTransitionPagerTitleView = ScaleTransitionPagerTitleView(context)
                 simplePagerTitleView.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
-                simplePagerTitleView.minScale = 0.583f
+                simplePagerTitleView.minScale = 0.727f
                 simplePagerTitleView.text = mTabTitles[index].tagName
                 simplePagerTitleView.textSize = 20f
                 simplePagerTitleView.normalColor = ContextCompat.getColor(context, R.color.black_333)

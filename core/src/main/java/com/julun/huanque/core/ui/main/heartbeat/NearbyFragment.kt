@@ -298,10 +298,8 @@ class NearbyFragment : BaseLazyFragment() {
                     HomePageActivity.newInstance(requireActivity(), item.userId, showPic = pic)
                 }
                 R.id.tv_bottom_tips -> {
-                    if (item.likeTagList.isEmpty()) {
-                        ToastUtils.show("已邀请TA添加喜欢的标签")
-                    } else {
-                        if (item.sex == SessionUtils.getSex()) {
+                    if (!item.likeTagList.isEmpty()) {
+                        if (item.sex != SessionUtils.getSex()) {
                             item.likeTagList.forEach {
                                 if (myTagList.contains(it)) {
                                     it.mark = BooleanType.TRUE
@@ -836,14 +834,20 @@ class NearbyFragment : BaseLazyFragment() {
             }
 
             val holder = mRecyclerView?.findViewHolderForAdapterPosition(0) as? BaseViewHolder ?: return@postDelayed
-            val aniViewArray = mutableListOf<HomeCardTagView>(
+            val aniViewArray1 = mutableListOf<HomeCardTagView>(
                 holder.getView<HomeCardTagView>(R.id.ani_tag_01),
+//                holder.getView<HomeCardTagView>(R.id.ani_tag_02),
+                holder.getView<HomeCardTagView>(R.id.ani_tag_03)
+//                holder.getView<HomeCardTagView>(R.id.ani_tag_04)
+            )
+            val aniViewArray2 = mutableListOf<HomeCardTagView>(
+//                holder.getView<HomeCardTagView>(R.id.ani_tag_01),
                 holder.getView<HomeCardTagView>(R.id.ani_tag_02),
-                holder.getView<HomeCardTagView>(R.id.ani_tag_03),
+//                holder.getView<HomeCardTagView>(R.id.ani_tag_03),
                 holder.getView<HomeCardTagView>(R.id.ani_tag_04)
             )
-            val rd1 = aniViewArray.random()
-            val rd2 = aniViewArray.filter { it.id != rd1.id }.random()
+            val rd1 = aniViewArray1.random()
+            val rd2 = aniViewArray2.random()
 //            logger.info("开始做标签显隐动画 rd1=${rd1.id} rd2=${rd2.id}")
 
             rd1.removeListener()
@@ -1039,7 +1043,7 @@ class NearbyFragment : BaseLazyFragment() {
                             item.likeTagList[0].tagName + "、" + item.likeTagList[1].tagName + "、" + item.likeTagList[2].tagName + "..."
                         }
                     }
-                    val content = "TA喜欢:${tagsStr}"
+                    val content = "TA喜欢：${tagsStr}"
                     val styleSpan1A = StyleSpan(Typeface.BOLD)
 //                    val styleSpan1A = RelativeSizeSpan(1.1f)
 //                    val styleSpan1B = ForegroundColorSpan(Color.parseColor("#FFCC00"))

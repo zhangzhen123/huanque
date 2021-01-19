@@ -118,7 +118,7 @@ class HomeTownFragment : BaseBottomSheetFragment() {
                 val simplePagerTitleView: ScaleTransitionPagerTitleView =
                     ScaleTransitionPagerTitleView(context)
                 simplePagerTitleView.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
-                simplePagerTitleView.minScale = 0.583f
+                simplePagerTitleView.minScale = 0.727f
                 simplePagerTitleView.text = mTabTitles[index]
                 simplePagerTitleView.textSize = 24f
                 simplePagerTitleView.normalColor =
@@ -142,8 +142,8 @@ class HomeTownFragment : BaseBottomSheetFragment() {
                             R.color.black_666
                         )
                     )
-                    simplePagerTitleView.scaleX = 0.583f
-                    simplePagerTitleView.scaleY = 0.583f
+                    simplePagerTitleView.scaleX = 0.727f
+                    simplePagerTitleView.scaleY = 0.727f
                 }
                 return simplePagerTitleView
             }

@@ -308,6 +308,7 @@
                 android:id="@+id/magic_indicator"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
+                android:layout_marginStart="@dimen/dimen_5"
                 android:layout_gravity="center_vertical"
                 android:background="@color/white" />
 

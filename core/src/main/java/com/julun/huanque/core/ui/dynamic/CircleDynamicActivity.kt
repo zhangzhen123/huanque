@@ -263,7 +263,7 @@ class CircleDynamicActivity : BaseVMActivity<CircleDynamicViewModel>() {
 
                 val simplePagerTitleView: ScaleTransitionPagerTitleView = ScaleTransitionPagerTitleView(context)
                 simplePagerTitleView.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
-                simplePagerTitleView.minScale = 0.583f
+                simplePagerTitleView.minScale = 0.727f
                 simplePagerTitleView.text = mTabTitles[index].typeName
                 simplePagerTitleView.textSize = 24f
                 simplePagerTitleView.normalColor = ContextCompat.getColor(context, R.color.black_666)
@@ -275,8 +275,8 @@ class CircleDynamicActivity : BaseVMActivity<CircleDynamicViewModel>() {
                     simplePagerTitleView.scaleY = 1.0f
                 } else {
                     simplePagerTitleView.setTextColor(ContextCompat.getColor(context, R.color.black_666))
-                    simplePagerTitleView.scaleX = 0.583f
-                    simplePagerTitleView.scaleY = 0.583f
+                    simplePagerTitleView.scaleX = 0.727f
+                    simplePagerTitleView.scaleY = 0.727f
                 }
                 return simplePagerTitleView
             }

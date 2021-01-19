@@ -138,9 +138,9 @@ class DynamicSquareFragment : BaseFragment() {
 
                 val simplePagerTitleView: ScaleTransitionPagerTitleView = ScaleTransitionPagerTitleView(context)
                 simplePagerTitleView.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
-                simplePagerTitleView.minScale = 0.583f
+                simplePagerTitleView.minScale = 0.727f
                 simplePagerTitleView.text = mTabTitles[index].typeName
-                simplePagerTitleView.textSize = 24f
+                simplePagerTitleView.textSize = 22f
                 simplePagerTitleView.normalColor = ContextCompat.getColor(context, R.color.black_666)
                 simplePagerTitleView.selectedColor = ContextCompat.getColor(context, R.color.black_333)
                 simplePagerTitleView.setOnClickListener { view_pager.currentItem = index }
@@ -150,8 +150,8 @@ class DynamicSquareFragment : BaseFragment() {
                     simplePagerTitleView.scaleY = 1.0f
                 } else {
                     simplePagerTitleView.setTextColor(ContextCompat.getColor(context, R.color.black_666))
-                    simplePagerTitleView.scaleX = 0.583f
-                    simplePagerTitleView.scaleY = 0.583f
+                    simplePagerTitleView.scaleX = 0.727f
+                    simplePagerTitleView.scaleY = 0.727f
                 }
                 return simplePagerTitleView
             }
@@ -162,8 +162,8 @@ class DynamicSquareFragment : BaseFragment() {
 //                }
                 val indicator = LinePagerIndicator(context)
                 indicator.mode = LinePagerIndicator.MODE_EXACTLY
-                indicator.lineHeight = dp2pxf(4)
-                indicator.lineWidth = dp2pxf(13)
+                indicator.lineHeight = dp2pxf(3)
+                indicator.lineWidth = dp2pxf(6)
                 indicator.roundRadius = dp2pxf(2)
                 indicator.startInterpolator = AccelerateInterpolator()
                 indicator.endInterpolator = DecelerateInterpolator(2.0f)

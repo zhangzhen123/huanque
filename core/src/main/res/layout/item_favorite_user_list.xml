@@ -138,6 +138,7 @@
             android:maxLines="1"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_10"
+            android:layout_marginBottom="@dimen/dimen_3"
             app:layout_constraintBottom_toTopOf="@+id/ll_bottom"
             app:layout_constraintStart_toStartOf="parent"
             tools:text="年龄" />

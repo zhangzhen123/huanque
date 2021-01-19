@@ -462,9 +462,9 @@ class HomePageActivity : BaseActivity() {
                 val simplePagerTitleView: ScaleTransitionPagerTitleView =
                     ScaleTransitionPagerTitleView(context)
                 simplePagerTitleView.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
-                simplePagerTitleView.minScale = 0.583f
+                simplePagerTitleView.minScale = 0.7f
                 simplePagerTitleView.text = mTabTitles[index]
-                simplePagerTitleView.textSize = 24f
+                simplePagerTitleView.textSize = 20f
                 simplePagerTitleView.normalColor =
                     ContextCompat.getColor(context, R.color.black_666)
                 simplePagerTitleView.selectedColor =
@@ -486,8 +486,8 @@ class HomePageActivity : BaseActivity() {
                             R.color.black_666
                         )
                     )
-                    simplePagerTitleView.scaleX = 0.583f
-                    simplePagerTitleView.scaleY = 0.583f
+                    simplePagerTitleView.scaleX = 0.7f
+                    simplePagerTitleView.scaleY = 0.7f
                 }
                 return simplePagerTitleView
             }
@@ -498,9 +498,9 @@ class HomePageActivity : BaseActivity() {
 //                }
                 val indicator = LinePagerIndicator(context)
                 indicator.mode = LinePagerIndicator.MODE_EXACTLY
-                indicator.lineHeight = 12f
-                indicator.lineWidth = 39f
-                indicator.roundRadius = 6f
+                indicator.lineHeight = dp2pxf(3)
+                indicator.lineWidth = dp2pxf(6)
+                indicator.roundRadius = dp2pxf(2)
                 indicator.startInterpolator = AccelerateInterpolator()
                 indicator.endInterpolator = DecelerateInterpolator(2.0f)
                 indicator.yOffset = 12f

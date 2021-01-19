@@ -112,7 +112,7 @@
         android:includeFontPadding="false"
         android:text="消息"
         android:textColor="@color/black_333"
-        android:textSize="@dimen/sp_24"
+        android:textSize="22sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@id/view_top"
         app:layout_constraintLeft_toLeftOf="parent"
