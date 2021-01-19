@@ -218,10 +218,19 @@ class NearbyFragment : BaseLazyFragment() {
                 }
                 when (currentDirection) {
                     ReItemTouchHelper.LEFT -> {
+                        if (mViewModel.currentRemainTimes <= 0) {
+                            //
+                            logger.info("跳转空白页")
+                            showLoading(ResponseError(0, "今日查看附近次数已经用完，去看看其他喜欢的人吧。"))
+                        }
                     }
                     ReItemTouchHelper.RIGHT -> {
                         logger.info("onSwipedClear direction=RIGHT mViewModel.currentHeartTouchTimes=${mViewModel.currentHeartTouchTimes}")
-                        if (mViewModel.currentHeartTouchTimes <= 0) {
+                        if (mViewModel.currentRemainTimes <= 0) {
+                            //
+                            logger.info("右划也优先判断总次数")
+                            showLoading(ResponseError(0, "今日查看附近次数已经用完，去看看其他喜欢的人吧。"))
+                        } else if (mViewModel.currentHeartTouchTimes <= 0) {
                             //
                             logger.info("提示弹窗 心动次数不足")
                             CommonDialogFragment.create(
@@ -454,7 +463,7 @@ class NearbyFragment : BaseLazyFragment() {
         })
         mMainConnectViewModel.locationTag.observe(this, Observer {
             if (it != null) {
-                currentLocation=it
+                currentLocation = it
                 val loc = currentLocation ?: return@Observer
                 mViewModel.requestNearbyList(
                     QueryType.INIT,

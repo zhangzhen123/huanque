@@ -215,6 +215,7 @@ class AuthTagPicActivity : BaseVMActivity<AuthTagPicViewModel>() {
             } else {
                 tv_pic_index.text = "${adapterPosition + 1}/${addPicAdapter.data.size - 1}"
             }
+            tv_pic_index.requestLayout()
         }
         addPicAdapter.onAdapterClickNew { _, view, position ->
             val item = addPicAdapter.getItemOrNull(position) ?: return@onAdapterClickNew
@@ -339,7 +340,6 @@ class AuthTagPicActivity : BaseVMActivity<AuthTagPicViewModel>() {
                 if (rm != null) {
                     addPicAdapter.remove(rm!!)
                 }
-                addPicAdapter.notifyDataSetChanged()
             }
         })
 

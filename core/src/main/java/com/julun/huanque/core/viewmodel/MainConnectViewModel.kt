@@ -71,7 +71,11 @@ class MainConnectViewModel : BaseViewModel() {
             registerListener(mLocationListener)
         }
     }
-
+    init {
+        mLocationService.setLocationOption(mLocationService.defaultLocationClientOption.apply {
+            setScanSpan(0)
+        })
+    }
     fun startLocation() {
         mLocationService.start()
     }
