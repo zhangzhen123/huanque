@@ -87,6 +87,7 @@ class NearbyFragment : BaseLazyFragment() {
     private lateinit var mReItemTouchHelper: ReItemTouchHelper
     private val list = mutableListOf<NearbyUserBean>()
     private val myTagList = mutableListOf<UserTagBean>()
+    private val myLikeTagList = mutableListOf<UserTagBean>()
     override fun lazyLoadData() {
         checkPermission()
     }
@@ -301,13 +302,24 @@ class NearbyFragment : BaseLazyFragment() {
                     if (item.likeTagList.isEmpty()) {
                         ToastUtils.show("已邀请TA添加喜欢的标签")
                     } else {
-                        item.likeTagList.forEach {
-                            if (myTagList.contains(it)) {
-                                it.mark = BooleanType.TRUE
-                            } else {
-                                it.mark = BooleanType.FALSE
+                        if (item.sex == SessionUtils.getSex()) {
+                            item.likeTagList.forEach {
+                                if (myTagList.contains(it)) {
+                                    it.mark = BooleanType.TRUE
+                                } else {
+                                    it.mark = BooleanType.FALSE
+                                }
+                            }
+                        } else {
+                            item.likeTagList.forEach {
+                                if (myLikeTagList.contains(it)) {
+                                    it.mark = BooleanType.TRUE
+                                } else {
+                                    it.mark = BooleanType.FALSE
+                                }
                             }
                         }
+
                         val tagFragment = TagFragment.newInstance(
                             true,
                             item.sex == SessionUtils.getSex(),
@@ -416,6 +428,38 @@ class NearbyFragment : BaseLazyFragment() {
                         showLoading(noMoreDataError)
                     }
                     return@Observer
+                } else {
+//                    bean.list.forEach { nearby ->
+//                        nearby.likeTagList.sortList(Comparator { i1, i2 ->
+//                            if (nearby.sex == SessionUtils.getSex()) {
+//                                val e1 = if (myLikeTagList.contains(i1)) {
+//                                    1
+//                                } else {
+//                                    0
+//                                }
+//                                val e2 = if (myLikeTagList.contains(i2)) {
+//                                    1
+//                                } else {
+//                                    0
+//                                }
+//                                e2 - e1
+//                            } else {
+//                                val e1 = if (myTagList.contains(i1)) {
+//                                    1
+//                                } else {
+//                                    0
+//                                }
+//                                val e2 = if (myTagList.contains(i2)) {
+//                                    1
+//                                } else {
+//                                    0
+//                                }
+//                                e2 - e1
+//                            }
+//
+//
+//                        })
+//                    }
                 }
 
                 hideLoading()
@@ -431,6 +475,10 @@ class NearbyFragment : BaseLazyFragment() {
                 if (bean.myTagList.isNotEmpty()) {
                     myTagList.clear()
                     myTagList.addAll(bean.myTagList)
+                }
+                if (bean.myLikeTagList.isNotEmpty()) {
+                    myLikeTagList.clear()
+                    myLikeTagList.addAll(bean.myTagList)
                 }
 
                 cardsAdapter.notifyDataSetChanged()
@@ -962,27 +1010,10 @@ class NearbyFragment : BaseLazyFragment() {
                     holder.setGone(R.id.tv_top_right_tips, true)
                 }
                 if (item.likeTagList.isEmpty()) {
-                    holder.setText(R.id.tv_bottom_tips, "TA还没有喜欢的标签，邀请TA填写吧")
+//                    holder.setText(R.id.tv_bottom_tips, "TA还没有喜欢的标签，邀请TA填写吧")
+                    holder.setGone(R.id.tv_bottom_tips, true)
                 } else {
 //                    val sameList = mutableListOf<UserTagBean>()
-                    item.likeTagList.sortList(Comparator { i1, i2 ->
-                        if (item.sex == SessionUtils.getSex()) {
-
-                        } else {
-
-                        }
-                        val e1 = if (myTagList.contains(i1)) {
-                            1
-                        } else {
-                            0
-                        }
-                        val e2 = if (myTagList.contains(i2)) {
-                            1
-                        } else {
-                            0
-                        }
-                        e2 - e1
-                    })
                     var tagsStr: String = ""
                     tagsStr = when (item.likeTagList.size) {
                         1 -> {
@@ -1006,7 +1037,7 @@ class NearbyFragment : BaseLazyFragment() {
                     val sp = SpannableString(content)
                     sp.setSpan(styleSpan1A, start, end, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
                     sp.setSpan(styleSpan1B, start, end, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
-                    holder.setText(R.id.tv_bottom_tips, sp)
+                    holder.setText(R.id.tv_bottom_tips, sp).setVisible(R.id.tv_bottom_tips, true)
                 }
 
 

@@ -63,18 +63,18 @@ class MyTagTabFragment : BaseLazyFragment() {
                 sdvTag.loadImage(item.tagIcon, 18f, 18f)
                 if (currentTab?.showType == MyTagType.AUTH) {
                     if (item.mark == BooleanType.TRUE) {
-                        holder.setImageResource(R.id.iv_tag_like, R.mipmap.ic_tag_pic_auth_success)
+                        holder.setImageResource(R.id.iv_tag_like, R.mipmap.icon_mine_tag_auth)
                         sdv.alpha = 1f
                     } else {
-                        holder.setImageResource(R.id.iv_tag_like, R.mipmap.ic_tag_pic_auth_no)
+                        holder.setImageResource(R.id.iv_tag_like, R.mipmap.icon_mine_tag_no_auth)
                         sdv.alpha = 0.5f
                     }
                 } else {
                     if (item.mark == BooleanType.TRUE) {
-                        holder.setImageResource(R.id.iv_tag_like, R.mipmap.ic_tag_like_yes)
+                        holder.setImageResource(R.id.iv_tag_like, R.mipmap.icon_mine_tag_like)
                         sdv.alpha = 1f
                     } else {
-                        holder.setImageResource(R.id.iv_tag_like, R.mipmap.ic_tag_like_no)
+                        holder.setImageResource(R.id.iv_tag_like, R.mipmap.icon_mine_tag_like_no)
                         sdv.alpha = 0.5f
                     }
                 }

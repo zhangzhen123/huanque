@@ -30,9 +30,9 @@ import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.widgets.recycler.decoration.StaggeredDecoration
 import com.julun.huanque.core.R
-import kotlinx.android.synthetic.main.activity_follow.headerPageView
-import kotlinx.android.synthetic.main.activity_follow.mRefreshLayout
 import kotlinx.android.synthetic.main.activity_tag_pics.*
+import kotlinx.android.synthetic.main.activity_tag_pics.rv_pics
+import kotlinx.android.synthetic.main.item_user_swip_card.*
 import org.jetbrains.anko.startActivity
 
 /**
@@ -94,21 +94,21 @@ class TagPicsActivity : BaseVMActivity<TagPicsViewModel>() {
         if (currentLikeUserId == 0L) {
             currentLikeUserId = null
         }
-        headerPageView.imageViewBack.onClickNew {
+        ivback.onClickNew {
             finish()
         }
-        headerPageView.textTitle.text = currentTag?.tagName ?: ""
+        tvTitle.text = currentTag?.tagName ?: ""
 
         // rv_pics.layoutManager = GridLayoutManager(this, 2)
         rv_pics.addItemDecoration(StaggeredDecoration(dp2px(5)))
         rv_pics.layoutManager = StaggeredGridLayoutManager(2, RecyclerView.VERTICAL)
         initViewModel()
-        iv_like.onClickNew {
+        ivOperation.onClickNew {
             switchLike()
         }
-        tv_like.onClickNew {
-            switchLike()
-        }
+//        tv_like.onClickNew {
+//            switchLike()
+//        }
         rv_pics.adapter = picListAdapter
 
 
@@ -135,7 +135,7 @@ class TagPicsActivity : BaseVMActivity<TagPicsViewModel>() {
     override fun initEvents(rootView: View) {
         super.initEvents(rootView)
         tv_like_bottom.onClickNew {
-            iv_like.performClick()
+            ivOperation.performClick()
         }
     }
 
@@ -177,12 +177,12 @@ class TagPicsActivity : BaseVMActivity<TagPicsViewModel>() {
                 val detail = mViewModel.tagDetail.value?.getT() ?: return@Observer
                 detail.like = tag.like
                 if (tag.like) {
-                    iv_like.setImageResource(R.mipmap.icon_tag_like)
-                    tv_like.text = "取消喜欢"
+                    ivOperation.setImageResource(R.mipmap.icon_tag_like_02)
+//                    tv_like.text = "取消喜欢"
                     showBottomView(true)
                 } else {
-                    iv_like.setImageResource(R.mipmap.icon_tag_dislike)
-                    tv_like.text = "喜欢"
+                    ivOperation.setImageResource(R.mipmap.icon_tag_dislike_02)
+//                    tv_like.text = "喜欢"
                     showBottomView(false)
                 }
 
@@ -222,18 +222,19 @@ class TagPicsActivity : BaseVMActivity<TagPicsViewModel>() {
         val list = listData.authPage.list
 
         if (listData.authPage.isPull) {
-            sdv_tag.loadImage(listData.tagIcon, 15f, 15f)
-            tv_tag.text = listData.tagName
-            tv_like_bottom.text = "喜欢${listData.tagName}"
-            tv_num.text = "认证${listData.authNum}人"
-            tv_desc.text = listData.tagDesc
+//            sdv_tag.loadImage(listData.tagIcon, 15f, 15f)
+//            tv_tag.text = listData.tagName
+//            tv_like_bottom.text = "喜欢${listData.tagName}"
+            tvTitle.text=listData.tagName
+            tv_num.text = "(认证${listData.authNum}人)"
+//            tv_desc.text = listData.tagDesc
             showBottomView(listData.like)
             if (listData.like) {
-                iv_like.setImageResource(R.mipmap.icon_tag_like)
-                tv_like.text = "取消喜欢"
+                ivOperation.setImageResource(R.mipmap.icon_tag_like_02)
+//                tv_like.text = "取消喜欢"
             } else {
-                iv_like.setImageResource(R.mipmap.icon_tag_dislike)
-                tv_like.text = "喜欢"
+                ivOperation.setImageResource(R.mipmap.icon_tag_dislike_02)
+//                tv_like.text = "喜欢"
             }
             val programList = list.distinct()
             picListAdapter.setList(programList)
@@ -283,13 +284,13 @@ class TagPicsActivity : BaseVMActivity<TagPicsViewModel>() {
             NetStateType.SUCCESS -> {
                 //由于上面在renderData中已经设置了空白页 这里不需要了
 //                picListAdapter.setEmptyView(MixedHelper.getEmptyView(this))
-                ct_head_layout.show()
+//                ct_head_layout.show()
             }
             NetStateType.LOADING -> {
                 picListAdapter.setEmptyView(MixedHelper.getLoadingView(this))
             }
             NetStateType.ERROR -> {
-                ct_head_layout.hide()
+//                ct_head_layout.hide()
                 picListAdapter.setEmptyView(
                     MixedHelper.getErrorView(
                         ctx = this,

@@ -64,10 +64,10 @@ class TagTabFragment : BaseLazyFragment() {
                 sdvTag.loadImage(item.tagIcon, 18f, 18f)
 
                 if (item.like) {
-                    holder.setImageResource(R.id.iv_tag_like, R.mipmap.icon_tag_like)
+                    holder.setImageResource(R.id.iv_tag_like, R.mipmap.icon_mine_tag_like)
                     sdv.alpha = 1f
                 } else {
-                    holder.setImageResource(R.id.iv_tag_like, R.mipmap.icon_tag_dislike)
+                    holder.setImageResource(R.id.iv_tag_like, R.mipmap.icon_mine_tag_like_no)
                     sdv.alpha = 0.5f
                 }
                 if (deleteMode) {

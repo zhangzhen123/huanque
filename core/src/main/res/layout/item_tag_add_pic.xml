@@ -96,7 +96,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dimen_8"
         android:layout_marginEnd="@dimen/dimen_8"
-        android:src="@mipmap/ic_tag_pic_auth_success"
+        android:src="@mipmap/icon_mine_tag_auth"
         app:layout_constraintEnd_toEndOf="@+id/sdv_add_img"
         app:layout_constraintTop_toTopOf="@+id/sdv_add_img" />
 
