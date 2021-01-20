@@ -2,6 +2,7 @@ package com.julun.huanque.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.bean.forms.UpdateInformationForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.net.Requests
@@ -27,17 +28,27 @@ class InviteCodeViewModel : BaseViewModel() {
     //邀请码更新成功标记位
     val codeSuccessFlag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
+    //清空验证码的标记位
+    val clearFlag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+
     /**
      * 更新邀请码
      */
     fun updateCard(code: String) {
         viewModelScope.launch {
             request({
-                userService.updateCode(UpdateInformationForm(invitationCode = code)).dataConvert()
+                userService.updateCode(UpdateInformationForm(invitationCode = code)).dataConvert(intArrayOf(1308))
                 ToastUtils.show("填写成功")
                 //邀请码填写成功
                 codeSuccessFlag.value = true
-            }, {})
+            }, {
+                if(it is ResponseError){
+                    if(it.busiCode == 1308){
+                        ToastUtils.show(it.busiMessage)
+                        clearFlag.value = true
+                    }
+                }
+            })
         }
     }
 }

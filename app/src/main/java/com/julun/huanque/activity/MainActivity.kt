@@ -277,10 +277,10 @@ class MainActivity : BaseActivity() {
             val mUpdateInfoFragment = UpdateInfoFragment.newInstance(birthday)
             addOrderDialog(mUpdateInfoFragment)
         }
-        //判断是否领取了礼包
-        if (!SPUtils.getBoolean(GlobalUtils.getNewUserKey(SessionUtils.getUserId()), false)) {
-            mMainViewModel.getNewUserGift()
-        }
+//        //判断是否领取了礼包
+//        if (!SPUtils.getBoolean(GlobalUtils.getNewUserKey(SessionUtils.getUserId()), false)) {
+////            mMainViewModel.getNewUserGift()
+//        }
 
 
     }
@@ -352,22 +352,22 @@ class MainActivity : BaseActivity() {
             }
         })
 
-        mMainViewModel.newUserBean.observe(this, Observer {
-            if (it != null) {
-                if (it.bagList.isNotEmpty()) {
-                    //显示新手礼包弹窗
-                    val newUserGiftFragment = NewUserMaleFragment()
-                    addOrderDialog(newUserGiftFragment)
-                }
-
-                if (it.videoUrl.isNotEmpty()) {
-                    SPUtils.commitBoolean(GlobalUtils.getNewUserKey(SessionUtils.getUserId()), true)
-                    //显示女性弹窗
-                    val newUserGiftFragment = NewUserFeMaleFragment()
-                    addOrderDialog(newUserGiftFragment)
-                }
-            }
-        })
+//        mMainViewModel.newUserBean.observe(this, Observer {
+//            if (it != null) {
+//                if (it.bagList.isNotEmpty()) {
+//                    //显示新手礼包弹窗
+//                    val newUserGiftFragment = NewUserMaleFragment()
+//                    addOrderDialog(newUserGiftFragment)
+//                }
+//
+//                if (it.videoUrl.isNotEmpty()) {
+//                    SPUtils.commitBoolean(GlobalUtils.getNewUserKey(SessionUtils.getUserId()), true)
+//                    //显示女性弹窗
+//                    val newUserGiftFragment = NewUserFeMaleFragment()
+//                    addOrderDialog(newUserGiftFragment)
+//                }
+//            }
+//        })
 
         mMainViewModel.userProtocolSignFlag.observe(this, Observer {
             if (it != BusiConstant.True) {
