@@ -50,9 +50,9 @@ class SelectSexViewModel : BaseViewModel() {
                 if (result.imToken.isNotEmpty()) {
                     SessionUtils.setRongImToken(result.imToken)
                 }
-                if (result.birthday.isNotEmpty()) {
-                    SessionUtils.setBirthday(result.birthday)
-                }
+//                if (result.birthday.isNotEmpty()) {
+//                    SessionUtils.setBirthday(result.birthday)
+//                }
 
                 LoginManager.loginSuccessComplete()
             }, {})

@@ -272,11 +272,11 @@ class MainActivity : BaseActivity() {
 
         mMessageViewModel.chatRoom()
 
-        val birthday = SessionUtils.getBirthday()
-        if (birthday.isNotEmpty()) {
-            val mUpdateInfoFragment = UpdateInfoFragment.newInstance(birthday)
-            addOrderDialog(mUpdateInfoFragment)
-        }
+//        val birthday = SessionUtils.getBirthday()
+//        if (birthday.isNotEmpty()) {
+//            val mUpdateInfoFragment = UpdateInfoFragment.newInstance(birthday)
+//            addOrderDialog(mUpdateInfoFragment)
+//        }
 //        //判断是否领取了礼包
 //        if (!SPUtils.getBoolean(GlobalUtils.getNewUserKey(SessionUtils.getUserId()), false)) {
 ////            mMainViewModel.getNewUserGift()

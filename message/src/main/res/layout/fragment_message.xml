@@ -29,7 +29,7 @@
         android:id="@+id/iv_account"
         android:layout_width="44dp"
         android:layout_height="0px"
-        android:layout_marginRight="135dp"
+        android:layout_marginRight="97dp"
         android:scaleType="centerInside"
         android:src="@mipmap/icon_account_in_message"
         android:visibility="gone"
@@ -56,6 +56,7 @@
         android:layout_width="wrap_content"
         android:layout_height="0px"
         android:layout_marginRight="97dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/view_top"
         app:layout_constraintRight_toRightOf="@id/view_top"
         app:layout_constraintTop_toTopOf="@id/view_top">

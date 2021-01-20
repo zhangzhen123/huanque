@@ -41,9 +41,9 @@ object SessionUtils {
 
     //邀请码
     private const val INVITE_CODE = "INVITE_CODE"
-
-    //生日
-    private const val BIRTHDAY = "BIRTHDAY"
+//
+//    //生日
+//    private const val BIRTHDAY = "BIRTHDAY"
 
     //社交意愿
     private const val WISH_COMPLETE = "WISH_COMPLETE"
@@ -206,13 +206,13 @@ object SessionUtils {
 
     fun getInviteCode() = SharedPreferencesUtils.getString(INVITE_CODE, "")
 
-    //生日
-    fun setBirthday(birthday: String) {
-        SharedPreferencesUtils.commitString(BIRTHDAY, birthday)
-    }
-
-
-    fun getBirthday() = SharedPreferencesUtils.getString(BIRTHDAY, "")
+//    //生日
+//    fun setBirthday(birthday: String) {
+//        SharedPreferencesUtils.commitString(BIRTHDAY, birthday)
+//    }
+//
+//
+//    fun getBirthday() = SharedPreferencesUtils.getString(BIRTHDAY, "")
 
     //社交意愿是否完成
     fun setWishComplete(wishComplete: String) {

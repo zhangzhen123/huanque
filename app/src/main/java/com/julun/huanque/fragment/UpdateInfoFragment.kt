@@ -85,20 +85,20 @@ class UpdateInfoFragment : BaseDialogFragment(), DialogInterface.OnKeyListener {
 //            }
 //        }
 
-        mBirthday = SessionUtils.getBirthday()
-        SessionUtils.setBirthday("")
-        tv_bir.text = mBirthday
+//        mBirthday = SessionUtils.getBirthday()
+//        SessionUtils.setBirthday("")
+//        tv_bir.text = mBirthday
 
         mViewModel.nicknameChange = false
         mViewModel.nicknameEnable.value = true
         mViewModel.headerPicData.value = SessionUtils.getHeaderPic()
 
-        try {
-            val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd") //注意月份是MM
-            mViewModel.birthdayData = simpleDateFormat.parse(mBirthday)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+//        try {
+//            val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd") //注意月份是MM
+//            mViewModel.birthdayData = simpleDateFormat.parse(mBirthday)
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//        }
 
 
     }
