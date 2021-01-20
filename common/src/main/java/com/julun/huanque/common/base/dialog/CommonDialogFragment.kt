@@ -1,11 +1,15 @@
 package com.julun.huanque.common.base.dialog
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
 import com.julun.huanque.common.R
+import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.bean.beans.CommonDialogInfo
 import com.julun.huanque.common.suger.*
@@ -28,7 +32,7 @@ class CommonDialogFragment() : BaseDialogFragment() {
         /**
          * 首次创建
          */
-        fun newInstance(info: CommonDialogInfo, callback: MyDialogCallback? = null): CommonDialogFragment {
+        fun newInstance(info: CommonDialogInfo, callback: Callback? = null): CommonDialogFragment {
             val args = Bundle()
             args.putSerializable(COMMON_INFO, info)
             val fragment = CommonDialogFragment()
@@ -43,7 +47,7 @@ class CommonDialogFragment() : BaseDialogFragment() {
         fun create(
             dialog: CommonDialogFragment? = null,
             info: CommonDialogInfo,
-            callback: MyDialogCallback? = null
+            callback: Callback? = null
         ): CommonDialogFragment {
             return if (dialog == null) {
                 newInstance(info).apply {
@@ -68,25 +72,29 @@ class CommonDialogFragment() : BaseDialogFragment() {
             okText: String? = null,
             cancelText: String? = null,
             cancelable: Boolean = true,
-            callback: MyDialogCallback? = null
+            callback: Callback? = null
         ): CommonDialogFragment {
             return create(dialog, CommonDialogInfo(title, content, image, imageRes, okText, cancelText, cancelable), callback)
         }
     }
 
+    fun show(activity: Activity) {
+        if(activity is FragmentActivity)
+        super.show(activity.supportFragmentManager,null)
+    }
     override fun getLayoutId(): Int {
         return R.layout.common_alert_dialog
     }
 
     private var info: CommonDialogInfo? = null
-    var callback: MyDialogCallback? = null
+    var callback: Callback? = null
     fun setInfo(info: CommonDialogInfo) {
         arguments?.putSerializable(COMMON_INFO, info)
     }
 
 
     override fun configDialog() {
-        setDialogSize(gravity = Gravity.CENTER, marginWidth = 30)
+        setDialogSize(gravity = Gravity.CENTER, marginWidth = 20)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -150,5 +158,5 @@ class CommonDialogFragment() : BaseDialogFragment() {
         super.onDestroy()
     }
 
-    class MyDialogCallback(val onCancel: () -> Unit = {}, val onOk: () -> Unit = {}, val onDismiss: () -> Unit = {})
+    class Callback(val onCancel: () -> Unit = {}, val onOk: () -> Unit = {}, val onDismiss: () -> Unit = {})
 }

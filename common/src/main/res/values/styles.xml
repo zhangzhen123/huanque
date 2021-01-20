@@ -231,7 +231,7 @@
         <item name="android:windowAnimationStyle">@null</item>
         <item name="android:windowBackground">@color/transparent</item><!--背景透明-->
         <item name="android:backgroundDimEnabled">true</item><!--模糊 遮罩层效果-->
-        <item name="android:backgroundDimAmount">0.6</item><!-- 灰度 遮罩层颜色深度 -->
+        <item name="android:backgroundDimAmount">0.4</item><!-- 灰度 遮罩层颜色深度 -->
         <item name="android:colorBackgroundCacheHint">@null</item><!-- 背景缓存颜色 -->
     </style>
 

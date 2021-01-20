@@ -95,7 +95,7 @@
     <!--按钮文字大小-->
     <dimen name="textSize_alert_button">18sp</dimen>
     <!--圆角-->
-    <dimen name="radius_alert_btn">20dp</dimen>
+    <dimen name="radius_alert_btn">25dp</dimen>
     <!-- AlertView end -->
 
     <!-- PullToRefresh start -->

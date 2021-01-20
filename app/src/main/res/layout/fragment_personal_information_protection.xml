@@ -6,26 +6,37 @@
     android:layout_height="wrap_content"
     android:background="@drawable/bg_personal_dialog_white">
 
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/dimen_160"
+        android:layout_marginTop="@dimen/dimen_30"
+        android:src="@mipmap/bg_dialog_personal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="30dp"
         android:text="@string/personal_information_protection_title"
         android:textColor="@color/black_333"
-        android:textSize="@dimen/sp_18"
+        android:textSize="@dimen/sp_24"
+        android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/image" />
 
     <TextView
         android:id="@+id/tv_content"
         android:layout_width="0px"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
+        android:layout_marginLeft="25dp"
         android:layout_marginTop="15dp"
-        android:layout_marginRight="20dp"
-        android:textColor="@color/black_666"
+        android:layout_marginRight="25dp"
+        android:textColor="@color/black_333"
         android:textSize="@dimen/sp_16"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -34,32 +45,35 @@
 
     <TextView
         android:id="@+id/tv_agree"
-        android:layout_width="122dp"
-        android:layout_height="40dp"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="@dimen/dimen_25"
         android:layout_marginTop="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginEnd="25dp"
         android:layout_marginBottom="20dp"
         android:background="@drawable/bg_personal_agree"
         android:gravity="center"
         android:text="同意"
-        android:textColor="@color/black_333"
+        android:textColor="@color/white"
         android:textSize="@dimen/sp_16"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_content" />
 
     <TextView
         android:id="@+id/tv_exit"
         android:layout_width="122dp"
-        android:layout_height="40dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/bg_personal_exit"
+        android:layout_height="@dimen/dimen_40"
+        android:layout_marginTop="@dimen/dimen_5"
+        android:layout_marginBottom="@dimen/dimen_12"
         android:gravity="center"
-        android:text="退出"
+        android:text="不同意并退出"
         android:textColor="@color/black_999"
         android:textSize="@dimen/sp_16"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_agree" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

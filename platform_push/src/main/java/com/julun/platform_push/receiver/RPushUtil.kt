@@ -87,7 +87,8 @@ object RPushUtil {
 
             when (bean.touchType) {
                 PushDataActionType.EditMineHomePage -> {
-                    startOpenRnPage(context, RnConstant.EDIT_MINE_HOMEPAGE)
+//                    startOpenRnPage(context, RnConstant.EDIT_MINE_HOMEPAGE)
+                    ARouter.getInstance().build(ARouterConstant.EDIT_INFO_ACTIVITY).navigation()
                 }
                 PushDataActionType.Url -> {
                     ULog.i(TAG, "开始跳转到网页:" + bean.touchValue)

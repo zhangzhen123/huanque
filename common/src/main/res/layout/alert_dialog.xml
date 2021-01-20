@@ -5,42 +5,44 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:background="@drawable/bg_dialog_alert"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingTop="@dimen/dimen_30"
+    android:paddingBottom="@dimen/dimen_20">
 
     <TextView
         android:id="@+id/titleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/dimen_25"
-        android:includeFontPadding="false"
+        android:layout_marginBottom="@dimen/dimen_15"
         android:gravity="bottom"
+        android:includeFontPadding="false"
         android:paddingLeft="32dp"
         android:paddingRight="32dp"
         android:text="温馨提示"
-        android:textStyle="bold"
         android:textColor="@color/black_333"
-        android:textSize="18sp" />
+        android:textSize="24sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/msgText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="@dimen/dimen_20"
         android:gravity="center"
-        android:minHeight="@dimen/dimen_50"
-        android:paddingLeft="20dp"
-        android:paddingTop="@dimen/dimen_15"
-        android:paddingRight="20dp"
-        android:textColor="@color/black_666"
+        android:paddingLeft="25dp"
+        android:paddingRight="25dp"
+        android:textColor="@color/black_333"
         android:textSize="16sp"
         tools:text="确定充值吗确定充值吗确定充值吗确定充值吗" />
 
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_40"
-        android:layout_margin="@dimen/dimen_20"
+        android:layout_height="@dimen/dimen_50"
+        android:layout_marginStart="@dimen/dimen_25"
+        android:layout_marginEnd="@dimen/dimen_25"
         android:orientation="horizontal">
 
         <TextView
@@ -51,7 +53,7 @@
             android:background="@drawable/bg_alertbutton_left"
             android:gravity="center"
             android:text="@string/cancel"
-            android:textColor="@color/black_999"
+            android:textColor="@color/white"
             android:textSize="16sp" />
 
         <View
@@ -67,7 +69,7 @@
             android:background="@drawable/bg_alertbutton_right"
             android:gravity="center"
             android:text="@string/sure"
-            android:textColor="@color/black_333"
+            android:textColor="@color/white"
             android:textSize="16sp" />
     </LinearLayout>
 </LinearLayout>

@@ -4,14 +4,16 @@
     <item android:state_pressed="true">
         <shape android:shape="rectangle">
             <!-- android:radius 弧形的半径 -->
-            <stroke android:width="@dimen/dimen_1" android:color="@color/stroke" />
+<!--            <stroke android:width="@dimen/dimen_1" android:color="@color/stroke" />-->
+            <solid android:color="#DDDDDD"/>
             <corners android:radius="@dimen/radius_alert_btn" />
         </shape>
     </item>
     <item>
         <shape android:shape="rectangle">
             <!-- android:radius 弧形的半径 -->
-            <stroke android:width="@dimen/dimen_1" android:color="@color/stroke" />
+<!--            <stroke android:width="@dimen/dimen_1" android:color="@color/stroke" />-->
+            <solid android:color="#DDDDDD"/>
             <corners android:radius="@dimen/radius_alert_btn" />
         </shape>
     </item>

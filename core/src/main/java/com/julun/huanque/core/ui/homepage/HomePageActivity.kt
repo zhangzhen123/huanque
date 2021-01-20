@@ -7,20 +7,13 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Typeface
 import android.media.MediaPlayer
-import android.os.Build
 import android.os.Bundle
-import android.transition.ChangeBounds
-import android.transition.ChangeTransform
-import android.transition.TransitionSet
 import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
-import android.widget.ImageView
 import androidx.activity.viewModels
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -29,8 +22,8 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.facebook.drawee.view.SimpleDraweeView
 import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.transition.platform.Hold
 import com.julun.huanque.common.base.BaseActivity
+import com.julun.huanque.common.base.dialog.CommonDialogFragment
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.ResponseError
@@ -38,11 +31,9 @@ import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.events.PicChangeEvent
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.StringHelper
-import com.julun.huanque.common.interfaces.ScrollMarginListener
 import com.julun.huanque.common.interfaces.routerservice.IRealNameService
 import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.manager.audio.AudioPlayerManager
-import com.julun.huanque.common.manager.audio.MediaPlayFunctionListener
 import com.julun.huanque.common.manager.audio.MediaPlayInfoListener
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.ui.image.ImageActivity
@@ -53,7 +44,6 @@ import com.julun.huanque.common.widgets.indicator.ScaleTransitionPagerTitleView
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.HomePageAdapter
 import com.julun.huanque.core.adapter.HomePagePicListAdapter
-import com.julun.huanque.core.manager.AliPlayerManager
 import com.julun.huanque.core.viewmodel.HomePageViewModel
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
@@ -375,7 +365,11 @@ class HomePageActivity : BaseActivity() {
             val voiceBean = mHomePageViewModel.homeInfoBean.value?.voice ?: return@onClickNew
             if (mHomePageViewModel.mineHomePage && voiceBean.voiceStatus != VoiceBean.Pass) {
                 //我的主页,语音为空，跳转编辑资料页面
-                RNPageActivity.start(this, RnConstant.EDIT_MINE_HOMEPAGE)
+//                RNPageActivity.start(this, RnConstant.EDIT_MINE_HOMEPAGE)
+                val intent = Intent(this, EditInfoActivity::class.java)
+                if (ForceUtils.activityMatch(intent)) {
+                    startActivity(intent)
+                }
                 return@onClickNew
             }
             if (voiceBean.voiceStatus != VoiceBean.Pass) {
@@ -1119,29 +1113,59 @@ class HomePageActivity : BaseActivity() {
                 if (mHomePageViewModel.homeInfoBean.value?.headRealPeople == BusiConstant.True) {
                     ToastUtils.show("已完成真人认证")
                 } else {
-                    MyAlertDialog(this).showAlertWithOKAndCancel(
-                        "通过人脸识别技术确认照片为真人将获得认证标识，提高交友机会哦~",
-                        MyAlertDialog.MyDialogCallback(onRight = {
-                            (ARouter.getInstance().build(ARouterConstant.REALNAME_SERVICE)
-                                .navigation() as? IRealNameService)?.checkRealHead { e ->
-                                if (e is ResponseError && e.busiCode == ErrorCodes.REAL_HEAD_ERROR) {
-                                    MyAlertDialog(this, false).showAlertWithOKAndCancel(
-                                        e.busiMessage.toString(),
-                                        title = "修改提示",
-                                        okText = "修改头像",
-                                        noText = "取消",
-                                        callback = MyAlertDialog.MyDialogCallback(onRight = {
-                                            RNPageActivity.start(
-                                                this,
-                                                RnConstant.EDIT_MINE_HOMEPAGE
-                                            )
-                                        })
-                                    )
-
+//                    MyAlertDialog(this).showAlertWithOKAndCancel(
+//                        "通过人脸识别技术确认照片为真人将获得认证标识，提高交友机会哦~",
+//                        MyAlertDialog.MyDialogCallback(onRight = {
+//                            (ARouter.getInstance().build(ARouterConstant.REALNAME_SERVICE)
+//                                .navigation() as? IRealNameService)?.checkRealHead { e ->
+//                                if (e is ResponseError && e.busiCode == ErrorCodes.REAL_HEAD_ERROR) {
+//                                    MyAlertDialog(this, false).showAlertWithOKAndCancel(
+//                                        e.busiMessage.toString(),
+//                                        title = "修改提示",
+//                                        okText = "修改头像",
+//                                        noText = "取消",
+//                                        callback = MyAlertDialog.MyDialogCallback(onRight = {
+//                                            RNPageActivity.start(
+//                                                this,
+//                                                RnConstant.EDIT_MINE_HOMEPAGE
+//                                            )
+//                                        })
+//                                    )
+//
+//                                }
+//                            }
+//                        }), "真人照片未认证", okText = "去认证", noText = "取消"
+//                    )
+                    CommonDialogFragment.create(
+                        title = "真人照片认证",
+                        content = "通过人脸识别技术确认照片为真人将获得认证标识，提高交友机会哦~",
+                        imageRes = com.julun.huanque.core.R.mipmap.bg_dialog_real_auth,
+                        okText = "去认证",
+                        cancelText = "取消",
+                        callback = CommonDialogFragment.Callback(
+                            onOk = {
+                                (ARouter.getInstance().build(ARouterConstant.REALNAME_SERVICE)
+                                    .navigation() as? IRealNameService)?.checkRealHead { e ->
+                                    if (e is ResponseError && e.busiCode == ErrorCodes.REAL_HEAD_ERROR) {
+                                        MyAlertDialog(this, false).showAlertWithOKAndCancel(
+                                            e.busiMessage.toString(),
+                                            title = "修改提示",
+                                            okText = "修改头像",
+                                            noText = "取消",
+                                            callback = MyAlertDialog.MyDialogCallback(onRight = {
+                                                val intent = Intent(this, EditInfoActivity::class.java)
+                                                if (ForceUtils.activityMatch(intent)) {
+                                                    startActivity(intent)
+                                                }
+                                            })
+                                        )
+                                    }
                                 }
+
                             }
-                        }), "真人照片未认证", okText = "去认证", noText = "取消"
-                    )
+                        )
+                    ).show(this, "CommonDialogFragment")
+
                 }
             }
             "UserLevel" -> {
@@ -1165,6 +1189,7 @@ class HomePageActivity : BaseActivity() {
      * 实人认证
      */
     private fun realHeader() {
+
         (ARouter.getInstance().build(ARouterConstant.REALNAME_SERVICE)
             .navigation() as? IRealNameService)?.checkRealHead { e ->
             if (e is ResponseError && e.busiCode == ErrorCodes.REAL_HEAD_ERROR) {
@@ -1174,10 +1199,14 @@ class HomePageActivity : BaseActivity() {
                     okText = "修改头像",
                     noText = "取消",
                     callback = MyAlertDialog.MyDialogCallback(onRight = {
-                        RNPageActivity.start(
-                            this,
-                            RnConstant.EDIT_MINE_HOMEPAGE
-                        )
+//                        RNPageActivity.start(
+//                            this,
+//                            RnConstant.EDIT_MINE_HOMEPAGE
+//                        )
+                        val intent = Intent(this, EditInfoActivity::class.java)
+                        if (ForceUtils.activityMatch(intent)) {
+                            startActivity(intent)
+                        }
                     })
                 )
 

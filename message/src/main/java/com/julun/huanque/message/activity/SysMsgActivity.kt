@@ -1,5 +1,6 @@
 package com.julun.huanque.message.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
@@ -23,10 +24,7 @@ import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.ui.web.WebActivity
-import com.julun.huanque.common.utils.JsonUtil
-import com.julun.huanque.common.utils.MessageFormatUtils
-import com.julun.huanque.common.utils.SessionUtils
-import com.julun.huanque.common.utils.ToastUtils
+import com.julun.huanque.common.utils.*
 import com.julun.huanque.message.R
 import com.julun.huanque.message.adapter.CommentListAdapter
 import com.julun.huanque.message.adapter.FriendsAdapter
@@ -309,7 +307,8 @@ class SysMsgActivity : BaseActivity() {
             }
             MessageConstants.EditMineHomePage -> {
                 //跳转到我的资料编辑
-                RNPageActivity.start(this, RnConstant.EDIT_MINE_HOMEPAGE)
+//                RNPageActivity.start(this, RnConstant.EDIT_MINE_HOMEPAGE)
+                ARouter.getInstance().build(ARouterConstant.EDIT_INFO_ACTIVITY).navigation()
             }
             MessageConstants.RoyalPage -> {
                 //跳转到贵族

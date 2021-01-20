@@ -4,13 +4,10 @@ import android.Manifest
 import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
-import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
-import android.text.style.ForegroundColorSpan
-import android.text.style.RelativeSizeSpan
 import android.text.style.StyleSpan
 import android.view.View
 import android.view.ViewGroup
@@ -192,7 +189,6 @@ class NearbyFragment : BaseLazyFragment() {
 
                     }
                     ReItemTouchHelper.UP -> {
-
                     }
                     ReItemTouchHelper.LEFT -> {
                         mViewModel.noFeel(o.userId)
@@ -234,9 +230,9 @@ class NearbyFragment : BaseLazyFragment() {
                             //
                             logger.info("提示弹窗 心动次数不足")
                             CommonDialogFragment.create(
-                                commonDialogFragment, "心动数已达到上限",
-                                mViewModel.heartTouchNotEnoughTips,
-                                imageRes = R.mipmap.bg_header_living,
+                                dialog = commonDialogFragment, title = "心动数已达到上限",
+                                content = mViewModel.heartTouchNotEnoughTips,
+                                imageRes = R.mipmap.bg_dialog_heart_full,
                                 okText = "我知道了"
                             ).show(requireActivity(), "CommonDialogFragment")
                         }
@@ -753,7 +749,7 @@ class NearbyFragment : BaseLazyFragment() {
             imageRes = R.mipmap.bg_header_living,
             okText = "一键开启",
             cancelable = false,
-            callback = CommonDialogFragment.MyDialogCallback(
+            callback = CommonDialogFragment.Callback(
                 onOk = {
                     PhoneUtils.getPermissionSetting(requireActivity().packageName).let {
                         if (ForceUtils.activityMatch(it)) {
@@ -880,7 +876,7 @@ class NearbyFragment : BaseLazyFragment() {
                 }
             }
 
-            val delay = if (reset) 0 else 2000L
+            val delay = if (!reset) 0 else 1000L
             if (first != null) {
                 rd1.startSetDataAndAni(first, delay)
             }
