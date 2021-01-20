@@ -561,7 +561,8 @@ class HomePageActivity : BaseActivity() {
 //                        mPagerAdapter?.notifyDataSetChanged()
                     }
                     NetStateType.NETWORK_ERROR -> {
-                        state_pager_view.showError()
+                        ToastUtils.show("网络异常")
+                        state_pager_view.showError(btnClick = View.OnClickListener { mHomePageViewModel.homeInfo() })
                     }
                     NetStateType.LOADING -> {
                         state_pager_view.showLoading()
