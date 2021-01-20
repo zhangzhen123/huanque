@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Outline
 import android.graphics.PixelFormat
-import android.net.Uri
 import android.os.Build
 import android.os.IBinder
 import android.view.*
@@ -14,6 +13,7 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.annotation.RequiresApi
 import com.alibaba.android.arouter.launcher.ARouter
+import com.julun.huanque.common.base.dialog.CommonDialogFragment
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.bean.events.FloatingCloseEvent
 import com.julun.huanque.common.bean.forms.ProgramIdForm
@@ -29,7 +29,6 @@ import com.julun.huanque.common.net.RequestCaller
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.LiveRoomService
 import com.julun.huanque.common.suger.dataConvert
-import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.dp2pxf
 import com.julun.huanque.common.utils.SPUtils
 import com.julun.huanque.common.utils.ScreenUtils
@@ -182,7 +181,7 @@ class FloatingService : Service(), View.OnClickListener, RequestCaller {
 //            display?.getBackground()?.setAlpha(0)
             windowManager?.addView(display, layoutParams)
 
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 videoView?.outlineProvider = SurfaceVideoViewOutlineProvider(dp2pxf(6));
                 videoView?.clipToOutline = true;
             }
@@ -215,12 +214,24 @@ class FloatingService : Service(), View.OnClickListener, RequestCaller {
                         //首次在首页关闭悬浮窗
                         SPUtils.commitBoolean(SPParamKey.First_Close_Floating, false)
 
-                        MyAlertDialog(act).showAlertWithOKAndCancel(
-                            "关闭直播间不希望小窗播放，可以在我的>设置>通用中关闭哦",
-                            MyAlertDialog.MyDialogCallback(onRight = {
-                                ARouter.getInstance().build(ARouterConstant.PLAYER_SETTING_ACTIVITY).navigation()
-                            }), "设置提醒", "去设置"
-                        )
+//                        MyAlertDialog(act).showAlertWithOKAndCancel(
+//                            "关闭直播间不希望小窗播放，可以在我的>设置>通用中关闭哦",
+//                            MyAlertDialog.MyDialogCallback(onRight = {
+//                                ARouter.getInstance().build(ARouterConstant.PLAYER_SETTING_ACTIVITY).navigation()
+//                            }), "设置提醒", "去设置"
+//                        )
+                        CommonDialogFragment.create(
+                            title = "小窗设置",
+                            content = "关闭直播间不希望小窗播放，可以在我的>设置>通用中关闭哦",
+                            imageRes =R.mipmap.bg_dialog_small_window,
+                            okText = "去设置",
+                            cancelText = "取消",
+                            callback = CommonDialogFragment.Callback(
+                                onOk = {
+                                    ARouter.getInstance().build(ARouterConstant.PLAYER_SETTING_ACTIVITY).navigation()
+                                }
+                            )
+                        ).show(act)
                     }
 
                 }
@@ -229,7 +240,7 @@ class FloatingService : Service(), View.OnClickListener, RequestCaller {
                 //跳转直播间
                 jumpToPlayer = true
                 CommonInit.getInstance().getCurrentActivity()?.let { act ->
-                    PlayerActivity.start(act, programId = mProgramId, from = PlayerFrom.FloatWindow,draft = mDraft)
+                    PlayerActivity.start(act, programId = mProgramId, from = PlayerFrom.FloatWindow, draft = mDraft)
                 }
 
             }

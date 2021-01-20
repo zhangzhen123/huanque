@@ -17,6 +17,7 @@ import com.facebook.drawee.span.DraweeSpanStringBuilder
 import com.julun.huanque.R
 import com.julun.huanque.activity.LoginActivity
 import com.julun.huanque.common.base.BaseActivity
+import com.julun.huanque.common.base.dialog.CommonDialogFragment
 import com.julun.huanque.common.base.dialog.LoadingDialog
 import com.julun.huanque.common.bean.beans.ChatBubble
 import com.julun.huanque.common.constant.*
@@ -31,6 +32,7 @@ import com.julun.huanque.core.ui.live.dialog.CardManagerDialogFragment
 import com.julun.huanque.core.ui.tag_manager.TagManagerActivity
 import com.julun.huanque.core.ui.record_voice.VoiceSignActivity
 import com.julun.huanque.core.ui.tag_manager.MyTagsActivity
+import com.julun.huanque.fragment.PersonalInformationProtectionFragment
 import com.julun.huanque.message.activity.PrivateConversationActivity
 import com.julun.huanque.message.fragment.ChatSendGiftFragment
 import com.julun.huanque.support.LoginManager
@@ -222,8 +224,16 @@ class TestActivity : BaseActivity() {
 
         btn_manager.onClickNew {
             //管理弹窗
-            val dialog = CardManagerDialogFragment()
-            dialog.show(supportFragmentManager, "CardManagerDialogFragment")
+//            val dialog = CardManagerDialogFragment()
+//            dialog.show(supportFragmentManager, "CardManagerDialogFragment")
+            val mPersonalInformationProtectionFragment =
+                PersonalInformationProtectionFragment.newInstance(
+                    PersonalInformationProtectionFragment.WelcomeActivity
+                )
+            mPersonalInformationProtectionFragment.show(
+                supportFragmentManager,
+                "PersonalInformationProtectionFragment"
+            )
         }
 
         btn_anim.onClickNew {

@@ -148,7 +148,7 @@ class PersonalInformationProtectionFragment : BaseDialogFragment() {
 
     override fun needEnterAnimation() = false
     private fun setWindowConfig() {
-        this.setDialogSize(Gravity.CENTER, ViewGroup.LayoutParams.MATCH_PARENT,padding = 35)
+        this.setDialogSize(Gravity.CENTER, ViewGroup.LayoutParams.MATCH_PARENT,padding = 20)
 //        //不需要半透明遮罩层
 ////        win.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
         if (mType != WelcomeActivity) {

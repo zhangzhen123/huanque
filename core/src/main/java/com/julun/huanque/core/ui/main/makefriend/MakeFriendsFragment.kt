@@ -34,6 +34,7 @@ import com.julun.huanque.common.ui.image.ImageActivity
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.core.R
 import com.julun.huanque.core.manager.AliPlayerManager
+import com.julun.huanque.core.ui.homepage.EditInfoActivity
 import com.julun.huanque.core.ui.homepage.HomePageActivity
 import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.ui.main.bird.LeYuanBirdActivity
@@ -166,11 +167,19 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
             when (item.showType) {
                 HomeItemBean.GUIDE_TO_COMPLETE_INFORMATION -> {
                     logger.info("跳转编辑资料页")
-                    RNPageActivity.start(requireActivity(), RnConstant.EDIT_MINE_HOMEPAGE)
+//                    RNPageActivity.start(requireActivity(), RnConstant.EDIT_MINE_HOMEPAGE)
+                    val intent = Intent(requireActivity(), EditInfoActivity::class.java)
+                    if (ForceUtils.activityMatch(intent)) {
+                        startActivity(intent)
+                    }
                 }
                 HomeItemBean.GUIDE_TO_ADD_TAG -> {
                     logger.info("跳转添加标签页")
-                    RNPageActivity.start(requireActivity(), RnConstant.EDIT_MINE_HOMEPAGE)
+//                    RNPageActivity.start(requireActivity(), RnConstant.EDIT_MINE_HOMEPAGE)
+                    val intent = Intent(requireActivity(), EditInfoActivity::class.java)
+                    if (ForceUtils.activityMatch(intent)) {
+                        startActivity(intent)
+                    }
                 }
                 HomeItemBean.NORMAL -> {
                     val bean = item.content as? HomeRecomItem ?: return@onAdapterClickNew

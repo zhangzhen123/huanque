@@ -16,6 +16,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.dialog.BottomActionDialog
@@ -65,6 +66,7 @@ import kotlin.math.max
  *@创建时间 2020/12/29 19:17
  *@描述 编辑资料页面
  */
+@Route(path = ARouterConstant.EDIT_INFO_ACTIVITY)
 class EditInfoActivity : BaseActivity() {
 
     private val mEditInfoViewModel: EditInfoViewModel by viewModels()

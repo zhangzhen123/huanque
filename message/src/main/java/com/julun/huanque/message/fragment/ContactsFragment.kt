@@ -267,7 +267,8 @@ class ContactsFragment : BaseVMFragment<ContactsFragmentViewModel>() {
         state_pager_view.showEmpty(false, R.mipmap.icon_default_empty, emptyContent, View.OnClickListener {
             if (mViewModel.mType == ContactsTabType.Fan && (mActivityViewModel.socialListData.value?.perfection ?: 0) < 100) {
                 //跳转编辑资料
-                RNPageActivity.start(requireActivity(), RnConstant.EDIT_MINE_HOMEPAGE)
+//                RNPageActivity.start(requireActivity(), RnConstant.EDIT_MINE_HOMEPAGE)
+                ARouter.getInstance().build(ARouterConstant.EDIT_INFO_ACTIVITY).navigation()
             } else {
                 //跳转交友
                 ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY)

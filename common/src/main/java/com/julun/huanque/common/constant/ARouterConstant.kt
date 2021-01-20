@@ -93,6 +93,8 @@ object ARouterConstant {
 
     //主页页面
     const val HOME_PAGE_ACTIVITY = "/$CORE$PREFIX_ACTIVITY/HomePageActivity"
+    //编辑个人信息
+    const val EDIT_INFO_ACTIVITY = "/$CORE$PREFIX_ACTIVITY/EditInfoActivity"
 
     //花魁榜
     const val PLUM_FLOWER_ACTIVITY = "/$CORE$PREFIX_ACTIVITY/PlumFlowerActivity"

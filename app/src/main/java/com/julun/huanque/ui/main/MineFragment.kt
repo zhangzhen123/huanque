@@ -22,6 +22,7 @@ import com.julun.huanque.BuildConfig
 import com.julun.huanque.R
 import com.julun.huanque.activity.SettingActivity
 import com.julun.huanque.common.base.BaseVMFragment
+import com.julun.huanque.common.base.dialog.CommonDialogFragment
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
@@ -36,11 +37,11 @@ import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.interfaces.routerservice.IRealNameService
-import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.widgets.bgabanner.BGABanner
+import com.julun.huanque.core.ui.homepage.EditInfoActivity
 import com.julun.huanque.core.ui.homepage.HomePageActivity
 import com.julun.huanque.core.ui.recharge.RechargeCenterActivity
 import com.julun.huanque.fragment.InviteCodeFragment
@@ -137,7 +138,8 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
                 ToastUtils.show(error.busiMessage)
                 when (error.busiCode) {
                     ErrorCodes.NOT_INFO_COMPLETE -> {
-                        RNPageActivity.start(requireActivity(), RnConstant.EDIT_MINE_HOMEPAGE)
+//                        RNPageActivity.start(requireActivity(), RnConstant.EDIT_MINE_HOMEPAGE)
+                        requireActivity().startActivity<EditInfoActivity>()
                     }
                     ErrorCodes.NOT_BIND_WECHAT -> {
                         //账号与安全
@@ -304,6 +306,8 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
 
     }
 
+    private var commonDialogFragment: CommonDialogFragment? = null
+
     override fun initEvents(rootView: View) {
         clHeadRoot.onClickNew {
 //            RNPageActivity.start(requireActivity(), RnConstant.MINE_HOMEPAGE)
@@ -314,26 +318,72 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
 
             if (mViewModel.userInfo.value?.getT()?.userBasic?.headRealPeople != true) {
                 //未处于头像认证状态
-                MyAlertDialog(requireActivity()).showAlertWithOKAndCancel(
-                    "通过人脸识别技术确认照片为真人将获得认证标识，提高交友机会哦~",
-                    MyAlertDialog.MyDialogCallback(onRight = {
-                        (ARouter.getInstance().build(ARouterConstant.REALNAME_SERVICE)
-                            .navigation() as? IRealNameService)?.checkRealHead { e ->
-                            if (e is ResponseError && e.busiCode == ErrorCodes.REAL_HEAD_ERROR) {
-                                MyAlertDialog(requireActivity(), false).showAlertWithOKAndCancel(
-                                    e.busiMessage.toString(),
-                                    title = "修改提示",
-                                    okText = "修改头像",
-                                    noText = "取消",
-                                    callback = MyAlertDialog.MyDialogCallback(onRight = {
-                                        RNPageActivity.start(requireActivity(), RnConstant.EDIT_MINE_HOMEPAGE)
-                                    })
-                                )
+//                MyAlertDialog(requireActivity()).showAlertWithOKAndCancel(
+//                    "通过人脸识别技术确认照片为真人将获得认证标识，提高交友机会哦~",
+//                    MyAlertDialog.MyDialogCallback(onRight = {
+//                        (ARouter.getInstance().build(ARouterConstant.REALNAME_SERVICE)
+//                            .navigation() as? IRealNameService)?.checkRealHead { e ->
+//                            if (e is ResponseError && e.busiCode == ErrorCodes.REAL_HEAD_ERROR) {
+//                                MyAlertDialog(requireActivity(), false).showAlertWithOKAndCancel(
+//                                    e.busiMessage.toString(),
+//                                    title = "修改提示",
+//                                    okText = "修改头像",
+//                                    noText = "取消",
+//                                    callback = MyAlertDialog.MyDialogCallback(onRight = {
+//                                        RNPageActivity.start(requireActivity(), RnConstant.EDIT_MINE_HOMEPAGE)
+//                                    })
+//                                )
+//
+//                            }
+//                        }
+//                    }), "真人照片未认证", okText = "去认证", noText = "取消"
+//                )
+                CommonDialogFragment.create(
+                    dialog = commonDialogFragment,
+                    title = "真人照片认证",
+                    content = "通过人脸识别技术确认照片为真人将获得认证标识，提高交友机会哦~",
+                    imageRes = com.julun.huanque.core.R.mipmap.bg_dialog_real_auth,
+                    okText = "去认证",
+                    cancelText = "取消",
+                    callback = CommonDialogFragment.Callback(
+                        onOk = {
+                            (ARouter.getInstance().build(ARouterConstant.REALNAME_SERVICE)
+                                .navigation() as? IRealNameService)?.checkRealHead { e ->
+                                if (e is ResponseError && e.busiCode == ErrorCodes.REAL_HEAD_ERROR) {
+                                    MyAlertDialog(requireActivity(), false).showAlertWithOKAndCancel(
+                                        e.busiMessage.toString(),
+                                        title = "修改提示",
+                                        okText = "修改头像",
+                                        noText = "取消",
+                                        callback = MyAlertDialog.MyDialogCallback(onRight = {
+                                            val intent = Intent(requireActivity(), EditInfoActivity::class.java)
+                                            if (ForceUtils.activityMatch(intent)) {
+                                                startActivity(intent)
+                                            }
+                                        })
+                                    )
+//                                    CommonDialogFragment.create(
+//                                        title = "修改提示",
+//                                        content = e.busiMessage.toString(),
+//                                        imageRes = com.julun.huanque.core.R.mipmap.bg_dialog_heart_full,
+//                                        okText = "修改头像",
+//                                        cancelText = "取消",
+//                                        callback = CommonDialogFragment.MyDialogCallback(
+//                                            onOk = {
+//                                                val intent = Intent(requireActivity(), EditInfoActivity::class.java)
+//                                                if (ForceUtils.activityMatch(intent)) {
+//                                                    startActivity(intent)
+//                                                }
+//                                            }
+//                                        )
+//                                    ).show(requireActivity(), "CommonDialogFragment")
 
+                                }
                             }
+
                         }
-                    }), "真人照片未认证", okText = "去认证", noText = "取消"
-                )
+                    )
+                ).show(requireActivity(), "CommonDialogFragment")
             }
 //            ARouter.getInstance().build(ARouterConstant.REAL_HEAD_ACTIVITY).navigation()
 
