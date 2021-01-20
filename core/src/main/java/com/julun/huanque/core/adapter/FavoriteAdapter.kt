@@ -25,6 +25,7 @@ import java.text.DecimalFormat
 class FavoriteAdapter : BaseQuickAdapter<FavoriteUserBean, BaseViewHolder>(R.layout.item_favorite_user_list) {
     //去掉底部栏49 顶部tab=53 中间tab=40 其他边距20
     private val itemHeight = (ScreenUtils.getRealScreenHeight() - ScreenUtils.statusHeight - dp2px(49 + 53 + 40 + 20)) / 2
+
     init {
         addChildClickViewIds(R.id.ll_top_tag_holder)
     }
@@ -76,40 +77,40 @@ class FavoriteAdapter : BaseQuickAdapter<FavoriteUserBean, BaseViewHolder>(R.lay
             } else {
                 item.area
             }
-            tvDistance.show()
-            when {
-                item.distance < 1000 -> {
-                    holder.setText(R.id.tv_distance, "${item.distance}")
-                    holder.setText(R.id.tv_location, "m $area")
-                }
-                else -> {
-                    val format = DecimalFormat("#.0")
-                    format.roundingMode = RoundingMode.DOWN
-                    val dt = format.format((item.distance / 1000.0))
-                    holder.setText(R.id.tv_distance, dt)
-                    holder.setText(R.id.tv_location, "km $area")
-                }
-            }
+//            tvDistance.show()
+//            when {
+//                item.distance < 1000 -> {
+//                    holder.setText(R.id.tv_distance, "${item.distance}")
+//                    holder.setText(R.id.tv_location, "m $area")
+//                }
+//                else -> {
+//                    val format = DecimalFormat("#.0")
+//                    format.roundingMode = RoundingMode.DOWN
+//                    val dt = format.format((item.distance / 1000.0))
+//                    holder.setText(R.id.tv_distance, dt)
+//                    holder.setText(R.id.tv_location, "km $area")
+//                }
+//            }
             if (item.sameCity) {
-//                        tvDistance.show()
+                tvDistance.show()
                 ivDistance.hide()
-//                        when {
-//                            item.distance < 1000 -> {
-//                                holder.setText(R.id.tv_distance, "${item.distance}")
-//                                holder.setText(R.id.tv_location, "m $area")
-//                            }
-//                            else -> {
-//                                val format = DecimalFormat("#.0")
-//                                format.roundingMode = RoundingMode.DOWN
-//                                val dt = format.format((item.distance / 1000.0))
-//                                holder.setText(R.id.tv_distance, dt)
-//                                holder.setText(R.id.tv_location, "km $area")
-//                            }
-//                        }
+                when {
+                    item.distance < 1000 -> {
+                        holder.setText(R.id.tv_distance, "${item.distance}")
+                        holder.setText(R.id.tv_location, "m $area")
+                    }
+                    else -> {
+                        val format = DecimalFormat("#.0")
+                        format.roundingMode = RoundingMode.DOWN
+                        val dt = format.format((item.distance / 1000.0))
+                        holder.setText(R.id.tv_distance, dt)
+                        holder.setText(R.id.tv_location, "km $area")
+                    }
+                }
             } else {
-//                        tvDistance.hide()
+                tvDistance.hide()
                 ivDistance.show()
-//                        holder.setText(R.id.tv_location, area)
+                holder.setText(R.id.tv_location, area)
                 when {
                     item.distance <= 100000 -> {
                         ivDistance.imageResource = R.mipmap.icon_home_distance_car

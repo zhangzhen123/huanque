@@ -5,7 +5,9 @@ import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.bean.beans.HomePagePicBean
 import com.julun.huanque.common.constant.BusiConstant
+import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.loadImage
+import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.core.R
 
 /**
@@ -32,6 +34,11 @@ class NearbyPicListAdapter : BaseQuickAdapter<HomePagePicBean, BaseViewHolder>(R
 //            .setRoundingParams(roundParams)
 //            .build()
 //        sdv.hierarchy = hierarchy
-        sdv.loadImage(item.coverPic + BusiConstant.OSS_120, 28f, 28f)
+        if(item.blur){
+            ImageUtils.loadImageWithBlur(sdv,item.coverPic + BusiConstant.OSS_120, 3, 50,dp2px(28),dp2px(28))
+        }else{
+            sdv.loadImage(item.coverPic + BusiConstant.OSS_120, 28f, 28f)
+        }
+
     }
 }

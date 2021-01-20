@@ -74,6 +74,40 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+                <RelativeLayout
+                    android:id="@+id/rl_guide"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimen_40"
+                    android:layout_marginStart="@dimen/dimen_15"
+                    android:layout_marginEnd="@dimen/dimen_15"
+                    android:background="@drawable/bg_mine_guide">
+
+                    <TextView
+                        android:id="@+id/tv_guide_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="@dimen/dimen_10"
+                        android:text="完成资料可获得更精准的推荐"
+                        android:textColor="@color/black_333"
+                        android:textSize="@dimen/sp_14"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_guide_title2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:drawableRight="@mipmap/icon_forward_black_01"
+                        android:gravity="center"
+                        android:textColor="@color/black_333"
+                        android:textSize="@dimen/sp_12"
+                        android:textStyle="bold"
+                        tools:text="资料完整度：20%" />
+
+                </RelativeLayout>
+
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/clHeadRoot"
                     android:layout_width="match_parent"

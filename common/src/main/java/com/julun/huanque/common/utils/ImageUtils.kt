@@ -250,7 +250,7 @@ object ImageUtils {
 
         val controller = Fresco.newDraweeControllerBuilder()
             .setImageRequest(imageRequest)
-            .setAutoPlayAnimations(true)
+//            .setAutoPlayAnimations(true)
             .setOldController(imgView.controller)
             .build()
         imgView.controller = controller

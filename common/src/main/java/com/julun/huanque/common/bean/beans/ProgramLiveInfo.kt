@@ -616,6 +616,8 @@ data class HomePageInfo(
     var perfection: Int = 0,
     //封面列表
     var picList: MutableList<String> = mutableListOf(),
+    //可查看数目
+    var seeMaxCoverNum: Int = -1,
     //动态数量
     var postNum: Int = 0,
     //收礼数据
@@ -1095,7 +1097,8 @@ data class HomePagePicBean(
     var headerPic: String = "",
     //是否显示不可移动提示
     var showNoMoveAttention: String = "",
-    var logId: Long = 0L
+    var logId: Long = 0L,
+    var blur: Boolean = false//本地字段 是否模糊
 ) : Serializable
 
 /**

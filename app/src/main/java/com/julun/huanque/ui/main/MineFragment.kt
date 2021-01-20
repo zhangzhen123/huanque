@@ -28,10 +28,7 @@ import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.basic.ResponseError
-import com.julun.huanque.common.bean.beans.AdInfoBean
-import com.julun.huanque.common.bean.beans.UserDataTab
-import com.julun.huanque.common.bean.beans.UserDetailInfo
-import com.julun.huanque.common.bean.beans.UserTool
+import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.events.*
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.MixedHelper
@@ -190,6 +187,7 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
 
     private fun loadData(info: UserDetailInfo) {
         judgeRedPoint()
+        loadGuide(info.perfectGuide, info.userBasic.perfection)
         SharedPreferencesUtils.commitString(SPParamKey.CUSTOMER_URL, info.customerUrl)
         headImage.loadImage(info.userBasic.headPic + BusiConstant.OSS_160, 60f, 60f)
         tvNickName.text = info.userBasic.nickname
@@ -278,6 +276,19 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
 
         infoTabAdapter.setNewInstance(info.userDataTabList)
         toolsAdapter.setNewInstance(info.tools)
+    }
+
+    private fun loadGuide(perfectGuide: PerfectGuideBean?, perfection: Int) {
+        if (perfectGuide != null) {
+            if (perfection == 100) {
+                rl_guide.hide()
+            } else {
+                rl_guide.show()
+                tv_guide_title2.text = "资料完整度：${perfection}%"
+            }
+        } else {
+            rl_guide.hide()
+        }
     }
 
     private fun loadAd(adList: MutableList<AdInfoBean>?) {
@@ -474,6 +485,13 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
         iv_invite.onClickNew {
             //邀请码弹窗
             mInviteCodeFragment.show(childFragmentManager, "InviteCodeFragment")
+        }
+
+        rl_guide.onClickNew {
+            val intent = Intent(requireActivity(), EditInfoActivity::class.java)
+            if (ForceUtils.activityMatch(intent)) {
+                startActivity(intent)
+            }
         }
 
     }

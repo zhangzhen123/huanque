@@ -10,7 +10,8 @@ data class UserDetailInfo(
     //客服地址
     var customerUrl: String = "",
     //邀请码剩余时间
-    var inviteCodeTtl: Long = 0
+    var inviteCodeTtl: Long = 0,
+    var perfectGuide: PerfectGuideBean? = null
 ) : Serializable
 
 data class UserBasic(
@@ -33,7 +34,14 @@ data class UserBasic(
     var userType: String = "",
     var age: Int = 0,
     //真人图片地址
-    var authMark: String = ""
+    var authMark: String = "",
+    var perfection: Int = 0
+)
+
+data class PerfectGuideBean(
+    var guide: Boolean = false,
+    var guideText: String = "",
+    var touchType: String = ""
 )
 
 data class UserTool(

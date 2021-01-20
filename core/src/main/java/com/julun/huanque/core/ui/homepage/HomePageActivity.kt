@@ -15,7 +15,6 @@ import androidx.activity.viewModels
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -708,7 +707,7 @@ class HomePageActivity : BaseActivity() {
     private fun showViewByData(bean: HomePageInfo) {
         tv_user_name.text = bean.nickname
         if (!mHomePageViewModel.shareElement) {
-            showPic(bean.headPic, bean.picList)
+            showPic(bean.headPic, bean.picList, bean.seeMaxCoverNum)
         }
         tv_nickname.text = bean.nickname
         if (bean.authMark.isEmpty()) {
@@ -887,13 +886,22 @@ class HomePageActivity : BaseActivity() {
     /**
      * 显示图片数据
      */
-    private fun showPic(headerPic: String, coverPicList: MutableList<String>) {
+    private fun showPic(
+        headerPic: String,
+        coverPicList: MutableList<String>,
+        freeCount: Int
+    ) {
         val picList = mutableListOf<HomePagePicBean>()
         if (headerPic.isNotEmpty()) {
-            picList.add(HomePagePicBean(headerPic, selected = BusiConstant.True))
+            picList.add(HomePagePicBean(headerPic, selected = BusiConstant.True, blur = false))
         }
-        coverPicList.forEach {
-            picList.add(HomePagePicBean(it))
+        coverPicList.forEachIndexed { index, cover ->
+            val mBlur = if (freeCount == -1) {
+                false
+            } else {
+                index >= freeCount - 1
+            }
+            picList.add(HomePagePicBean(cover, blur = mBlur))
         }
         showBanner(picList)
         mPicAdapter.setList(picList)
@@ -957,7 +965,12 @@ class HomePageActivity : BaseActivity() {
         BGABanner.Adapter<View, HomePagePicBean> { _, itemView, model, _ ->
             val pic = itemView?.findViewById<SimpleDraweeView>(R.id.sdv) ?: return@Adapter
 
-            ImageUtils.loadImageNoResize(pic, "${model?.coverPic}")
+            if (model?.blur == true) {
+                ImageUtils.loadImageWithBlur(pic, model.coverPic, 3, 50)
+            } else {
+                ImageUtils.loadImageNoResize(pic, "${model?.coverPic}")
+            }
+
 //            val icWater = itemView?.findViewById<ImageView>(R.id.iv_water) ?: return@Adapter
 //            if (model?.realPic == BusiConstant.True) {
 //                icWater.show()
