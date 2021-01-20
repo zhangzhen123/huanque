@@ -952,6 +952,7 @@ class NearbyFragment : BaseLazyFragment() {
             }
 
             override fun convert(holder: BaseViewHolder, item: NearbyUserBean) {
+                holder.setVisible(R.id.sd_auth_tag, item.realName || item.headRealPeople)
                 val sdv = holder.getView<SimpleDraweeView>(R.id.card_img)
                 sdv.loadImageNoResize(item.coverPic)
 //                if (item.distance != 0) {

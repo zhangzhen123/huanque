@@ -169,7 +169,7 @@ class HomePageActivity : BaseActivity() {
 //        custom_coordinator.setmZoomView(view_holder)
 //        custom_coordinator.setZoom(0f)
 //        custom_coordinator.setmMoveView(toolbar, view_pager, con_header)
-
+        state_pager_view.showLoading()
         initViewModel()
         initRecyclerView()
         initViewPager()
@@ -556,13 +556,13 @@ class HomePageActivity : BaseActivity() {
                 when (it.state) {
                     NetStateType.SUCCESS -> {
                         state_pager_view.showSuccess()
-                        mPagerAdapter?.notifyDataSetChanged()
+//                        mPagerAdapter?.notifyDataSetChanged()
                     }
                     NetStateType.NETWORK_ERROR -> {
-//                        state_pager_view.showError()
+                        state_pager_view.showError()
                     }
                     NetStateType.LOADING -> {
-//                        state_pager_view.showLoading()
+                        state_pager_view.showLoading()
                     }
 
 

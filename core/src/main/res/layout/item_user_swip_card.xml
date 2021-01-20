@@ -137,9 +137,9 @@
 
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/sd_auth_tag"
-                android:layout_width="@dimen/dimen_16"
-                android:layout_height="@dimen/dimen_16"
-                android:layout_marginStart="@dimen/dimen_6"
+                android:layout_width="@dimen/dimen_18"
+                android:layout_height="@dimen/dimen_18"
+                android:layout_marginStart="@dimen/dimen_4"
                 android:visibility="gone"
                 app:actualImageResource="@mipmap/icon_real_people"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_user_name"
