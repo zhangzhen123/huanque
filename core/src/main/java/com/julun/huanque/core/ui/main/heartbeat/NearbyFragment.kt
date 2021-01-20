@@ -4,6 +4,7 @@ import android.Manifest
 import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
 import android.text.SpannableString
@@ -23,12 +24,14 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
+import com.alibaba.android.arouter.launcher.ARouter
 import com.baidu.location.BDLocation
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.base.BaseLazyFragment
 import com.julun.huanque.common.base.dialog.CommonDialogFragment
+import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.bean.beans.HomePagePicBean
@@ -36,10 +39,9 @@ import com.julun.huanque.common.bean.beans.NearbyUserBean
 import com.julun.huanque.common.bean.beans.UserTagBean
 import com.julun.huanque.common.bean.events.LikeEvent
 import com.julun.huanque.common.bean.events.PicChangeEvent
-import com.julun.huanque.common.constant.BooleanType
-import com.julun.huanque.common.constant.BusiConstant
-import com.julun.huanque.common.constant.HomeTabType
+import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.reportCrash
+import com.julun.huanque.common.interfaces.routerservice.IRealNameService
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.utils.device.PhoneUtils
@@ -53,6 +55,7 @@ import com.julun.huanque.common.widgets.layoutmanager.AutoCenterLayoutManager
 import com.julun.huanque.common.widgets.recycler.decoration.HorizontalItemDecoration
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.NearbyPicListAdapter
+import com.julun.huanque.core.ui.homepage.EditInfoActivity
 import com.julun.huanque.core.ui.homepage.HomePageActivity
 import com.julun.huanque.core.ui.homepage.TagFragment
 import com.julun.huanque.core.ui.tag_manager.TagUserPicsActivity
@@ -322,6 +325,38 @@ class NearbyFragment : BaseLazyFragment() {
                         )
                         tagFragment.show(childFragmentManager, "tagFragment")
                     }
+                }
+                R.id.sd_auth_tag -> {
+                    //实人认证图标
+                    CommonDialogFragment.create(
+                        title = "真人照片认证",
+                        content = "通过人脸识别技术确认照片为真人将获得认证标识，提高交友机会哦~",
+                        imageRes = com.julun.huanque.core.R.mipmap.bg_dialog_real_auth,
+                        okText = "去认证",
+                        cancelText = "取消",
+                        callback = CommonDialogFragment.Callback(
+                            onOk = {
+                                (ARouter.getInstance().build(ARouterConstant.REALNAME_SERVICE)
+                                    .navigation() as? IRealNameService)?.checkRealHead { e ->
+                                    if (e is ResponseError && e.busiCode == ErrorCodes.REAL_HEAD_ERROR) {
+                                        MyAlertDialog(requireActivity(), false).showAlertWithOKAndCancel(
+                                            e.busiMessage.toString(),
+                                            title = "修改提示",
+                                            okText = "修改头像",
+                                            noText = "取消",
+                                            callback = MyAlertDialog.MyDialogCallback(onRight = {
+                                                val intent = Intent(requireActivity(), EditInfoActivity::class.java)
+                                                if (ForceUtils.activityMatch(intent)) {
+                                                    startActivity(intent)
+                                                }
+                                            })
+                                        )
+                                    }
+                                }
+
+                            }
+                        )
+                    ).show(requireActivity(), "CommonDialogFragment")
                 }
             }
         }
@@ -916,7 +951,8 @@ class NearbyFragment : BaseLazyFragment() {
                     R.id.ani_tag_03,
                     R.id.ani_tag_04,
                     R.id.iv_super_like,
-                    R.id.tv_bottom_tips
+                    R.id.tv_bottom_tips,
+                    R.id.sd_auth_tag
                 )
             }
 
