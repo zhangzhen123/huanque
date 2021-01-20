@@ -1,6 +1,7 @@
 package com.julun.huanque.core.ui.main.heartbeat
 
 import android.animation.Animator
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
 import androidx.fragment.app.activityViewModels
@@ -85,17 +86,18 @@ class FilterTagFragment : BaseBottomSheetFragment() {
         rv_social_type.itemAnimator = null
         rv_social_type.layoutManager = GridLayoutManager(requireContext(), 2)
         rv_social_type.addItemDecoration(GridLayoutSpaceItemDecoration2(dp2px(15)))
-        rv_social_type.setHasFixedSize(true)
+//        rv_social_type.setHasFixedSize(true)
         rv_social_type.isNestedScrollingEnabled = false
 
         rv_tags.adapter = parentTagAdapter
+        parentTagAdapter.addFooterView(LayoutInflater.from(context).inflate(R.layout.view_bottom_holder, null))
         rv_tags.layoutManager = LinearLayoutManager(requireContext())
         rv_tags.addItemDecoration(VerticalItemDecoration(dp2px(30)))
-        rv_tags.setHasFixedSize(true)
+//        rv_tags.setHasFixedSize(true)
         rv_tags.isNestedScrollingEnabled = false
         (rv_tags.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
 
-        socialsAdapter.setOnItemClickListener { _, view, position ->
+        socialsAdapter.setOnItemClickListener { _, _, position ->
             val item = socialsAdapter.getItemOrNull(position) ?: return@setOnItemClickListener
             item.selected = !item.selected
             socialsAdapter.notifyItemChanged(position)

@@ -62,7 +62,8 @@ class MainConnectViewModel : BaseViewModel() {
                     )
                 )
             } else {
-                ToastUtils.show("无法获取定位 请确保已打开定位开关")
+                locationTag.value=null
+//                ToastUtils.show("无法获取定位 请确保已打开定位开关")
             }
         }
     }
@@ -73,7 +74,8 @@ class MainConnectViewModel : BaseViewModel() {
     }
     init {
         mLocationService.setLocationOption(mLocationService.defaultLocationClientOption.apply {
-            setScanSpan(0)
+//            this.setScanSpan(0)
+            this.isOpenGps = true
         })
     }
     fun startLocation() {

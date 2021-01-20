@@ -224,7 +224,7 @@ class TagPicsActivity : BaseVMActivity<TagPicsViewModel>() {
         if (listData.authPage.isPull) {
 //            sdv_tag.loadImage(listData.tagIcon, 15f, 15f)
 //            tv_tag.text = listData.tagName
-//            tv_like_bottom.text = "喜欢${listData.tagName}"
+            tv_like_bottom.text = "喜欢${listData.tagName}"
             tvTitle.text=listData.tagName
             tv_num.text = "(认证${listData.authNum}人)"
 //            tv_desc.text = listData.tagDesc

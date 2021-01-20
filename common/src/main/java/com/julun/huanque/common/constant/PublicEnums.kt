@@ -384,6 +384,9 @@ object ActivityCodes {
     //请求码
     //通用基础请求码
     const val REQUEST_CODE_NORMAL = 10000
+
+    //定位请求
+    const val REQUEST_CODE_LOCATION = 888
 }
 
 /**
