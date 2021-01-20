@@ -5,7 +5,9 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.base.BaseFragment
+import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.message.R
@@ -53,13 +55,23 @@ class WatchFragment : BaseFragment() {
         recycler_view.adapter = mAdapter
         mAdapter.setEmptyView(MixedHelper.getEmptyView(requireContext(), "暂无数据"))
         mAdapter.setOnItemChildClickListener { adapter, view, position ->
+            val tempHistoryBean = mAdapter.getItemOrNull(position) ?: return@setOnItemChildClickListener
             when (view.id) {
                 R.id.tv_private -> {
                     //私信
-//                    PrivateConversationActivity.newInstance(requireActivity(),)
+                    PrivateConversationActivity.newInstance(
+                        requireActivity(),
+                        tempHistoryBean.userId,
+                        tempHistoryBean.nickName,
+                        headerPic = tempHistoryBean.headPic
+                    )
                 }
                 R.id.sdv_header -> {
-                    //头像
+                    //主页
+                    val bundle = Bundle().apply {
+                        putLong(ParamConstant.UserId, tempHistoryBean.userId)
+                    }
+                    ARouter.getInstance().build(ARouterConstant.HOME_PAGE_ACTIVITY).with(bundle).navigation()
 
                 }
             }

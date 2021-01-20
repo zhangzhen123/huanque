@@ -255,8 +255,8 @@ class PrivateConversationActivity : BaseActivity() {
 //        mPrivateConversationViewModel?.mFateID = intent?.getStringExtra(ParamConstant.FATE_ID)
         //获取基本数据
         mPrivateConversationViewModel?.chatBasic(targetID ?: return)
-        //获取小鹊语料
-        mPrivateConversationViewModel?.getActiveWord()
+//        //获取小鹊语料
+//        mPrivateConversationViewModel?.getActiveWord()
         //获取配置相关
         val cb = SPUtils.getObject<ChatBubble>(SPParamKey.PRIVATE_CHAT_BUBBLE, ChatBubble::class.java)
         if (cb == null || cb.bgc.isEmpty()) {
