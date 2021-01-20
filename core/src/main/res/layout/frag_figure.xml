@@ -46,7 +46,8 @@
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/sdv_figure"
         android:layout_width="90dp"
-        android:layout_height="275dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="306:966"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/view_top" />

@@ -41,8 +41,8 @@ class LoginPicAdapter() : BaseQuickAdapter<LoginPicBean, BaseViewHolder>(R.layou
     }
 
     override fun getItem(position: Int): LoginPicBean {
-//        val count = data.size
-        return data.random()
+        val count = data.size
+        return data[position % count]
     }
 
     override fun getItemViewType(position: Int): Int {

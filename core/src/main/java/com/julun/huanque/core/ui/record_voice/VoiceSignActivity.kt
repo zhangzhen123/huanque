@@ -304,7 +304,7 @@ class VoiceSignActivity : BaseVMActivity<VoiceSignViewModel>() {
 //                    it.getT()
                 recordState = 0
                 EventBus.getDefault().post(VoiceSignEvent())
-                ToastUtils.show("修改语音签名成功")
+                ToastUtils.show("语音保存成功，等待审核中")
                 finish()
             } else if (it.state == NetStateType.ERROR) {
                 ToastUtils.show(it.error?.message)

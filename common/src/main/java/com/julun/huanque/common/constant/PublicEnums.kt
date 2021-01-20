@@ -368,6 +368,9 @@ object MessageConstants {
     //动态详情
     const val PostDetail = "PostDetail"
 
+    //标签详情
+    const val AuthTagDetail = "AuthTagDetail"
+
 }
 
 /**

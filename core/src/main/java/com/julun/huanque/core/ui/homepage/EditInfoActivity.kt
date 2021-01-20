@@ -464,10 +464,10 @@ class EditInfoActivity : BaseActivity() {
     private fun showBottomDialog(isHead: Boolean) {
         val actions = arrayListOf<BottomAction>()
         if (isHead) {
-            actions.add(BottomAction(BottomActionCode.REPLACE_HEAD, "更换头像"))
             if (currentPicBean?.realPic != BooleanType.TRUE) {
                 actions.add(BottomAction(BottomActionCode.AUTH_HEAD, "认证头像"))
             }
+            actions.add(BottomAction(BottomActionCode.REPLACE_HEAD, "更换头像"))
         } else {
             actions.add(BottomAction(BottomActionCode.REPLACE, "更换"))
             actions.add(BottomAction(BottomActionCode.DELETE, "删除"))
@@ -593,8 +593,8 @@ class EditInfoActivity : BaseActivity() {
         showBasicInfo(tv_school, info.schoolInfo.school)
 
 //        tv_job.text = "${info.profession.professionTypeText}/${info.profession.professionName}"
-        if (info.profession.professionTypeText.isNotEmpty() && info.profession.professionName.isNotEmpty()) {
-            showBasicInfo(tv_job, "${info.profession.professionTypeText}/${info.profession.professionName}")
+        if (info.profession.professionName.isNotEmpty()) {
+            showBasicInfo(tv_job, info.profession.professionName)
         } else {
             showBasicInfo(tv_job, "")
         }

@@ -81,6 +81,7 @@ class HomeTownFragment : BaseBottomSheetFragment() {
             if (it != null) {
                 tv_introduction.text = it.introduce
                 mTabTitles.clear()
+                mTypeList.clear()
                 it.cultureList.forEach { sc ->
                     mTypeList.add(sc.cultureType)
                     mTabTitles.add("${sc.cultureTypeText} ${sc.num}")

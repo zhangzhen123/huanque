@@ -21,6 +21,7 @@ import androidx.lifecycle.Observer
 import cn.jiguang.verifysdk.api.JVerificationInterface
 import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseActivity
+import com.julun.huanque.common.bean.events.WeiXinCodeEvent
 import com.julun.huanque.common.constant.Agreement
 import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.helper.StorageHelper
@@ -41,6 +42,8 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.android.synthetic.main.frag_login.*
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.backgroundColor
 import org.jetbrains.anko.textColor
 import java.util.concurrent.TimeUnit
@@ -57,6 +60,8 @@ class LoginActivity2 : BaseActivity() {
 
     //是否正在倒计时
     private var mIsCountting: Boolean = false
+
+    override fun isRegisterEventBus() = true
 
     override fun getLayoutId() = R.layout.frag_login
 
@@ -566,4 +571,9 @@ class LoginActivity2 : BaseActivity() {
         closeKeyBoard()
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun receiveWeiXinCode(event: WeiXinCodeEvent) {
+        logger.info("收到微信登录code:${event.code}")
+        mLoginViewModel.weiXinLogin(event.code)
+    }
 }
