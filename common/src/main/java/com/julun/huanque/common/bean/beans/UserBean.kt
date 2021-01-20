@@ -502,3 +502,23 @@ data class FilterTag(
  * 星座对象
  */
 data class ConstellationBean(var type: String = "", var name: String = "") : Serializable
+
+/**
+ * 查看历史
+ */
+data class WatchHistoryBean(
+    //头像
+    var headPic: String = "",
+    //昵称
+    var nickName: String = "",
+    //性别
+    var sex: String = "",
+    //用户Id
+    var userId: Long = 0,
+    //查看次数
+    var visitCount: Int = 0,
+    //查看时间
+    var visitTime: String = "",
+    //年龄
+    var age: Int = 0
+) : Serializable

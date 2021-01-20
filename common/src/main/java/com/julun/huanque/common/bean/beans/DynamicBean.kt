@@ -164,6 +164,22 @@ data class DynamicListExt(
     var follow: Boolean = false
 ) : Serializable
 
+class WatchListInfo<T> : RootListData<T>() {
+    var extData: WatchListExt? = null
+}
+
+/**
+ * 观看历史数据
+ */
+class WatchListExt(
+    //能访问的最大数量
+    var viewNum: Int = 0,
+    //添加喜欢的标签数＞3即可知道谁访问了你哦
+    var guideText: String = "",
+    //跳转的类型 同消息touchType
+    var touchType: String = ""
+) : Serializable
+
 /**
  * 点赞变化 分享变化  评论变化 如果是true +1  false则-1 null不处理
  */

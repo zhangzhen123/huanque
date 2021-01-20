@@ -36,6 +36,11 @@
             android:name=".activity.CommentListActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name="com.julun.huanque.message.activity.WatchHistoryActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/CustomToolBarTheme" />
+
+        <activity
             android:name=".activity.PraiseListActivity"
             android:screenOrientation="portrait" />
         <activity

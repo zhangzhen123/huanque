@@ -36,14 +36,17 @@ import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.interfaces.routerservice.IRealNameService
+import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.widgets.bgabanner.BGABanner
 import com.julun.huanque.core.ui.homepage.HomePageActivity
 import com.julun.huanque.core.ui.recharge.RechargeCenterActivity
+import com.julun.huanque.fragment.InviteCodeFragment
 import com.julun.huanque.message.activity.ContactsActivity
 import com.julun.huanque.ui.safe.AccountAndSecurityActivity
+import com.julun.huanque.viewmodel.InviteCodeViewModel
 import com.julun.huanque.viewmodel.MainViewModel
 import com.julun.huanque.viewmodel.MineViewModel
 import com.julun.rnlib.RNPageActivity
@@ -72,8 +75,14 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
 
     private val mMainViewModel: MainViewModel by activityViewModels()
 
+    //邀请码ViewModel
+    private val mInviteViewModel: InviteCodeViewModel by activityViewModels()
+
     //是否需要刷新数据
     private var mNeedRefresh = false
+
+    //邀请弹窗
+    private val mInviteCodeFragment: InviteCodeFragment by lazy { InviteCodeFragment() }
 
     override fun getLayoutId() = R.layout.fragment_mine
 
@@ -152,6 +161,21 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
             }
         })
 
+        mViewModel.codeShowStatus.observe(this, Observer {
+            if (it == true) {
+                iv_invite.show()
+            } else {
+                iv_invite.hide()
+            }
+        })
+
+        mInviteViewModel.codeSuccessFlag.observe(this, Observer {
+            if (it == true) {
+                //邀请码校验成功
+                mInviteCodeFragment.dismiss()
+                mViewModel.clearCodeTimer()
+            }
+        })
 
     }
 
@@ -283,7 +307,7 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
     override fun initEvents(rootView: View) {
         clHeadRoot.onClickNew {
 //            RNPageActivity.start(requireActivity(), RnConstant.MINE_HOMEPAGE)
-            HomePageActivity.newInstance(requireActivity(),SessionUtils.getUserId())
+            HomePageActivity.newInstance(requireActivity(), SessionUtils.getUserId())
         }
 
         headImage.onClickNew {
@@ -397,6 +421,10 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
             startActivity(intent)
         }
 
+        iv_invite.onClickNew {
+            //邀请码弹窗
+            mInviteCodeFragment.show(childFragmentManager, "InviteCodeFragment")
+        }
 
     }
 

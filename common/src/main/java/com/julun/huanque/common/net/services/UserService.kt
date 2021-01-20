@@ -209,6 +209,12 @@ interface UserService {
     suspend fun updateCard(@Body form: UpdateInformationForm): Root<UpdateSexBean>
 
     /**
+     * 更新邀请码
+     */
+    @POST("user/acct/data/updateCard")
+    suspend fun updateCode(@Body form: UpdateInformationForm): Root<VoidResult>
+
+    /**
      * 新手礼包
      */
     @POST("user/welfare/newUserBag")

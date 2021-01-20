@@ -8,7 +8,9 @@ data class UserDetailInfo(
     var userBasic: UserBasic = UserBasic(),
     var userDataTabList: MutableList<UserDataTab> = mutableListOf(),
     //客服地址
-    var customerUrl: String = ""
+    var customerUrl: String = "",
+    //邀请码剩余时间
+    var inviteCodeTtl: Long = 0
 ) : Serializable
 
 data class UserBasic(

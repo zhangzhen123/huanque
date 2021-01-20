@@ -342,10 +342,10 @@ class MessageFragment : BaseFragment() {
                 } else {
                     rl_yuanfen.hide()
                 }
-                //显示广告
-                if (!mMessageViewModel.player) {
-                    loadAd(it.adList)
-                }
+//                //显示广告
+//                if (!mMessageViewModel.player) {
+//                    loadAd(it.adList)
+//                }
                 if (it.hasSubAccount == BusiConstant.True) {
                     //有分身账号
                     iv_account.show()
@@ -537,6 +537,10 @@ class MessageFragment : BaseFragment() {
             }
         }
 
+        view_watch.onClickNew {
+            //看过的人
+            WatchHistoryActivity.newInstance(requireActivity())
+        }
     }
 
     //设置在线状态的PopupWindow

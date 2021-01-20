@@ -441,4 +441,10 @@ interface SocialService {
      */
     @POST("user/acct/card/homeTown")
     suspend fun homeTown(@Body body: FriendIdForm): Root<HomeTownInfo>
+
+    /**
+     * 访问历史
+     */
+    @POST("social/friend/relation/visitLog")
+    suspend fun visitLog(@Body body: WatchForm): Root<WatchListInfo<WatchHistoryBean>>
 }

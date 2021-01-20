@@ -222,7 +222,7 @@ class UpdateInfoFragment : BaseDialogFragment(), DialogInterface.OnKeyListener {
             }
             form.invitationCode = code
 
-            if (form.headPic.isNotEmpty() || form.nickname?.isNotEmpty() == true || form.birthday?.isNotEmpty() == true || form.invitationCode?.isNotEmpty() == true) {
+            if (form.headPic?.isNotEmpty() == true || form.nickname?.isNotEmpty() == true || form.birthday?.isNotEmpty() == true || form.invitationCode?.isNotEmpty() == true) {
                 //需要更新
                 mViewModel.updateCard(form)
             } else {
