@@ -56,10 +56,10 @@ class SchoolViewModel : BaseViewModel() {
     /**
      * 搜索学校数据
      */
-    fun searchSchool(schoolStr: String) {
+    fun searchSchool(schoolStr: String, education: String? = null) {
         viewModelScope.launch {
             request({
-                searchShoolResult.value = userService.getSchool(SchoolForm(schoolStr)).dataConvert()
+                searchShoolResult.value = userService.getSchool(SchoolForm(schoolStr, education)).dataConvert()
             }, {})
         }
     }
@@ -71,7 +71,7 @@ class SchoolViewModel : BaseViewModel() {
         if (form.startYear == null && schoolName == originalSchoolInfo?.school && form.education == null) {
             return
         }
-        if(form.schoolId == 0){
+        if (form.schoolId == 0) {
             form.schoolId = null
         }
         viewModelScope.launch {

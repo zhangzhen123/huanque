@@ -155,10 +155,6 @@ class ProfessionActivity : BaseActivity() {
             val form = SaveProfessionForm()
             //判断收入是否有变动
             val curIncomeCode = mViewModel.professionData.value?.incomeCode ?: ""
-            if (curIncomeCode != mViewModel.oriIncomeCode) {
-                //收入有变动
-                form.income = curIncomeCode
-            }
 
             //判断职业特性是否有变动
             val curFeatureTypes = mutableListOf<String>()
@@ -183,30 +179,19 @@ class ProfessionActivity : BaseActivity() {
                 }
                 oriTypesStr.append(it)
             }
-            if (oriTypesStr.toString() != curTypesStr.toString()) {
-                //职业特性数据有变化
-                form.professionFeatureCodes = curTypesStr.toString()
-            }
 
+            val oriPromissionId = mViewModel.originalProfession?.professionId
             val curPromissionId = mViewModel.professionData.value?.professionId ?: return@onClickNew
-            if (form.income != null || form.professionFeatureCodes != null) {
-                //职业特性或者收入有变动
+
+            if (curIncomeCode != mViewModel.oriIncomeCode || oriTypesStr.toString() != curTypesStr.toString() || curPromissionId != oriPromissionId) {
+                //收入有变动
+                form.income = curIncomeCode
+                form.professionFeatureCodes = curTypesStr.toString()
                 form.professionId = curPromissionId
-            } else {
-                //判断职业是否变动
-                val oriPromissionId = mViewModel.originalProfession?.professionId
-                if (curPromissionId != oriPromissionId) {
-                    //职业有过变动
-                    form.professionId = curPromissionId
-                }
-            }
-            if (form.income != null || form.professionFeatureCodes != null || form.professionId != null) {
-                //数据有变动
                 mViewModel.saveProfession(form)
             } else {
                 EditUtils.goToNext(this, mViewModel.index)
             }
-
         }
     }
 
@@ -253,6 +238,9 @@ class ProfessionActivity : BaseActivity() {
         if (contentH.isNotEmpty() && contentZ.isNotEmpty()) {
             tv_home_town.text = "$contentH/$contentZ"
         }
+//        if (contentZ.isNotEmpty()) {
+//            tv_home_town.text = contentZ
+//        }
     }
 
 
@@ -387,32 +375,32 @@ class ProfessionActivity : BaseActivity() {
 
         val showList = mutableListOf<SingleProfessionFeatureConfig>()
         //添加正向
-        if (upList.size <= 4) {
-            showList.addAll(upList)
-        } else {
-            //获取4个正向
-            upList.asSequence().take(4).forEach {
-                showList.add(it)
-            }
+//        if (upList.size <= 4) {
+//            showList.addAll(upList)
+//        } else {
+        //获取4个正向
+        upList.asSequence().filter { it.mark != BusiConstant.True }.take(4).forEach {
+            showList.add(it)
         }
+//        }
         //添加中性
-        if (middleList.size <= 2) {
-            showList.addAll(middleList)
-        } else {
-            //获取两个中性
-            middleList.asSequence().take(2).forEach {
-                showList.add(it)
-            }
+//        if (middleList.size <= 2) {
+//            showList.addAll(middleList)
+//        } else {
+        //获取两个中性
+        middleList.asSequence().filter { it.mark != BusiConstant.True }.take(2).forEach {
+            showList.add(it)
         }
+//        }
         //添加负性
-        if (downList.size <= 2) {
-            showList.addAll(downList)
-        } else {
-            //获取两个负向
-            downList.asSequence().take(2).forEach {
-                showList.add(it)
-            }
+//        if (downList.size <= 2) {
+//            showList.addAll(downList)
+//        } else {
+        //获取两个负向
+        downList.asSequence().filter { it.mark != BusiConstant.True }.take(2).forEach {
+            showList.add(it)
         }
+//        }
         //随机打乱
         val realList = mutableListOf<SingleProfessionFeatureConfig>()
         val count = showList.size

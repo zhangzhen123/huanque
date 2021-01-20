@@ -97,6 +97,9 @@ class WelcomeActivity : BaseActivity() {
     //是否显示过登录弹窗
     private var mShowedLoginView = false
 
+    //是否跳转登录页面
+    private var loginActivity = false
+
     //是否是首次进入
     private var first = true
 
@@ -228,7 +231,13 @@ class WelcomeActivity : BaseActivity() {
             add(LoginPicBean(R.mipmap.tag_59, 24, "北京", "一环"))
             add(LoginPicBean(R.mipmap.tag_60, 24, "北京", "一环"))
         }
-        recycler_view.adapter = mAdapter.apply { setList(tagPic) }
+        val showList = mutableListOf<LoginPicBean>()
+        while (tagPic.isNotEmpty()) {
+            val tempData = tagPic.random()
+            tagPic.remove(tempData)
+            showList.add(tempData)
+        }
+        recycler_view.adapter = mAdapter.apply { setList(showList) }
         recycler_view.layoutManager = StaggeredGridLayoutManager(2, RecyclerView.VERTICAL)
         recycler_view.startScroll()
     }
@@ -590,6 +599,7 @@ class WelcomeActivity : BaseActivity() {
 //                mLoginFragment.show(supportFragmentManager, "LoginFragment")
                 val intent = Intent(this, LoginActivity2::class.java)
                 if (ForceUtils.activityMatch(intent)) {
+                    loginActivity = true
                     startActivity(intent)
                 }
             }
@@ -664,6 +674,10 @@ class WelcomeActivity : BaseActivity() {
         return uiConfigBuilder.build()
     }
 
+    override fun onResume() {
+        super.onResume()
+        loginActivity = false
+    }
 
     override fun onDestroy() {
         super.onDestroy()
@@ -706,6 +720,7 @@ class WelcomeActivity : BaseActivity() {
 //                        mLoginFragment.show(supportFragmentManager, "LoginFragment")
                         val intent = Intent(this@WelcomeActivity, LoginActivity2::class.java)
                         if (ForceUtils.activityMatch(intent)) {
+                            loginActivity = true
                             startActivity(intent)
                         }
                     }
@@ -725,6 +740,9 @@ class WelcomeActivity : BaseActivity() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun receiveWeiXinCode(event: WeiXinCodeEvent) {
+        if(loginActivity){
+            return
+        }
         logger.info("收到微信登录code:${event.code}")
         mLoginViewModel.weiXinLogin(event.code)
     }

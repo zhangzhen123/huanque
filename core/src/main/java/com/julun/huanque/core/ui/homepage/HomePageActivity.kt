@@ -44,6 +44,7 @@ import com.julun.huanque.common.widgets.layoutmanager.AutoCenterLayoutManager
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.HomePageAdapter
 import com.julun.huanque.core.adapter.HomePagePicListAdapter
+import com.julun.huanque.core.ui.record_voice.VoiceSignActivity
 import com.julun.huanque.core.viewmodel.HomePageViewModel
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
@@ -337,7 +338,14 @@ class HomePageActivity : BaseActivity() {
         //播放音效
         view_voice.onClickNew {
             //进入语音录制页面
-
+            val voiceBean = mHomePageViewModel.homeInfoBean.value?.voice ?: return@onClickNew
+            if (mHomePageViewModel.mineHomePage && voiceBean.voiceStatus.isEmpty()) {
+                //录制语音
+                val intent = Intent(this, VoiceSignActivity::class.java)
+                if (ForceUtils.activityMatch(intent)) {
+                    startActivity(intent)
+                }
+            }
         }
 
 
@@ -552,7 +560,8 @@ class HomePageActivity : BaseActivity() {
 //                        mPagerAdapter?.notifyDataSetChanged()
                     }
                     NetStateType.NETWORK_ERROR -> {
-                        state_pager_view.showError()
+                        ToastUtils.show("网络异常")
+                        state_pager_view.showError(btnClick = View.OnClickListener { mHomePageViewModel.homeInfo() })
                     }
                     NetStateType.LOADING -> {
                         state_pager_view.showLoading()

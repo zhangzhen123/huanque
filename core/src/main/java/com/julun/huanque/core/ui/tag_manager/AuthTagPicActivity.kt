@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
@@ -22,6 +23,7 @@ import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.bean.beans.AuthPic
 import com.julun.huanque.common.bean.beans.AuthTagPicInfo
 import com.julun.huanque.common.bean.beans.BottomAction
+import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.BottomActionCode
 import com.julun.huanque.common.constant.ManagerTagCode
 import com.julun.huanque.common.constant.TagPicAuthStatus
@@ -52,6 +54,7 @@ import org.jetbrains.anko.startActivity
  *@Description: AuthTagPicActivity 认证标签图片
  *
  */
+@Route(path = ARouterConstant.AUTH_TAG_PIC_ACTIVITY)
 class AuthTagPicActivity : BaseVMActivity<AuthTagPicViewModel>() {
 
     companion object {

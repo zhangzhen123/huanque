@@ -93,6 +93,7 @@ object ARouterConstant {
 
     //主页页面
     const val HOME_PAGE_ACTIVITY = "/$CORE$PREFIX_ACTIVITY/HomePageActivity"
+
     //编辑个人信息
     const val EDIT_INFO_ACTIVITY = "/$CORE$PREFIX_ACTIVITY/EditInfoActivity"
 
@@ -120,6 +121,9 @@ object ARouterConstant {
 
     //圈子动态
     const val CIRCLE_DYNAMIC_ACTIVITY = "/$CORE$PREFIX_ACTIVITY/CircleDynamicActivity"
+
+    //认证页面
+    const val AUTH_TAG_PIC_ACTIVITY = "/$CORE$PREFIX_ACTIVITY/AuthTagPicActivity"
 
 
     //邀友分享

@@ -157,8 +157,13 @@ class SchoolActivity : BaseActivity() {
             override fun afterTextChanged(s: Editable?) {
                 if (s?.isNotEmpty() == true) {
                     phone_num_clear.show()
+                    val education = mViewModel.schoolData.value?.education
                     if (mViewModel.selectSchool?.schoolName != s.toString()) {
-                        mViewModel.searchSchool(s.toString())
+                        if(education == ""){
+                            mViewModel.searchSchool(s.toString(),null)
+                        }else{
+                            mViewModel.searchSchool(s.toString(),education)
+                        }
                         recycler_view.show()
                     } else {
                         recycler_view.hide()
@@ -361,7 +366,7 @@ class SchoolActivity : BaseActivity() {
             .setDividerColor(0x00000000)
             .setOutSideColor(0x00000000) //设置外部遮罩颜色
             .build()
-
+        mViewModel.currentDate = selectedDate.time
         pvTime?.setKeyBackCancelable(false)
 
         val params = FrameLayout.LayoutParams(

@@ -77,7 +77,7 @@ class FigureFragment : BaseBottomSheetFragment() {
             suggest.append(it)
         }
         tv_suggest.text = suggest.toString()
-        tv_figure.text = data.myFigure
+        tv_figure.text = data.figure
     }
 
 

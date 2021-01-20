@@ -13,10 +13,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.dialog.MyAlertDialog
-import com.julun.huanque.common.bean.beans.ActionMessageContent
-import com.julun.huanque.common.bean.beans.FriendBean
-import com.julun.huanque.common.bean.beans.PostShareBean
-import com.julun.huanque.common.bean.beans.SysMsgBean
+import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.events.LoginOutEvent
 import com.julun.huanque.common.bean.events.SystemMessageRefreshBean
 import com.julun.huanque.common.constant.*
@@ -366,6 +363,17 @@ class SysMsgActivity : BaseActivity() {
                 } catch (e: java.lang.Exception) {
                     e.printStackTrace()
                 }
+            }
+            MessageConstants.AuthTagDetail -> {
+                try {
+                    val bundle = Bundle()
+                    bundle.putInt(ManagerTagCode.TAG_INFO, sysBean.touchValue.toInt())
+                    bundle.putBoolean("isMe", true)
+                    ARouter.getInstance().build(ARouterConstant.AUTH_TAG_PIC_ACTIVITY).with(bundle).navigation()
+                } catch (e: java.lang.Exception) {
+                    e.printStackTrace()
+                }
+
             }
 //            else -> {
 //                ToastUtils.show("没有记录的action类型 -> ${touchType}")

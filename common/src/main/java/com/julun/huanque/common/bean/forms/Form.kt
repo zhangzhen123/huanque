@@ -346,7 +346,7 @@ data class ConstellationForm(var constellationType: String? = null) : Serializab
 /**
  * 学校模糊搜索对象
  */
-data class SchoolForm(var school: String = "") : Serializable
+data class SchoolForm(var school: String = "", var educationType: String? = null) : Serializable
 
 /**
  * 保存学校form
