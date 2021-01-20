@@ -392,6 +392,8 @@ data class NearbyUserBean(
     var coverPicList: MutableList<String> = mutableListOf(),
     var distance: Int = 0,
     var realName: Boolean = false,
+    //真人头像
+    var headRealPeople: Boolean = false,
     var lat: String = "",
     var likeTagList: ArrayList<UserTagBean> = arrayListOf(),
     var lon: String = "",
