@@ -41,6 +41,7 @@ import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
 import com.julun.huanque.common.widgets.bgabanner.BGABanner
 import com.julun.huanque.common.widgets.indicator.ScaleTransitionPagerTitleView
+import com.julun.huanque.common.widgets.layoutmanager.AutoCenterLayoutManager
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.HomePageAdapter
 import com.julun.huanque.core.adapter.HomePagePicListAdapter
@@ -534,8 +535,7 @@ class HomePageActivity : BaseActivity() {
      * 初始化RecyclerView
      */
     private fun initRecyclerView() {
-        recyclerView_piclist.layoutManager =
-            LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
+        recyclerView_piclist.layoutManager = AutoCenterLayoutManager(this, RecyclerView.HORIZONTAL, false)
         recyclerView_piclist.adapter = mPicAdapter
 
         mPicAdapter.setOnItemClickListener { adapter, view, position ->
@@ -1036,7 +1036,9 @@ class HomePageActivity : BaseActivity() {
             bga_banner.currentItem = position
         }
         if (position >= 0) {
-            recyclerView_piclist.smoothScrollToPosition(position)
+            val manager = recyclerView_piclist.layoutManager as AutoCenterLayoutManager
+            manager.smoothScrollToPosition(recyclerView_piclist, position)
+//            recyclerView_piclist.smoothScrollToPosition(position)
         }
     }
 

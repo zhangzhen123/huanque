@@ -4,8 +4,10 @@ import android.Manifest
 import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
+import android.provider.Settings
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.StyleSpan
@@ -36,6 +38,7 @@ import com.julun.huanque.common.bean.beans.NearbyUserBean
 import com.julun.huanque.common.bean.beans.UserTagBean
 import com.julun.huanque.common.bean.events.LikeEvent
 import com.julun.huanque.common.bean.events.PicChangeEvent
+import com.julun.huanque.common.constant.ActivityCodes
 import com.julun.huanque.common.constant.BooleanType
 import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.constant.HomeTabType
@@ -482,7 +485,7 @@ class NearbyFragment : BaseLazyFragment() {
                 val error = it.error
                 if (error != null) {
 //                    showLoading(it.error)
-                    showLayoutError(1)
+                    showLayoutError(2)
                 }
 
             }
@@ -512,6 +515,8 @@ class NearbyFragment : BaseLazyFragment() {
                     loc.city,
                     loc.district
                 )
+            }else{
+                showLayoutError(1)
             }
         })
         mViewModel.likeTag.observe(this, Observer {
@@ -597,6 +602,9 @@ class NearbyFragment : BaseLazyFragment() {
         loadingSetAni!!.start()
     }
 
+    /**
+     * 0代表没有更多次数 >0代表没匹配对象
+     */
     private fun showLoading(state: ResponseError? = null) {
         state_layout_error.hide()
         state_layout.show()
@@ -636,7 +644,7 @@ class NearbyFragment : BaseLazyFragment() {
     }
 
     /**
-     * 0代表位置异常 1代表网络错误
+     * 0代表没有位置权限 1代表位置定位失败 2代表网络错误
      */
     private fun showLayoutError(type: Int) {
         hideLoading()
@@ -664,6 +672,18 @@ class NearbyFragment : BaseLazyFragment() {
                 }
             }
             1 -> {
+                iv_error_pic.imageResource = R.mipmap.icon_location_fail
+                tv_error_title.text = "定位失败"
+                tv_error_content.text = "无法获取定位，请到手机系统设置中开启定位服务"
+                tv_btn_ok.text = "一键开启"
+                tv_btn_ok.onClickNew {
+                    val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                    startActivityForResult(intent, ActivityCodes.REQUEST_CODE_LOCATION)
+                }
+
+            }
+
+            2 -> {
                 iv_error_pic.imageResource = R.mipmap.icon_net_error
                 tv_error_content.text = "请检查网络设置或尝试重新加载"
                 tv_btn_ok.text = "重新加载"
@@ -680,6 +700,13 @@ class NearbyFragment : BaseLazyFragment() {
 
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        logger.info("requestCode=${requestCode}")
+        if(requestCode==ActivityCodes.REQUEST_CODE_LOCATION){
+            mMainConnectViewModel.startLocation()
+        }
+    }
     //封装百度地图相关的Service
 //    private lateinit var mLocationService: LocationService
 

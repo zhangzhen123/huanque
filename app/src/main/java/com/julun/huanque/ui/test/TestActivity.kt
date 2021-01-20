@@ -32,7 +32,6 @@ import com.julun.huanque.core.ui.live.dialog.CardManagerDialogFragment
 import com.julun.huanque.core.ui.tag_manager.TagManagerActivity
 import com.julun.huanque.core.ui.record_voice.VoiceSignActivity
 import com.julun.huanque.core.ui.tag_manager.MyTagsActivity
-import com.julun.huanque.fragment.PersonalInformationProtectionFragment
 import com.julun.huanque.message.activity.PrivateConversationActivity
 import com.julun.huanque.message.fragment.ChatSendGiftFragment
 import com.julun.huanque.support.LoginManager
@@ -226,14 +225,18 @@ class TestActivity : BaseActivity() {
             //管理弹窗
 //            val dialog = CardManagerDialogFragment()
 //            dialog.show(supportFragmentManager, "CardManagerDialogFragment")
-            val mPersonalInformationProtectionFragment =
-                PersonalInformationProtectionFragment.newInstance(
-                    PersonalInformationProtectionFragment.WelcomeActivity
+            CommonDialogFragment.create(
+                title = "小窗设置",
+                content = "关闭直播间不希望小窗播放，可以在我的>设置>通用中关闭哦",
+                imageRes = com.julun.huanque.core.R.mipmap.bg_dialog_small_window,
+                okText = "去设置",
+                cancelText = "取消",
+                callback = CommonDialogFragment.Callback(
+                    onOk = {
+                        ARouter.getInstance().build(ARouterConstant.PLAYER_SETTING_ACTIVITY).navigation()
+                    }
                 )
-            mPersonalInformationProtectionFragment.show(
-                supportFragmentManager,
-                "PersonalInformationProtectionFragment"
-            )
+            ).show(this,"CommonDialogFragment")
         }
 
         btn_anim.onClickNew {
