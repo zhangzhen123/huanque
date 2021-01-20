@@ -330,18 +330,18 @@ class MessageFragment : BaseFragment() {
                 } else {
                     tv_yuanfen_count.hide()
                 }
-                val onLineResource = if (it.onlineStatus == ChatRoomBean.Online) {
-                    R.mipmap.icon_online
-                } else {
-                    R.mipmap.icon_unline
-                }
-                iv_online_status.imageResource = onLineResource
+//                val onLineResource = if (it.onlineStatus == ChatRoomBean.Online) {
+//                    R.mipmap.icon_online
+//                } else {
+//                    R.mipmap.icon_unline
+//                }
+//                iv_online_status.imageResource = onLineResource
 
-                if (it.showFate == BusiConstant.True && !mMessageViewModel.player) {
-                    rl_yuanfen.show()
-                } else {
-                    rl_yuanfen.hide()
-                }
+//                if (it.showFate == BusiConstant.True && !mMessageViewModel.player) {
+//                    rl_yuanfen.show()
+//                } else {
+//                    rl_yuanfen.hide()
+//                }
 //                //显示广告
 //                if (!mMessageViewModel.player) {
 //                    loadAd(it.adList)
@@ -452,12 +452,12 @@ class MessageFragment : BaseFragment() {
             YuanFenActivity.newInstance(requireActivity(), mMessageViewModel.chatRoomData.value?.fateNoReplyNum ?: 0)
         }
 
-        rl_online.onClickNew {
-            //在线按钮
-            if (mOnLineStatusSettingPopupWindow?.isShowing != true) {
-                showOnLinePopupWindow()
-            }
-        }
+//        rl_online.onClickNew {
+//            //在线按钮
+//            if (mOnLineStatusSettingPopupWindow?.isShowing != true) {
+//                showOnLinePopupWindow()
+//            }
+//        }
 
         swipe_refresh.setOnRefreshListener {
             mMessageViewModel.chatRoom()
@@ -635,42 +635,42 @@ class MessageFragment : BaseFragment() {
         mYuanFenTranslationAnimation?.start()
     }
 
-    /**
-     * 显示切换的PopopWindow
-     */
-    private fun showOnLinePopupWindow() {
-        val status = mMessageViewModel.chatRoomData.value
-
-        val view = LayoutInflater.from(requireContext()).inflate(R.layout.view_online, null)
-        mOnLineStatusSettingPopupWindow = PopupWindow(view, dp2px(90), dp2px(79))
-        val drawable = GlobalUtils.getDrawable(R.drawable.bg_online_setting)
-        mOnLineStatusSettingPopupWindow?.setBackgroundDrawable(drawable)
-        mOnLineStatusSettingPopupWindow?.isOutsideTouchable = true
-        val tv_unline = view.findViewById<View>(R.id.tv_unline)
-        val tv_online = view.findViewById<View>(R.id.tv_online)
-        if (status?.onlineStatus == ChatRoomBean.Invisible) {
-            //不在线
-            tv_unline.isSelected = true
-        } else {
-            tv_online.isSelected = true
-        }
-        tv_unline.onClickNew {
-            //设置隐身
-            mMessageViewModel.updateOnlineStatus(false)
-            mOnLineStatusSettingPopupWindow?.dismiss()
-        }
-        tv_online.onClickNew {
-            //设置在线
-            mMessageViewModel.updateOnlineStatus(true)
-            mOnLineStatusSettingPopupWindow?.dismiss()
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            mOnLineStatusSettingPopupWindow?.showAsDropDown(iv_online_arrow, 26, 5, Gravity.BOTTOM or Gravity.RIGHT)
-        } else {
-            mOnLineStatusSettingPopupWindow?.showAsDropDown(iv_online_arrow)
-        }
-
-    }
+//    /**
+//     * 显示切换的PopopWindow
+//     */
+//    private fun showOnLinePopupWindow() {
+//        val status = mMessageViewModel.chatRoomData.value
+//
+//        val view = LayoutInflater.from(requireContext()).inflate(R.layout.view_online, null)
+//        mOnLineStatusSettingPopupWindow = PopupWindow(view, dp2px(90), dp2px(79))
+//        val drawable = GlobalUtils.getDrawable(R.drawable.bg_online_setting)
+//        mOnLineStatusSettingPopupWindow?.setBackgroundDrawable(drawable)
+//        mOnLineStatusSettingPopupWindow?.isOutsideTouchable = true
+//        val tv_unline = view.findViewById<View>(R.id.tv_unline)
+//        val tv_online = view.findViewById<View>(R.id.tv_online)
+//        if (status?.onlineStatus == ChatRoomBean.Invisible) {
+//            //不在线
+//            tv_unline.isSelected = true
+//        } else {
+//            tv_online.isSelected = true
+//        }
+//        tv_unline.onClickNew {
+//            //设置隐身
+//            mMessageViewModel.updateOnlineStatus(false)
+//            mOnLineStatusSettingPopupWindow?.dismiss()
+//        }
+//        tv_online.onClickNew {
+//            //设置在线
+//            mMessageViewModel.updateOnlineStatus(true)
+//            mOnLineStatusSettingPopupWindow?.dismiss()
+//        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//            mOnLineStatusSettingPopupWindow?.showAsDropDown(iv_online_arrow, 26, 5, Gravity.BOTTOM or Gravity.RIGHT)
+//        } else {
+//            mOnLineStatusSettingPopupWindow?.showAsDropDown(iv_online_arrow)
+//        }
+//
+//    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun privateMessageReceive(bean: EventMessageBean) {

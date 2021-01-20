@@ -61,7 +61,7 @@ class MessageSettingActivity : BaseActivity() {
 
         iv_msg_vibrate.isSelected = SPUtils.getBoolean(SPParamKey.Msg_Vibrate, true)
 
-        showPriceSetView(SessionUtils.getSex() == Sex.FEMALE)
+//        showPriceSetView(SessionUtils.getSex() == Sex.FEMALE)
     }
 
     override fun onResume() {
@@ -88,11 +88,11 @@ class MessageSettingActivity : BaseActivity() {
             }
         }
 
-        view_charge.onClickNew {
-            //设置费用
-            mDialog = mDialog ?: PrivateChargeDialogFragment()
-            mDialog?.show(supportFragmentManager, "PrivateChargeDialogFragment")
-        }
+//        view_charge.onClickNew {
+//            //设置费用
+//            mDialog = mDialog ?: PrivateChargeDialogFragment()
+//            mDialog?.show(supportFragmentManager, "PrivateChargeDialogFragment")
+//        }
         iv_fold_stranger_msg.onClickNew {
             //折叠陌生人消息
             iv_fold_stranger_msg.isSelected = !iv_fold_stranger_msg.isSelected
@@ -148,23 +148,23 @@ class MessageSettingActivity : BaseActivity() {
         }
     }
 
-    /**
-     * 设置价格视图
-     * 女性显示该视图,男性隐藏
-     */
-    private fun showPriceSetView(show: Boolean) {
-        if (show) {
-            view_charge.show()
-            tv_charge_title.show()
-            tv_charge.show()
-            iv_arrow.show()
-        } else {
-            view_charge.hide()
-            tv_charge_title.hide()
-            tv_charge.hide()
-            iv_arrow.hide()
-        }
-    }
+//    /**
+//     * 设置价格视图
+//     * 女性显示该视图,男性隐藏
+//     */
+//    private fun showPriceSetView(show: Boolean) {
+//        if (show) {
+//            view_charge.show()
+//            tv_charge_title.show()
+//            tv_charge.show()
+//            iv_arrow.show()
+//        } else {
+//            view_charge.hide()
+//            tv_charge_title.hide()
+//            tv_charge.hide()
+//            iv_arrow.hide()
+//        }
+//    }
 
     private fun prepareViewModel() {
         mViewModel = ViewModelProvider(this).get(MessageSettingViewModel::class.java)
@@ -200,11 +200,11 @@ class MessageSettingActivity : BaseActivity() {
     }
 
     private fun setViews(info: MessageSettingBean) {
-        tv_charge.text = if (info.privateMsgFee > 0) {
-            "${info.privateMsgFee}鹊币/条"
-        } else {
-            "免费"
-        }
+//        tv_charge.text = if (info.privateMsgFee > 0) {
+//            "${info.privateMsgFee}鹊币/条"
+//        } else {
+//            "免费"
+//        }
         iv_voice_communication.isSelected = info.answer
         iv_private_msg.isSelected = info.privateMsgRemind
         iv_attention.isSelected = info.followRemind
