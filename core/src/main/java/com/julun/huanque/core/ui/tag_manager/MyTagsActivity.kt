@@ -12,12 +12,14 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.lifecycle.Observer
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.base.BaseVMActivity
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.bean.beans.TagTypeTag
+import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.ManagerTagCode
 import com.julun.huanque.common.constant.MyTagType
 import com.julun.huanque.common.suger.dp2pxf
@@ -42,6 +44,8 @@ import org.jetbrains.anko.startActivity
  *@Description: MyTagsActivity  我的标签  我喜欢/我拥有
  *
  */
+
+@Route(path = ARouterConstant.MY_TAGS_ACTIVITY)
 class MyTagsActivity : BaseVMActivity<MyTagViewModel>() {
 
     companion object {

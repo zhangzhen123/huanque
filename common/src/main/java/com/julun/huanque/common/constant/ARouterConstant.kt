@@ -153,6 +153,8 @@ object ARouterConstant {
     //职业
     const val ProfessionActivity = "/$CORE$PREFIX_ACTIVITY/ProfessionActivity"
 
+    const val MY_TAGS_ACTIVITY = "/$CORE$PREFIX_ACTIVITY/MyTagsActivity"
+
 
     /** 实名认证 start **/
     private const val REAL_NAME = "realname"

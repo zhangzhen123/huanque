@@ -1,5 +1,6 @@
 package com.julun.huanque.core.ui.homepage
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
@@ -15,6 +16,7 @@ import com.julun.huanque.common.bean.beans.SocialWishBean
 import com.julun.huanque.common.bean.forms.InviteCompleteForm
 import com.julun.huanque.common.constant.MyTagType
 import com.julun.huanque.common.suger.*
+import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.HomePageTagAdapter
@@ -89,7 +91,13 @@ class HomePageInformationFragment : BaseFragment() {
                     //显示他拥有的标签弹窗
                     val list = mHomePageViewModel.homeInfoBean.value?.authTagList
                     if (list != null) {
-                        mTagFragment.setParams(false, isSameSex, mHomePageViewModel.mineHomePage, mHomePageViewModel.targetUserId, list)
+                        mTagFragment.setParams(
+                            false,
+                            isSameSex,
+                            mHomePageViewModel.mineHomePage,
+                            mHomePageViewModel.targetUserId,
+                            list
+                        )
                         mTagFragment.show(childFragmentManager, "TagFragment")
                     }
 
@@ -109,7 +117,13 @@ class HomePageInformationFragment : BaseFragment() {
 //                    mInviteViewModel.mType = InviteCompleteForm.Information
                     val list = mHomePageViewModel.homeInfoBean.value?.likeTagList
                     if (list != null) {
-                        mTagFragment.setParams(true, isSameSex, mHomePageViewModel.mineHomePage, mHomePageViewModel.targetUserId, list)
+                        mTagFragment.setParams(
+                            true,
+                            isSameSex,
+                            mHomePageViewModel.mineHomePage,
+                            mHomePageViewModel.targetUserId,
+                            list
+                        )
                         mTagFragment.show(childFragmentManager, "TagFragment")
                     }
 
@@ -307,6 +321,19 @@ class HomePageInformationFragment : BaseFragment() {
     }
 
     private fun showViewByData(bean: HomePageInfo) {
+
+        if (mHomePageViewModel.mineHomePage&&bean.perfectGuide?.guide == true) {
+            rl_guide_info.show()
+            tv_guide_info_per.text = "资料完整度：${bean.perfection}%"
+            rl_guide_info.onClickNew {
+                val intent = Intent(requireActivity(), EditInfoActivity::class.java)
+                if (ForceUtils.activityMatch(intent)) {
+                    startActivity(intent)
+                }
+            }
+        } else {
+            rl_guide_info.hide()
+        }
         isSameSex = bean.sex == bean.currSexType
         //家乡
         val homeTownStr = StringBuilder()
@@ -439,9 +466,9 @@ class HomePageInformationFragment : BaseFragment() {
         } else {
             bean.likeTagList
         }
-        if(mHomePageViewModel.mineHomePage){
+        if (mHomePageViewModel.mineHomePage) {
             tv_like_tag_count.text = "${bean.myLikeTag.markTagNum}"
-        }else{
+        } else {
             tv_like_tag_count.text = "${likeTagList.size}"
         }
         val realLikeTagList = mutableListOf<UserTagBean>()

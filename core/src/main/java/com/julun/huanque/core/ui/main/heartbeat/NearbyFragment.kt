@@ -45,6 +45,7 @@ import com.julun.huanque.common.constant.BooleanType
 import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.constant.HomeTabType
 import com.julun.huanque.common.constant.*
+import com.julun.huanque.common.helper.AppHelper
 import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.interfaces.routerservice.IRealNameService
 import com.julun.huanque.common.suger.*
@@ -298,8 +299,13 @@ class NearbyFragment : BaseLazyFragment() {
 //                    intent.putExtra(ParamConstant.UserId, tempBean.userId)
 //                    intent.putExtra(ParamConstant.NearByBean, tempBean)
 //                    startActivity(intent, activityOptionsCompat.toBundle())
-                    val pic = tempBean.coverPicList.getOrNull(tempBean.selectIndex) ?: ""
-                    HomePageActivity.newInstance(requireActivity(), item.userId, showPic = pic)
+                    if (tempBean.cardType == CardType.GUIDE) {
+                        AppHelper.openTouch(tempBean.touchType, activity = requireActivity())
+                    } else {
+                        val pic = tempBean.coverPicList.getOrNull(tempBean.selectIndex) ?: ""
+                        HomePageActivity.newInstance(requireActivity(), item.userId, showPic = pic)
+                    }
+
                 }
                 R.id.tv_bottom_tips -> {
                     if (!item.likeTagList.isEmpty()) {
@@ -423,9 +429,9 @@ class NearbyFragment : BaseLazyFragment() {
             picsAdapter.notifyDataSetChanged()
             val pic = picsAdapter.getItemOrNull(selectIndex) ?: return
 
-            if(pic.blur){
+            if (pic.blur) {
                 ImageUtils.loadImageWithBlur(sdv, pic.coverPic, 2, 15)
-            }else{
+            } else {
                 sdv.loadImageNoResize(pic.coverPic)
             }
 //            sdv.loadImageNoResize(pic.coverPic)
@@ -511,7 +517,6 @@ class NearbyFragment : BaseLazyFragment() {
                 } else {
                     list.addAll(bean.list)
                 }
-
                 if (bean.myTagList.isNotEmpty()) {
                     myTagList.clear()
                     myTagList.addAll(bean.myTagList)
@@ -887,7 +892,7 @@ class NearbyFragment : BaseLazyFragment() {
             //获取到当前最上方的item
             val item = cardsAdapter.getItemOrNull(0) ?: return@postDelayed
             val tags = item.tagList
-            if(tags.isEmpty()){
+            if (tags.isEmpty()) {
                 return@postDelayed
             }
             val first: UserTagBean? = tags.getOrNull(currentAniIndex)
@@ -1024,6 +1029,27 @@ class NearbyFragment : BaseLazyFragment() {
                 holder.setVisible(R.id.sd_auth_tag, item.realName || item.headRealPeople)
                 val sdv = holder.getView<SimpleDraweeView>(R.id.card_img)
                 sdv.loadImageNoResize(item.coverPic)
+
+                if (item.cardType == CardType.GUIDE) {
+                    holder.setGone(R.id.iv_dislike, true)
+                    holder.setGone(R.id.iv_like, true)
+                    holder.setGone(R.id.tv_user_name, true)
+                    holder.setGone(R.id.tv_bottom_tips, true)
+                    holder.setGone(R.id.rv_pics, true)
+                    holder.setGone(R.id.tv_pic_count, true)
+                    holder.setGone(R.id.ll_info, true)
+                    holder.setGone(R.id.tv_top_right_tips, true)
+                    return
+                } else {
+                    holder.setGone(R.id.iv_dislike, false)
+                    holder.setGone(R.id.iv_like, false)
+                    holder.setGone(R.id.tv_user_name, false)
+                    holder.setGone(R.id.tv_bottom_tips, false)
+                    holder.setGone(R.id.rv_pics, false)
+                    holder.setGone(R.id.tv_pic_count, false)
+                    holder.setGone(R.id.ll_info, false)
+                    holder.setGone(R.id.tv_top_right_tips, false)
+                }
 //                if (item.distance != 0) {
 //                    holder.setText(R.id.tv_distance, "${item.distance}")
 //                        .setVisible(R.id.tv_distance, true)
@@ -1061,10 +1087,10 @@ class NearbyFragment : BaseLazyFragment() {
                         ivDistance.show()
                         holder.setText(R.id.tv_locationAge, "${item.area}${age}")
                         when {
-                            item.distance < 100000 -> {
+                            item.distance <= 100000 -> {
                                 ivDistance.imageResource = R.mipmap.icon_home_distance_car
                             }
-                            item.distance < 800000 -> {
+                            item.distance <= 800000 -> {
 
                                 //显示动车
                                 ivDistance.imageResource = R.mipmap.icon_home_distance_rail_way
@@ -1152,10 +1178,10 @@ class NearbyFragment : BaseLazyFragment() {
                     if (index == 0) {
                         list.add(HomePagePicBean(pic, selected = BooleanType.TRUE))
                     } else {
-                        val mBlur = if (item.seeMaxCoverNum == -1) {
+                        val mBlur = if (mViewModel.currentSeeMaxCoverNum == -1) {
                             false
                         } else {
-                            index >= item.seeMaxCoverNum
+                            index >= mViewModel.currentSeeMaxCoverNum
                         }
                         list.add(HomePagePicBean(pic, selected = BooleanType.FALSE, blur = mBlur))
                     }
@@ -1193,9 +1219,9 @@ class NearbyFragment : BaseLazyFragment() {
                 }
                 mPicsAdapter.notifyDataSetChanged()
                 val pic = mPicsAdapter.getItemOrNull(position) ?: return
-                if(pic.blur){
+                if (pic.blur) {
                     ImageUtils.loadImageWithBlur(sdv, pic.coverPic, 2, 15)
-                }else{
+                } else {
                     sdv.loadImageNoResize(pic.coverPic)
                 }
 

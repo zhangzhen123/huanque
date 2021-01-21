@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -24,6 +25,7 @@ import com.julun.huanque.common.bean.beans.AdInfoBean
 import com.julun.huanque.common.bean.events.*
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.MixedHelper
+import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.manager.RongCloudManager
@@ -43,6 +45,8 @@ import com.luck.picture.lib.tools.StatusBarUtil
 import io.rong.imlib.RongIMClient
 import io.rong.imlib.model.Conversation
 import kotlinx.android.synthetic.main.fragment_message.*
+import kotlinx.android.synthetic.main.fragment_message.view_notification
+import kotlinx.android.synthetic.main.fragment_message.view_top
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.*
@@ -540,6 +544,31 @@ class MessageFragment : BaseFragment() {
         view_watch.onClickNew {
             //看过的人
             WatchHistoryActivity.newInstance(requireActivity())
+        }
+
+        view_notification.onClickNew {
+            val intent = NotificationUtils.gotoNotificationSetting(requireActivity())
+            if (!TextUtils.isEmpty(intent.action) && ForceUtils.activityMatch(intent)) {
+                try {
+                    //配置action成功才跳转
+                    startActivityForResult(intent, BusiConstant.NOTIFICATION_REQUEST_CODE)
+                } catch (e: Exception) {
+                    reportCrash("跳转通知页失败", e)
+                }
+            }
+        }
+        iv_notification_close.onClickNew {
+            view_notification.hide()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val open = NotificationUtils.areNotificationsEnabled(requireContext())
+        if (open) {
+            view_notification.hide()
+        } else {
+            view_notification.show()
         }
         view_heart.onClickNew {
             HeartBeatActivity.newInstance(requireActivity())

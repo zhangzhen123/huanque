@@ -31,8 +31,10 @@ import com.julun.huanque.common.bean.beans.FavoriteUserBean
 import com.julun.huanque.common.bean.beans.HomePagePicBean
 import com.julun.huanque.common.bean.beans.UserTagBean
 import com.julun.huanque.common.constant.BooleanType
+import com.julun.huanque.common.constant.CardType
 import com.julun.huanque.common.constant.IntentParamKey
 import com.julun.huanque.common.constant.ParamConstant
+import com.julun.huanque.common.helper.AppHelper
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.ScreenUtils
@@ -65,7 +67,6 @@ import kotlin.random.Random
 class FavoriteTabFragment : BaseVMFragment<FavoriteTabViewModel>() {
 
     companion object {
-        const val BANNER_POSITION = 6
         fun newInstance(tab: UserTagBean?): FavoriteTabFragment {
             return FavoriteTabFragment().apply {
                 val bundle = Bundle()
@@ -118,7 +119,11 @@ class FavoriteTabFragment : BaseVMFragment<FavoriteTabViewModel>() {
 //            intent.putExtra(ParamConstant.UserId, item.userId)
 //            intent.putExtra(ParamConstant.FavoriteUserBean, item)
 //            startActivity(intent, activityOptionsCompat.toBundle())
-            HomePageActivity.newInstance(requireActivity(), item.userId)
+            if(item.cardType== CardType.GUIDE){
+                AppHelper.openTouch(item.touchType,item.touchValue,requireActivity())
+            }else{
+                HomePageActivity.newInstance(requireActivity(), item.userId)
+            }
         }
         authorAdapter.onAdapterChildClickNew { adapter, view, position ->
             val item = authorAdapter.getItemOrNull(position)
