@@ -447,4 +447,10 @@ interface SocialService {
      */
     @POST("social/friend/relation/visitLog")
     suspend fun visitLog(@Body body: WatchForm): Root<WatchListInfo<WatchHistoryBean>>
+
+    /**
+     * 获取心动列表
+     */
+    @POST("social/friend/hearttouch/list")
+    suspend fun hearttouchList(@Body form: HeartBeanForm): Root<HeartListInfo<SingleHeartBean>>
 }

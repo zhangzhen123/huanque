@@ -433,3 +433,16 @@ data class WatchForm(
     }
 
 }
+
+/**
+ * 心动form
+ */
+data class HeartBeanForm(var heartTouchType: String = "", var offset: Int = 0) : Serializable {
+    companion object {
+        //对我心动
+        const val HeartTouchToMe = "HeartTouchToMe"
+
+        //我心动的
+        const val MyHeartTouch = "MyHeartTouch"
+    }
+}

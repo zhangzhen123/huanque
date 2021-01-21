@@ -784,46 +784,46 @@ class PrivateConversationActivity : BaseActivity() {
                 }, {})
         }
 
-        iv_xiaoque.onClickNew {
-            mFirstXiaoQueDisposable?.dispose()
-            //点击小鹊助手
-            showXiaoQueView(true)
-            //显示文案
-            mPrivateConversationViewModel?.let { vModel ->
-                vModel.xiaoqueCountDown()
-                val wordList = vModel.wordList
-                if (wordList.isEmpty()) {
-                    return@onClickNew
-                }
-                vModel.wordPosition++
-                val position = vModel.wordPosition % wordList.size
-                if (ForceUtils.isIndexNotOutOfBounds(position, wordList)) {
-                    val word = wordList[position]
-                    vModel.currentActiveWord = word
-                    tv_active_content.text = "${word.wordType}，“${word.content}”"
-                }
-                if (vModel.wordPosition >= wordList.size - 1) {
-                    //数据已经使用光，从后台获取新的数据
-                    vModel.getActiveWord()
-                }
-            }
-        }
+//        iv_xiaoque.onClickNew {
+//            mFirstXiaoQueDisposable?.dispose()
+//            //点击小鹊助手
+//            showXiaoQueView(true)
+//            //显示文案
+//            mPrivateConversationViewModel?.let { vModel ->
+//                vModel.xiaoqueCountDown()
+//                val wordList = vModel.wordList
+//                if (wordList.isEmpty()) {
+//                    return@onClickNew
+//                }
+//                vModel.wordPosition++
+//                val position = vModel.wordPosition % wordList.size
+//                if (ForceUtils.isIndexNotOutOfBounds(position, wordList)) {
+//                    val word = wordList[position]
+//                    vModel.currentActiveWord = word
+//                    tv_active_content.text = "${word.wordType}，“${word.content}”"
+//                }
+//                if (vModel.wordPosition >= wordList.size - 1) {
+//                    //数据已经使用光，从后台获取新的数据
+//                    vModel.getActiveWord()
+//                }
+//            }
+//        }
 
 //        tv_send_exactly.onClickNew {
 //            //小鹊助手，直接发送
 //            showXiaoQueView(false)
 //            sendChatMessage(getActiveWord(), "", "")
 //        }
-        view_xiaoque.onClickNew {
-            //小鹊助手，编辑
-            showXiaoQueView(false)
-            val text = getActiveWord()
-            edit_text.setText(text)
-            //唤起键盘
-            edit_text.requestFocus()
-            //修改光标位置
-            edit_text.setSelection(text.length);
-        }
+//        view_xiaoque.onClickNew {
+//            //小鹊助手，编辑
+//            showXiaoQueView(false)
+//            val text = getActiveWord()
+//            edit_text.setText(text)
+//            //唤起键盘
+//            edit_text.requestFocus()
+//            //修改光标位置
+//            edit_text.setSelection(text.length);
+//        }
 
         iv_que_close.onClickNew {
             showXiaoQueView(false)
@@ -1788,19 +1788,19 @@ class PrivateConversationActivity : BaseActivity() {
      * 显示小鹊提示视图
      */
     private fun showXiaoQueView(show: Boolean) {
-        if (show) {
-            //显示助手文案视图
-            view_xiaoque.show()
-            iv_arrow.show()
-            iv_que_close.show()
-            tv_active_content.show()
-        } else {
-            //隐藏助手文案视图
-            view_xiaoque.hide()
-            iv_arrow.hide()
-            iv_que_close.hide()
-            tv_active_content.hide()
-        }
+//        if (show) {
+//            //显示助手文案视图
+//            view_xiaoque.show()
+//            iv_arrow.show()
+//            iv_que_close.show()
+//            tv_active_content.show()
+//        } else {
+//            //隐藏助手文案视图
+//            view_xiaoque.hide()
+//            iv_arrow.hide()
+//            iv_que_close.hide()
+//            tv_active_content.hide()
+//        }
 
     }
 

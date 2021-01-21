@@ -1,6 +1,8 @@
 package com.julun.huanque.common.bean.beans
 
+import com.julun.huanque.common.basic.Root
 import com.julun.huanque.common.basic.RootListData
+import com.julun.huanque.common.constant.BusiConstant
 import com.luck.picture.lib.entity.LocalMedia
 import java.io.Serializable
 
@@ -168,6 +170,7 @@ class WatchListInfo<T> : RootListData<T>() {
     var extData: WatchListExt? = null
 }
 
+
 /**
  * 观看历史数据
  */
@@ -191,6 +194,48 @@ class DynamicChangeResult(
 //    var share: Int? = null,
     var comment: Long? = null
 )
+
+
+/**
+ * 心动列表数据
+ */
+class HeartListInfo<T> : RootListData<T>() {
+    //引导文案
+    var guideText: String = ""
+
+    //跳转类型
+    var touchType: String = ""
+
+    //跳转按钮的文案
+    var touchText: String = ""
+
+    //剩余解锁次数（-1 无限制）
+    var remainUnlockTimes: Int = -1
+
+}
+
+
+/**
+ * 单个心动对象
+ */
+data class SingleHeartBean(
+    var age: Int = 0,
+    var area: String = "",
+    var coverPic: String = "",
+    var distance: Int = 0,
+    //互动文案
+    var interactTips: String = "",
+    //心动记录ID
+    var logId: Long = 0,
+    //是否匹配（相互心动），用于判断是否显示互相心动图标
+    var matched: String = "",
+    var nickname: String = "",
+    var sameCity: String = "",
+    var sex: String = "",
+    //是否解锁
+    var unLock: String = "",
+    var userId: Long = 0
+) : Serializable
 
 /**
  * 分享接口结果

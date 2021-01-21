@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        app:cardCornerRadius="10dp"
+        app:layout_constraintDimensionRatio="110:180"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_width="110dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/sdv"
+                android:layout_width="0px"
+                android:layout_height="0px"
+                app:layout_constraintDimensionRatio="11:14"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:placeholderImage="@mipmap/logo_placeholder_medium"
+                app:placeholderImageScaleType="centerCrop" />
+
+            <TextView
+                android:id="@+id/tv_distance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:textColor="@color/black_333"
+                android:textSize="@dimen/sp_10"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/tv_status"
+                app:layout_constraintLeft_toLeftOf="@id/sdv"
+                app:layout_constraintTop_toBottomOf="@id/sdv"
+                app:layout_constraintVertical_chainStyle="packed"
+                tools:text="拱墅区" />
+
+            <TextView
+                android:id="@+id/tv_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="2dp"
+                android:textColor="@color/black_333"
+                android:textSize="@dimen/sp_10"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="@id/sdv"
+                app:layout_constraintTop_toBottomOf="@id/tv_distance"
+                tools:text="互相心动" />
+
+            <ImageView
+                android:id="@+id/iv_heart"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginRight="4dp"
+                android:src="@mipmap/icon_heart_interaction"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/iv_lock"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/icon_lock"
+                app:layout_constraintBottom_toBottomOf="@id/sdv"
+                app:layout_constraintLeft_toLeftOf="@id/sdv"
+                app:layout_constraintRight_toRightOf="@id/sdv"
+                app:layout_constraintTop_toTopOf="@id/sdv" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
