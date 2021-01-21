@@ -190,6 +190,7 @@ class PrivateConversationActivity : BaseActivity() {
     //语音管理对象 是否初始化的标记位
     private var voiceMamagerInited = false
 
+    private val mPrivateOrderFragment: PrivateOrderFragment by lazy { PrivateOrderFragment() }
     override fun isRegisterEventBus() = true
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
@@ -375,6 +376,11 @@ class PrivateConversationActivity : BaseActivity() {
                 mProgramListChatFragment.show(supportFragmentManager, "ProgramListInChatFragment")
             }
         })
+        mPrivateConversationViewModel.finishState.observe(this, Observer {
+            if (it == true) {
+                finish()
+            }
+        })
 
 //        mPrivateConversationViewModel?.propListData?.observe(this, Observer {
 //            //道具列表
@@ -472,6 +478,10 @@ class PrivateConversationActivity : BaseActivity() {
 
             } else {
                 mIntimateDetailViewModel?.basicBean?.value = it
+            }
+
+            if (it.guideInfo != null) {
+                mPrivateOrderFragment.show(supportFragmentManager, "PrivateOrderFragment")
             }
         })
 
@@ -585,19 +595,22 @@ class PrivateConversationActivity : BaseActivity() {
      */
     private fun showHint() {
         val price = mPrivateConversationViewModel?.msgFeeData?.value ?: return
-        edit_text
-        if (price == 0L && (SessionUtils.getSex() == Sex.MALE || (SessionUtils.getSex() == Sex.FEMALE && mPrivateConversationViewModel?.chatInfoData?.value?.sex == Sex.FEMALE))) {
-            //免费(男性  或者  自己和对方都是女性  显示标识)
+        if (price == 0L) {
+            //免费
+            iv_msg_card.hide()
             tv_free.hide()
-            edit_text.hint = "聊天免费，不消耗券和鹊币"
+            edit_text.hint = "聊点什么吧"
+            edit_text.setPadding(dp2px(7), dp2px(7), dp2px(15), dp2px(7))
         } else {
             //不免费
             tv_free.hide()
+            iv_msg_card.show()
+            edit_text.setPadding(dp2px(41), dp2px(7), dp2px(15), dp2px(7))
             val ticketCount = mPrivateConversationViewModel?.propData?.value?.chatTicketCnt ?: 0
             if (ticketCount > 0) {
                 edit_text.hint = "聊天券剩余${ticketCount}次"
             } else {
-                edit_text.hint = "聊点什么吧..."
+                edit_text.hint = "对方设置聊天收费，私信消息30鹊币/条"
             }
         }
     }

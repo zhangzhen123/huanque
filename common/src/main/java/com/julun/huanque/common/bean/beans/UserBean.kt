@@ -183,8 +183,15 @@ class ConversationBasicBean(
     //直播显示倒计时
     var recomDelaySec: Long = 0,
     //我是否是对方的陌生人
-    var strangerToOther: String = ""
+    var strangerToOther: String = "",
+    //引导数据
+    var guideInfo: PrivateConversationGuideInfo? = null
 )
+
+data class PrivateConversationGuideInfo(
+    var waitNum: Int = 0,
+    var giftList: MutableList<ChatGift> = mutableListOf()
+) : Serializable
 
 /**
  * 道具实体类
