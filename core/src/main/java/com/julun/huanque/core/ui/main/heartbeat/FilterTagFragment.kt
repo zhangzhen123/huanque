@@ -386,6 +386,7 @@ class FilterTagFragment : BaseBottomSheetFragment() {
                 rv.itemAnimator = null
                 if (item.tagList.size <= 4) {
                     holder.setGone(R.id.iv_arrow, true)
+                    fAdapter.setList(item.tagList)
                 } else {
                     holder.setGone(R.id.iv_arrow, false)
                     if (item.isFold) {

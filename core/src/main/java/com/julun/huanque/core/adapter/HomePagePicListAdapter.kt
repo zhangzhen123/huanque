@@ -5,8 +5,11 @@ import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.bean.beans.HomePagePicBean
 import com.julun.huanque.common.constant.BusiConstant
+import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.loadImage
+import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.core.R
+import kotlinx.android.synthetic.main.view_single_video.view.*
 
 /**
  *@创建者   dong
@@ -28,6 +31,13 @@ class HomePagePicListAdapter : BaseQuickAdapter<HomePagePicBean, BaseViewHolder>
 //            .setRoundingParams(roundParams)
 //            .build()
 //        sdv.hierarchy = hierarchy
-        sdv.loadImage(item.coverPic, 40f, 40f)
+        if(item.blur){
+//            ImageUtils.loadImageWithBlur(sdv, item.coverPic, 3, 80,dp2px(40),dp2px(40))
+            sdv.loadImage(item.coverPic  +BusiConstant.OSS_BLUR_02, 40f, 40f)
+        }else{
+            sdv.loadImage(item.coverPic, 40f, 40f)
+        }
+//        sdv.loadImage(item.coverPic, 40f, 40f)
+
     }
 }

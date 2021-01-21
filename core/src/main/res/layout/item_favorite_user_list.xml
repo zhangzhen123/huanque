@@ -35,8 +35,8 @@
             android:background="@drawable/bg_shape_card_tag_02"
             android:gravity="start|center_vertical"
             android:paddingStart="@dimen/dimen_7"
-            android:paddingEnd="@dimen/dimen_7"
             android:paddingTop="@dimen/dimen_1"
+            android:paddingEnd="@dimen/dimen_7"
             android:paddingBottom="@dimen/dimen_1"
             android:textColor="@color/colorAccent_lib"
             android:textSize="@dimen/sp_10"
@@ -100,8 +100,8 @@
                 android:id="@+id/iv_distance"
                 android:layout_width="@dimen/dimen_20"
                 android:layout_height="@dimen/dimen_20"
-                android:gravity="center"
-                android:scaleType="fitCenter" />
+                android:scaleType="fitCenter"
+                tools:src="@mipmap/icon_home_distance_rail_way" />
 
             <TextView
                 android:id="@+id/tv_distance"
@@ -113,7 +113,8 @@
                 android:maxLines="1"
                 android:textColor="@color/colorAccent_lib"
                 android:textSize="@dimen/sp_16"
-                tools:text="shit" />
+                tools:visibility="gone"
+                tools:text="999" />
 
 
             <TextView
@@ -134,11 +135,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dimen_8"
+            android:layout_marginBottom="@dimen/dimen_3"
             android:gravity="center"
             android:maxLines="1"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_10"
-            android:layout_marginBottom="@dimen/dimen_3"
             app:layout_constraintBottom_toTopOf="@+id/ll_bottom"
             app:layout_constraintStart_toStartOf="parent"
             tools:text="年龄" />

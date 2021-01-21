@@ -421,9 +421,14 @@ class NearbyFragment : BaseLazyFragment() {
                 }
             }
             picsAdapter.notifyDataSetChanged()
-
             val pic = picsAdapter.getItemOrNull(selectIndex) ?: return
-            sdv.loadImageNoResize(pic.coverPic)
+
+            if(pic.blur){
+                ImageUtils.loadImageWithBlur(sdv, pic.coverPic, 2, 15)
+            }else{
+                sdv.loadImageNoResize(pic.coverPic)
+            }
+//            sdv.loadImageNoResize(pic.coverPic)
             tvPicCount.text = "${selectIndex + 1}/${picsAdapter.data.size}"
 
             val manager = rvPics.layoutManager as AutoCenterLayoutManager
@@ -513,7 +518,7 @@ class NearbyFragment : BaseLazyFragment() {
                 }
                 if (bean.myLikeTagList.isNotEmpty()) {
                     myLikeTagList.clear()
-                    myLikeTagList.addAll(bean.myTagList)
+                    myLikeTagList.addAll(bean.myLikeTagList)
                 }
 
                 cardsAdapter.notifyDataSetChanged()
@@ -552,7 +557,7 @@ class NearbyFragment : BaseLazyFragment() {
                     loc.city,
                     loc.district
                 )
-            }else{
+            } else {
                 showLayoutError(1)
             }
         })
@@ -740,7 +745,7 @@ class NearbyFragment : BaseLazyFragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         logger.info("requestCode=${requestCode}")
-        if(requestCode==ActivityCodes.REQUEST_CODE_LOCATION){
+        if (requestCode == ActivityCodes.REQUEST_CODE_LOCATION) {
             mMainConnectViewModel.startLocation()
         }
     }
@@ -882,6 +887,9 @@ class NearbyFragment : BaseLazyFragment() {
             //获取到当前最上方的item
             val item = cardsAdapter.getItemOrNull(0) ?: return@postDelayed
             val tags = item.tagList
+            if(tags.isEmpty()){
+                return@postDelayed
+            }
             val first: UserTagBean? = tags.getOrNull(currentAniIndex)
             currentAniIndex++
             val second: UserTagBean? = tags.getOrNull(currentAniIndex)
@@ -1032,25 +1040,26 @@ class NearbyFragment : BaseLazyFragment() {
                     ""
                 }
                 if (item.distance > 0) {
-                    when {
-                        item.distance < 1000 -> {
-                            tvDistance.text = "${item.distance}"
-                            holder.setText(R.id.tv_locationAge, "m ${item.area}${age}")
-                        }
-                        else -> {
-                            val format = DecimalFormat("#.0")
-                            format.roundingMode = RoundingMode.DOWN
-                            val dt = format.format((item.distance / 1000.0))
-                            tvDistance.text = dt
-                            holder.setText(R.id.tv_locationAge, "km ${item.area}${age}")
-                        }
-                    }
-                    tvDistance.show()
                     if (item.sameCity) {
+                        tvDistance.show()
                         ivDistance.hide()
+                        when {
+                            item.distance < 1000 -> {
+                                tvDistance.text = "${item.distance}"
+                                holder.setText(R.id.tv_locationAge, "m ${item.area}${age}")
+                            }
+                            else -> {
+                                val format = DecimalFormat("#.0")
+                                format.roundingMode = RoundingMode.DOWN
+                                val dt = format.format((item.distance / 1000.0))
+                                tvDistance.text = dt
+                                holder.setText(R.id.tv_locationAge, "km ${item.area}${age}")
+                            }
+                        }
                     } else {
+                        tvDistance.hide()
                         ivDistance.show()
-//                        holder.setText(R.id.tv_locationAge, "${item.area}${age}")
+                        holder.setText(R.id.tv_locationAge, "${item.area}${age}")
                         when {
                             item.distance < 100000 -> {
                                 ivDistance.imageResource = R.mipmap.icon_home_distance_car
@@ -1143,7 +1152,12 @@ class NearbyFragment : BaseLazyFragment() {
                     if (index == 0) {
                         list.add(HomePagePicBean(pic, selected = BooleanType.TRUE))
                     } else {
-                        list.add(HomePagePicBean(pic, selected = BooleanType.FALSE))
+                        val mBlur = if (item.seeMaxCoverNum == -1) {
+                            false
+                        } else {
+                            index >= item.seeMaxCoverNum
+                        }
+                        list.add(HomePagePicBean(pic, selected = BooleanType.FALSE, blur = mBlur))
                     }
 
                 }
@@ -1179,7 +1193,12 @@ class NearbyFragment : BaseLazyFragment() {
                 }
                 mPicsAdapter.notifyDataSetChanged()
                 val pic = mPicsAdapter.getItemOrNull(position) ?: return
-                sdv.loadImageNoResize(pic.coverPic)
+                if(pic.blur){
+                    ImageUtils.loadImageWithBlur(sdv, pic.coverPic, 2, 15)
+                }else{
+                    sdv.loadImageNoResize(pic.coverPic)
+                }
+
                 tv.text = "${position + 1}/${mPicsAdapter.data.size}"
             }
 

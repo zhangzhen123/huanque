@@ -602,6 +602,8 @@ data class HomePageInfo(
     var mySign: String = "",
     //是否是真人
     var headRealPeople: String = "",
+    //是否实名
+    var realName: Boolean = false,
     //是否是密友
     var intimate: String = "",
     //他人主页喜欢的标签列表
@@ -616,6 +618,8 @@ data class HomePageInfo(
     var perfection: Int = 0,
     //封面列表
     var picList: MutableList<String> = mutableListOf(),
+    //可查看数目
+    var seeMaxCoverNum: Int = -1,
     //动态数量
     var postNum: Int = 0,
     //收礼数据
@@ -651,10 +655,18 @@ data class HomePageInfo(
     //播放数据
     var playProgram: HomePageProgram = HomePageProgram(),
     //直播间内的动态数据
-    var post: PostInHomePage = PostInHomePage()
+    var post: PostInHomePage = PostInHomePage(),
     /*2.0.0新增字段*/
-
+    var perfectGuide: PerfectGuideBean? = null,
+    //头像认证引导
+    var realHeadGuide: RealHeadGuideBean? = null,
+    //实名引导
+    var realNameGuide: RealNameGuideBean? = null
 ) : Serializable
+
+data class RealHeadGuideBean(var guide: Boolean = false)
+
+data class RealNameGuideBean(var guide: Boolean = false)
 
 /**
  * 编辑相关数据  这个类除了picList结构与上面不一样 其他一模一样 至于为什么这样做 问后台
@@ -1097,7 +1109,8 @@ data class HomePagePicBean(
     var headerPic: String = "",
     //是否显示不可移动提示
     var showNoMoveAttention: String = "",
-    var logId: Long = 0L
+    var logId: Long = 0L,
+    var blur: Boolean = false//本地字段 是否模糊
 ) : Serializable
 
 /**

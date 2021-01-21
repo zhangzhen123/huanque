@@ -4,49 +4,55 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="@dimen/dimen_10"
     android:paddingStart="@dimen/dimen_10"
+    android:paddingTop="@dimen/dimen_10"
     android:paddingEnd="@dimen/dimen_10"
     android:paddingBottom="@dimen/dimen_20">
 
-<!--    <androidx.cardview.widget.CardView-->
-<!--        android:id="@+id/card_view"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:layout_margin="10dp"-->
-<!--        app:cardElevation="0dp"-->
-<!--        app:cardCornerRadius="8dp">-->
+    <!--    <androidx.cardview.widget.CardView-->
+    <!--        android:id="@+id/card_view"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="match_parent"-->
+    <!--        android:layout_margin="10dp"-->
+    <!--        app:cardElevation="0dp"-->
+    <!--        app:cardCornerRadius="8dp">-->
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/card_img"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:background="@drawable/bg_white_10"
+            app:placeholderImage="@drawable/logo_nearby_placeholder_bg"
+            app:placeholderImageScaleType="fitXY"
+            app:roundedCornerRadius="@dimen/dimen_10" />
 
-            <com.facebook.drawee.view.SimpleDraweeView
-                android:id="@+id/card_img"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:placeholderImage="@drawable/logo_nearby_placeholder_bg"
-                android:background="@drawable/bg_white_10"
-                app:placeholderImageScaleType="fitXY"
-                app:roundedCornerRadius="@dimen/dimen_10" />
+        <View
+            android:id="@+id/shadow_view"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:background="@drawable/bg_shape_card_shadow"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
-            <View
-                android:id="@+id/shadow_view"
-                android:layout_width="match_parent"
-                android:layout_height="180dp"
-                android:background="@drawable/bg_shape_card_shadow"
-                app:layout_constraintBottom_toBottomOf="parent" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dimen_8"
+            android:orientation="horizontal"
+            android:gravity="bottom"
+            app:layout_constraintBottom_toTopOf="@+id/rv_pics"
+            app:layout_constraintStart_toStartOf="@+id/rv_pics">
 
             <ImageView
                 android:id="@+id/iv_distance"
                 android:layout_width="@dimen/dimen_20"
                 android:layout_height="@dimen/dimen_20"
                 android:gravity="center"
-                android:scaleType="fitCenter"
-                android:layout_marginBottom="@dimen/dimen_8"
-                app:layout_constraintBottom_toTopOf="@+id/rv_pics"
-                app:layout_constraintStart_toStartOf="@+id/rv_pics" />
+                android:scaleType="fitCenter" />
 
             <TextView
                 android:id="@+id/tv_distance"
@@ -57,9 +63,6 @@
                 android:textColor="#FFCC00"
                 android:textSize="@dimen/sp_16"
                 android:textStyle="bold"
-                android:layout_marginBottom="@dimen/dimen_8"
-                app:layout_constraintBottom_toTopOf="@+id/rv_pics"
-                app:layout_constraintStart_toEndOf="@+id/iv_distance"
                 tools:text="23.3" />
 
             <TextView
@@ -73,170 +76,170 @@
                 android:paddingBottom="@dimen/dimen_2"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_10"
-                app:layout_constraintBottom_toBottomOf="@+id/tv_distance"
-                app:layout_constraintStart_toEndOf="@+id/tv_distance"
                 tools:text="km 余杭区/24岁" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_pics"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_marginStart="@dimen/dimen_10"
-                android:layout_marginBottom="@dimen/dimen_15"
-                app:layout_constraintBottom_toTopOf="@+id/tv_bottom_tips"
-                app:layout_constraintStart_toStartOf="parent" />
-
-            <TextView
-                android:id="@+id/tv_pic_count"
-                android:layout_width="wrap_content"
-                android:layout_height="24dp"
-                android:layout_margin="@dimen/dimen_6"
-                android:gravity="start|center_vertical"
-                android:textColor="@color/white"
-                android:textSize="@dimen/sp_10"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/rv_pics"
-                app:layout_constraintStart_toEndOf="@+id/rv_pics"
-                app:layout_constraintTop_toTopOf="@+id/rv_pics"
-                tools:text="1/5" />
-
-            <TextView
-                android:id="@+id/tv_bottom_tips"
-                android:layout_width="wrap_content"
-                android:layout_height="24dp"
-                android:layout_margin="@dimen/dimen_10"
-                android:background="@drawable/bg_shape_white_p10"
-                android:drawableEnd="@mipmap/icon_forward_grey_02"
-                android:drawablePadding="@dimen/dimen_5"
-                android:gravity="center"
-                android:paddingStart="@dimen/dimen_8"
-                android:paddingEnd="@dimen/dimen_8"
-                android:singleLine="true"
-                android:textColor="#D9FFFFFF"
-                android:textSize="@dimen/sp_12"
-                app:layout_constrainedWidth="true"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintHorizontal_bias="0"
-                tools:text="你有TA喜欢的 XX、XX等X个标签 Ta还喜欢什么" />
-
-            <TextView
-                android:id="@+id/tv_user_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/dimen_38"
-                android:gravity="start|center_vertical"
-                android:includeFontPadding="false"
-                android:textColor="@color/white"
-                android:textSize="@dimen/sp_20"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/rv_pics"
-                app:layout_constraintStart_toStartOf="@+id/rv_pics"
-                tools:text="清蝶泳" />
-
-            <com.facebook.drawee.view.SimpleDraweeView
-                android:id="@+id/sd_auth_tag"
-                android:layout_width="@dimen/dimen_18"
-                android:layout_height="@dimen/dimen_18"
-                android:layout_marginStart="@dimen/dimen_4"
-                android:visibility="gone"
-                app:actualImageResource="@mipmap/icon_real_people"
-                app:layout_constraintBottom_toBottomOf="@+id/tv_user_name"
-                app:layout_constraintStart_toEndOf="@+id/tv_user_name"
-                app:layout_constraintTop_toTopOf="@+id/tv_user_name" />
+        </LinearLayout>
 
 
-            <TextView
-                android:id="@+id/tv_top_right_tips"
-                android:layout_width="wrap_content"
-                android:layout_height="24dp"
-                android:layout_marginTop="@dimen/dimen_10"
-                android:background="@drawable/bg_shape_card_tip"
-                android:gravity="start|center_vertical"
-                android:paddingStart="@dimen/dimen_12"
-                android:paddingEnd="@dimen/dimen_12"
-                android:textColor="@color/colorAccent_lib"
-                android:textSize="@dimen/sp_12"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="5分钟前对你心动" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_pics"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginStart="@dimen/dimen_10"
+            android:layout_marginBottom="@dimen/dimen_15"
+            app:layout_constraintBottom_toTopOf="@+id/tv_bottom_tips"
+            app:layout_constraintStart_toStartOf="parent" />
 
-            <View
-                android:id="@+id/tv_top_holder"
-                android:layout_width="wrap_content"
-                android:layout_height="35dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/tv_pic_count"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:layout_margin="@dimen/dimen_6"
+            android:gravity="start|center_vertical"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_10"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/rv_pics"
+            app:layout_constraintStart_toEndOf="@+id/rv_pics"
+            app:layout_constraintTop_toTopOf="@+id/rv_pics"
+            tools:text="1/5" />
 
-            <com.julun.huanque.core.widgets.HomeCardTagView
-                android:id="@+id/ani_tag_01"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dimen_10"
-                android:visibility="gone"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_top_holder"
-                tools:visibility="visible" />
+        <TextView
+            android:id="@+id/tv_bottom_tips"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:layout_margin="@dimen/dimen_10"
+            android:background="@drawable/bg_shape_white_p10"
+            android:drawableEnd="@mipmap/icon_forward_grey_02"
+            android:drawablePadding="@dimen/dimen_5"
+            android:gravity="center"
+            android:paddingStart="@dimen/dimen_8"
+            android:paddingEnd="@dimen/dimen_8"
+            android:singleLine="true"
+            android:textColor="#D9FFFFFF"
+            android:textSize="@dimen/sp_12"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="你有TA喜欢的 XX、XX等X个标签 Ta还喜欢什么" />
 
-            <com.julun.huanque.core.widgets.HomeCardTagView
-                android:id="@+id/ani_tag_02"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/dimen_10"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_top_holder"
-                tools:visibility="visible" />
-
-            <com.julun.huanque.core.widgets.HomeCardTagView
-                android:id="@+id/ani_tag_03"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dimen_10"
-                android:visibility="gone"
-                app:layout_constraintBottom_toTopOf="@+id/tv_user_name"
-                app:layout_constraintStart_toStartOf="parent"
-                tools:visibility="visible" />
-
-            <com.julun.huanque.core.widgets.HomeCardTagView
-                android:id="@+id/ani_tag_04"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/dimen_10"
-                android:visibility="gone"
-                app:layout_constraintBottom_toTopOf="@+id/tv_user_name"
-                app:layout_constraintEnd_toEndOf="parent"
-                tools:visibility="visible" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <ImageView
-            android:id="@+id/iv_dislike"
-            android:layout_width="@dimen/dimen_80"
+        <TextView
+            android:id="@+id/tv_user_name"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_margin="50dp"
-            android:alpha="0"
-            android:src="@mipmap/icon_card_unlike" />
+            android:layout_marginBottom="@dimen/dimen_38"
+            android:gravity="start|center_vertical"
+            android:includeFontPadding="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_20"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/rv_pics"
+            app:layout_constraintStart_toStartOf="@+id/rv_pics"
+            tools:text="清蝶泳" />
 
-        <ImageView
-            android:id="@+id/iv_like"
-            android:layout_width="@dimen/dimen_80"
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/sd_auth_tag"
+            android:layout_width="@dimen/dimen_18"
+            android:layout_height="@dimen/dimen_18"
+            android:layout_marginStart="@dimen/dimen_4"
+            android:visibility="gone"
+            app:actualImageResource="@mipmap/icon_real_people"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_user_name"
+            app:layout_constraintStart_toEndOf="@+id/tv_user_name"
+            app:layout_constraintTop_toTopOf="@+id/tv_user_name" />
+
+
+        <TextView
+            android:id="@+id/tv_top_right_tips"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:layout_marginTop="@dimen/dimen_10"
+            android:background="@drawable/bg_shape_card_tip"
+            android:gravity="start|center_vertical"
+            android:paddingStart="@dimen/dimen_12"
+            android:paddingEnd="@dimen/dimen_12"
+            android:textColor="@color/colorAccent_lib"
+            android:textSize="@dimen/sp_12"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="5分钟前对你心动" />
+
+        <View
+            android:id="@+id/tv_top_holder"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.julun.huanque.core.widgets.HomeCardTagView
+            android:id="@+id/ani_tag_01"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:layout_margin="@dimen/dimen_50"
-            android:alpha="0"
-            android:src="@mipmap/icon_card_like" />
+            android:layout_marginStart="@dimen/dimen_10"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_top_holder"
+            tools:visibility="visible" />
 
-        <ImageView
-            android:id="@+id/iv_super_like"
-            android:layout_width="@dimen/dimen_75"
+        <com.julun.huanque.core.widgets.HomeCardTagView
+            android:id="@+id/ani_tag_02"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end|bottom"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="@dimen/dimen_65"
-            android:src="@mipmap/icon_super_like"
-            android:visibility="gone" />
+            android:layout_marginEnd="@dimen/dimen_10"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_top_holder"
+            tools:visibility="visible" />
 
-<!--    </androidx.cardview.widget.CardView>-->
+        <com.julun.huanque.core.widgets.HomeCardTagView
+            android:id="@+id/ani_tag_03"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_10"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/tv_user_name"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:visibility="visible" />
+
+        <com.julun.huanque.core.widgets.HomeCardTagView
+            android:id="@+id/ani_tag_04"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dimen_10"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/tv_user_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:visibility="visible" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/iv_dislike"
+        android:layout_width="@dimen/dimen_80"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_margin="50dp"
+        android:alpha="0"
+        android:src="@mipmap/icon_card_unlike" />
+
+    <ImageView
+        android:id="@+id/iv_like"
+        android:layout_width="@dimen/dimen_80"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_margin="@dimen/dimen_50"
+        android:alpha="0"
+        android:src="@mipmap/icon_card_like" />
+
+    <ImageView
+        android:id="@+id/iv_super_like"
+        android:layout_width="@dimen/dimen_75"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="@dimen/dimen_65"
+        android:src="@mipmap/icon_super_like"
+        android:visibility="gone" />
+
+    <!--    </androidx.cardview.widget.CardView>-->
 </com.julun.huanque.common.widgets.cardlib.SwipeTouchLayout>
