@@ -38,7 +38,12 @@ class HeartUnLockFragment : BaseDialogFragment() {
     override fun onResume() {
         super.onResume()
         initViewModel()
-        tv_count.text = "剩余解锁次数：${mActViewModel.unLockCount}次"
+        if (mActViewModel.unLockCount == -1) {
+            tv_count.text = "剩余解锁次数：无限制"
+        } else {
+            tv_count.text = "剩余解锁次数：${mActViewModel.unLockCount}次"
+        }
+
     }
 
     /**

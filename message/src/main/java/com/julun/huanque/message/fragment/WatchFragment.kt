@@ -7,9 +7,13 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.base.BaseFragment
+import com.julun.huanque.common.bean.forms.WatchForm
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.helper.MixedHelper
+import com.julun.huanque.common.suger.hide
+import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.suger.show
 import com.julun.huanque.message.R
 import com.julun.huanque.message.activity.PrivateConversationActivity
 import com.julun.huanque.message.adapter.WatchAdapter
@@ -32,18 +36,32 @@ class WatchFragment : BaseFragment() {
 
     private val mViewModel: WatchHistoryViewModel by viewModels()
 
+    //需要刷新的标记位
+    private var mNeedRefresh = false
+
     private val mAdapter = WatchAdapter()
     private var mType = ""
     override fun getLayoutId() = R.layout.frag_watch
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         mType = arguments?.getString(ParamConstant.TYPE) ?: ""
+        if (mType != WatchForm.HaveSeen) {
+            mAdapter.needBlur = true
+        }
         initRecyclerView()
         initViewModel()
         mViewModel.queryData(mType, true)
 
         swipe_refresh.setOnRefreshListener {
             mViewModel.queryData(mType, true)
+        }
+    }
+
+    override fun initEvents(rootView: View) {
+        super.initEvents(rootView)
+        cardView.onClickNew {
+            val touchEype = mViewModel.watchExtra.value?.touchType ?: ""
+//            jump(touchEype)
         }
     }
 
@@ -68,11 +86,13 @@ class WatchFragment : BaseFragment() {
                 }
                 R.id.sdv_header -> {
                     //主页
-                    val bundle = Bundle().apply {
-                        putLong(ParamConstant.UserId, tempHistoryBean.userId)
+                    val maxCount = mViewModel.watchExtra.value?.viewNum ?: 0
+                    if (!mAdapter.needBlur || maxCount == -1 || position < maxCount) {
+                        val bundle = Bundle().apply {
+                            putLong(ParamConstant.UserId, tempHistoryBean.userId)
+                        }
+                        ARouter.getInstance().build(ARouterConstant.HOME_PAGE_ACTIVITY).with(bundle).navigation()
                     }
-                    ARouter.getInstance().build(ARouterConstant.HOME_PAGE_ACTIVITY).with(bundle).navigation()
-
                 }
             }
 
@@ -80,6 +100,15 @@ class WatchFragment : BaseFragment() {
 
         mAdapter.loadMoreModule.setOnLoadMoreListener {
             mViewModel.queryData(mType)
+        }
+    }
+
+
+    override fun onResume() {
+        super.onResume()
+        if (mNeedRefresh) {
+            mViewModel.refreshGuide()
+            mNeedRefresh = false
         }
     }
 
@@ -101,6 +130,19 @@ class WatchFragment : BaseFragment() {
                     mAdapter.loadMoreModule.loadMoreComplete()
                 } else {
                     mAdapter.loadMoreModule.loadMoreEnd()
+                }
+            }
+        })
+
+        mViewModel.watchExtra.observe(this, Observer {
+            if (it != null) {
+                mAdapter.maxCount = it.viewNum
+                mAdapter.notifyDataSetChanged()
+                if (it.guideText.isEmpty()) {
+                    cardView.hide()
+                } else {
+                    cardView.show()
+                    tv_attention.text = it.guideText
                 }
             }
         })

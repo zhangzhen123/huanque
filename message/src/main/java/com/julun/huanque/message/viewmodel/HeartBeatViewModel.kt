@@ -83,7 +83,9 @@ class HeartBeatViewModel : BaseViewModel() {
             request({
                 socialService.unlock(UnlockForm(logId, userId)).dataConvert()
                 unlockLogId.value = logId
-                unLockCount--
+                if (unLockCount > 0) {
+                    unLockCount--
+                }
             }, {})
         }
     }

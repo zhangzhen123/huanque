@@ -6,7 +6,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.constant.ARouterConstant
@@ -17,18 +16,11 @@ import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
-import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.message.R
-import com.julun.huanque.message.activity.PrivateConversationActivity
 import com.julun.huanque.message.adapter.HeartBeatAdapter
-import com.julun.huanque.message.adapter.WatchAdapter
 import com.julun.huanque.message.viewmodel.HeartBeatViewModel
-import com.julun.huanque.message.viewmodel.WatchHistoryViewModel
 import kotlinx.android.synthetic.main.frag_heart_beat.*
-import kotlinx.android.synthetic.main.frag_watch.*
-import kotlinx.android.synthetic.main.frag_watch.recycler_view
-import kotlinx.android.synthetic.main.frag_watch.swipe_refresh
 
 /**
  *@创建者   dong
@@ -76,58 +68,7 @@ class HeartBeatFragment : BaseFragment() {
         tv_action.onClickNew {
             //点击事件
             var touchType = mViewModel.heartBeatData.value?.touchType ?: return@onClickNew
-            when (touchType) {
-                MessageConstants.MySign -> {
-                    //个性签名
-                    //UpdateSignActivity
-                    mNeedRefresh = true
-                    ARouter.getInstance().build(ARouterConstant.UpdateSignActivity).navigation()
-                }
-                MessageConstants.Voice -> {
-                    //语音签名
-                    //VOICE_SIGN_ACTIVITY
-                    mNeedRefresh = true
-                    ARouter.getInstance().build(ARouterConstant.VOICE_SIGN_ACTIVITY).navigation()
-                }
-                MessageConstants.HomeTown -> {
-                    //家乡
-                    //HomeTownActivity
-                    mNeedRefresh = true
-                    ARouter.getInstance().build(ARouterConstant.HomeTownActivity).navigation()
-                }
-                MessageConstants.Birthday -> {
-                    //生日
-                    //UpdateBirthdayActivity
-                    mNeedRefresh = true
-                    ARouter.getInstance().build(ARouterConstant.UpdateBirthdayActivity).navigation()
-                }
-                MessageConstants.Figure -> {
-                    //身材
-                    //FigureActivity
-                    mNeedRefresh = true
-                    ARouter.getInstance().build(ARouterConstant.FigureActivity).navigation()
-                }
-                MessageConstants.School -> {
-                    //学校
-                    //SchoolActivity
-                    mNeedRefresh = true
-                    ARouter.getInstance().build(ARouterConstant.SchoolActivity).navigation()
-                }
-                MessageConstants.Professional -> {
-                    //职业
-                    mNeedRefresh = true
-                    ARouter.getInstance().build(ARouterConstant.ProfessionActivity).navigation()
-                }
-                MessageConstants.EditMineHomePage -> {
-                    //编辑资料页面
-                    mNeedRefresh = true
-                    ARouter.getInstance().build(ARouterConstant.EDIT_INFO_ACTIVITY).navigation()
-                }
-                else -> {
-                }
-            }
-
-
+            jump(touchType)
         }
     }
 
@@ -216,6 +157,62 @@ class HeartBeatFragment : BaseFragment() {
         if (mNeedRefresh) {
             mViewModel.refreshGuide()
             mNeedRefresh = false
+        }
+    }
+
+    /**
+     * 跳转
+     */
+    private fun jump(touchType : String){
+        when (touchType) {
+            MessageConstants.MySign -> {
+                //个性签名
+                //UpdateSignActivity
+                mNeedRefresh = true
+                ARouter.getInstance().build(ARouterConstant.UpdateSignActivity).navigation()
+            }
+            MessageConstants.Voice -> {
+                //语音签名
+                //VOICE_SIGN_ACTIVITY
+                mNeedRefresh = true
+                ARouter.getInstance().build(ARouterConstant.VOICE_SIGN_ACTIVITY).navigation()
+            }
+            MessageConstants.HomeTown -> {
+                //家乡
+                //HomeTownActivity
+                mNeedRefresh = true
+                ARouter.getInstance().build(ARouterConstant.HomeTownActivity).navigation()
+            }
+            MessageConstants.Birthday -> {
+                //生日
+                //UpdateBirthdayActivity
+                mNeedRefresh = true
+                ARouter.getInstance().build(ARouterConstant.UpdateBirthdayActivity).navigation()
+            }
+            MessageConstants.Figure -> {
+                //身材
+                //FigureActivity
+                mNeedRefresh = true
+                ARouter.getInstance().build(ARouterConstant.FigureActivity).navigation()
+            }
+            MessageConstants.School -> {
+                //学校
+                //SchoolActivity
+                mNeedRefresh = true
+                ARouter.getInstance().build(ARouterConstant.SchoolActivity).navigation()
+            }
+            MessageConstants.Professional -> {
+                //职业
+                mNeedRefresh = true
+                ARouter.getInstance().build(ARouterConstant.ProfessionActivity).navigation()
+            }
+            MessageConstants.EditMineHomePage -> {
+                //编辑资料页面
+                mNeedRefresh = true
+                ARouter.getInstance().build(ARouterConstant.EDIT_INFO_ACTIVITY).navigation()
+            }
+            else -> {
+            }
         }
     }
 
