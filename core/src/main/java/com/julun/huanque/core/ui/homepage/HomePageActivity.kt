@@ -351,7 +351,6 @@ class HomePageActivity : BaseActivity() {
                 //录制语音
                 val intent = Intent(this, VoiceSignActivity::class.java)
                 if (ForceUtils.activityMatch(intent)) {
-                    needRefresh = true
                     startActivity(intent)
                 }
             }
@@ -368,7 +367,6 @@ class HomePageActivity : BaseActivity() {
                 bundle.putString(ParamConstant.NICKNAME, basicBean.nickname)
                 bundle.putString(ParamConstant.HeaderPic, basicBean.headPic)
             }
-            needRefresh = true
             ARouter.getInstance().build(ARouterConstant.PRIVATE_CONVERSATION_ACTIVITY)
                 .with(bundle)
                 .navigation(this)
@@ -386,7 +384,6 @@ class HomePageActivity : BaseActivity() {
 //                RNPageActivity.start(this, RnConstant.EDIT_MINE_HOMEPAGE)
                 val intent = Intent(this, EditInfoActivity::class.java)
                 if (ForceUtils.activityMatch(intent)) {
-                    needRefresh = true
                     startActivity(intent)
                 }
                 return@onClickNew
@@ -430,7 +427,6 @@ class HomePageActivity : BaseActivity() {
 //            RNPageActivity.start(this, RnConstant.EDIT_MINE_HOMEPAGE)
             val intent = Intent(this, EditInfoActivity::class.java)
             if (ForceUtils.activityMatch(intent)) {
-                needRefresh = true
                 startActivity(intent)
             }
         }
@@ -451,7 +447,6 @@ class HomePageActivity : BaseActivity() {
         rl_guide_photo.onClickNew {
             val intent = Intent(this, EditInfoActivity::class.java)
             if (ForceUtils.activityMatch(intent)) {
-                needRefresh = true
                 startActivity(intent)
             }
         }
@@ -748,14 +743,13 @@ class HomePageActivity : BaseActivity() {
             sdv_real.show()
 //            sdv_real.loadImage(bean.authMark, 18f, 18f)
         }
-        //todo
-        if (bean.realNameGuide?.guide == false) {
+        if (bean.realNameGuide?.guide == true) {
             rl_guide_real.show()
             tv_guide_title.text = "Ta已完成实名认证，加速推荐中"
             rl_guide_real.onClickNew {
                 realNameNotice()
             }
-        } else if (bean.realNameGuide?.guide == true) {
+        } else if (bean.realHeadGuide?.guide == true) {
             rl_guide_real.show()
             tv_guide_title.text = "Ta已完成真人认证，可放心交友"
             rl_guide_real.onClickNew {
@@ -1051,6 +1045,7 @@ class HomePageActivity : BaseActivity() {
             val freeCount = mHomePageViewModel.homeInfoBean.value?.seeMaxCoverNum ?: -1
             //&& !custom_coordinator.isScrolling()
             if (!isFinishing) {
+                mHomePageViewModel.needRefresh = false
                 ImageActivity.start(
                     this, posisiton, picList,
                     from = ImageActivityFrom.HOME,
@@ -1270,7 +1265,6 @@ class HomePageActivity : BaseActivity() {
                                 callback = MyAlertDialog.MyDialogCallback(onRight = {
                                     val intent = Intent(this, EditInfoActivity::class.java)
                                     if (ForceUtils.activityMatch(intent)) {
-                                        needRefresh = true
                                         startActivity(intent)
                                     }
                                 })
@@ -1288,7 +1282,7 @@ class HomePageActivity : BaseActivity() {
         CommonDialogFragment.create(
             title = "实名认证",
             content = "完成实名认证，提高真人交友可信度，将获得更多推荐机会~",
-            imageRes = R.mipmap.bg_dialog_real_auth,
+            imageRes = R.mipmap.bg_dialog_real_name,
             okText = "去认证",
             cancelText = "取消",
             callback = CommonDialogFragment.Callback(
@@ -1315,13 +1309,8 @@ class HomePageActivity : BaseActivity() {
                     okText = "修改头像",
                     noText = "取消",
                     callback = MyAlertDialog.MyDialogCallback(onRight = {
-//                        RNPageActivity.start(
-//                            this,
-//                            RnConstant.EDIT_MINE_HOMEPAGE
-//                        )
                         val intent = Intent(this, EditInfoActivity::class.java)
                         if (ForceUtils.activityMatch(intent)) {
-                            needRefresh = true
                             startActivity(intent)
                         }
                     })
@@ -1378,11 +1367,11 @@ class HomePageActivity : BaseActivity() {
             }
     }
 
-    private var needRefresh: Boolean = false
     override fun onRestart() {
         super.onRestart()
-        if (needRefresh) {
-            needRefresh = false
+        if (!mHomePageViewModel.needRefresh) {
+            mHomePageViewModel.needRefresh = true
+        } else {
             //重新获取数据
 //        if (mHomePageViewModel.mineHomePage) {
             mHomePageViewModel.homeInfo()

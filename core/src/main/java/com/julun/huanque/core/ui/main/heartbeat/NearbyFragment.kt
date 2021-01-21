@@ -1152,10 +1152,10 @@ class NearbyFragment : BaseLazyFragment() {
                     if (index == 0) {
                         list.add(HomePagePicBean(pic, selected = BooleanType.TRUE))
                     } else {
-                        val mBlur = if (item.seeMaxCoverNum == -1) {
+                        val mBlur = if (mViewModel.currentSeeMaxCoverNum == -1) {
                             false
                         } else {
-                            index >= item.seeMaxCoverNum
+                            index >= mViewModel.currentSeeMaxCoverNum
                         }
                         list.add(HomePagePicBean(pic, selected = BooleanType.FALSE, blur = mBlur))
                     }

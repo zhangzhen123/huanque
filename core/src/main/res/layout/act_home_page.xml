@@ -71,7 +71,8 @@
                         android:layout_marginStart="@dimen/dimen_15"
                         android:layout_marginEnd="@dimen/dimen_15"
                         android:background="@drawable/bg_solid_btn1"
-                        app:layout_constraintBottom_toBottomOf="@+id/bga_banner"
+                        tools:visibility="visible"
+                        android:layout_marginTop="@dimen/dimen_74"
                         app:layout_constraintTop_toTopOf="@+id/bga_banner">
 
                         <TextView
@@ -217,6 +218,7 @@
                         android:background="@drawable/bg_solid_btn1"
                         android:visibility="gone"
                         tools:visibility="visible"
+                        android:layout_marginTop="@dimen/dimen_10"
                         app:layout_constraintTop_toBottomOf="@id/bga_banner">
 
                         <TextView

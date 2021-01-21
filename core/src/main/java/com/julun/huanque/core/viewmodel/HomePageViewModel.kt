@@ -87,6 +87,8 @@ class HomePageViewModel : BaseViewModel() {
     //我的主页标识位
     var mineHomePage = false
 
+    var needRefresh = true
+
     /**
      * 获取基础信息
      */

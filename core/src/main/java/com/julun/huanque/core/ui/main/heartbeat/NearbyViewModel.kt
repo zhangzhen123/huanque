@@ -35,12 +35,16 @@ class NearbyViewModel : BaseViewModel() {
     val likeTag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
     //通过viewModel响应 防止多次执行
-    val likeEvent:  MutableLiveData<LikeEvent> by lazy { MutableLiveData<LikeEvent>() }
+    val likeEvent: MutableLiveData<LikeEvent> by lazy { MutableLiveData<LikeEvent>() }
+
     //记录当前总供滑动的次数
     var currentRemainTimes: Int = 0
 
     //记录当前右划心动的次数
     var currentHeartTouchTimes: Int = 0
+
+    //当前用户可查看的数目
+    var currentSeeMaxCoverNum: Int = -1
 
     var heartTouchNotEnoughTips: String = ""
     private var offset = 0
@@ -72,7 +76,7 @@ class NearbyViewModel : BaseViewModel() {
                     ).dataConvert()
                 currentRemainTimes = result.remainTimes
                 currentHeartTouchTimes = result.heartTouchTimes
-
+                currentSeeMaxCoverNum = result.seeMaxCoverNum
 
                 likeTag.value = true
                 heartTouchNotEnoughTips = result.heartTouchNotEnoughTips

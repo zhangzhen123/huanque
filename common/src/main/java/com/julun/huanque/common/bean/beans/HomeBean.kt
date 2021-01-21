@@ -383,6 +383,7 @@ class NearbyListData<T> : RootListData<T>() {
     var heartTouchNotEnoughTips: String = ""
     var remainTimes: Int = 0
     var heartTouchTimes: Int = 0
+    var seeMaxCoverNum: Int = 0
 }
 
 data class NearbyUserBean(
@@ -403,7 +404,6 @@ data class NearbyUserBean(
     var userId: Long = 0L,
     var interactTips: String = "",
     var sameCity: Boolean = false,
-    var seeMaxCoverNum: Int = -1,
     var selectIndex: Int = 0//本地字段 记录当前的选中位置
 ) : Serializable
 
