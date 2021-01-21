@@ -3,15 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#164AC4">
+    android:background="@color/white">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="64dp"
         android:text="社交意愿"
-        android:textColor="@color/white"
-        android:textSize="@dimen/sp_16"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_20"
         android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="96dp"
         android:text="告诉欢鹊你的社交意愿，欢鹊可以帮助你"
-        android:textColor="@color/white"
+        android:textColor="@color/black_333"
         android:textSize="@dimen/sp_12"
         android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -51,6 +51,18 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="58dp"
+        android:layout_marginRight="58dp"
+        android:layout_marginBottom="10dp"
+        android:background="@mipmap/pic_sex_bottom"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="260:179"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

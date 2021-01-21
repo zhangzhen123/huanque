@@ -26,29 +26,33 @@
                 app:cardCornerRadius="25dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:visibility="visible">
-
-                <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="5dp"
-                    android:src="@mipmap/icon_history_attention" />
+                app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
                     android:id="@+id/tv_attention"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="55dp"
-                    android:drawableRight="@mipmap/icon_history_attention_arrow"
+                    android:layout_marginLeft="20dp"
                     android:gravity="center_vertical"
-                    android:singleLine="true"
                     android:textColor="@color/black_333"
                     android:textSize="@dimen/sp_14"
                     android:textStyle="bold"
                     tools:text="肯德基嗯和" />
 
+                <TextView
+                    android:id="@+id/tv_action"
+                    android:layout_width="wrap_content"
+                    android:layout_height="26dp"
+                    android:layout_gravity="right|center_vertical"
+                    android:layout_marginRight="14dp"
+                    android:background="@drawable/bg_enable"
+                    android:gravity="center"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_14"
+                    android:textStyle="bold"
+                    tools:text="肯定会" />
 
             </androidx.cardview.widget.CardView>
 

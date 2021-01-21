@@ -433,3 +433,38 @@ data class WatchForm(
     }
 
 }
+
+/**
+ * 心动form
+ */
+data class HeartBeanForm(var heartTouchType: String = "", var offset: Int = 0) : Serializable {
+    companion object {
+        //对我心动
+        const val HeartTouchToMe = "HeartTouchToMe"
+
+        //我心动的
+        const val MyHeartTouch = "MyHeartTouch"
+    }
+}
+
+/**
+ * 刷新引导信息的form
+ */
+data class GuideInfoForm(var type: String) : Serializable {
+    companion object {
+        //心动
+        const val HeartTouch = "HeartTouch"
+
+        //访客
+        const val Visit = "Visit"
+    }
+
+}
+
+/**
+ * 解锁form
+ */
+data class UnlockForm(
+    var logId: Long = 0,
+    var userId: Long = 0
+) : Serializable

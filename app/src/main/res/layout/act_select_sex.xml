@@ -2,16 +2,16 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#024AB5">
+    android:layout_height="match_parent">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="67dp"
+        android:layout_marginBottom="87dp"
         android:text="性别选择"
-        android:textColor="@color/white"
-        android:textSize="24sp"
+        android:textColor="@color/black_333"
+        android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/iv_male"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
@@ -19,9 +19,9 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="40dp"
+        android:layout_marginBottom="50dp"
         android:text="告诉欢鹊你的性别，欢鹊更容易匹配适合你的TA"
-        android:textColor="@color/white"
+        android:textColor="@color/black_333"
         android:textSize="@dimen/sp_12"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/iv_male"
@@ -73,29 +73,36 @@
         app:layout_constraintRight_toRightOf="@id/iv_female"
         app:layout_constraintTop_toBottomOf="@id/iv_female" />
 
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="男生"
-        android:textColor="@color/white"
-        android:textSize="@dimen/sp_20"
-        android:textStyle="bold"
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="15dp"
+        android:src="@mipmap/icon_male"
         app:layout_constraintLeft_toLeftOf="@id/iv_male"
         app:layout_constraintRight_toRightOf="@id/iv_male"
         app:layout_constraintTop_toBottomOf="@id/iv_male" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="美女"
-        android:textColor="@color/white"
-        android:textSize="@dimen/sp_20"
-        android:textStyle="bold"
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="15dp"
+        android:src="@mipmap/icon_female"
         app:layout_constraintLeft_toLeftOf="@id/iv_female"
         app:layout_constraintRight_toRightOf="@id/iv_female"
         app:layout_constraintTop_toBottomOf="@id/iv_female" />
+
+
+    <View
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="58dp"
+        android:layout_marginRight="58dp"
+        android:layout_marginBottom="10dp"
+        android:background="@mipmap/pic_sex_bottom"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="260:179"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

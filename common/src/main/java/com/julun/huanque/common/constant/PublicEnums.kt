@@ -371,6 +371,23 @@ object MessageConstants {
     //标签详情
     const val AuthTagDetail = "AuthTagDetail"
 
+    //个性签名页面
+    const val MySign = "MySign"
+
+    //语音签名
+    const val Voice = "Voice"
+
+    //家乡编辑
+    const val HomeTown = "HomeTown"
+
+    const val Birthday = "Birthday"
+
+    const val Figure = "Figure"
+
+    const val School = "School"
+
+    const val Professional = "Professional"
+
 }
 
 /**

@@ -8,8 +8,10 @@ import android.text.TextWatcher
 import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.dialog.MyAlertDialog
+import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
@@ -26,6 +28,7 @@ import org.greenrobot.eventbus.EventBus
  *@创建时间 2020/12/30 14:36
  *@描述 修改个性签名页面
  */
+@Route(path = ARouterConstant.UpdateSignActivity)
 class UpdateSignActivity : BaseActivity() {
 
     companion object {

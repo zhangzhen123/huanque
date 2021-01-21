@@ -570,6 +570,9 @@ class MessageFragment : BaseFragment() {
         } else {
             view_notification.show()
         }
+        view_heart.onClickNew {
+            HeartBeatActivity.newInstance(requireActivity())
+        }
     }
 
     //设置在线状态的PopupWindow

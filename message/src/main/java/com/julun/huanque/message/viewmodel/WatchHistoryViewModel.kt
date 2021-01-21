@@ -3,7 +3,9 @@ package com.julun.huanque.message.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.julun.huanque.common.bean.beans.WatchHistoryBean
+import com.julun.huanque.common.bean.beans.WatchListExt
 import com.julun.huanque.common.bean.beans.WatchListInfo
+import com.julun.huanque.common.bean.forms.GuideInfoForm
 import com.julun.huanque.common.bean.forms.WatchForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.net.Requests
@@ -23,6 +25,9 @@ class WatchHistoryViewModel : BaseViewModel() {
     //访问历史
     val historyData: MutableLiveData<WatchListInfo<WatchHistoryBean>> by lazy { MutableLiveData<WatchListInfo<WatchHistoryBean>>() }
 
+    //额外配置参数
+    val watchExtra: MutableLiveData<WatchListExt> by lazy { MutableLiveData<WatchListExt>() }
+
     private var mOffset = 0
 
     /**
@@ -37,9 +42,22 @@ class WatchHistoryViewModel : BaseViewModel() {
                 val watchHistory = socialService.visitLog(WatchForm(type, mOffset)).dataConvert()
                 watchHistory.isPull = refresh
                 mOffset += watchHistory.list.size
+                watchExtra.value = watchHistory.extData
                 historyData.value = watchHistory
             }, {})
         }
     }
 
+    /**
+     * 刷新引导文案
+     */
+    fun refreshGuide() {
+        viewModelScope.launch {
+            request({
+                val tempBean = socialService.guideInfo(GuideInfoForm(GuideInfoForm.HeartTouch)).dataConvert()
+                val extra = WatchListExt(guideText = tempBean.guideText, touchType = tempBean.touchType)
+                watchExtra.value = extra
+            })
+        }
+    }
 }

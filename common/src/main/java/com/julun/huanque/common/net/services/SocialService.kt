@@ -447,4 +447,22 @@ interface SocialService {
      */
     @POST("social/friend/relation/visitLog")
     suspend fun visitLog(@Body body: WatchForm): Root<WatchListInfo<WatchHistoryBean>>
+
+    /**
+     * 获取心动列表
+     */
+    @POST("social/friend/hearttouch/list")
+    suspend fun hearttouchList(@Body form: HeartBeanForm): Root<HeartListInfo<SingleHeartBean>>
+
+    /**
+     * 刷新引导数据
+     */
+    @POST("social/friend/hearttouch/guideInfo")
+    suspend fun guideInfo(@Body form: GuideInfoForm): Root<HeartListInfo<SingleHeartBean>>
+
+    /**
+     * 解锁心动
+     */
+    @POST("social/friend/hearttouch/unlock")
+    suspend fun unlock(@Body form: UnlockForm): Root<VoidResult>
 }

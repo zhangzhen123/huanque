@@ -6,8 +6,10 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.bean.beans.FigureBean
+import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.constant.Sex
 import com.julun.huanque.common.suger.hide
@@ -32,6 +34,7 @@ import java.math.BigDecimal
  *@创建时间 2021/1/8 10:09
  *@描述 身材
  */
+@Route(path = ARouterConstant.FigureActivity)
 class FigureActivity : BaseActivity() {
 
     companion object {

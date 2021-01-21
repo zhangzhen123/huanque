@@ -140,6 +140,18 @@ object ARouterConstant {
 
     //发布动态
     const val PUBLISH_STATE_ACTIVITY = "/$CORE$PREFIX_ACTIVITY/PublishStateActivity"
+    //个性签名
+    const val UpdateSignActivity = "/$CORE$PREFIX_ACTIVITY/UpdateSignActivity"
+    //家乡
+    const val HomeTownActivity = "/$CORE$PREFIX_ACTIVITY/HomeTownActivity"
+    //生日
+    const val UpdateBirthdayActivity = "/$CORE$PREFIX_ACTIVITY/UpdateBirthdayActivity"
+    //身材
+    const val FigureActivity = "/$CORE$PREFIX_ACTIVITY/FigureActivity"
+    //学校
+    const val SchoolActivity = "/$CORE$PREFIX_ACTIVITY/SchoolActivity"
+    //职业
+    const val ProfessionActivity = "/$CORE$PREFIX_ACTIVITY/ProfessionActivity"
 
     const val MY_TAGS_ACTIVITY = "/$CORE$PREFIX_ACTIVITY/MyTagsActivity"
 

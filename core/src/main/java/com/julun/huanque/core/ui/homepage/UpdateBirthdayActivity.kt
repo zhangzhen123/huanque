@@ -9,12 +9,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.activity.viewModels
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.bigkoo.pickerview.builder.TimePickerBuilder
 import com.bigkoo.pickerview.listener.CustomListener
 import com.bigkoo.pickerview.listener.OnTimeSelectListener
 import com.bigkoo.pickerview.view.TimePickerView
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.bean.beans.FigureBean
+import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.constant.Sex
 import com.julun.huanque.common.suger.dp2px
@@ -36,6 +38,7 @@ import java.util.*
  *@创建时间 2021/1/5 11:33
  *@描述 更新年龄页面
  */
+@Route(path = ARouterConstant.UpdateBirthdayActivity)
 class UpdateBirthdayActivity : BaseActivity() {
 
     companion object {
