@@ -15,6 +15,7 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder
 import com.bigkoo.pickerview.builder.TimePickerBuilder
 import com.bigkoo.pickerview.listener.CustomListener
@@ -28,6 +29,7 @@ import com.julun.huanque.common.bean.beans.EducationBean
 import com.julun.huanque.common.bean.beans.SchoolInfo
 import com.julun.huanque.common.bean.beans.SingleSchool
 import com.julun.huanque.common.bean.forms.SaveSchoolForm
+import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.hide
@@ -59,6 +61,7 @@ import java.util.*
  *@创建时间 2021/1/5 19:34
  *@描述 学校页面
  */
+@Route(path = ARouterConstant.SchoolActivity)
 class SchoolActivity : BaseActivity() {
 
     companion object {
@@ -159,10 +162,10 @@ class SchoolActivity : BaseActivity() {
                     phone_num_clear.show()
                     val education = mViewModel.schoolData.value?.education
                     if (mViewModel.selectSchool?.schoolName != s.toString()) {
-                        if(education == ""){
-                            mViewModel.searchSchool(s.toString(),null)
-                        }else{
-                            mViewModel.searchSchool(s.toString(),education)
+                        if (education == "") {
+                            mViewModel.searchSchool(s.toString(), null)
+                        } else {
+                            mViewModel.searchSchool(s.toString(), education)
                         }
                         recycler_view.show()
                     } else {

@@ -12,6 +12,7 @@ import android.widget.ImageView
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder
 import com.bigkoo.pickerview.listener.CustomListener
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener
@@ -20,6 +21,7 @@ import com.contrarywind.interfaces.IPickerViewData
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.forms.SaveProfessionForm
+import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.helper.MixedHelper
@@ -52,6 +54,7 @@ import java.lang.StringBuilder
  *@创建时间 2020/12/30 19:59
  *@描述 职业页面
  */
+@Route(path = ARouterConstant.ProfessionActivity)
 class ProfessionActivity : BaseActivity() {
 
     companion object {

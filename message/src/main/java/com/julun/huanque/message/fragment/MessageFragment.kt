@@ -541,6 +541,9 @@ class MessageFragment : BaseFragment() {
             //看过的人
             WatchHistoryActivity.newInstance(requireActivity())
         }
+        view_heart.onClickNew {
+            HeartBeatActivity.newInstance(requireActivity())
+        }
     }
 
     //设置在线状态的PopupWindow

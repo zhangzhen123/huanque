@@ -6,7 +6,9 @@ import com.julun.huanque.common.bean.beans.HeartListInfo
 import com.julun.huanque.common.bean.beans.SingleHeartBean
 import com.julun.huanque.common.bean.beans.WatchHistoryBean
 import com.julun.huanque.common.bean.beans.WatchListInfo
+import com.julun.huanque.common.bean.forms.GuideInfoForm
 import com.julun.huanque.common.bean.forms.HeartBeanForm
+import com.julun.huanque.common.bean.forms.UnlockForm
 import com.julun.huanque.common.bean.forms.WatchForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.net.Requests
@@ -26,6 +28,19 @@ class HeartBeatViewModel : BaseViewModel() {
     //访问历史
     val heartBeatData: MutableLiveData<HeartListInfo<SingleHeartBean>> by lazy { MutableLiveData<HeartListInfo<SingleHeartBean>>() }
 
+    //引导数据
+    val guideInfo: MutableLiveData<HeartListInfo<SingleHeartBean>> by lazy { MutableLiveData<HeartListInfo<SingleHeartBean>>() }
+
+    //解锁的ID
+    val unlockLogId: MutableLiveData<Long> by lazy { MutableLiveData<Long>() }
+
+    //解锁次数
+    var unLockCount = 0
+
+    //暂存的心动记录对象
+    var mSingleHeartBean: SingleHeartBean? = null
+
+
     private var mOffset = 0
 
     /**
@@ -38,11 +53,40 @@ class HeartBeatViewModel : BaseViewModel() {
         viewModelScope.launch {
             request({
                 val watchHistory = socialService.hearttouchList(HeartBeanForm(type, mOffset)).dataConvert()
+                if (refresh) {
+                    guideInfo.value = watchHistory
+                }
                 watchHistory.isPull = refresh
                 mOffset += watchHistory.list.size
+                unLockCount = watchHistory.remainUnlockTimes
                 heartBeatData.value = watchHistory
             }, {})
         }
     }
+
+    /**
+     * 刷新引导文案
+     */
+    fun refreshGuide() {
+        viewModelScope.launch {
+            request({
+                guideInfo.value = socialService.guideInfo(GuideInfoForm(GuideInfoForm.HeartTouch)).dataConvert()
+            })
+        }
+    }
+
+    /**
+     * 解锁
+     */
+    fun unlock(logId: Long, userId: Long) {
+        viewModelScope.launch {
+            request({
+                socialService.unlock(UnlockForm(logId, userId)).dataConvert()
+                unlockLogId.value = logId
+                unLockCount--
+            }, {})
+        }
+    }
+
 
 }

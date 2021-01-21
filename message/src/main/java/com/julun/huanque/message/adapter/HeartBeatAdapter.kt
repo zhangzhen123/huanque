@@ -19,6 +19,8 @@ import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.message.R
 import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.textColor
+import java.math.RoundingMode
+import java.text.DecimalFormat
 
 /**
  *@创建者   dong
@@ -31,12 +33,33 @@ class HeartBeatAdapter : BaseQuickAdapter<SingleHeartBean, BaseViewHolder>(R.lay
         val sdv = holder.getView<SimpleDraweeView>(R.id.sdv)
         if (item.unLock == BusiConstant.True) {
             //解锁
-//            sdv.loadImage()
+            sdv.loadImage(item.coverPic)
         } else {
             //未解锁
+            sdv.loadImage("${item.coverPic}${BusiConstant.OSS_BLUR_01}")
+        }
 
+        val tv_distance = holder.getView<TextView>(R.id.tv_distance)
+        val distance = item.distance
+
+
+        if (distance == 0) {
+            val starList = mutableListOf<String>("金星", "木星", "水星", "火星", "土星")
+            val currentStar = starList.random()
+            tv_distance.text = currentStar
+        } else {
+            if (distance >= 1000) {
+                val df = DecimalFormat("#.0")
+                df.roundingMode = RoundingMode.DOWN
+                tv_distance.text = "${df.format(distance / 1000.0)}km ${item.area}"
+            } else {
+                tv_distance.text = "${distance}m ${item.area} /"
+            }
         }
 
 
+        holder.setVisible(R.id.iv_heart, item.matched == BusiConstant.True)
+            .setText(R.id.tv_status, item.interactTips)
+            .setVisible(R.id.iv_lock, item.unLock != BusiConstant.True)
     }
 }
