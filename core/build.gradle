@@ -48,5 +48,5 @@ dependencies {
     api rootProject.ext.dependencies["AGORA"]
     api 'github.hellocsl:GalleryLayoutManager:1.0.6'
     kapt rootProject.ext.dependencies["AROUTER_COMPILER"]
-
+    implementation 'com.github.yuruiyin:AppbarLayoutBehavior:1.0.3'
 }
