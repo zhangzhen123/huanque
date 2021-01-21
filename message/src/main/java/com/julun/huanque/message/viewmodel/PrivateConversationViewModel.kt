@@ -70,6 +70,8 @@ class PrivateConversationViewModel : BaseViewModel() {
     //首次获取历史记录成功标识位
     val firstSuccessState: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
+    val finishState : MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+
     //对方ID
     val targetIdData: MutableLiveData<Long> by lazy { MutableLiveData<Long>() }
 
