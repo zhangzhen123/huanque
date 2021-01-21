@@ -421,9 +421,14 @@ class NearbyFragment : BaseLazyFragment() {
                 }
             }
             picsAdapter.notifyDataSetChanged()
-
             val pic = picsAdapter.getItemOrNull(selectIndex) ?: return
-            sdv.loadImageNoResize(pic.coverPic)
+
+            if(pic.blur){
+                ImageUtils.loadImageWithBlur(sdv, pic.coverPic, 2, 15)
+            }else{
+                sdv.loadImageNoResize(pic.coverPic)
+            }
+//            sdv.loadImageNoResize(pic.coverPic)
             tvPicCount.text = "${selectIndex + 1}/${picsAdapter.data.size}"
 
             val manager = rvPics.layoutManager as AutoCenterLayoutManager
@@ -882,6 +887,9 @@ class NearbyFragment : BaseLazyFragment() {
             //获取到当前最上方的item
             val item = cardsAdapter.getItemOrNull(0) ?: return@postDelayed
             val tags = item.tagList
+            if(tags.isEmpty()){
+                return@postDelayed
+            }
             val first: UserTagBean? = tags.getOrNull(currentAniIndex)
             currentAniIndex++
             val second: UserTagBean? = tags.getOrNull(currentAniIndex)
@@ -1186,7 +1194,7 @@ class NearbyFragment : BaseLazyFragment() {
                 mPicsAdapter.notifyDataSetChanged()
                 val pic = mPicsAdapter.getItemOrNull(position) ?: return
                 if(pic.blur){
-                    ImageUtils.loadImageWithBlur(sdv, pic.coverPic, 3, 50)
+                    ImageUtils.loadImageWithBlur(sdv, pic.coverPic, 2, 15)
                 }else{
                     sdv.loadImageNoResize(pic.coverPic)
                 }

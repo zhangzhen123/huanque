@@ -27,6 +27,7 @@ import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.bean.beans.*
+import com.julun.huanque.common.bean.events.ImagePositionEvent
 import com.julun.huanque.common.bean.events.PicChangeEvent
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.StringHelper
@@ -48,6 +49,7 @@ import com.julun.huanque.core.ui.record_voice.VoiceSignActivity
 import com.julun.huanque.core.viewmodel.HomePageViewModel
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
+import com.julun.rnlib.RnManager
 import kotlinx.android.synthetic.main.act_home_page.*
 import net.lucode.hackware.magicindicator.ViewPagerHelper
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
@@ -56,6 +58,8 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerInd
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator
 import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.*
 import java.math.RoundingMode
 import java.text.DecimalFormat
@@ -118,6 +122,10 @@ class HomePageActivity : BaseActivity() {
     private var mShowPic: String = ""
 
     override fun getLayoutId() = R.layout.act_home_page
+
+    override fun isRegisterEventBus(): Boolean {
+        return true
+    }
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         intent?.let { tent ->
@@ -343,6 +351,7 @@ class HomePageActivity : BaseActivity() {
                 //录制语音
                 val intent = Intent(this, VoiceSignActivity::class.java)
                 if (ForceUtils.activityMatch(intent)) {
+                    needRefresh = true
                     startActivity(intent)
                 }
             }
@@ -359,6 +368,7 @@ class HomePageActivity : BaseActivity() {
                 bundle.putString(ParamConstant.NICKNAME, basicBean.nickname)
                 bundle.putString(ParamConstant.HeaderPic, basicBean.headPic)
             }
+            needRefresh = true
             ARouter.getInstance().build(ARouterConstant.PRIVATE_CONVERSATION_ACTIVITY)
                 .with(bundle)
                 .navigation(this)
@@ -376,6 +386,7 @@ class HomePageActivity : BaseActivity() {
 //                RNPageActivity.start(this, RnConstant.EDIT_MINE_HOMEPAGE)
                 val intent = Intent(this, EditInfoActivity::class.java)
                 if (ForceUtils.activityMatch(intent)) {
+                    needRefresh = true
                     startActivity(intent)
                 }
                 return@onClickNew
@@ -419,6 +430,7 @@ class HomePageActivity : BaseActivity() {
 //            RNPageActivity.start(this, RnConstant.EDIT_MINE_HOMEPAGE)
             val intent = Intent(this, EditInfoActivity::class.java)
             if (ForceUtils.activityMatch(intent)) {
+                needRefresh = true
                 startActivity(intent)
             }
         }
@@ -433,6 +445,14 @@ class HomePageActivity : BaseActivity() {
             if (mHomePageViewModel.homeInfoBean.value?.currHeadRealPeople != BusiConstant.True) {
                 mRealPeopleAttentionFragment = mRealPeopleAttentionFragment ?: RealPeopleAttentionFragment()
                 mRealPeopleAttentionFragment?.show(supportFragmentManager, "RealPeopleAttentionFragment")
+            }
+        }
+
+        rl_guide_photo.onClickNew {
+            val intent = Intent(this, EditInfoActivity::class.java)
+            if (ForceUtils.activityMatch(intent)) {
+                needRefresh = true
+                startActivity(intent)
             }
         }
     }
@@ -710,10 +730,13 @@ class HomePageActivity : BaseActivity() {
         })
     }
 
+    private var cSeeMaxCoverNum: Int = -1
+
     /**
      * 显示页面
      */
     private fun showViewByData(bean: HomePageInfo) {
+        cSeeMaxCoverNum = bean.seeMaxCoverNum
         tv_user_name.text = bean.nickname
         if (!mHomePageViewModel.shareElement) {
             showPic(bean.headPic, bean.picList, bean.seeMaxCoverNum)
@@ -724,6 +747,22 @@ class HomePageActivity : BaseActivity() {
         } else {
             sdv_real.show()
 //            sdv_real.loadImage(bean.authMark, 18f, 18f)
+        }
+        //todo
+        if (bean.realNameGuide?.guide == false) {
+            rl_guide_real.show()
+            tv_guide_title.text = "Ta已完成实名认证，加速推荐中"
+            rl_guide_real.onClickNew {
+                realNameNotice()
+            }
+        } else if (bean.realNameGuide?.guide == true) {
+            rl_guide_real.show()
+            tv_guide_title.text = "Ta已完成真人认证，可放心交友"
+            rl_guide_real.onClickNew {
+                realHeaderNotice()
+            }
+        } else {
+            rl_guide_real.hide()
         }
 
         val onLineBean = bean.online
@@ -975,10 +1014,12 @@ class HomePageActivity : BaseActivity() {
             val pic = itemView?.findViewById<SimpleDraweeView>(R.id.sdv) ?: return@Adapter
 
             if (model?.blur == true) {
-                ImageUtils.loadImageWithBlur(pic, model.coverPic, 3, 50)
+//                ImageUtils.loadImageWithBlur(pic, model.coverPic, 3, 50)
+                ImageUtils.loadImageNoResize(pic, "${model.coverPic}${BusiConstant.OSS_BLUR_01}")
             } else {
                 ImageUtils.loadImageNoResize(pic, "${model?.coverPic}")
             }
+//            ImageUtils.loadImageNoResize(pic, "${model?.coverPic}")
 
 //            val icWater = itemView?.findViewById<ImageView>(R.id.iv_water) ?: return@Adapter
 //            if (model?.realPic == BusiConstant.True) {
@@ -994,13 +1035,20 @@ class HomePageActivity : BaseActivity() {
             val picBeanList = mPicAdapter.data
             val picList = mutableListOf<String>()
             picBeanList.forEach {
-                picList.add(StringHelper.getOssImgUrl(it.coverPic))
+                val pic =
+                    if (it.blur) {
+                        it.coverPic + BusiConstant.OSS_BLUR_01
+                    } else {
+                        it.coverPic
+                    }
+                picList.add(StringHelper.getOssImgUrl(pic))
             }
 //            val bean = mHomePageViewModel.homeInfoBean.value ?: return@Delegate
 //            val imageList = bean.picList.apply { add(bean.headPic) }
 //
 //            imageList.forEach { picList.add(StringHelper.getOssImgUrl(it)) }
             logger.info("State = ${lifecycle.currentState}")
+            val freeCount = mHomePageViewModel.homeInfoBean.value?.seeMaxCoverNum ?: -1
             //&& !custom_coordinator.isScrolling()
             if (!isFinishing) {
                 ImageActivity.start(
@@ -1011,6 +1059,18 @@ class HomePageActivity : BaseActivity() {
                 )
             }
         }
+    }
+
+    /**
+     *
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun receiveImagePosition(event: ImagePositionEvent) {
+        logger("收到查看图片的位置的消息：${event.position}")
+        if (event.position != -1) {
+            bga_banner.currentItem = event.position
+        }
+
     }
 
     /**
@@ -1061,6 +1121,16 @@ class HomePageActivity : BaseActivity() {
             val manager = recyclerView_piclist.layoutManager as AutoCenterLayoutManager
             manager.smoothScrollToPosition(recyclerView_piclist, position)
 //            recyclerView_piclist.smoothScrollToPosition(position)
+        }
+
+        if (cSeeMaxCoverNum != -1) {
+            if (position >= cSeeMaxCoverNum) {
+                rl_guide_photo.show()
+            } else {
+                rl_guide_photo.hide()
+            }
+        } else {
+            rl_guide_photo.hide()
         }
     }
 
@@ -1160,36 +1230,7 @@ class HomePageActivity : BaseActivity() {
 //                            }
 //                        }), "真人照片未认证", okText = "去认证", noText = "取消"
 //                    )
-                    CommonDialogFragment.create(
-                        title = "真人照片认证",
-                        content = "通过人脸识别技术确认照片为真人将获得认证标识，提高交友机会哦~",
-                        imageRes = com.julun.huanque.core.R.mipmap.bg_dialog_real_auth,
-                        okText = "去认证",
-                        cancelText = "取消",
-                        callback = CommonDialogFragment.Callback(
-                            onOk = {
-                                (ARouter.getInstance().build(ARouterConstant.REALNAME_SERVICE)
-                                    .navigation() as? IRealNameService)?.checkRealHead { e ->
-                                    if (e is ResponseError && e.busiCode == ErrorCodes.REAL_HEAD_ERROR) {
-                                        MyAlertDialog(this, false).showAlertWithOKAndCancel(
-                                            e.busiMessage.toString(),
-                                            title = "修改提示",
-                                            okText = "修改头像",
-                                            noText = "取消",
-                                            callback = MyAlertDialog.MyDialogCallback(onRight = {
-                                                val intent = Intent(this, EditInfoActivity::class.java)
-                                                if (ForceUtils.activityMatch(intent)) {
-                                                    startActivity(intent)
-                                                }
-                                            })
-                                        )
-                                    }
-                                }
-
-                            }
-                        )
-                    ).show(this, "CommonDialogFragment")
-
+                    realHeaderNotice()
                 }
             }
             "UserLevel" -> {
@@ -1207,6 +1248,57 @@ class HomePageActivity : BaseActivity() {
             else -> {
             }
         }
+    }
+
+    private fun realHeaderNotice() {
+        CommonDialogFragment.create(
+            title = "真人照片认证",
+            content = "通过人脸识别技术确认照片为真人将获得认证标识，提高交友机会哦~",
+            imageRes = R.mipmap.bg_dialog_real_auth,
+            okText = "去认证",
+            cancelText = "取消",
+            callback = CommonDialogFragment.Callback(
+                onOk = {
+                    (ARouter.getInstance().build(ARouterConstant.REALNAME_SERVICE)
+                        .navigation() as? IRealNameService)?.checkRealHead { e ->
+                        if (e is ResponseError && e.busiCode == ErrorCodes.REAL_HEAD_ERROR) {
+                            MyAlertDialog(this, false).showAlertWithOKAndCancel(
+                                e.busiMessage.toString(),
+                                title = "修改提示",
+                                okText = "修改头像",
+                                noText = "取消",
+                                callback = MyAlertDialog.MyDialogCallback(onRight = {
+                                    val intent = Intent(this, EditInfoActivity::class.java)
+                                    if (ForceUtils.activityMatch(intent)) {
+                                        needRefresh = true
+                                        startActivity(intent)
+                                    }
+                                })
+                            )
+                        }
+                    }
+
+                }
+            )
+        ).show(this, "CommonDialogFragment")
+
+    }
+
+    private fun realNameNotice() {
+        CommonDialogFragment.create(
+            title = "实名认证",
+            content = "完成实名认证，提高真人交友可信度，将获得更多推荐机会~",
+            imageRes = R.mipmap.bg_dialog_real_auth,
+            okText = "去认证",
+            cancelText = "取消",
+            callback = CommonDialogFragment.Callback(
+                onOk = {
+                    ARouter.getInstance().build(ARouterConstant.REAL_NAME_MAIN_ACTIVITY)
+                        .navigation()
+                }
+            )
+        ).show(this, "CommonDialogFragment")
+
     }
 
     /**
@@ -1229,6 +1321,7 @@ class HomePageActivity : BaseActivity() {
 //                        )
                         val intent = Intent(this, EditInfoActivity::class.java)
                         if (ForceUtils.activityMatch(intent)) {
+                            needRefresh = true
                             startActivity(intent)
                         }
                     })
@@ -1285,12 +1378,17 @@ class HomePageActivity : BaseActivity() {
             }
     }
 
+    private var needRefresh: Boolean = false
     override fun onRestart() {
         super.onRestart()
-        //重新获取数据
-        if (mHomePageViewModel.mineHomePage) {
+        if (needRefresh) {
+            needRefresh = false
+            //重新获取数据
+//        if (mHomePageViewModel.mineHomePage) {
             mHomePageViewModel.homeInfo()
+//        }
         }
+
     }
 
     override fun onDestroy() {

@@ -32,10 +32,12 @@ class HomePagePicListAdapter : BaseQuickAdapter<HomePagePicBean, BaseViewHolder>
 //            .build()
 //        sdv.hierarchy = hierarchy
         if(item.blur){
-            ImageUtils.loadImageWithBlur(sdv, item.coverPic, 3, 80,dp2px(40),dp2px(40))
+//            ImageUtils.loadImageWithBlur(sdv, item.coverPic, 3, 80,dp2px(40),dp2px(40))
+            sdv.loadImage(item.coverPic  +BusiConstant.OSS_BLUR_02, 40f, 40f)
         }else{
             sdv.loadImage(item.coverPic, 40f, 40f)
         }
+//        sdv.loadImage(item.coverPic, 40f, 40f)
 
     }
 }
