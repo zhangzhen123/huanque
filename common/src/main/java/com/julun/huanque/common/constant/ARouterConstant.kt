@@ -141,6 +141,8 @@ object ARouterConstant {
     //发布动态
     const val PUBLISH_STATE_ACTIVITY = "/$CORE$PREFIX_ACTIVITY/PublishStateActivity"
 
+    const val MY_TAGS_ACTIVITY = "/$CORE$PREFIX_ACTIVITY/MyTagsActivity"
+
 
     /** 实名认证 start **/
     private const val REAL_NAME = "realname"

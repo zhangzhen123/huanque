@@ -404,7 +404,9 @@ data class NearbyUserBean(
     var userId: Long = 0L,
     var interactTips: String = "",
     var sameCity: Boolean = false,
-    var selectIndex: Int = 0//本地字段 记录当前的选中位置
+    var selectIndex: Int = 0,//本地字段 记录当前的选中位置
+    var cardType: String = "",//User：用户卡片 Guide：引导卡片
+    var touchType: String = ""
 ) : Serializable
 
 data class FavoriteUserBean(
@@ -422,7 +424,10 @@ data class FavoriteUserBean(
     var tagName: String = "",
     var userId: Long = 0,
     var interactTips: String = "",
-    var sameCity: Boolean = false
+    var sameCity: Boolean = false,
+    var cardType: String = "",//User：用户卡片 Guide：引导卡片
+    var touchType: String = "",
+    var touchValue: String = ""
 ) : Serializable
 
 class FavoriteListData<T> : RootListData<T>() {

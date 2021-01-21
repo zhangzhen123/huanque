@@ -5,7 +5,10 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.ViewCompat
+import androidx.core.view.children
+import androidx.core.view.forEach
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseQuickAdapter
@@ -14,6 +17,7 @@ import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.bean.beans.FavoriteUserBean
 import com.julun.huanque.common.bean.beans.HomePagePicBean
 import com.julun.huanque.common.constant.BooleanType
+import com.julun.huanque.common.constant.CardType
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.widgets.recycler.decoration.HorizontalItemDecoration
@@ -23,6 +27,8 @@ import java.math.RoundingMode
 import java.text.DecimalFormat
 
 class FavoriteAdapter : BaseQuickAdapter<FavoriteUserBean, BaseViewHolder>(R.layout.item_favorite_user_list) {
+
+
     //去掉底部栏49 顶部tab=53 中间tab=40 其他边距20
     private val itemHeight = (ScreenUtils.getRealScreenHeight() - ScreenUtils.statusHeight - dp2px(49 + 53 + 40 + 20)) / 2
 
@@ -57,7 +63,20 @@ class FavoriteAdapter : BaseQuickAdapter<FavoriteUserBean, BaseViewHolder>(R.lay
     override fun convert(holder: BaseViewHolder, item: FavoriteUserBean) {
         val sdv = holder.getView<SimpleDraweeView>(R.id.card_img)
         sdv.loadImageNoResize(item.coverPic)
-
+        if (item.cardType == CardType.GUIDE) {
+            holder.setGone(R.id.ll_top_tag, true)
+            holder.setGone(R.id.ll_bottom, true)
+            holder.setGone(R.id.tv_age, true)
+            holder.setGone(R.id.rv_pics, true)
+            holder.setGone(R.id.tv_top_right_tips, true)
+            return
+        } else {
+            holder.setGone(R.id.ll_top_tag, false)
+            holder.setGone(R.id.ll_bottom, false)
+            holder.setGone(R.id.tv_age, false)
+            holder.setGone(R.id.rv_pics, false)
+            holder.setGone(R.id.tv_top_right_tips, false)
+        }
         val age = if (item.age != 0) {
             "${item.age}岁"
         } else {
@@ -178,6 +197,7 @@ class FavoriteAdapter : BaseQuickAdapter<FavoriteUserBean, BaseViewHolder>(R.lay
     }
 
     override fun startAnim(anim: Animator, index: Int) {
+        logger("startAnim index=$index")
         anim.duration = 250L
         anim.startDelay = index * 80L
         anim.start()

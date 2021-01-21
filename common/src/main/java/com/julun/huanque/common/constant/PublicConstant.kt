@@ -102,3 +102,9 @@ object TagPicAuthStatus{
    const val Reject="Reject"
    const val Pass="Pass"
 }
+
+//User：用户卡片 Guide：引导卡片
+object  CardType{
+    const val USER = "User"
+    const val GUIDE = "Guide"
+}

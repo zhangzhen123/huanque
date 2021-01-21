@@ -33,10 +33,10 @@ class FavoriteTabViewModel : BaseViewModel() {
     fun addFirstList(list: MutableList<FavoriteUserBean>) {
         offset += list.size
         currentList.addAll(list)
-        if (currentList.size >= 4) {
-            val subList = currentList.sliceFromStart(4, removeSource = true)
-            dataList.value = subList.convertRtData()
-        }
+//        if (currentList.size >= 4) {
+//            val subList = currentList.sliceFromStart(4, removeSource = true)
+//            dataList.value = subList.convertRtData()
+//        }
     }
 
     fun requestProgramList(queryType: QueryType, typeCode: Int?) {
