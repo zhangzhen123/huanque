@@ -9,12 +9,17 @@ import android.os.Process
 import android.text.TextUtils
 import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.BuildConfig
+import com.julun.huanque.common.R
+import com.julun.huanque.common.bean.events.RHVerifyResult
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.init.CommonInit
+import com.julun.huanque.common.interfaces.routerservice.IRealNameService
+import com.julun.huanque.common.interfaces.routerservice.RealNameCallback
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.utils.MD5Util
 import com.julun.huanque.common.utils.SessionUtils
-import com.julun.huanque.common.utils.ULog
+import com.julun.huanque.common.utils.ToastUtils
+import org.greenrobot.eventbus.EventBus
 
 
 /**
@@ -297,10 +302,91 @@ object AppHelper {
                     putString(ManagerTagCode.MANAGER_PAGER_TYPE, MyTagType.AUTH)
                 }).navigation()
             }
+            MessageConstants.MySign -> {
+                //个性签名
+                ARouter.getInstance().build(ARouterConstant.UpdateSignActivity).navigation()
+            }
+            MessageConstants.Voice -> {
+                //语音签名
+                ARouter.getInstance().build(ARouterConstant.VOICE_SIGN_ACTIVITY).navigation()
+            }
+            MessageConstants.HomeTown -> {
+                //家乡
+                ARouter.getInstance().build(ARouterConstant.HomeTownActivity).navigation()
+            }
+            MessageConstants.Birthday -> {
+                //生日
+                ARouter.getInstance().build(ARouterConstant.UpdateBirthdayActivity).navigation()
+            }
+            MessageConstants.Figure -> {
+                //身材
+                ARouter.getInstance().build(ARouterConstant.FigureActivity).navigation()
+            }
+            MessageConstants.School -> {
+                //学校
+                ARouter.getInstance().build(ARouterConstant.SchoolActivity).navigation()
+            }
+            MessageConstants.Professional -> {
+                //职业
+                ARouter.getInstance().build(ARouterConstant.ProfessionActivity).navigation()
+            }
+            PushDataActionType.RealHead -> {
+                //真人
+                val service = ARouter.getInstance().build(ARouterConstant.REALNAME_SERVICE)
+                    .navigation() as? IRealNameService
+                service?.startRealHead(CommonInit.getInstance().getCurrentActivity() ?: return, object : RealNameCallback {
+                    override fun onCallback(status: String, des: String, percent: Int?) {
+                        EventBus.getDefault().post(RHVerifyResult(status))
+                        when (status) {
+                            RealNameConstants.TYPE_SUCCESS -> {
+                                //认证成功
+                                ToastUtils.show(des)
+
+                            }
+                            RealNameConstants.TYPE_FAIL, RealNameConstants.TYPE_ERROR -> {
+                                //认证失败 or 认证网络请求异常
+                                ToastUtils.show(des)
+                            }
+                            RealNameConstants.TYPE_CANCEL -> {
+                                //认证取消
+                                ToastUtils.show(
+                                    if (des.isNotEmpty()) {
+                                        des
+                                    } else {
+                                        "认证取消"
+                                    }
+                                )
+                            }
+                        }
+                    }
+                })
+            }
+
             else -> {
                 logger("没有操作可做")
             }
         }
 
     }
+
+    /**
+     * 获取用户图标  官方  真人  实名
+     * @param realProple 真人
+     * @param realName 实名
+     * @param userType 用户类型
+     */
+    fun getUserIcon(realPeople: Boolean, realName: Boolean, userType: String): Int? {
+        if (userType == UserType.Manager) {
+            //官方
+            return R.mipmap.icon_guan_home_page
+        }
+        if (realName) {
+            return R.mipmap.icon_real_name_home_page
+        }
+        if (realPeople) {
+            return R.mipmap.icon_real_people_home_page
+        }
+        return null
+    }
+
 }

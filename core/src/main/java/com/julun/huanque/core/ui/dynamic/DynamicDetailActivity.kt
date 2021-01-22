@@ -982,7 +982,7 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
             } else {
                 posterInfo.nickname
             }
-            val authTag = headerLayout.sd_auth_tag
+            val authTag = headerLayout.iv_auth_tag
             if (posterInfo.authMark.isNotEmpty()) {
                 authTag.show()
                 ImageUtils.loadImageWithHeight_2(authTag, posterInfo.authMark, dp2px(16))

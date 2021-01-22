@@ -30,6 +30,7 @@ import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.events.ImagePositionEvent
 import com.julun.huanque.common.bean.events.PicChangeEvent
 import com.julun.huanque.common.constant.*
+import com.julun.huanque.common.helper.AppHelper
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.interfaces.routerservice.IRealNameService
 import com.julun.huanque.common.manager.HuanViewModelManager
@@ -49,7 +50,6 @@ import com.julun.huanque.core.ui.record_voice.VoiceSignActivity
 import com.julun.huanque.core.viewmodel.HomePageViewModel
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
-import com.julun.rnlib.RnManager
 import kotlinx.android.synthetic.main.act_home_page.*
 import net.lucode.hackware.magicindicator.ViewPagerHelper
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
@@ -436,12 +436,25 @@ class HomePageActivity : BaseActivity() {
             mHomePageViewModel.like(mHomePageViewModel.targetUserId)
         }
 
-        sdv_real.onClickNew {
-            //实人认证
-            if (mHomePageViewModel.homeInfoBean.value?.currHeadRealPeople != BusiConstant.True) {
-                mRealPeopleAttentionFragment = mRealPeopleAttentionFragment ?: RealPeopleAttentionFragment()
-                mRealPeopleAttentionFragment?.show(supportFragmentManager, "RealPeopleAttentionFragment")
+        iv_mark.onClickNew {
+            val bean = mHomePageViewModel.homeInfoBean.value ?: return@onClickNew
+            //用户类型
+            val userType = bean.userType
+            if (userType == UserType.Manager) {
+                //官方没有点击效果
+                return@onClickNew
             }
+            if (bean.realNameGuide?.guide == true) {
+                //实名，显示实名弹窗
+                realNameNotice()
+                return@onClickNew
+            }
+            if (bean.realHeadGuide?.guide == true) {
+                //实人
+                realHeaderNotice()
+                return@onClickNew
+            }
+
         }
 
         rl_guide_photo.onClickNew {
@@ -737,10 +750,19 @@ class HomePageActivity : BaseActivity() {
             showPic(bean.headPic, bean.picList, bean.seeMaxCoverNum)
         }
         tv_nickname.text = bean.nickname
-        if (bean.authMark.isEmpty()) {
-            sdv_real.hide()
+        //显示图标
+        //是否是真人
+        val headRealPeople = bean.headRealPeople
+        //是否实名
+        val realName = bean.realName
+        //用户类型
+        val userType = bean.userType
+        val userIcon = AppHelper.getUserIcon(headRealPeople == BusiConstant.True, realName, userType)
+        if (userIcon == null) {
+            iv_mark.hide()
         } else {
-            sdv_real.show()
+            iv_mark.show()
+            iv_mark.setImageResource(userIcon)
 //            sdv_real.loadImage(bean.authMark, 18f, 18f)
         }
         if (bean.realNameGuide?.guide == true) {
@@ -866,19 +888,20 @@ class HomePageActivity : BaseActivity() {
                 iv_vehicle.imageResource = R.mipmap.icon_home_distance_rocket
             } else {
                 //有城市
-                if (distance >= 1000) {
-                    val df = DecimalFormat("#.0")
-                    df.roundingMode = RoundingMode.DOWN
-                    tv_distance.text = "${df.format(distance / 1000.0)}km ${bean.distanceCity.curryCityName} /"
-                } else {
-                    tv_distance.text = "${distance}m ${bean.distanceCity.curryCityName} /"
-                }
                 if (bean.distanceCity.sameCity == BusiConstant.True) {
                     //同市
                     iv_vehicle.hide()
+                    if (distance >= 1000) {
+                        val df = DecimalFormat("#.0")
+                        df.roundingMode = RoundingMode.DOWN
+                        tv_distance.text = "${df.format(distance / 1000.0)}km ${bean.distanceCity.curryCityName} /"
+                    } else {
+                        tv_distance.text = "${distance}m ${bean.distanceCity.curryCityName} /"
+                    }
                 } else {
                     //不同市
                     iv_vehicle.show()
+                    tv_distance.text = ""
                     if (distance < 100 * 1000) {
                         //显示汽车
                         iv_vehicle.imageResource = R.mipmap.icon_home_distance_car
@@ -914,14 +937,12 @@ class HomePageActivity : BaseActivity() {
             tv_private_chat.hide()
             tv_black_status.hide()
             tv_home_heart.hide()
-            view_heart.hide()
         } else {
             rl_edit_info.hide()
             //显示底部视图
             view_private_chat.show()
             tv_private_chat.show()
             tv_home_heart.show()
-            view_heart.show()
         }
     }
 

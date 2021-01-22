@@ -453,6 +453,7 @@ class LoginActivity2 : BaseActivity() {
         }
         mShowCodeSet.start()
         con_weixin.hide()
+        tv_fast_login.hide()
     }
 
     private val mShowInfoSet: AnimatorSet = AnimatorSet()
@@ -491,6 +492,7 @@ class LoginActivity2 : BaseActivity() {
         }
         mShowInfoSet.start()
         con_weixin.show()
+        tv_fast_login.show()
     }
 
 

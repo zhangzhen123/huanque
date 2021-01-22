@@ -344,37 +344,47 @@ class NearbyFragment : BaseLazyFragment() {
                         tagFragment.show(childFragmentManager, "tagFragment")
                     }
                 }
-                R.id.sd_auth_tag -> {
+                R.id.iv_auth_tag -> {
                     //实人认证图标
-                    CommonDialogFragment.create(
-                        title = "真人照片认证",
-                        content = "通过人脸识别技术确认照片为真人将获得认证标识，提高交友机会哦~",
-                        imageRes = com.julun.huanque.core.R.mipmap.bg_dialog_real_auth,
-                        okText = "去认证",
-                        cancelText = "取消",
-                        callback = CommonDialogFragment.Callback(
-                            onOk = {
-                                (ARouter.getInstance().build(ARouterConstant.REALNAME_SERVICE)
-                                    .navigation() as? IRealNameService)?.checkRealHead { e ->
-                                    if (e is ResponseError && e.busiCode == ErrorCodes.REAL_HEAD_ERROR) {
-                                        MyAlertDialog(requireActivity(), false).showAlertWithOKAndCancel(
-                                            e.busiMessage.toString(),
-                                            title = "修改提示",
-                                            okText = "修改头像",
-                                            noText = "取消",
-                                            callback = MyAlertDialog.MyDialogCallback(onRight = {
-                                                val intent = Intent(requireActivity(), EditInfoActivity::class.java)
-                                                if (ForceUtils.activityMatch(intent)) {
-                                                    startActivity(intent)
-                                                }
-                                            })
-                                        )
-                                    }
-                                }
 
-                            }
-                        )
-                    ).show(requireActivity(), "CommonDialogFragment")
+                    if (item.realName && SPUtils.getString(SPParamKey.RealName, "") != BusiConstant.True) {
+                        //显示实名认证
+                        realNameNotice()
+                        return@setOnItemChildClickListener
+                    }
+                    if (item.headRealPeople && SPUtils.getString(SPParamKey.RealPeople, "") != BusiConstant.True) {
+                        realHeaderNotice()
+                        return@setOnItemChildClickListener
+                    }
+//                    CommonDialogFragment.create(
+//                        title = "真人照片认证",
+//                        content = "通过人脸识别技术确认照片为真人将获得认证标识，提高交友机会哦~",
+//                        imageRes = com.julun.huanque.core.R.mipmap.bg_dialog_real_auth,
+//                        okText = "去认证",
+//                        cancelText = "取消",
+//                        callback = CommonDialogFragment.Callback(
+//                            onOk = {
+//                                (ARouter.getInstance().build(ARouterConstant.REALNAME_SERVICE)
+//                                    .navigation() as? IRealNameService)?.checkRealHead { e ->
+//                                    if (e is ResponseError && e.busiCode == ErrorCodes.REAL_HEAD_ERROR) {
+//                                        MyAlertDialog(requireActivity(), false).showAlertWithOKAndCancel(
+//                                            e.busiMessage.toString(),
+//                                            title = "修改提示",
+//                                            okText = "修改头像",
+//                                            noText = "取消",
+//                                            callback = MyAlertDialog.MyDialogCallback(onRight = {
+//                                                val intent = Intent(requireActivity(), EditInfoActivity::class.java)
+//                                                if (ForceUtils.activityMatch(intent)) {
+//                                                    startActivity(intent)
+//                                                }
+//                                            })
+//                                        )
+//                                    }
+//                                }
+//
+//                            }
+//                        )
+//                    ).show(requireActivity(), "CommonDialogFragment")
                 }
             }
         }
@@ -580,9 +590,9 @@ class NearbyFragment : BaseLazyFragment() {
         mMainConnectViewModel.nearbyCardGuide.observe(this, Observer {
             if (it != null) {
                 //不能过小 不然会闪一下
-                if(cardsAdapter.data.size>4){
-                    cardsAdapter.addData(4,it)
-                }else{
+                if (cardsAdapter.data.size > 4) {
+                    cardsAdapter.addData(4, it)
+                } else {
                     cardsAdapter.addData(it)
                 }
 
@@ -1054,7 +1064,7 @@ class NearbyFragment : BaseLazyFragment() {
                     R.id.ani_tag_04,
                     R.id.iv_super_like,
                     R.id.tv_bottom_tips,
-                    R.id.sd_auth_tag
+                    R.id.iv_auth_tag
                 )
             }
 
@@ -1086,7 +1096,15 @@ class NearbyFragment : BaseLazyFragment() {
             }
 
             override fun convert(holder: BaseViewHolder, item: NearbyUserBean) {
-                holder.setVisible(R.id.sd_auth_tag, item.realName || item.headRealPeople)
+                val iv_auth_tag = holder.getView<ImageView>(R.id.iv_auth_tag)
+
+                val userIcon = AppHelper.getUserIcon(item.realName, item.headRealPeople, "")
+                if (userIcon == null) {
+                    iv_auth_tag.hide()
+                } else {
+                    iv_auth_tag.show()
+                    iv_auth_tag.setImageResource(userIcon)
+                }
                 val sdv = holder.getView<SimpleDraweeView>(R.id.card_img)
                 val sdvBg = holder.getView<SimpleDraweeView>(R.id.card_img_bg)
                 showCardImage(sdv, sdvBg, item.coverPic)
@@ -1300,5 +1318,54 @@ class NearbyFragment : BaseLazyFragment() {
         }
     }
 
+    private fun realHeaderNotice() {
+        CommonDialogFragment.create(
+            title = "真人照片认证",
+            content = "通过人脸识别技术确认照片为真人将获得认证标识，提高交友机会哦~",
+            imageRes = R.mipmap.bg_dialog_real_auth,
+            okText = "去认证",
+            cancelText = "取消",
+            callback = CommonDialogFragment.Callback(
+                onOk = {
+                    (ARouter.getInstance().build(ARouterConstant.REALNAME_SERVICE)
+                        .navigation() as? IRealNameService)?.checkRealHead { e ->
+                        if (e is ResponseError && e.busiCode == ErrorCodes.REAL_HEAD_ERROR) {
+                            MyAlertDialog(requireActivity(), false).showAlertWithOKAndCancel(
+                                e.busiMessage.toString(),
+                                title = "修改提示",
+                                okText = "修改头像",
+                                noText = "取消",
+                                callback = MyAlertDialog.MyDialogCallback(onRight = {
+                                    val intent = Intent(requireContext(), EditInfoActivity::class.java)
+                                    if (ForceUtils.activityMatch(intent)) {
+                                        startActivity(intent)
+                                    }
+                                })
+                            )
+                        }
+                    }
+
+                }
+            )
+        ).show(requireActivity(), "CommonDialogFragment")
+
+    }
+
+    private fun realNameNotice() {
+        CommonDialogFragment.create(
+            title = "实名认证",
+            content = "完成实名认证，提高真人交友可信度，将获得更多推荐机会~",
+            imageRes = R.mipmap.bg_dialog_real_name,
+            okText = "去认证",
+            cancelText = "取消",
+            callback = CommonDialogFragment.Callback(
+                onOk = {
+                    ARouter.getInstance().build(ARouterConstant.REAL_NAME_MAIN_ACTIVITY)
+                        .navigation()
+                }
+            )
+        ).show(requireActivity(), "CommonDialogFragment")
+
+    }
 
 }

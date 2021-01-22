@@ -11,10 +11,12 @@ import com.julun.huanque.common.bean.forms.FriendIdForm
 import com.julun.huanque.common.bean.forms.NearbyForm
 import com.julun.huanque.common.bean.forms.ProgramListForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
+import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.HomeService
 import com.julun.huanque.common.net.services.ProgramService
 import com.julun.huanque.common.suger.*
+import com.julun.huanque.common.utils.SPUtils
 import kotlinx.coroutines.launch
 
 /**
@@ -83,6 +85,9 @@ class NearbyViewModel : BaseViewModel() {
                 offset += result.list.size
                 result.isPull = queryType != QueryType.LOAD_MORE
                 dataList.value = result.convertRtData()
+                //保存实名 真人状态
+                SPUtils.commitString(SPParamKey.RealName, result.realName)
+                SPUtils.commitString(SPParamKey.RealPeople, result.headRealPeople)
             }, error = {
                 dataList.value = it.convertListError(queryType = queryType)
             }, needLoadState = queryType == QueryType.INIT)

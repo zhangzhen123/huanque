@@ -25,14 +25,12 @@ import com.julun.huanque.common.constant.HomePageOnlineStatus
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.constant.Sex
 import com.julun.huanque.common.helper.ImageHelper
-import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.interfaces.PhotoOnItemClick
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.TimeUtils
-import com.julun.huanque.common.widgets.recycler.decoration.HorizontalItemDecoration
 import com.julun.huanque.core.R
 import com.luck.picture.lib.decoration.GridSpacingItemDecoration
 import org.jetbrains.anko.backgroundResource
@@ -94,7 +92,7 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
 //                holder.setGone(R.id.living_fg, !bean.living)
 
 //                val livingTag = holder.getView<SimpleDraweeView>(R.id.living_tag)
-                val authTag = holder.getView<SimpleDraweeView>(R.id.sd_auth_tag)
+                val authTag = holder.getView<SimpleDraweeView>(R.id.iv_auth_tag)
 //                if (bean.living) {
 //                    livingTag.show()
 //                    authTag.hide()

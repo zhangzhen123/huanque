@@ -11,15 +11,14 @@ import com.alibaba.security.realidentity.RPVerify
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.bean.events.RHVerifyResult
-import com.julun.huanque.common.constant.ARouterConstant
-import com.julun.huanque.common.constant.ErrorCodes
-import com.julun.huanque.common.constant.RealNameConstants
+import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.interfaces.routerservice.IRealNameService
 import com.julun.huanque.common.interfaces.routerservice.RealNameCallback
 import com.julun.huanque.common.net.NError
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.suger.dataConvert
+import com.julun.huanque.common.utils.SPUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.utils.ULog
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
@@ -176,7 +175,7 @@ class RealNameProvider : IRealNameService {
                             realName = realName,
                             certNum = realIdCard
                         )
-                    ).dataConvert(intArrayOf(501,1301))
+                    ).dataConvert(intArrayOf(501, 1301))
                 //协程并未取消，那么就可以继续往下执行
                 if (mTokenJob?.isActive == true) {
                     //获取token并打开人脸识别页面
@@ -214,6 +213,13 @@ class RealNameProvider : IRealNameService {
                     )
                 ).dataConvert(intArrayOf(1301))
                 callback(RealNameConstants.TYPE_SUCCESS, "认证成功~！", result.perfection)
+                if (type == RealNameConstants.TYPE_NAME) {
+                    //实名认证
+                    SPUtils.commitString(SPParamKey.RealName, BusiConstant.True)
+                } else if (type == RealNameConstants.TYPE_HEAD) {
+                    //真人认证
+                    SPUtils.commitString(SPParamKey.RealPeople, BusiConstant.True)
+                }
                 if (isNotice) {
                     EventBus.getDefault().post(RHVerifyResult(RealNameConstants.TYPE_SUCCESS))
                     ToastUtils.show("认证成功~！")

@@ -70,6 +70,7 @@ class WatchFragment : BaseFragment() {
         super.initEvents(rootView)
         cardView.onClickNew {
             val touchEype = mViewModel.watchExtra.value?.touchType ?: ""
+            mNeedRefresh = true
             AppHelper.openTouch(touchEype, activity = requireActivity())
 //            jump(touchEype)
         }
@@ -81,7 +82,7 @@ class WatchFragment : BaseFragment() {
     private fun initRecyclerView() {
         recycler_view.layoutManager = LinearLayoutManager(context)
         recycler_view.adapter = mAdapter
-        mAdapter.setEmptyView(MixedHelper.getEmptyView(requireContext(), "暂无数据"))
+        mAdapter.setEmptyView(MixedHelper.getEmptyView(requireContext(), "暂无数据",imgResId = R.mipmap.icon_no_data_01))
         mAdapter.setOnItemChildClickListener { adapter, view, position ->
             val tempHistoryBean = mAdapter.getItemOrNull(position) ?: return@setOnItemChildClickListener
             when (view.id) {

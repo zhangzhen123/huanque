@@ -210,7 +210,9 @@ class HeartListInfo<T> : RootListData<T>() {
     var touchText: String = ""
 
     //剩余解锁次数（-1 无限制）
-    var remainUnlockTimes: Int = -1
+    var remainUnlockTimes: Int = 0
+
+    var viewNum : Int = 0
 
 }
 

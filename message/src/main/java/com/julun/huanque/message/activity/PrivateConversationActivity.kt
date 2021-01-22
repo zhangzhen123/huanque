@@ -610,7 +610,7 @@ class PrivateConversationActivity : BaseActivity() {
             if (ticketCount > 0) {
                 edit_text.hint = "聊天券剩余${ticketCount}次"
             } else {
-                edit_text.hint = "对方设置聊天收费，私信消息30鹊币/条"
+                edit_text.hint = "对方设置聊天收费，30鹊币/条"
             }
         }
     }

@@ -1,7 +1,6 @@
 package com.julun.huanque.message.adapter
 
 import android.graphics.Color
-import android.os.Message
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -77,7 +76,7 @@ class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHold
             if (item.showUserInfo?.userType == UserType.Manager) {
                 //官方
                 ivPic.show()
-                ivPic.imageResource = R.mipmap.icon_guan
+                ivPic.imageResource = R.mipmap.icon_guan_home_page
                 ivHuanyu.hide()
             } else {
                 //欢遇状态
@@ -110,7 +109,7 @@ class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHold
                 ImageUtils.loadImageLocal(sdvHeader, R.mipmap.icon_message_system)
                 helper.setText(R.id.tv_nickname, "系统通知")
                 ivPic.show()
-                ivPic.imageResource = R.mipmap.icon_guan
+                ivPic.imageResource = R.mipmap.icon_guan_home_page
             } else {
                 ivPic.hide()
             }

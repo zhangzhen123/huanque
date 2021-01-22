@@ -384,6 +384,12 @@ class NearbyListData<T> : RootListData<T>() {
     var remainTimes: Int = 0
     var heartTouchTimes: Int = 0
     var seeMaxCoverNum: Int = 0
+
+    //我是否是实名
+    var realName: String = ""
+
+    //我是否是真人
+    var headRealPeople: String = ""
 }
 
 data class NearbyUserBean(

@@ -17,7 +17,7 @@
         app:roundAsCircle="true" />
 
     <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/sdv_real"
+        android:id="@+id/iv_mark"
         android:layout_width="14dp"
         android:layout_height="14dp"
         app:layout_constraintBottom_toBottomOf="@id/sdv_header"
