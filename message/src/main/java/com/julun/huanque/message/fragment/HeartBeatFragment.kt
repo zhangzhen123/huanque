@@ -8,10 +8,12 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.base.BaseFragment
+import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.constant.MessageConstants
 import com.julun.huanque.common.constant.ParamConstant
+import com.julun.huanque.common.helper.AppHelper
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
@@ -55,6 +57,7 @@ class HeartBeatFragment : BaseFragment() {
         mType = arguments?.getString(ParamConstant.TYPE) ?: ""
         initRecyclerView()
         initViewModel()
+        state_pager_view.showLoading()
         mViewModel.queryData(mType, true)
 
         swipe_refresh.setOnRefreshListener {
@@ -68,7 +71,7 @@ class HeartBeatFragment : BaseFragment() {
         tv_action.onClickNew {
             //点击事件
             var touchType = mViewModel.heartBeatData.value?.touchType ?: return@onClickNew
-            jump(touchType)
+            AppHelper.openTouch(touchType, activity = requireActivity())
         }
     }
 
@@ -109,6 +112,23 @@ class HeartBeatFragment : BaseFragment() {
      * 初始化ViewModel
      */
     private fun initViewModel() {
+        mViewModel.loadState.observe(this, Observer {
+            swipe_refresh.isRefreshing = false
+            when (it.state) {
+                NetStateType.SUCCESS -> {
+                    state_pager_view.showSuccess()
+                }
+                NetStateType.ERROR -> {
+                    state_pager_view.showError(R.mipmap.icon_no_data_01)
+                }
+                NetStateType.NETWORK_ERROR -> {
+                    state_pager_view.showError(btnClick = View.OnClickListener {
+                        state_pager_view.showLoading()
+                        mViewModel.queryData(mType, true)
+                    })
+                }
+            }
+        })
         mViewModel.heartBeatData.observe(this, Observer {
             if (it != null) {
                 swipe_refresh.isRefreshing = false
@@ -157,62 +177,6 @@ class HeartBeatFragment : BaseFragment() {
         if (mNeedRefresh) {
             mViewModel.refreshGuide()
             mNeedRefresh = false
-        }
-    }
-
-    /**
-     * 跳转
-     */
-    private fun jump(touchType : String){
-        when (touchType) {
-            MessageConstants.MySign -> {
-                //个性签名
-                //UpdateSignActivity
-                mNeedRefresh = true
-                ARouter.getInstance().build(ARouterConstant.UpdateSignActivity).navigation()
-            }
-            MessageConstants.Voice -> {
-                //语音签名
-                //VOICE_SIGN_ACTIVITY
-                mNeedRefresh = true
-                ARouter.getInstance().build(ARouterConstant.VOICE_SIGN_ACTIVITY).navigation()
-            }
-            MessageConstants.HomeTown -> {
-                //家乡
-                //HomeTownActivity
-                mNeedRefresh = true
-                ARouter.getInstance().build(ARouterConstant.HomeTownActivity).navigation()
-            }
-            MessageConstants.Birthday -> {
-                //生日
-                //UpdateBirthdayActivity
-                mNeedRefresh = true
-                ARouter.getInstance().build(ARouterConstant.UpdateBirthdayActivity).navigation()
-            }
-            MessageConstants.Figure -> {
-                //身材
-                //FigureActivity
-                mNeedRefresh = true
-                ARouter.getInstance().build(ARouterConstant.FigureActivity).navigation()
-            }
-            MessageConstants.School -> {
-                //学校
-                //SchoolActivity
-                mNeedRefresh = true
-                ARouter.getInstance().build(ARouterConstant.SchoolActivity).navigation()
-            }
-            MessageConstants.Professional -> {
-                //职业
-                mNeedRefresh = true
-                ARouter.getInstance().build(ARouterConstant.ProfessionActivity).navigation()
-            }
-            MessageConstants.EditMineHomePage -> {
-                //编辑资料页面
-                mNeedRefresh = true
-                ARouter.getInstance().build(ARouterConstant.EDIT_INFO_ACTIVITY).navigation()
-            }
-            else -> {
-            }
         }
     }
 
