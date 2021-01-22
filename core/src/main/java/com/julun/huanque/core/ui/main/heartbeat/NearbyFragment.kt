@@ -284,7 +284,7 @@ class NearbyFragment : BaseLazyFragment() {
                     //todo
                     logger.info("超级喜欢")
                 }
-                R.id.card_img -> {
+                R.id.cl_container -> {
                     val parentView = view.parent as? View ?: return@setOnItemChildClickListener
                     val tempBean = cardsAdapter.getItemOrNull(position) ?: return@setOnItemChildClickListener
 
@@ -450,7 +450,7 @@ class NearbyFragment : BaseLazyFragment() {
             if (pic.blur) {
                 sdvBg.show()
                 sdv.hide()
-                ImageUtils.loadImageWithBlur(sdvBg, pic.coverPic, 2, 15)
+                ImageUtils.loadImageWithBlur(sdvBg, pic.coverPic, 2, 150)
             } else {
 //                sdv.loadImageNoResize(pic.coverPic)
                 showCardImage(sdv, sdvBg, pic.coverPic)
@@ -1032,7 +1032,7 @@ class NearbyFragment : BaseLazyFragment() {
                     sdv.hierarchy.roundingParams = RoundingParams.fromCornersRadius(0f)
                     layoutParams.dimensionRatio = "h,${width}:${height}"
                     sdvBg.show()
-                    ImageUtils.loadImageWithBlur(sdvBg, coverPic, 2, 20)
+                    ImageUtils.loadImageWithBlur(sdvBg, coverPic, 2, 150)
                 } else {
                     sdv.hierarchy.roundingParams = RoundingParams.fromCornersRadius(dp2pxf(10))
                     layoutParams.dimensionRatio = "0"
@@ -1057,7 +1057,7 @@ class NearbyFragment : BaseLazyFragment() {
         object : BaseQuickAdapter<NearbyUserBean, BaseViewHolder>(R.layout.item_user_swip_card, list) {
             init {
                 addChildClickViewIds(
-                    R.id.card_img,
+                    R.id.cl_container,
                     R.id.ani_tag_01,
                     R.id.ani_tag_02,
                     R.id.ani_tag_03,
@@ -1306,7 +1306,7 @@ class NearbyFragment : BaseLazyFragment() {
                 if (pic.blur) {
                     sdv.hide()
                     sdvBg.show()
-                    ImageUtils.loadImageWithBlur(sdvBg, pic.coverPic, 2, 15)
+                    ImageUtils.loadImageWithBlur(sdvBg, pic.coverPic, 2, 150)
                 } else {
 //                    sdv.loadImageNoResize(pic.coverPic)
                     showCardImage(sdv, sdvBg, pic.coverPic)

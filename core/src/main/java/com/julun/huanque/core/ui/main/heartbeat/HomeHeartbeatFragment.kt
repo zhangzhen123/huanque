@@ -93,6 +93,7 @@ class HomeHeartbeatFragment : BaseFragment() {
             override fun processMessage(messageList: List<TplBean>) {
                 // 需要做排队
                 logger.info("收到头条消息：${messageList.getOrNull(0)?.realTxt}")
+                queueList.addAll(messageList)
                 playRunway()
             }
         })

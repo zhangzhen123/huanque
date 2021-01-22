@@ -330,6 +330,11 @@ object AppHelper {
                 //职业
                 ARouter.getInstance().build(ARouterConstant.ProfessionActivity).navigation()
             }
+            MessageConstants.AuthTagDetail -> {
+                ARouter.getInstance().build(ARouterConstant.MY_TAGS_ACTIVITY).with(Bundle().apply {
+                    putString(ManagerTagCode.MANAGER_PAGER_TYPE, MyTagType.AUTH)
+                }).navigation()
+            }
             PushDataActionType.RealHead -> {
                 //真人
                 val service = ARouter.getInstance().build(ARouterConstant.REALNAME_SERVICE)

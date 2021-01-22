@@ -649,6 +649,8 @@ object PushDataActionType {
 
     //真人图标
     const val RealHead = "RealHead"
+    //某人的指定标签详情
+    const val AuthTagPic = "AuthTagPic"
 }
 
 object HomePageOnlineStatus {
