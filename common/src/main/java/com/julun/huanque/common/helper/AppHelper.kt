@@ -9,12 +9,12 @@ import android.os.Process
 import android.text.TextUtils
 import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.BuildConfig
+import com.julun.huanque.common.R
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.utils.MD5Util
 import com.julun.huanque.common.utils.SessionUtils
-import com.julun.huanque.common.utils.ULog
 
 
 /**
@@ -206,7 +206,7 @@ object AppHelper {
     /**
      * 全局通用的点击跳转操作
      */
-    fun openTouch(touchType: String, touchValue: String="", activity: Activity? = null) {
+    fun openTouch(touchType: String, touchValue: String = "", activity: Activity? = null) {
         when (touchType) {
             PushDataActionType.EditMineHomePage -> {
                 ARouter.getInstance().build(ARouterConstant.EDIT_INFO_ACTIVITY).navigation(activity)
@@ -297,4 +297,25 @@ object AppHelper {
         }
 
     }
+
+    /**
+     * 获取用户图标  官方  真人  实名
+     * @param realProple 真人
+     * @param realName 实名
+     * @param userType 用户类型
+     */
+    fun getUserIcon(realPeople: Boolean, realName: Boolean, userType: String): Int? {
+        if (userType == UserType.Manager) {
+            //官方
+            return R.mipmap.icon_guan_home_page
+        }
+        if (realName) {
+            return R.mipmap.icon_real_name_home_page
+        }
+        if (realPeople) {
+            return R.mipmap.icon_real_people_home_page
+        }
+        return null
+    }
+
 }

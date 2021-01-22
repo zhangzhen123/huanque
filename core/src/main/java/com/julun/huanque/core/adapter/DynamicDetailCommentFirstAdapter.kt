@@ -1,6 +1,5 @@
 package com.julun.huanque.core.adapter
 
-import android.view.LayoutInflater
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -37,7 +36,7 @@ class DynamicDetailCommentFirstAdapter : BaseQuickAdapter<DynamicComment, BaseVi
     override fun convert(holder: BaseViewHolder, item: DynamicComment) {
         //头像和真人标识
         val sdv_header = holder.getView<SimpleDraweeView>(R.id.sdv_header)
-        val sdv_real = holder.getView<SimpleDraweeView>(R.id.sdv_real)
+        val sdv_real = holder.getView<SimpleDraweeView>(R.id.iv_mark)
         val sdv_riv_ownereal = holder.getView<View>(R.id.iv_owner)
         sdv_header.loadImage(item.headPic, 36f, 36f)
         if (item.headRealPeople) {
