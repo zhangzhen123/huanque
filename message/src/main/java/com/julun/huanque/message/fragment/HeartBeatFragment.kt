@@ -70,7 +70,8 @@ class HeartBeatFragment : BaseFragment() {
         super.initEvents(rootView)
         tv_action.onClickNew {
             //点击事件
-            var touchType = mViewModel.heartBeatData.value?.touchType ?: return@onClickNew
+            var touchType = mViewModel.guideInfo.value?.touchType ?: return@onClickNew
+            mNeedRefresh = true
             AppHelper.openTouch(touchType, activity = requireActivity())
         }
     }
@@ -81,7 +82,7 @@ class HeartBeatFragment : BaseFragment() {
     private fun initRecyclerView() {
         recycler_view.layoutManager = GridLayoutManager(context, 3)
         recycler_view.adapter = mAdapter
-        mAdapter.setEmptyView(MixedHelper.getEmptyView(requireContext(), "暂无数据"))
+        mAdapter.setEmptyView(MixedHelper.getEmptyView(requireContext(), "暂无数据",imgResId = R.mipmap.icon_no_data_01))
         mAdapter.setOnItemClickListener { adapter, view, position ->
             val tempData = mAdapter.getItemOrNull(position) ?: return@setOnItemClickListener
             if (tempData.unLock == BusiConstant.True) {

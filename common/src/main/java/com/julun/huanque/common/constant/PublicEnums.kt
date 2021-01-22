@@ -640,10 +640,15 @@ object PushDataActionType {
 
     //交友页面
     const val FriendHome = "FriendHome"
+
     //我喜欢的标签
     const val MyLikeTag = "MyLikeTag"
+
     //我拥有的标签
     const val MyAuthTag = "MyAuthTag"
+
+    //真人图标
+    const val RealHead = "RealHead"
 }
 
 object HomePageOnlineStatus {

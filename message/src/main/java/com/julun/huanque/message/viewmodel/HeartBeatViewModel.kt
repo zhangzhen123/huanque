@@ -55,12 +55,12 @@ class HeartBeatViewModel : BaseViewModel() {
                 val watchHistory = socialService.hearttouchList(HeartBeanForm(type, mOffset)).dataConvert()
                 if (refresh) {
                     guideInfo.value = watchHistory
+                    unLockCount = watchHistory.remainUnlockTimes
                 }
                 watchHistory.isPull = refresh
                 mOffset += watchHistory.list.size
-                unLockCount = watchHistory.remainUnlockTimes
                 heartBeatData.value = watchHistory
-            }, {},needLoadState = true)
+            }, {}, needLoadState = true)
         }
     }
 
@@ -70,7 +70,9 @@ class HeartBeatViewModel : BaseViewModel() {
     fun refreshGuide() {
         viewModelScope.launch {
             request({
-                guideInfo.value = socialService.guideInfo(GuideInfoForm(GuideInfoForm.HeartTouch)).dataConvert()
+                val tempData = socialService.guideInfo(GuideInfoForm(GuideInfoForm.HeartTouch)).dataConvert()
+                guideInfo.value = tempData
+                unLockCount = tempData.remainUnlockTimes
             })
         }
     }

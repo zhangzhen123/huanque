@@ -54,8 +54,8 @@ class WatchHistoryViewModel : BaseViewModel() {
     fun refreshGuide() {
         viewModelScope.launch {
             request({
-                val tempBean = socialService.guideInfo(GuideInfoForm(GuideInfoForm.HeartTouch)).dataConvert()
-                val extra = WatchListExt(guideText = tempBean.guideText, touchType = tempBean.touchType)
+                val tempBean = socialService.guideInfo(GuideInfoForm(GuideInfoForm.Visit)).dataConvert()
+                val extra = WatchListExt(guideText = tempBean.guideText, touchType = tempBean.touchType,viewNum = tempBean.viewNum)
                 watchExtra.value = extra
             })
         }

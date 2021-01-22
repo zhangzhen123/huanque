@@ -888,19 +888,20 @@ class HomePageActivity : BaseActivity() {
                 iv_vehicle.imageResource = R.mipmap.icon_home_distance_rocket
             } else {
                 //有城市
-                if (distance >= 1000) {
-                    val df = DecimalFormat("#.0")
-                    df.roundingMode = RoundingMode.DOWN
-                    tv_distance.text = "${df.format(distance / 1000.0)}km ${bean.distanceCity.curryCityName} /"
-                } else {
-                    tv_distance.text = "${distance}m ${bean.distanceCity.curryCityName} /"
-                }
                 if (bean.distanceCity.sameCity == BusiConstant.True) {
                     //同市
                     iv_vehicle.hide()
+                    if (distance >= 1000) {
+                        val df = DecimalFormat("#.0")
+                        df.roundingMode = RoundingMode.DOWN
+                        tv_distance.text = "${df.format(distance / 1000.0)}km ${bean.distanceCity.curryCityName} /"
+                    } else {
+                        tv_distance.text = "${distance}m ${bean.distanceCity.curryCityName} /"
+                    }
                 } else {
                     //不同市
                     iv_vehicle.show()
+                    tv_distance.text = ""
                     if (distance < 100 * 1000) {
                         //显示汽车
                         iv_vehicle.imageResource = R.mipmap.icon_home_distance_car
@@ -936,14 +937,12 @@ class HomePageActivity : BaseActivity() {
             tv_private_chat.hide()
             tv_black_status.hide()
             tv_home_heart.hide()
-            view_heart.hide()
         } else {
             rl_edit_info.hide()
             //显示底部视图
             view_private_chat.show()
             tv_private_chat.show()
             tv_home_heart.show()
-            view_heart.show()
         }
     }
 

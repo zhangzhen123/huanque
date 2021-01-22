@@ -73,7 +73,7 @@ class WatchAdapter : BaseQuickAdapter<WatchHistoryBean, BaseViewHolder>(R.layout
 
 
 
-        holder.setVisible(R.id.tv_private, !needBlur || maxCount == -1 && adapterPosition < maxCount)
+        holder.setVisible(R.id.tv_private, !needBlur || maxCount == -1 || adapterPosition < maxCount)
 
         val tv_sex = holder.getView<TextView>(R.id.tv_sex)
 

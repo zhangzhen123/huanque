@@ -10,11 +10,16 @@ import android.text.TextUtils
 import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.BuildConfig
 import com.julun.huanque.common.R
+import com.julun.huanque.common.bean.events.RHVerifyResult
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.init.CommonInit
+import com.julun.huanque.common.interfaces.routerservice.IRealNameService
+import com.julun.huanque.common.interfaces.routerservice.RealNameCallback
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.utils.MD5Util
 import com.julun.huanque.common.utils.SessionUtils
+import com.julun.huanque.common.utils.ToastUtils
+import org.greenrobot.eventbus.EventBus
 
 
 /**
@@ -319,10 +324,38 @@ object AppHelper {
                 //职业
                 ARouter.getInstance().build(ARouterConstant.ProfessionActivity).navigation()
             }
-            MessageConstants.EditMineHomePage -> {
-                //编辑资料页面
-                ARouter.getInstance().build(ARouterConstant.EDIT_INFO_ACTIVITY).navigation()
+            PushDataActionType.RealHead -> {
+                //真人
+                val service = ARouter.getInstance().build(ARouterConstant.REALNAME_SERVICE)
+                    .navigation() as? IRealNameService
+                service?.startRealHead(CommonInit.getInstance().getCurrentActivity() ?: return, object : RealNameCallback {
+                    override fun onCallback(status: String, des: String, percent: Int?) {
+                        EventBus.getDefault().post(RHVerifyResult(status))
+                        when (status) {
+                            RealNameConstants.TYPE_SUCCESS -> {
+                                //认证成功
+                                ToastUtils.show(des)
+
+                            }
+                            RealNameConstants.TYPE_FAIL, RealNameConstants.TYPE_ERROR -> {
+                                //认证失败 or 认证网络请求异常
+                                ToastUtils.show(des)
+                            }
+                            RealNameConstants.TYPE_CANCEL -> {
+                                //认证取消
+                                ToastUtils.show(
+                                    if (des.isNotEmpty()) {
+                                        des
+                                    } else {
+                                        "认证取消"
+                                    }
+                                )
+                            }
+                        }
+                    }
+                })
             }
+
             else -> {
                 logger("没有操作可做")
             }
