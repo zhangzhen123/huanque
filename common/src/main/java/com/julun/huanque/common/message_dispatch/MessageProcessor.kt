@@ -434,9 +434,6 @@ object MessageProcessor {
 
         // 停播，开播事件，"context"没有值
         fun processBridge(raw: Any? = VoidResult()) = process(raw as T)
-
-        //标记是不是全局订阅
-        fun isGlobal(): Boolean = false
     }
 
     /**
@@ -524,20 +521,6 @@ object MessageProcessor {
         override fun getEventType(): EventMessageType = EventMessageType.PkScoreTask
     }
 
-    /**
-     * 月赛结果变化
-     */
-    interface MonthPKResultMessageProcess : EventMessageProcessor<MonthPKResultEvent> {
-        override fun getEventType(): EventMessageType = EventMessageType.YUESAI_PRE_TOPCHANGE
-    }
-
-
-    /**
-     * 愚人节福蛋消息
-     */
-    interface YuRenJieProcess : EventMessageProcessor<YuRenJieEvent> {
-        override fun getEventType(): EventMessageType = EventMessageType.YuRenJie2018TTL
-    }
 
     /**
      * 本场贡献榜变化消息
@@ -713,33 +696,6 @@ object MessageProcessor {
         override fun getEventType() = EventMessageType.AnchorExpChange
     }
 
-    /**
-     * 年度盛典秒杀消息
-     */
-    interface YearSeckillMessageProcessor : EventMessageProcessor<YearSeckillResult> {
-        override fun getEventType() = EventMessageType.SecKillCountDown
-    }
-
-    /**
-     * 年度盛典活动Banner 数据变化消息
-     */
-    interface YearBannerChangeMessageProcessor : EventMessageProcessor<YearBannerResult> {
-        override fun getEventType() = EventMessageType.NdsdTopChange
-    }
-
-    /**
-     * 年度盛典红包数据变化消息
-     */
-    interface YearRPChangeMessageProcessor : EventMessageProcessor<YearRedPackageResult> {
-        override fun getEventType() = EventMessageType.RedPacket
-    }
-
-    /**
-     * 双旦活动Banner 数据变化消息
-     */
-    interface NewYearRPChangeMessageProcessor : EventMessageProcessor<NewYearBannerResult> {
-        override fun getEventType() = EventMessageType.ActTopChange
-    }
 
     /**
      * 有任务完成消息 代表可领取
@@ -811,12 +767,6 @@ object MessageProcessor {
         override fun getEventType() = EventMessageType.UserFansLevelChange
     }
 
-    /**
-     * 聊天室祝福卡数量变动
-     */
-    interface ChatRoomCardsChangeProcessor : EventMessageProcessor<ChatRoomCardsChangeBean> {
-        override fun getEventType() = EventMessageType.ChatRoomCardsChange
-    }
 
     /**
      * 聊天室人数变动
@@ -858,42 +808,6 @@ object MessageProcessor {
      */
     interface BlockChatRoomProcessor : EventMessageProcessor<VoidResult> {
         override fun getEventType() = EventMessageType.BlockChatRoom
-    }
-
-
-    /**
-     * 猜字谜消息
-     * @author WanZhiYuan
-     * @version 4.15
-     * @iterativeDate 2019/07/25
-     */
-    interface GuessWordsMessageProcessor : EventMessageProcessor<BubbleResult> {
-        override fun getEventType() = EventMessageType.RiddleChange
-    }
-
-    /**
-     * 翻牌游戏消息
-     * @author WanZhiYuan
-     * @version 4.16
-     * @iterativeDate 2019/08/09
-     */
-    interface FlipCardMessageProcessor : EventMessageProcessor<FlipCardResult> {
-        override fun getEventType() = EventMessageType.TurnCard
-    }
-
-
-    /*
-     * 闯关刷新消息
-     */
-    interface PassLevelTopUserChangeProcessor : EventMessageProcessor<VoidResult> {
-        override fun getEventType() = EventMessageType.PassLevelTopUserChange
-    }
-
-    /*
-     * 猜字谜第一名奖励消息
-     */
-    interface RiddleAwardProcessor : EventMessageProcessor<WordPuzzleAward> {
-        override fun getEventType() = EventMessageType.RiddleAward
     }
 
     /**
@@ -1016,12 +930,6 @@ object MessageProcessor {
         override fun getEventType() = EventMessageType.ToggleCDN
     }
 
-    /**
-     * 月卡购买消息
-     */
-    interface OpenMonthCardProcessor : EventMessageProcessor<OpenMonthCardMessage> {
-        override fun getEventType() = EventMessageType.OpenMonthCard
-    }
 
     /**
      * 主播发布动态（帖子/视频）审核通过消息
@@ -1130,7 +1038,6 @@ object MessageProcessor {
      */
     interface NetCallReceiveProcessor : EventMessageProcessor<NetCallReceiveBean> {
         override fun getEventType() = EventMessageType.NetCallReceive
-        override fun isGlobal() = true
     }
 
     /**
@@ -1191,7 +1098,6 @@ object MessageProcessor {
 
     interface IntimateChangeProcessor : EventMessageProcessor<IntimateBean> {
         override fun getEventType() = EventMessageType.IntimateChange
-        override fun isGlobal() = true
     }
 
     /**
@@ -1199,7 +1105,6 @@ object MessageProcessor {
      */
     interface KickUserProcessor : EventMessageProcessor<OperatorMessageBean> {
         override fun getEventType() = EventMessageType.KickUser
-        override fun isGlobal() = true
     }
 //    /**
 //     * 禁言消息
@@ -1212,7 +1117,6 @@ object MessageProcessor {
      */
     interface BanUserProcessor : EventMessageProcessor<OperatorMessageBean> {
         override fun getEventType() = EventMessageType.BanUser
-        override fun isGlobal() = true
     }
 
     /**
@@ -1220,7 +1124,6 @@ object MessageProcessor {
      */
     interface BanUserDeviceProcessor : EventMessageProcessor<OperatorMessageBean> {
         override fun getEventType() = EventMessageType.BanUserDevice
-        override fun isGlobal() = true
     }
 
     /**
@@ -1228,7 +1131,6 @@ object MessageProcessor {
      */
     interface BanUserLivingProcessor : EventMessageProcessor<OperatorMessageBean> {
         override fun getEventType() = EventMessageType.BanUserLiving
-        override fun isGlobal() = true
     }
 
     /**
@@ -1284,7 +1186,6 @@ object MessageProcessor {
     interface AnonyVoiceInviteProcessor : EventMessageProcessor<AnonyVoiceInviteBean> {
         override fun getEventType() = EventMessageType.AnonyVoiceInvite
 
-        override fun isGlobal() = true
     }
 
     interface AnonyVoiceCancelProcessor : EventMessageProcessor<AnonyVoiceCancelBean> {
@@ -1296,7 +1197,6 @@ object MessageProcessor {
      */
     interface RefreshUserSettingProcessor : EventMessageProcessor<VoidResult> {
         override fun getEventType() = EventMessageType.RefreshUserSetting
-        override fun isGlobal() = true
     }
 
     /**
@@ -1304,7 +1204,6 @@ object MessageProcessor {
      */
     interface FateQuickMatchProcessor : EventMessageProcessor<FateQuickMatchBean> {
         override fun getEventType() = EventMessageType.FateQuickMatch
-        override fun isGlobal() = true
     }
 
     /**
@@ -1312,7 +1211,6 @@ object MessageProcessor {
      */
     interface FateQuickMatchChangeProcessor : EventMessageProcessor<FateQuickMatchChangeBean> {
         override fun getEventType() = EventMessageType.FateQuickMatchChange
-        override fun isGlobal() = true
     }
 
     /**
@@ -1320,11 +1218,17 @@ object MessageProcessor {
      */
     interface FirstChargeResultProcessor : EventMessageProcessor<SinglePack> {
         override fun getEventType() = EventMessageType.FirstChargeResult
-        override fun isGlobal() = true
     }
 
     interface SubAccountMsgNoticeProcessor : EventMessageProcessor<VoidResult> {
         override fun getEventType() = EventMessageType.SubAccountMsgNotice
+    }
+
+    /**
+     * 通用的推送弹窗或者引导
+     */
+    interface SocialGuideMsgProcessor : EventMessageProcessor<SocialGuideMsgBean> {
+        override fun getEventType() = EventMessageType.SocialGuideMsg
     }
 
 }
@@ -1415,19 +1319,13 @@ enum class EventMessageType(val klass: Class<*>) {
     /**PK道具使用消息**/
     PkPropUseWarn(PkPropUseWarnEvent::class.java),
 
-    /**月赛PK结果**/
-    YUESAI_PRE_TOPCHANGE(MonthPKResultEvent::class.java),
 
     /** 主播升级进度条 **/
     AnchorExpChange(AnchorLevelProgressEvent::class.java),
 
-    /** 端午节礼物 **/
-    BOAT_PROGRESS(BoatProgressEventBean::class.java),
-
     //答题开始通知
     QuestionStart(VoidResult::class.java),
 
-    YuRenJie2018TTL(YuRenJieEvent::class.java),
     RoomTotalScoreChange(ContributionEvent::class.java),
 
     RefreshUser(VoidResult::class.java),
@@ -1440,16 +1338,11 @@ enum class EventMessageType(val klass: Class<*>) {
     MicFinished(MicActionBean::class.java),
     MicDisconnect(MicActionBean::class.java),//主播心跳断开时发送
 
-    //年度盛典
-    SecKillCountDown(YearSeckillResult::class.java),
-    NdsdTopChange(YearBannerResult::class.java),
     RedPacket(YearRedPackageResult::class.java),
 
     //异步红包通知
     RobRedPacketResult(YearRedPackageResult::class.java),
 
-    //双旦活动
-    ActTopChange(NewYearBannerResult::class.java),
     FinishMission(FinishMissionBean::class.java),
     FinishAchievement(FinishAchievementBean::class.java),
 
@@ -1480,10 +1373,6 @@ enum class EventMessageType(val klass: Class<*>) {
     //特权变化消息
     UserFansLevelChange(VoidResult::class.java),
 
-    /**
-     * 祝福卡数量变动消息
-     */
-    ChatRoomCardsChange(ChatRoomCardsChangeBean::class.java),
 
     /**
      * 直播间人数变动消息
@@ -1504,19 +1393,6 @@ enum class EventMessageType(val klass: Class<*>) {
     //聊天室封禁消息
     BlockChatRoom(VoidResult::class.java),
 
-
-    //气泡消息
-    RiddleChange(BubbleResult::class.java),
-
-    //翻牌游戏消息
-    TurnCard(FlipCardResult::class.java),
-
-
-    //闯关最佳刷新标识
-    PassLevelTopUserChange(VoidResult::class.java),
-
-    //猜字谜中奖消息
-    RiddleAward(WordPuzzleAward::class.java),
 
     //横竖屏切换消息
     RoomCutoverScreenType(SwitchScreen::class.java),
@@ -1712,8 +1588,9 @@ enum class EventMessageType(val klass: Class<*>) {
     FirstChargeResult(SinglePack::class.java),
 
     //分身收到消息的通知
-    SubAccountMsgNotice(VoidResult::class.java)
-//inviteUserId
+    SubAccountMsgNotice(VoidResult::class.java),
+
+    //inviteUserId
     //禁言消息
 //    MuteUser(OperatorMessageBean::class.java),
 //    //设备封禁消息
@@ -1722,4 +1599,5 @@ enum class EventMessageType(val klass: Class<*>) {
 //    UpToRoomManager(OperatorMessageBean::class.java),
 //    //取消房管消息
 //    CancelRoomManager(OperatorMessageBean::class.java),
+    SocialGuideMsg(SocialGuideMsgBean::class.java)
 }

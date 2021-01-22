@@ -72,3 +72,16 @@ data class MessageSettingBean(
     //已设置开播提醒主播数量
     var showRemindCnt: Int = 0
 ) : Serializable
+
+data class SocialGuideMsgBean(
+    var cancelBtnText: String = "",
+    var confirmBtnText: String = "",
+    var content: String = "",
+    var pics: String = "",
+    var showType: String = "",
+    var title: String = "",
+    var touchType: String = "",
+    var touchValue: String = "",
+    var coverPic: String = "",
+    var userIds: List<Int> = listOf()
+)

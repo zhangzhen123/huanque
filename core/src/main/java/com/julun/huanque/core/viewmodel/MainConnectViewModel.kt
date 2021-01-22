@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.baidu.location.BDAbstractLocationListener
 import com.baidu.location.BDLocation
 import com.julun.huanque.common.basic.QueryType
+import com.julun.huanque.common.bean.beans.NearbyUserBean
 import com.julun.huanque.common.bean.forms.SaveLocationForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.init.CommonInit
@@ -36,6 +37,8 @@ class MainConnectViewModel : BaseViewModel() {
 
     //
     val heartBeatSwitch: MutableLiveData<String> by lazy { MutableLiveData<String>() }
+
+    val nearbyCardGuide: MutableLiveData<NearbyUserBean> by lazy { MutableLiveData<NearbyUserBean>() }
 
     val refreshNearby: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 

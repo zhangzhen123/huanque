@@ -19,12 +19,14 @@ import com.julun.huanque.agora.activity.AnonymousVoiceActivity
 import com.julun.huanque.app.update.AppChecker
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.BaseDialogFragment
+import com.julun.huanque.common.base.dialog.CommonDialogFragment
 import com.julun.huanque.common.base.dialog.LoadingDialog
 import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.events.*
 import com.julun.huanque.common.bean.forms.SaveLocationForm
 import com.julun.huanque.common.constant.*
+import com.julun.huanque.common.helper.AppHelper
 import com.julun.huanque.common.helper.ChannelCodeHelper
 import com.julun.huanque.common.helper.StorageHelper
 import com.julun.huanque.common.init.CommonInit
@@ -104,6 +106,7 @@ class MainActivity : BaseActivity() {
 
     private var firstTime = 0L
 
+
     //封装百度地图相关的Service
 //    private lateinit var mLocationService: LocationService
 
@@ -173,20 +176,6 @@ class MainActivity : BaseActivity() {
             }
 
             filterIndexData(targetIndex)
-            //todo test
-//            var time=0
-//            Observable.interval(1,30,TimeUnit.SECONDS).observeOn(AndroidSchedulers.mainThread()).subscribe {
-//                val bean=FateQuickMatchBean(userInfo = UserInfoInRoom().apply {
-//                    time++
-//                    age=time
-//                    city="杭州"
-//                    nickname="name${time}"
-//                    userId=20000189
-//
-//                },fateId = "wdadwada",quickChat = "True",expTime = System.currentTimeMillis()+26*1000)
-//                mHuanQueViewModel.setFateData(bean)
-//                showPaiDanFragment()
-//            }
 
         }
 
@@ -862,6 +851,31 @@ class MainActivity : BaseActivity() {
                 }
 
             }
+        })
+        MessageProcessor.registerEventProcessor(this, object : MessageProcessor.SocialGuideMsgProcessor {
+            override fun process(data: SocialGuideMsgBean) {
+                if (data.showType == GuideShowType.CARD) {
+                    mainConnectViewModel.nearbyCardGuide.value =
+                        NearbyUserBean(cardType = CardType.GUIDE, touchType = data.touchType, coverPic = data.coverPic)
+                } else if (data.showType == GuideShowType.POPUP) {
+                    CommonDialogFragment.create(
+                        title = data.title,
+                        content = data.content,
+                        image = data.coverPic,
+                        okText = data.confirmBtnText,
+                        cancelText = data.cancelBtnText,
+                        callback = CommonDialogFragment.Callback(
+                            onCancel = {
+
+                            },
+                            onOk = {
+                                AppHelper.openTouch(data.touchType, data.touchValue, this@MainActivity)
+                            }
+                        )
+                    )
+                }
+            }
+
         })
 
     }

@@ -285,6 +285,7 @@ object ImageUtils {
         imgView.controller = controller
 
     }
+
     /**
      * 使用fresco
      * 给imageView设置本地图片
@@ -479,6 +480,24 @@ object ImageUtils {
         simpleDraweeView.controller = controller
     }
 
+    /**
+     * 通过给定的宽度，自动适应高度
+     * * @param simpleDraweeView view
+     * * @param url  Uri
+     * [controllerListener]回调的监听器
+     */
+    fun loadImageWithListener(
+        simpleDraweeView: SimpleDraweeView,
+        url: String,
+        controllerListener: BaseControllerListener<ImageInfo>
+    ) {
+        val controller =
+            Fresco.newDraweeControllerBuilder().setControllerListener(controllerListener)
+                .setUri(Uri.parse(StringHelper.getOssImgUrl(url))).setAutoPlayAnimations(true)
+                .setOldController(simpleDraweeView.controller).build()
+        simpleDraweeView.controller = controller
+    }
+
     fun loadRemoteImageInpx(imgView: SimpleDraweeView, url: Uri, width: Int, height: Int) {
         //        Uri uri = Uri.parse(url);
         val build = ImageRequestBuilder.newBuilderWithSource(url)
@@ -647,7 +666,7 @@ object ImageUtils {
      * @param arrayList 传入对应混排list,使用方法 -> [demo]
      * @param space 图标和之前内容之间的间距  默认 " "(一个空格)
      */
-    fun renderTextAndImage(arrayList: ArrayList<TIBean>,space : String = " "): BaseTextBean? {
+    fun renderTextAndImage(arrayList: ArrayList<TIBean>, space: String = " "): BaseTextBean? {
         if (arrayList.isEmpty()) {
             return null
         }
