@@ -579,6 +579,7 @@ class TplBeanExtraContext(
     //贵族等级
     var royalLevel: Int = 0,
 
+    var touchValue: String = "",
     /**
      * 新版入场特效字段
      */

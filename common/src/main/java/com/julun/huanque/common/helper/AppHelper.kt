@@ -234,7 +234,13 @@ object AppHelper {
             }
             PushDataActionType.MineHomePage -> {
                 val bundle = Bundle().apply {
-                    putLong(ParamConstant.UserId, SessionUtils.getUserId())
+                    var userId = touchValue.toLongOrNull()
+                    if (userId != null) {
+                        userId = SessionUtils.getUserId()
+                    }
+                    if (userId != null) {
+                        putLong(ParamConstant.UserId, userId)
+                    }
                 }
                 ARouter.getInstance().build(ARouterConstant.HOME_PAGE_ACTIVITY).with(bundle).navigation()
             }
