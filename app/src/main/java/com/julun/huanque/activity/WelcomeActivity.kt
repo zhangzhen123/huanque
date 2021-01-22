@@ -131,6 +131,7 @@ class WelcomeActivity : BaseActivity() {
     override fun getLayoutId() = R.layout.act_welcome
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
+        JVerificationInterface.clearPreLoginCache()
         ActivitiesManager.INSTANCE.finishActivityExcept("com.julun.huanque.activity.WelcomeActivity")
         mLoginViewModel.currentFragmentState.value = LoginViewModel.Fragment_State_Phone
         view_white.alpha = 1f
@@ -147,16 +148,13 @@ class WelcomeActivity : BaseActivity() {
 //        VoiceManager.startRing(false)
         getWakeUp(intent)
         getPushClickData()
-        logger.info("欢迎 1")
         if (mShowFragment) {
             //开始预取号
-            logger.info("欢迎 2")
             mPreLoginSuccess = false
             FastLoginManager.mPreListener = mLocalPreLoginListener
             FastLoginManager.preLogin()
             checkPermissions()
         } else {
-            logger.info("欢迎 3")
             val mPersonalInformationProtectionFragment =
                 PersonalInformationProtectionFragment.newInstance(
                     PersonalInformationProtectionFragment.WelcomeActivity
@@ -383,7 +381,6 @@ class WelcomeActivity : BaseActivity() {
      * 跳转页面
      */
     private fun startActivity() {
-        logger.info("欢迎 4 ${mLogicSuccess}")
         if (!mLogicSuccess) {
             return
         }
@@ -706,7 +703,6 @@ class WelcomeActivity : BaseActivity() {
      * 播放透明动画
      */
     private fun startAlphaAnimation() {
-        logger.info("欢迎 5")
         mAlphaAnimation?.cancel()
         mAlphaAnimation = mAlphaAnimation ?: ObjectAnimator.ofFloat(view_white, "alpha", 1f, 0f)
             .apply { duration = 500 }
@@ -723,7 +719,6 @@ class WelcomeActivity : BaseActivity() {
                     if (enableFast && FastLoginManager.getPreviewCode() == FastLoginManager.CODE_PRELOGIN_SUCCESS) {
                         loginAuth()
                     } else {
-                        logger.info("欢迎 6")
 //                        mLoginViewModel.mShowLoginFragment = true
 //                        mLoginFragment.show(supportFragmentManager, "LoginFragment")
                         val intent = Intent(this@WelcomeActivity, LoginActivity2::class.java)

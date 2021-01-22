@@ -936,13 +936,16 @@ class HomePageActivity : BaseActivity() {
             view_private_chat.hide()
             tv_private_chat.hide()
             tv_black_status.hide()
-            tv_home_heart.hide()
         } else {
             rl_edit_info.hide()
             //显示底部视图
             view_private_chat.show()
             tv_private_chat.show()
-            tv_home_heart.show()
+            if (bean.heartTouch == BusiConstant.True) {
+                val params = view_private_chat.layoutParams
+                params.width = ScreenUtils.getScreenWidth() - dp2px(30)
+                view_private_chat.layoutParams = params
+            }
         }
     }
 
