@@ -861,7 +861,7 @@ class MainActivity : BaseActivity() {
                     CommonDialogFragment.create(
                         title = data.title,
                         content = data.content,
-                        image = data.coverPic,
+                        imageRes = R.mipmap.bg_dialog_title_01,
                         okText = data.confirmBtnText,
                         cancelText = data.cancelBtnText,
                         callback = CommonDialogFragment.Callback(
@@ -872,7 +872,7 @@ class MainActivity : BaseActivity() {
                                 AppHelper.openTouch(data.touchType, data.touchValue, this@MainActivity)
                             }
                         )
-                    )
+                    ).show(this@MainActivity)
                 }
             }
 
