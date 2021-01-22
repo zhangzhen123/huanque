@@ -16,7 +16,7 @@
 
 
     <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/sd_auth_tag"
+        android:id="@+id/iv_auth_tag"
         android:layout_width="@dimen/dimen_53"
         android:layout_height="@dimen/dimen_16"
         app:layout_constraintBottom_toBottomOf="@+id/header_pic"

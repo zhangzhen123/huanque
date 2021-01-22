@@ -219,7 +219,7 @@ class TodayFateDialogFragment : BaseDialogFragment() {
                 }
                 ImageUtils.loadImageLocal(holder.getView(R.id.bg_shadow), R.mipmap.bg_shadow_home_item)
 
-                val authTag = holder.getView<SimpleDraweeView>(R.id.sd_auth_tag)
+                val authTag = holder.getView<SimpleDraweeView>(R.id.iv_auth_tag)
                 if (item.authMark.isNotEmpty()) {
                     authTag.show()
                     ImageUtils.loadImageWithHeight_2(authTag, item.authMark, dp2px(13))

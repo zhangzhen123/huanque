@@ -291,6 +291,38 @@ object AppHelper {
                     putString(ManagerTagCode.MANAGER_PAGER_TYPE, MyTagType.AUTH)
                 }).navigation()
             }
+            MessageConstants.MySign -> {
+                //个性签名
+                ARouter.getInstance().build(ARouterConstant.UpdateSignActivity).navigation()
+            }
+            MessageConstants.Voice -> {
+                //语音签名
+                ARouter.getInstance().build(ARouterConstant.VOICE_SIGN_ACTIVITY).navigation()
+            }
+            MessageConstants.HomeTown -> {
+                //家乡
+                ARouter.getInstance().build(ARouterConstant.HomeTownActivity).navigation()
+            }
+            MessageConstants.Birthday -> {
+                //生日
+                ARouter.getInstance().build(ARouterConstant.UpdateBirthdayActivity).navigation()
+            }
+            MessageConstants.Figure -> {
+                //身材
+                ARouter.getInstance().build(ARouterConstant.FigureActivity).navigation()
+            }
+            MessageConstants.School -> {
+                //学校
+                ARouter.getInstance().build(ARouterConstant.SchoolActivity).navigation()
+            }
+            MessageConstants.Professional -> {
+                //职业
+                ARouter.getInstance().build(ARouterConstant.ProfessionActivity).navigation()
+            }
+            MessageConstants.EditMineHomePage -> {
+                //编辑资料页面
+                ARouter.getInstance().build(ARouterConstant.EDIT_INFO_ACTIVITY).navigation()
+            }
             else -> {
                 logger("没有操作可做")
             }

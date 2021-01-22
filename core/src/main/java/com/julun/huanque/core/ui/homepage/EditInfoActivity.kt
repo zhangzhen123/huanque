@@ -489,6 +489,7 @@ class EditInfoActivity : BaseActivity() {
             updateProgress(info.perfection)
         }
 
+        SPUtils.commitString(SPParamKey.RealPeople,info.headRealPeople)
         //显示图片相关
         val pics = info.picList
         //用来显示的数据

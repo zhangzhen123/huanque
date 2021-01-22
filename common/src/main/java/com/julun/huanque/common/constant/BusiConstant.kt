@@ -145,6 +145,12 @@ object SPParamKey {
 
     //首次进入编辑页面
     const val First_Edit = "First_Edit"
+
+    //实名认证状态
+    const val RealName = "RealName"
+
+    //真人认证状态
+    const val RealPeople = "RealPeople"
 }
 
 /**

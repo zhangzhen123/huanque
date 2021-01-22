@@ -99,7 +99,7 @@ class DynamicListAdapter : BaseQuickAdapter<DynamicItemBean, BaseViewHolder>(R.l
         }
         val headPic = holder.getView<SimpleDraweeView>(R.id.header_pic)
 
-        val authTag = holder.getView<SimpleDraweeView>(R.id.sd_auth_tag)
+        val authTag = holder.getView<SimpleDraweeView>(R.id.iv_auth_tag)
         if (item.authMark.isNotEmpty()) {
             authTag.show()
             ImageUtils.loadImageWithHeight_2(authTag, item.authMark, dp2px(16))
