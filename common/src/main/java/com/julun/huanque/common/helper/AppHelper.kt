@@ -206,7 +206,7 @@ object AppHelper {
     /**
      * 全局通用的点击跳转操作
      */
-    fun openTouch(touchType: String, touchValue: String="", activity: Activity? = null) {
+    fun openTouch(touchType: String, touchValue: String = "", activity: Activity? = null) {
         when (touchType) {
             PushDataActionType.EditMineHomePage -> {
                 ARouter.getInstance().build(ARouterConstant.EDIT_INFO_ACTIVITY).navigation(activity)
@@ -229,7 +229,13 @@ object AppHelper {
             }
             PushDataActionType.MineHomePage -> {
                 val bundle = Bundle().apply {
-                    putLong(ParamConstant.UserId, SessionUtils.getUserId())
+                    var userId = touchValue.toLongOrNull()
+                    if (userId != null) {
+                        userId = SessionUtils.getUserId()
+                    }
+                    if (userId != null) {
+                        putLong(ParamConstant.UserId, userId)
+                    }
                 }
                 ARouter.getInstance().build(ARouterConstant.HOME_PAGE_ACTIVITY).with(bundle).navigation()
             }

@@ -968,7 +968,7 @@ object RongCloudManager {
 
                     when (msgType) {
                         MessageProcessor.MessageType.Text.name -> {
-                            if (TextUtils.isEmpty(roomId)) return
+//                            if (TextUtils.isEmpty(roomId)) return
                             // 文本消息
                             MessageProcessor.parseTextMessage(jsonString, it.msgId)
                         }

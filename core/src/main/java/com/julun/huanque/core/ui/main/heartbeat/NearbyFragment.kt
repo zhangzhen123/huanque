@@ -27,6 +27,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.alibaba.android.arouter.launcher.ARouter
 import com.baidu.location.BDLocation
 import com.chad.library.adapter.base.BaseQuickAdapter
@@ -265,6 +266,7 @@ class NearbyFragment : BaseLazyFragment() {
         val layoutManager = CardLayoutManager(mReItemTouchHelper, setting)
         mRecyclerView.layoutManager = layoutManager
         mRecyclerView.adapter = cardsAdapter
+        (mRecyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations=false
         cardsAdapter.setOnItemChildClickListener { adapter, view, position ->
             logger.info("setOnItemChildClickListener 点击了${position}")
             val item = cardsAdapter.getItemOrNull(position) ?: return@setOnItemChildClickListener

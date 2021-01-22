@@ -334,7 +334,7 @@ object MessageProcessor {
      */
     enum class TextMessageType {
         PRIVATE_MESSAGE, PUBLIC_MESSAGE, RUNWAY_MESSAGE, SYSTEM_NOTICE_MESSAGE, /*ROYAL_MESSAGE, GUARD_MESSAGE,*/ WELCOME_MESSAGE,
-        WeekStar, FactoryCar, NewRedPacket, GiftBoxRunway, Headline, DrawAct, Planet;
+        WeekStar, FactoryCar, NewRedPacket, GiftBoxRunway, Headline, DrawAct, Planet,HomeHeadLine;
 
         companion object {
             fun parse(value: String): TextMessageType? {
@@ -424,6 +424,11 @@ object MessageProcessor {
     interface BoxRunwayMessageReceiver : MessageReceiver {
         override fun getMessageType(): TextMessageType = TextMessageType.GiftBoxRunway
     }
+    //心动首页头条
+    interface HomeHeadLineMessageReceiver : MessageReceiver {
+        override fun getMessageType(): TextMessageType = TextMessageType.HomeHeadLine
+    }
+
 
     /**
      * 事件处理器

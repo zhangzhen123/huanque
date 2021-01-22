@@ -1,5 +1,7 @@
 package com.julun.huanque.core.ui.main.heartbeat
 
+import android.animation.Animator
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.graphics.Typeface
 import android.os.Bundle
@@ -7,6 +9,8 @@ import android.util.SparseArray
 import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
+import android.view.animation.LinearInterpolator
+import androidx.core.animation.addListener
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
@@ -16,12 +20,14 @@ import androidx.lifecycle.Observer
 import androidx.viewpager.widget.ViewPager
 import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.basic.NetStateType
+import com.julun.huanque.common.bean.TplBean
 import com.julun.huanque.common.bean.beans.PagerTab
+import com.julun.huanque.common.helper.AppHelper
+import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.init.CommonInit
-import com.julun.huanque.common.suger.dp2pxf
-import com.julun.huanque.common.suger.hide
-import com.julun.huanque.common.suger.onClickNew
-import com.julun.huanque.common.suger.show
+import com.julun.huanque.common.message_dispatch.MessageProcessor
+import com.julun.huanque.common.suger.*
+import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.widgets.indicator.ScaleTransitionPagerTitleView
 import com.julun.huanque.core.R
 import com.julun.huanque.core.viewmodel.MainConnectViewModel
@@ -35,6 +41,7 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerInd
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator
 import org.jetbrains.anko.topPadding
+import java.util.*
 
 /**
  *
@@ -61,6 +68,8 @@ class HomeHeartbeatFragment : BaseFragment() {
         return R.layout.fragment_heartbeat_container
     }
 
+    val queueList: LinkedList<TplBean> = LinkedList()
+
     private val viewModel: HeartbeatViewModel by viewModels()
 
     private var mFilterTagFragment: FilterTagFragment? = null
@@ -80,8 +89,27 @@ class HomeHeartbeatFragment : BaseFragment() {
             mFilterTagFragment = FilterTagFragment()
             mFilterTagFragment?.show(childFragmentManager, "FilterTagFragment")
         }
+        MessageProcessor.registerTxtProcessor(this, object : MessageProcessor.HomeHeadLineMessageReceiver {
+            override fun processMessage(messageList: List<TplBean>) {
+                // 需要做排队
+                logger.info("收到头条消息：${messageList.getOrNull(0)?.realTxt}")
+                playRunway()
+            }
+        })
+        runway_headLine.onClickNew {
+            currentHeadline?.let { tpl ->
+                if (tpl.textTouch != null && tpl.context?.touchValue != null) {
+                    AppHelper.openTouch(tpl.textTouch!!, tpl.context!!.touchValue)
+                }
 
+            }
+        }
+    }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        playMessageAnimator?.cancel()
+        MessageProcessor.removeProcessors(this)
     }
 
     private fun initViewPager() {
@@ -110,6 +138,51 @@ class HomeHeartbeatFragment : BaseFragment() {
 
         })
         view_pager.currentItem = 0
+    }
+
+    private var isPlaying = false
+    private var playMessageAnimator: Animator? = null
+
+    private var currentHeadline: TplBean? = null
+    private fun playRunway() {
+
+        if (!isPlaying && queueList.isNotEmpty()) {
+
+            isPlaying = true
+            val tpl = queueList.pop()
+            currentHeadline = tpl
+            runway_headLine.render(tpl)
+            val x = ScreenUtils.getViewRealWidth(runway_headLine)
+            val runwayWidth = fl_runway.width
+            val start = if (runwayWidth > 0) {
+                runwayWidth
+            } else {
+                ScreenUtils.getScreenWidth() - dp2px(100)
+            }.toFloat()
+            val end = -x.toFloat()//这么简单的动画竟然折腾了一大圈 也是醉了
+            playMessageAnimator = ObjectAnimator.ofFloat(runway_headLine, "translationX", start, end)
+            playMessageAnimator?.duration = calculateDuration(x.toFloat())
+            playMessageAnimator?.interpolator = LinearInterpolator()
+            playMessageAnimator?.addListener(
+                onStart = {
+                    runway_headLine.show()
+                },
+                onEnd = {
+                    runway_headLine.hide()
+                    isPlaying = false
+                    playRunway()
+                })
+            playMessageAnimator?.start()
+        }
+
+    }
+
+    private fun calculateDuration(length: Float): Long {
+        val width = DensityHelper.px2dp(length)
+        //文本长度分解成固定每秒播放的dp宽度计算最终这次的文本需要的播放时间
+        val duration = (width / 50f + 0.5f) * 1000
+        logger.info("当前的view的长度：" + width + "当前的播放时长：" + duration.toLong())
+        return duration.toLong()
     }
 
     private fun initViewModel() {
@@ -178,7 +251,7 @@ class HomeHeartbeatFragment : BaseFragment() {
                 indicator.startInterpolator = AccelerateInterpolator()
                 indicator.endInterpolator = DecelerateInterpolator(2.0f)
                 indicator.yOffset = dp2pxf(4)
-                indicator.setColors(ContextCompat.getColor(context,R.color.primary_color))
+                indicator.setColors(ContextCompat.getColor(context, R.color.primary_color))
                 return indicator
             }
         }
