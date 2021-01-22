@@ -6,11 +6,13 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.content.Intent
 import android.graphics.Typeface
+import android.graphics.drawable.Animatable
 import android.os.Bundle
 import android.provider.Settings
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.StyleSpan
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
@@ -29,7 +31,10 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.baidu.location.BDLocation
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
+import com.facebook.drawee.controller.BaseControllerListener
+import com.facebook.drawee.generic.RoundingParams
 import com.facebook.drawee.view.SimpleDraweeView
+import com.facebook.imagepipeline.image.ImageInfo
 import com.julun.huanque.common.base.BaseLazyFragment
 import com.julun.huanque.common.base.dialog.CommonDialogFragment
 import com.julun.huanque.common.base.dialog.MyAlertDialog
@@ -414,10 +419,11 @@ class NearbyFragment : BaseLazyFragment() {
         val rvPics = holder.getViewOrNull<RecyclerView>(R.id.rv_pics)
         val tvPicCount = holder.getViewOrNull<TextView>(R.id.tv_pic_count)
         val sdv = holder.getViewOrNull<SimpleDraweeView>(R.id.card_img)
+        val sdvBg = holder.getViewOrNull<SimpleDraweeView>(R.id.card_img_bg)
         val picsAdapter = rvPics?.adapter as? NearbyPicListAdapter ?: return
         val selectIndex: Int = picsAdapter.data.indexOfFirst { it.coverPic == imageUrl }
         item.selectIndex = selectIndex
-        if (sdv != null && tvPicCount != null) {
+        if (sdv != null && sdvBg != null && tvPicCount != null) {
             val dataList = picsAdapter.data
             dataList.forEachIndexed { index, homePagePicBean ->
                 if (index == selectIndex) {
@@ -430,9 +436,12 @@ class NearbyFragment : BaseLazyFragment() {
             val pic = picsAdapter.getItemOrNull(selectIndex) ?: return
 
             if (pic.blur) {
-                ImageUtils.loadImageWithBlur(sdv, pic.coverPic, 2, 15)
+                sdvBg.show()
+                sdv.hide()
+                ImageUtils.loadImageWithBlur(sdvBg, pic.coverPic, 2, 15)
             } else {
-                sdv.loadImageNoResize(pic.coverPic)
+//                sdv.loadImageNoResize(pic.coverPic)
+                showCardImage(sdv, sdvBg, pic.coverPic)
             }
 //            sdv.loadImageNoResize(pic.coverPic)
             tvPicCount.text = "${selectIndex + 1}/${picsAdapter.data.size}"
@@ -564,6 +573,17 @@ class NearbyFragment : BaseLazyFragment() {
                 )
             } else {
                 showLayoutError(1)
+            }
+        })
+        mMainConnectViewModel.nearbyCardGuide.observe(this, Observer {
+            if (it != null) {
+                //不能过小 不然会闪一下
+                if(cardsAdapter.data.size>4){
+                    cardsAdapter.addData(4,it)
+                }else{
+                    cardsAdapter.addData(it)
+                }
+
             }
         })
         mViewModel.likeTag.observe(this, Observer {
@@ -983,6 +1003,44 @@ class NearbyFragment : BaseLazyFragment() {
 
     }
 
+    private fun showCardImage(sdv: SimpleDraweeView, sdvBg: SimpleDraweeView, coverPic: String) {
+        sdvBg.hide()
+        sdv.show()
+//                sdv.loadImageNoResize(item.coverPic)
+        ImageUtils.loadImageWithListener(sdv, coverPic, object : BaseControllerListener<ImageInfo>() {
+            override fun onFinalImageSet(id: String?, imageInfo: ImageInfo?, anim: Animatable?) {
+                if (imageInfo == null) {
+                    return
+                }
+                val height = imageInfo.height
+                val width = imageInfo.width
+                logger.info("宽高比：${width / height.toFloat()}")
+                val layoutParams = sdv.layoutParams as ConstraintLayout.LayoutParams
+                if (width / height.toFloat() >= 7.0f / 9.0f) {
+                    sdv.hierarchy.roundingParams = RoundingParams.fromCornersRadius(0f)
+                    layoutParams.dimensionRatio = "h,${width}:${height}"
+                    sdvBg.show()
+                    ImageUtils.loadImageWithBlur(sdvBg, coverPic, 2, 20)
+                } else {
+                    sdv.hierarchy.roundingParams = RoundingParams.fromCornersRadius(dp2pxf(10))
+                    layoutParams.dimensionRatio = "0"
+                    sdvBg.hide()
+                }
+                sdv.requestLayout()
+
+            }
+
+            override fun onIntermediateImageSet(id: String?, imageInfo: ImageInfo?) {
+                Log.d("TAG", "Intermediate image received")
+            }
+
+            override fun onFailure(id: String?, throwable: Throwable?) {
+                throwable!!.printStackTrace()
+            }
+        }
+        )
+    }
+
     private val cardsAdapter: BaseQuickAdapter<NearbyUserBean, BaseViewHolder> by lazy {
         object : BaseQuickAdapter<NearbyUserBean, BaseViewHolder>(R.layout.item_user_swip_card, list) {
             init {
@@ -1028,8 +1086,8 @@ class NearbyFragment : BaseLazyFragment() {
             override fun convert(holder: BaseViewHolder, item: NearbyUserBean) {
                 holder.setVisible(R.id.sd_auth_tag, item.realName || item.headRealPeople)
                 val sdv = holder.getView<SimpleDraweeView>(R.id.card_img)
-                sdv.loadImageNoResize(item.coverPic)
-
+                val sdvBg = holder.getView<SimpleDraweeView>(R.id.card_img_bg)
+                showCardImage(sdv, sdvBg, item.coverPic)
                 if (item.cardType == CardType.GUIDE) {
                     holder.setGone(R.id.iv_dislike, true)
                     holder.setGone(R.id.iv_like, true)
@@ -1197,7 +1255,7 @@ class NearbyFragment : BaseLazyFragment() {
                     }
 
                     item.selectIndex = position
-                    selectPic(position, mPicsAdapter, sdv, tvPicCount)
+                    selectPic(position, mPicsAdapter, sdv, sdvBg, tvPicCount)
                     val manager = rvPics.layoutManager as AutoCenterLayoutManager
                     manager.smoothScrollToPosition(rvPics, position)
                 }
@@ -1208,7 +1266,13 @@ class NearbyFragment : BaseLazyFragment() {
             /**
              * 选中特定的图片
              */
-            private fun selectPic(position: Int, mPicsAdapter: NearbyPicListAdapter, sdv: SimpleDraweeView, tv: TextView) {
+            private fun selectPic(
+                position: Int,
+                mPicsAdapter: NearbyPicListAdapter,
+                sdv: SimpleDraweeView,
+                sdvBg: SimpleDraweeView,
+                tv: TextView
+            ) {
                 val dataList = mPicsAdapter.data
                 dataList.forEachIndexed { index, homePagePicBean ->
                     if (index == position) {
@@ -1220,9 +1284,12 @@ class NearbyFragment : BaseLazyFragment() {
                 mPicsAdapter.notifyDataSetChanged()
                 val pic = mPicsAdapter.getItemOrNull(position) ?: return
                 if (pic.blur) {
-                    ImageUtils.loadImageWithBlur(sdv, pic.coverPic, 2, 15)
+                    sdv.hide()
+                    sdvBg.show()
+                    ImageUtils.loadImageWithBlur(sdvBg, pic.coverPic, 2, 15)
                 } else {
-                    sdv.loadImageNoResize(pic.coverPic)
+//                    sdv.loadImageNoResize(pic.coverPic)
+                    showCardImage(sdv, sdvBg, pic.coverPic)
                 }
 
                 tv.text = "${position + 1}/${mPicsAdapter.data.size}"

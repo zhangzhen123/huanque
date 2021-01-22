@@ -108,3 +108,7 @@ object  CardType{
     const val USER = "User"
     const val GUIDE = "Guide"
 }
+object  GuideShowType{
+    const val POPUP = "Popup"
+    const val CARD = "Card"
+}

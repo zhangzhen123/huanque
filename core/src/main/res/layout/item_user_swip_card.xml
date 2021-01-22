@@ -20,16 +20,27 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/bg_white_10"
         android:orientation="vertical">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/card_img_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:actualImageScaleType="centerCrop"
+            app:roundedCornerRadius="@dimen/dimen_10" />
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/card_img"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/bg_white_10"
+            android:layout_height="0dp"
+            app:actualImageScaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1"
+            app:layout_constraintTop_toTopOf="parent"
             app:placeholderImage="@drawable/logo_nearby_placeholder_bg"
-            app:placeholderImageScaleType="fitXY"
-            app:roundedCornerRadius="@dimen/dimen_10" />
+            app:roundedCornerRadius="@dimen/dimen_10"
+            app:placeholderImageScaleType="fitXY" />
 
         <View
             android:id="@+id/shadow_view"
@@ -43,8 +54,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/dimen_8"
-            android:orientation="horizontal"
             android:gravity="bottom"
+            android:orientation="horizontal"
             app:layout_constraintBottom_toTopOf="@+id/rv_pics"
             app:layout_constraintStart_toStartOf="@+id/rv_pics">
 
