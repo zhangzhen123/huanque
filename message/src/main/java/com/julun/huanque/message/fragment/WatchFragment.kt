@@ -7,9 +7,11 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.base.BaseFragment
+import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.bean.forms.WatchForm
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.ParamConstant
+import com.julun.huanque.common.helper.AppHelper
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
@@ -18,7 +20,13 @@ import com.julun.huanque.message.R
 import com.julun.huanque.message.activity.PrivateConversationActivity
 import com.julun.huanque.message.adapter.WatchAdapter
 import com.julun.huanque.message.viewmodel.WatchHistoryViewModel
+import kotlinx.android.synthetic.main.frag_heart_beat.*
 import kotlinx.android.synthetic.main.frag_watch.*
+import kotlinx.android.synthetic.main.frag_watch.cardView
+import kotlinx.android.synthetic.main.frag_watch.recycler_view
+import kotlinx.android.synthetic.main.frag_watch.state_pager_view
+import kotlinx.android.synthetic.main.frag_watch.swipe_refresh
+import kotlinx.android.synthetic.main.frag_watch.tv_attention
 
 /**
  *@创建者   dong
@@ -50,6 +58,7 @@ class WatchFragment : BaseFragment() {
         }
         initRecyclerView()
         initViewModel()
+        state_pager_view.showLoading()
         mViewModel.queryData(mType, true)
 
         swipe_refresh.setOnRefreshListener {
@@ -61,6 +70,7 @@ class WatchFragment : BaseFragment() {
         super.initEvents(rootView)
         cardView.onClickNew {
             val touchEype = mViewModel.watchExtra.value?.touchType ?: ""
+            AppHelper.openTouch(touchEype, activity = requireActivity())
 //            jump(touchEype)
         }
     }
@@ -116,6 +126,23 @@ class WatchFragment : BaseFragment() {
      * 初始化ViewModel
      */
     private fun initViewModel() {
+        mViewModel.loadState.observe(this, Observer {
+            swipe_refresh.isRefreshing = false
+            when (it.state) {
+                NetStateType.SUCCESS -> {
+                    state_pager_view.showSuccess()
+                }
+                NetStateType.ERROR -> {
+                    state_pager_view.showError(R.mipmap.icon_no_data_01)
+                }
+                NetStateType.NETWORK_ERROR -> {
+                    state_pager_view.showError(btnClick = View.OnClickListener {
+                        state_pager_view.showLoading()
+                        mViewModel.queryData(mType, true)
+                    })
+                }
+            }
+        })
         mViewModel.historyData.observe(this, Observer {
             if (it != null) {
                 swipe_refresh.isRefreshing = false

@@ -60,7 +60,7 @@ class HeartBeatViewModel : BaseViewModel() {
                 mOffset += watchHistory.list.size
                 unLockCount = watchHistory.remainUnlockTimes
                 heartBeatData.value = watchHistory
-            }, {})
+            }, {},needLoadState = true)
         }
     }
 

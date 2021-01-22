@@ -44,7 +44,7 @@ class WatchHistoryViewModel : BaseViewModel() {
                 mOffset += watchHistory.list.size
                 watchExtra.value = watchHistory.extData
                 historyData.value = watchHistory
-            }, {})
+            }, {},needLoadState = true)
         }
     }
 

@@ -19,6 +19,7 @@
             android:layout_height="wrap_content"
             android:background="#00000000"
             app:elevation="0px"
+            app:layout_behavior="com.yuruiyin.appbarlayoutbehavior.AppBarLayoutBehavior"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent">
