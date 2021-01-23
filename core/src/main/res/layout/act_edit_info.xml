@@ -33,7 +33,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/con_progress"
                 android:layout_width="0px"
-                android:layout_height="49dp"
+                android:layout_height="50dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginRight="15dp"
@@ -44,6 +44,28 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:visibility="visible">
 
+                <View
+                    android:id="@+id/view_progress_top"
+                    android:layout_width="0px"
+                    android:layout_height="30dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_progress_bottom"
+                    android:layout_width="0px"
+                    android:layout_height="20dp"
+                    android:background="@drawable/bg_progress_bottom"
+                    android:gravity="center"
+                    android:textColor="@color/black_666"
+                    android:textSize="@dimen/sp_10"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    tools:text="肯德基嗯" />
+
+
                 <TextView
                     android:id="@+id/tv_progressbar"
                     android:layout_width="wrap_content"
@@ -52,9 +74,9 @@
                     android:text="资料完成度"
                     android:textColor="@color/black_666"
                     android:textSize="@dimen/sp_12"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintBottom_toBottomOf="@id/view_progress_top"
+                    app:layout_constraintLeft_toLeftOf="@id/view_progress_top"
+                    app:layout_constraintTop_toTopOf="@id/view_progress_top" />
 
                 <ImageView
                     android:id="@+id/iv_close_progress"
@@ -62,9 +84,9 @@
                     android:layout_height="24dp"
                     android:layout_marginRight="8dp"
                     android:src="@mipmap/icon_close_grey_01"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintBottom_toBottomOf="@id/view_progress_top"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="@id/view_progress_top" />
 
                 <ProgressBar
                     android:id="@+id/progressBar"
@@ -75,10 +97,10 @@
                     android:layout_marginRight="37dp"
                     android:max="100"
                     android:progressDrawable="@drawable/bg_edit_progress"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintBottom_toBottomOf="@id/view_progress_top"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="@id/view_progress_top" />
 
                 <View
                     android:id="@+id/view_progress_placeholder"

@@ -489,7 +489,7 @@ class EditInfoActivity : BaseActivity() {
             updateProgress(info.perfection)
         }
 
-        SPUtils.commitString(SPParamKey.RealPeople,info.headRealPeople)
+        SPUtils.commitString(SPParamKey.RealPeople, info.headRealPeople)
         //显示图片相关
         val pics = info.picList
         //用来显示的数据
@@ -505,6 +505,7 @@ class EditInfoActivity : BaseActivity() {
         }
 //originCoverPicList
         mEditPicAdapter.setList(showPics)
+        tv_progress_bottom.text = info.perfectGuide?.guideText ?: ""
 
         showSign(info.mySign)
         val normalColor = GlobalUtils.getColor(R.color.black_333)
