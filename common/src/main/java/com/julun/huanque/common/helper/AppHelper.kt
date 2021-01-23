@@ -3,13 +3,17 @@ package com.julun.huanque.common.helper
 import android.app.Activity
 import android.app.ActivityManager
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Process
 import android.text.TextUtils
+import androidx.core.content.ContextCompat.startActivity
 import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.BuildConfig
 import com.julun.huanque.common.R
+import com.julun.huanque.common.base.dialog.MyAlertDialog
+import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.bean.beans.UserTagBean
 import com.julun.huanque.common.bean.events.RHVerifyResult
 import com.julun.huanque.common.constant.*
@@ -17,6 +21,7 @@ import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.interfaces.routerservice.IRealNameService
 import com.julun.huanque.common.interfaces.routerservice.RealNameCallback
 import com.julun.huanque.common.suger.logger
+import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.common.utils.MD5Util
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
@@ -308,8 +313,8 @@ object AppHelper {
                 val tagId = strs.getOrNull(1)?.toIntOrNull() ?: return
                 //我拥有的标签
                 ARouter.getInstance().build(ARouterConstant.TAG_USER_PICS_ACTIVITY).with(Bundle().apply {
-                    putLong(ManagerTagCode.TAG_INFO,useId)
-                    putInt(IntentParamKey.USER_ID.name,tagId)
+                    putLong(ManagerTagCode.TAG_INFO, useId)
+                    putInt(IntentParamKey.USER_ID.name, tagId)
                 }).navigation()
             }
             TouchTypeConstants.AuthTagPic -> {
@@ -374,33 +379,49 @@ object AppHelper {
             TouchTypeConstants.RealHead -> {
                 //真人
                 val service = ARouter.getInstance().build(ARouterConstant.REALNAME_SERVICE)
-                    .navigation() as? IRealNameService
-                service?.startRealHead(CommonInit.getInstance().getCurrentActivity() ?: return, object : RealNameCallback {
-                    override fun onCallback(status: String, des: String, percent: Int?) {
-                        EventBus.getDefault().post(RHVerifyResult(status))
-                        when (status) {
-                            RealNameConstants.TYPE_SUCCESS -> {
-                                //认证成功
-                                ToastUtils.show(des)
-
-                            }
-                            RealNameConstants.TYPE_FAIL, RealNameConstants.TYPE_ERROR -> {
-                                //认证失败 or 认证网络请求异常
-                                ToastUtils.show(des)
-                            }
-                            RealNameConstants.TYPE_CANCEL -> {
-                                //认证取消
-                                ToastUtils.show(
-                                    if (des.isNotEmpty()) {
-                                        des
-                                    } else {
-                                        "认证取消"
-                                    }
-                                )
-                            }
-                        }
+                    .navigation() as? IRealNameService ?: return
+                val act = activity ?: CommonInit.getInstance().getCurrentActivity()
+                act ?: return
+                service.checkRealHead { e ->
+                    if (e is ResponseError && e.busiCode == ErrorCodes.REAL_HEAD_ERROR) {
+                        MyAlertDialog(act, false).showAlertWithOKAndCancel(
+                            e.busiMessage.toString(),
+                            title = "修改提示",
+                            okText = "修改头像",
+                            noText = "取消",
+                            callback = MyAlertDialog.MyDialogCallback(onRight = {
+                                ARouter.getInstance().build(ARouterConstant.EDIT_INFO_ACTIVITY).navigation(activity)
+                            })
+                        )
                     }
-                })
+                }
+
+//                service?.startRealHead(CommonInit.getInstance().getCurrentActivity() ?: return, object : RealNameCallback {
+//                    override fun onCallback(status: String, des: String, percent: Int?) {
+//                        EventBus.getDefault().post(RHVerifyResult(status))
+//                        when (status) {
+//                            RealNameConstants.TYPE_SUCCESS -> {
+//                                //认证成功
+//                                ToastUtils.show(des)
+//
+//                            }
+//                            RealNameConstants.TYPE_FAIL, RealNameConstants.TYPE_ERROR -> {
+//                                //认证失败 or 认证网络请求异常
+//                                ToastUtils.show(des)
+//                            }
+//                            RealNameConstants.TYPE_CANCEL -> {
+//                                //认证取消
+//                                ToastUtils.show(
+//                                    if (des.isNotEmpty()) {
+//                                        des
+//                                    } else {
+//                                        "认证取消"
+//                                    }
+//                                )
+//                            }
+//                        }
+//                    }
+//                })
             }
 
             else -> {
