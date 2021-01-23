@@ -15,6 +15,9 @@ import com.julun.huanque.core.adapter.TagListAdapter
 import com.julun.huanque.core.ui.tag_manager.AuthTagPicActivity
 import com.julun.huanque.core.ui.tag_manager.TagPicsActivity
 import kotlinx.android.synthetic.main.frag_tag.*
+import java.util.*
+import kotlin.Comparator
+import kotlin.collections.ArrayList
 
 /**
  *@创建者   dong
@@ -168,6 +171,20 @@ class TagFragment : BaseBottomSheetFragment() {
                 likeCount++
             }
         }
+        tagList?.let { list ->
+            Collections.sort(list, object : Comparator<UserTagBean> {
+                override fun compare(o1: UserTagBean?, o2: UserTagBean?): Int {
+                    if (o1?.mark == BusiConstant.True) {
+                        return -1
+                    } else {
+                        return 1
+                    }
+                }
+            })
+
+
+        }
+
         mAdapter.setList(tagList)
         tv_love_count.text = "$likeCount"
     }

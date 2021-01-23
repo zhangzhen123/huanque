@@ -230,6 +230,10 @@ class PrivateConversationActivity : BaseActivity() {
 
 
         val targetID = intent?.getLongExtra(ParamConstant.TARGET_USER_ID, 0)
+        if(targetID == mPrivateConversationViewModel?.targetIdData?.value){
+            //就是当前用户
+            return
+        }
         val nickName = intent?.getStringExtra(ParamConstant.NICKNAME) ?: ""
         val meetStatus = intent?.getStringExtra(ParamConstant.MEET_STATUS) ?: ""
         val header = intent?.getStringExtra(ParamConstant.HeaderPic) ?: ""
