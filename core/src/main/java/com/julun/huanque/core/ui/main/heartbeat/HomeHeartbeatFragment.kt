@@ -22,12 +22,14 @@ import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.bean.TplBean
 import com.julun.huanque.common.bean.beans.PagerTab
+import com.julun.huanque.common.constant.TouchTypeConstants
 import com.julun.huanque.common.helper.AppHelper
 import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.ScreenUtils
+import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.widgets.indicator.ScaleTransitionPagerTitleView
 import com.julun.huanque.core.R
 import com.julun.huanque.core.viewmodel.MainConnectViewModel
@@ -85,7 +87,7 @@ class HomeHeartbeatFragment : BaseFragment() {
         home_container.post {
             RnManager.createReactInstanceManager(CommonInit.getInstance().getApp())
         }
-        tv_filter_tag.onClickNew {
+        v_filter_tag_holder.onClickNew {
             mFilterTagFragment = FilterTagFragment()
             mFilterTagFragment?.show(childFragmentManager, "FilterTagFragment")
         }
@@ -100,6 +102,9 @@ class HomeHeartbeatFragment : BaseFragment() {
         runway_headLine.onClickNew {
             currentHeadline?.let { tpl ->
                 if (tpl.textTouch != null && tpl.context?.touchValue != null) {
+                    if (tpl.textTouch == TouchTypeConstants.MineHomePage && tpl.context!!.touchValue.toLongOrNull() == SessionUtils.getUserId()) {
+                        return@onClickNew
+                    }
                     AppHelper.openTouch(tpl.textTouch!!, tpl.context!!.touchValue)
                 }
 

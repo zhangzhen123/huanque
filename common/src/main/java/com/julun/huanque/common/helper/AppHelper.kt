@@ -237,12 +237,10 @@ object AppHelper {
             TouchTypeConstants.MineHomePage -> {
                 val bundle = Bundle().apply {
                     var userId = touchValue.toLongOrNull()
-                    if (userId != null) {
+                    if (userId == null) {
                         userId = SessionUtils.getUserId()
                     }
-                    if (userId != null) {
-                        putLong(ParamConstant.UserId, userId)
-                    }
+                    putLong(ParamConstant.UserId, userId)
                 }
                 ARouter.getInstance().build(ARouterConstant.HOME_PAGE_ACTIVITY).with(bundle).navigation()
             }
@@ -302,6 +300,16 @@ object AppHelper {
                 //我拥有的标签
                 ARouter.getInstance().build(ARouterConstant.MY_TAGS_ACTIVITY).with(Bundle().apply {
                     putString(ManagerTagCode.MANAGER_PAGER_TYPE, MyTagType.AUTH)
+                }).navigation()
+            }
+            TouchTypeConstants.UserTagPicPreview -> {
+                val strs = touchValue.split(",")
+                val useId = strs.getOrNull(0)?.toLongOrNull() ?: return
+                val tagId = strs.getOrNull(1)?.toIntOrNull() ?: return
+                //我拥有的标签
+                ARouter.getInstance().build(ARouterConstant.TAG_USER_PICS_ACTIVITY).with(Bundle().apply {
+                    putLong(ManagerTagCode.TAG_INFO,useId)
+                    putInt(IntentParamKey.USER_ID.name,tagId)
                 }).navigation()
             }
             TouchTypeConstants.AuthTagPic -> {

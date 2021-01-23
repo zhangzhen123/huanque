@@ -5,6 +5,7 @@ import android.animation.ValueAnimator
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.graphics.Typeface
 import android.media.MediaPlayer
 import android.os.Bundle
@@ -765,20 +766,47 @@ class HomePageActivity : BaseActivity() {
             iv_mark.setImageResource(userIcon)
 //            sdv_real.loadImage(bean.authMark, 18f, 18f)
         }
-        if (bean.realNameGuide?.guide == true) {
-            rl_guide_real.show()
+        if (mHomePageViewModel.mineHomePage && bean.perfectGuide?.guide == true) {
+            rl_guide_info.show()
+            rl_guide_info.backgroundColor= Color.parseColor("#CACED7")
+            tv_guide_title.text = bean.perfectGuide?.guideText
+            tv_guide_title_02.show()
+            tv_guide_title_02.text = "资料完整度：${bean.perfection}%"
+            tv_guide_title.setCompoundDrawables(null, null, null, null)
+            rl_guide_info.onClickNew {
+                val intent = Intent(this, EditInfoActivity::class.java)
+                if (ForceUtils.activityMatch(intent)) {
+                    startActivity(intent)
+                }
+            }
+        } else if (bean.realNameGuide?.guide == true) {
+            rl_guide_info.show()
+            rl_guide_info.backgroundColor= Color.parseColor("#F3C060")
             tv_guide_title.text = "Ta已完成实名认证，加速推荐中"
-            rl_guide_real.onClickNew {
+            val drawable = ContextCompat.getDrawable(this, R.mipmap.icon_title_realname)
+            if (drawable != null) {
+                drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
+                tv_guide_title.setCompoundDrawables(drawable, null, null, null)
+            }
+            tv_guide_title_02.hide()
+            rl_guide_info.onClickNew {
                 realNameNotice()
             }
         } else if (bean.realHeadGuide?.guide == true) {
-            rl_guide_real.show()
+            rl_guide_info.show()
+            rl_guide_info.backgroundColor= Color.parseColor("#F3C060")
             tv_guide_title.text = "Ta已完成真人认证，可放心交友"
-            rl_guide_real.onClickNew {
+            val drawable = ContextCompat.getDrawable(this, R.mipmap.icon_auth_head_success)
+            if (drawable != null) {
+                drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
+                tv_guide_title.setCompoundDrawables(drawable, null, null, null)
+            }
+            tv_guide_title_02.hide()
+            rl_guide_info.onClickNew {
                 realHeaderNotice()
             }
         } else {
-            rl_guide_real.hide()
+            rl_guide_info.hide()
         }
 
         val onLineBean = bean.online

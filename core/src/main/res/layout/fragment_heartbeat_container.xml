@@ -62,6 +62,18 @@
 
     </FrameLayout>
 
+    <View
+        android:id="@+id/v_filter_tag_holder"
+        android:layout_width="@dimen/dimen_30"
+        android:layout_height="40dp"
+        android:layout_marginEnd="@dimen/dimen_3"
+        android:gravity="center"
+        android:scaleType="centerInside"
+        android:src="@mipmap/icon_nearby_filter"
+        app:layout_constraintBottom_toBottomOf="@+id/magic_indicator"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <com.julun.huanque.common.widgets.viewpager.NoScrollViewPager
         android:id="@+id/view_pager"
         android:layout_width="match_parent"

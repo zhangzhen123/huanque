@@ -38,7 +38,7 @@ object BusiConstant {
     //广场封面大小
     const val OSS_350 = "!350"
 
-    const val OSS_BLUR_01 = "?x-oss-process=image/blur,r_50,s_20"
+    const val OSS_BLUR_01 = "?x-oss-process=image/blur,r_50,s_50"
 
     const val OSS_BLUR_02 = "?x-oss-process=image/blur,r_50,s_25"
 

@@ -396,6 +396,9 @@ object TouchTypeConstants {
     //我拥有的标签
     const val MyAuthTag = "MyAuthTag"
 
+    //标签图片查看预览
+    const val UserTagPicPreview = "UserTagPicPreview"
+
     //真人图标
     const val RealHead = "RealHead"
 

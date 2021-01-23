@@ -158,5 +158,4 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible" />
 
-
 </FrameLayout>
