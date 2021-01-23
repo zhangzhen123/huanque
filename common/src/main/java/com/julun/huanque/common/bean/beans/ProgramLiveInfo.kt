@@ -661,7 +661,8 @@ data class HomePageInfo(
     //头像认证引导
     var realHeadGuide: RealHeadGuideBean? = null,
     //实名引导
-    var realNameGuide: RealNameGuideBean? = null
+    var realNameGuide: RealNameGuideBean? = null,
+    var currRealName : String = ""
 ) : Serializable
 
 data class RealHeadGuideBean(var guide: Boolean = false)

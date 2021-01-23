@@ -441,18 +441,23 @@ class HomePageActivity : BaseActivity() {
 
         iv_mark.onClickNew {
             val bean = mHomePageViewModel.homeInfoBean.value ?: return@onClickNew
+            //是否是真人
+            val headRealPeople = bean.headRealPeople
+            //是否实名
+            val realName = bean.realName
             //用户类型
             val userType = bean.userType
+            val userIcon = AppHelper.getUserIcon(headRealPeople == BusiConstant.True, realName, userType)
             if (userType == UserType.Manager) {
                 //官方没有点击效果
                 return@onClickNew
             }
-            if (bean.realNameGuide?.guide == true) {
+            if (bean.currRealName != BusiConstant.True && userIcon == com.julun.huanque.common.R.mipmap.icon_real_name_home_page) {
                 //实名，显示实名弹窗
                 realNameNotice()
                 return@onClickNew
             }
-            if (bean.realHeadGuide?.guide == true) {
+            if (bean.currHeadRealPeople != BusiConstant.True && userIcon == com.julun.huanque.common.R.mipmap.icon_real_people_home_page) {
                 //实人
                 realHeaderNotice()
                 return@onClickNew
@@ -780,7 +785,7 @@ class HomePageActivity : BaseActivity() {
         }
         if (mHomePageViewModel.mineHomePage && bean.perfectGuide?.guide == true) {
             rl_guide_info.show()
-            rl_guide_info.backgroundColor= Color.parseColor("#CACED7")
+            rl_guide_info.backgroundColor = Color.parseColor("#CACED7")
             tv_guide_title.text = bean.perfectGuide?.guideText
             tv_guide_title_02.show()
             tv_guide_title_02.text = "资料完整度：${bean.perfection}%"
@@ -793,7 +798,7 @@ class HomePageActivity : BaseActivity() {
             }
         } else if (bean.realNameGuide?.guide == true) {
             rl_guide_info.show()
-            rl_guide_info.backgroundColor= Color.parseColor("#F3C060")
+            rl_guide_info.backgroundColor = Color.parseColor("#F3C060")
             tv_guide_title.text = "Ta已完成实名认证，加速推荐中"
             val drawable = ContextCompat.getDrawable(this, R.mipmap.icon_title_realname)
             if (drawable != null) {
@@ -806,7 +811,7 @@ class HomePageActivity : BaseActivity() {
             }
         } else if (bean.realHeadGuide?.guide == true) {
             rl_guide_info.show()
-            rl_guide_info.backgroundColor= Color.parseColor("#F3C060")
+            rl_guide_info.backgroundColor = Color.parseColor("#F3C060")
             tv_guide_title.text = "Ta已完成真人认证，可放心交友"
             val drawable = ContextCompat.getDrawable(this, R.mipmap.icon_auth_head_success)
             if (drawable != null) {
