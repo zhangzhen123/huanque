@@ -347,13 +347,17 @@ class NearbyFragment : BaseLazyFragment() {
                 }
                 R.id.iv_auth_tag -> {
                     //实人认证图标
-
-                    if (item.realName && SPUtils.getString(SPParamKey.RealName, "") != BusiConstant.True) {
+                    val userIcon = AppHelper.getUserIcon(item.headRealPeople, item.realName, "") ?: return@setOnItemChildClickListener
+                    if (userIcon == com.julun.huanque.common.R.mipmap.icon_real_name_home_page
+                        && SPUtils.getString(SPParamKey.RealName, "") != BusiConstant.True
+                    ) {
                         //显示实名认证
                         realNameNotice()
                         return@setOnItemChildClickListener
                     }
-                    if (item.headRealPeople && SPUtils.getString(SPParamKey.RealPeople, "") != BusiConstant.True) {
+                    if (userIcon == com.julun.huanque.common.R.mipmap.icon_real_people_home_page
+                        && SPUtils.getString(SPParamKey.RealPeople, "") != BusiConstant.True
+                    ) {
                         realHeaderNotice()
                         return@setOnItemChildClickListener
                     }
@@ -1110,7 +1114,7 @@ class NearbyFragment : BaseLazyFragment() {
             override fun convert(holder: BaseViewHolder, item: NearbyUserBean) {
                 val iv_auth_tag = holder.getView<ImageView>(R.id.iv_auth_tag)
 
-                val userIcon = AppHelper.getUserIcon(item.realName, item.headRealPeople, "")
+                val userIcon = AppHelper.getUserIcon(item.headRealPeople, item.realName, "")
                 if (userIcon == null) {
                     iv_auth_tag.hide()
                 } else {
@@ -1289,7 +1293,7 @@ class NearbyFragment : BaseLazyFragment() {
                     }
 
                     item.selectIndex = position
-                    selectPic(position, mPicsAdapter, sdv, sdvBg, tvPicCount,guidePhoto)
+                    selectPic(position, mPicsAdapter, sdv, sdvBg, tvPicCount, guidePhoto)
                     val manager = rvPics.layoutManager as AutoCenterLayoutManager
                     manager.smoothScrollToPosition(rvPics, position)
                 }
@@ -1306,7 +1310,7 @@ class NearbyFragment : BaseLazyFragment() {
                 sdv: SimpleDraweeView,
                 sdvBg: SimpleDraweeView,
                 tv: TextView,
-                guideView:View
+                guideView: View
             ) {
                 val dataList = mPicsAdapter.data
                 dataList.forEachIndexed { index, homePagePicBean ->

@@ -661,7 +661,8 @@ data class HomePageInfo(
     //头像认证引导
     var realHeadGuide: RealHeadGuideBean? = null,
     //实名引导
-    var realNameGuide: RealNameGuideBean? = null
+    var realNameGuide: RealNameGuideBean? = null,
+    var currRealName : String = ""
 ) : Serializable
 
 data class RealHeadGuideBean(var guide: Boolean = false)
@@ -755,8 +756,9 @@ data class EditPagerInfo(
     //播放数据
     var playProgram: HomePageProgram = HomePageProgram(),
     //直播间内的动态数据
-    var post: PostInHomePage = PostInHomePage()
+    var post: PostInHomePage = PostInHomePage(),
     /*2.0.0新增字段*/
+    var perfectGuide: PerfectGuideBean? = null
 
 ) : Serializable
 
