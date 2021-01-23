@@ -1,12 +1,11 @@
 package com.julun.huanque.common.utils
 
 import com.alibaba.fastjson.JSONObject
-import com.julun.huanque.common.R
 import com.julun.huanque.common.bean.BaseData
 import com.julun.huanque.common.bean.beans.FriendBean
 import com.julun.huanque.common.bean.beans.SysMsgContent
 import com.julun.huanque.common.bean.beans.TIBean
-import com.julun.huanque.common.constant.MessageConstants
+import com.julun.huanque.common.constant.TouchTypeConstants
 import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.helper.ImageHelper
 import com.julun.huanque.common.widgets.draweetext.DraweeSpanTextView
@@ -77,7 +76,7 @@ object MessageFormatUtils {
         text.textSize = DensityHelper.dp2px(14)
         list.add(text)
         when (result.relationChangeType) {
-            MessageConstants.FRIEDN -> {
+            TouchTypeConstants.FRIEND -> {
                 //成为好友
                 if (fromListlist) {
                     text.text = "${result.friendNickname} 和你成了鹊友"
@@ -85,7 +84,7 @@ object MessageFormatUtils {
                     text.text = "和你成了鹊友"
                 }
             }
-            MessageConstants.FRIEDN_FOLLOW -> {
+            TouchTypeConstants.FRIEND_FOLLOW -> {
                 //关注
                 if (fromListlist) {
 
@@ -94,7 +93,7 @@ object MessageFormatUtils {
                     text.text = "关注了你"
                 }
             }
-            MessageConstants.FRIEDN_INTIMATE -> {
+            TouchTypeConstants.FRIEND_INTIMATE -> {
                 //成为密友
                 if (fromListlist) {
                     text.text = "${result.friendNickname} 和你成为了密友"

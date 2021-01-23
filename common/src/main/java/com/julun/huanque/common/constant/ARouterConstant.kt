@@ -124,6 +124,8 @@ object ARouterConstant {
 
     //认证页面
     const val AUTH_TAG_PIC_ACTIVITY = "/$CORE$PREFIX_ACTIVITY/AuthTagPicActivity"
+    //标签图片列表
+    const val TAG_PICS_ACTIVITY = "/$CORE$PREFIX_ACTIVITY/TagPicsActivity"
 
 
     //邀友分享

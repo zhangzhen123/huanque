@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.module.LoadMoreModule
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
@@ -21,6 +22,7 @@ import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.bean.beans.UserTagBean
 import com.julun.huanque.common.bean.beans.TagDetailBean
 import com.julun.huanque.common.bean.beans.TagPicBean
+import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.IntentParamKey
 import com.julun.huanque.common.constant.ManagerTagCode
 import com.julun.huanque.common.helper.MixedHelper
@@ -44,6 +46,7 @@ import org.jetbrains.anko.startActivity
  *@Description: TagPicsActivity
  *
  */
+@Route(path = ARouterConstant.TAG_PICS_ACTIVITY)
 class TagPicsActivity : BaseVMActivity<TagPicsViewModel>() {
 
 

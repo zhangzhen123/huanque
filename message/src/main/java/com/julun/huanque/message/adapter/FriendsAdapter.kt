@@ -1,21 +1,14 @@
 package com.julun.huanque.message.adapter
 
-import android.graphics.Color
-import android.text.TextUtils
 import android.view.View
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.module.LoadMoreModule
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
-import com.julun.huanque.common.bean.beans.FriendBean
 import com.julun.huanque.common.bean.beans.FriendContent
-import com.julun.huanque.common.bean.beans.TIBean
 import com.julun.huanque.common.constant.BusiConstant
-import com.julun.huanque.common.constant.MessageConstants
 import com.julun.huanque.common.utils.ImageUtils
-import com.julun.huanque.common.utils.JsonUtil
 import com.julun.huanque.common.utils.MessageFormatUtils
 import com.julun.huanque.common.utils.TimeUtils
-import com.julun.huanque.common.widgets.draweetext.DraweeSpanTextView
 import com.julun.huanque.message.R
 import io.rong.imlib.model.Message
 import io.rong.message.TextMessage

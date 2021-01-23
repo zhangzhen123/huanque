@@ -2,7 +2,6 @@ package com.julun.platform_push.receiver
 
 import android.content.Context
 import com.julun.huanque.common.bean.message.PushAppData
-import com.julun.huanque.common.constant.PushDataActionType
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.utils.JsonUtil
 import io.rong.push.PushType
