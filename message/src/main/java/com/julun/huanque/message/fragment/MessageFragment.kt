@@ -560,6 +560,15 @@ class MessageFragment : BaseFragment() {
         iv_notification_close.onClickNew {
             view_notification.hide()
         }
+
+        view_anony_voice.onClickNew {
+            //匿名语音
+            ARouter.getInstance().build(ARouterConstant.ANONYMOUS_VOICE_ACTIVITY).navigation()
+        }
+        view_leyuan.onClickNew {
+            //养鹊乐园
+            ARouter.getInstance().build(ARouterConstant.LEYUAN_BIRD_ACTIVITY).navigation()
+        }
     }
 
     override fun onResume() {

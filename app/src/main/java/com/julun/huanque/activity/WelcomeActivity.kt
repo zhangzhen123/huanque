@@ -131,7 +131,7 @@ class WelcomeActivity : BaseActivity() {
     override fun getLayoutId() = R.layout.act_welcome
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
-        JVerificationInterface.clearPreLoginCache()
+        JVerificationInterface.dismissLoginAuthActivity()
         ActivitiesManager.INSTANCE.finishActivityExcept("com.julun.huanque.activity.WelcomeActivity")
         mLoginViewModel.currentFragmentState.value = LoginViewModel.Fragment_State_Phone
         view_white.alpha = 1f

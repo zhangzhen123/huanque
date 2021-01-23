@@ -50,7 +50,13 @@ data class ChatRoomBean(
     //是否有分身账号
     var hasSubAccount: String = "",
     //是否有分身账号未读消息
-    var hasSubAccountMsg: String = ""
+    var hasSubAccountMsg: String = "",
+    //心动数量
+    var heartTouchCnt: Int = 0,
+    //心动的头像列表
+    var heartTouchHeadPicList: MutableList<String> = mutableListOf(),
+    //新增访客数量
+    var visitCnt: Int = 0
 ) : Serializable {
     companion object {
         //在线
