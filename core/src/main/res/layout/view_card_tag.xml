@@ -1,16 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
     <FrameLayout
         android:id="@+id/fl_start_dot"
-        android:layout_width="8dp"
-        android:layout_height="@dimen/dimen_8"
-        android:background="@drawable/bg_shape_black_p50"
-        android:visibility="gone">
+        android:layout_width="@dimen/dimen_16"
+        android:layout_height="@dimen/dimen_16"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <View
+            android:id="@+id/v_dot_bg_start"
+            android:layout_width="@dimen/dimen_8"
+            android:layout_height="@dimen/dimen_8"
+            android:layout_gravity="center"
+            android:background="@drawable/bg_shape_dot_p50" />
 
         <View
             android:id="@+id/start_dot"
@@ -38,10 +45,10 @@
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/sdv_tag"
-            app:actualImageScaleType="centerCrop"
-            app:placeholderImage="@mipmap/logo_placeholder_small"
             android:layout_width="@dimen/dimen_18"
-            android:layout_height="@dimen/dimen_18" />
+            android:layout_height="@dimen/dimen_18"
+            app:actualImageScaleType="centerCrop"
+            app:placeholderImage="@mipmap/logo_placeholder_small" />
 
         <TextView
             android:id="@+id/tv_tag"
@@ -63,10 +70,15 @@
 
     <FrameLayout
         android:id="@+id/fl_end_dot"
-        android:layout_width="8dp"
-        android:layout_height="@dimen/dimen_8"
-        android:background="@drawable/bg_shape_black_p50"
+        android:layout_width="@dimen/dimen_16"
+        android:layout_height="@dimen/dimen_16"
         android:visibility="gone">
+        <View
+            android:id="@+id/v_dot_bg_end"
+            android:layout_width="@dimen/dimen_8"
+            android:layout_height="@dimen/dimen_8"
+            android:layout_gravity="center"
+            android:background="@drawable/bg_shape_dot_p50" />
 
         <View
             android:id="@+id/end_dot"

@@ -294,6 +294,7 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
                 rl_guide.hide()
             } else {
                 rl_guide.show()
+                tv_guide_title.text=perfectGuide.guideText
                 tv_guide_title2.text = "资料完整度：${perfection}%"
             }
         } else {

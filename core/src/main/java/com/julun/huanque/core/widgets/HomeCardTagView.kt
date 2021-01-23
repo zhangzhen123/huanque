@@ -89,13 +89,23 @@ class HomeCardTagView : LinearLayout {
             } else {
                 fl_end_dot
             }
+        val dotViewBg =
+            if (isLeft) {
+                v_dot_bg_start
+            } else {
+                v_dot_bg_end
+            }
         val ani1 = ObjectAnimator.ofFloat(dotView, View.ALPHA, 0f, 1f)
-        val ani2 = ObjectAnimator.ofFloat(dotView, View.SCALE_X, 0f, 1.2f, 1.0f)
-        val ani3 = ObjectAnimator.ofFloat(dotView, View.SCALE_Y, 0f, 1.2f, 1.0f)
+        ani1.duration = 500
+//        ani1.repeatCount=3
+        val ani2 = ObjectAnimator.ofFloat(dotViewBg, View.SCALE_X, 0f,0.6f, 1.2f,0.6f, 0.0f)
+        ani2.repeatCount = 2
+        val ani3 = ObjectAnimator.ofFloat(dotViewBg, View.SCALE_Y, 0f,0.6f, 1.2f,0.6f, 0.0f)
+        ani3.repeatCount = 2
 
         val aniSet1 = AnimatorSet()
-        aniSet1.duration = 500
-        aniSet1.playTogether(ani1, ani2, ani3)
+        aniSet1.duration = 1500
+        aniSet1.playTogether(/*ani1, */ani2, ani3)
         //
 
         val ani21 = ObjectAnimator.ofFloat(ll_content, View.ALPHA, 0f, 1f)
@@ -111,11 +121,12 @@ class HomeCardTagView : LinearLayout {
             ll_content.requestLayout()
         }
         val aniSet2 = AnimatorSet()
+        aniSet2.startDelay = 500
         aniSet2.playTogether(ani21, ani22)
 
         val aniShowSet = AnimatorSet()
-        aniShowSet.playSequentially(aniSet1, aniSet2)
-
+//        aniShowSet.playSequentially(aniSet1, aniSet2)
+        aniShowSet.playTogether(ani1, aniSet1, aniSet2)
         //消失动画
         val ani31 = ObjectAnimator.ofFloat(ll_content, View.ALPHA, 1f, 0f)
         ani31.duration = 350
@@ -130,22 +141,23 @@ class HomeCardTagView : LinearLayout {
 
 
         val ani41 = ObjectAnimator.ofFloat(dotView, View.ALPHA, 1f, 0f)
-        val ani42 = ObjectAnimator.ofFloat(dotView, View.SCALE_X, 1f, 1.2f, 0f)
-        val ani43 = ObjectAnimator.ofFloat(dotView, View.SCALE_Y, 1f, 1.2f, 0f)
+        val ani42 = ObjectAnimator.ofFloat(dotViewBg, View.SCALE_X, 1f/*, 1.2f*/, 0f)
+        val ani43 = ObjectAnimator.ofFloat(dotViewBg, View.SCALE_Y, 1f/*, 1.2f*/, 0f)
         val aniSet4 = AnimatorSet()
         aniSet4.duration = 500
         aniSet4.playTogether(ani41, ani42, ani43)
 
         val aniHideSet = AnimatorSet()
         aniHideSet.playSequentially(aniSet3, aniSet4)
-        aniHideSet.startDelay = 3000
+//        aniHideSet.startDelay = 3000
 
         aniSet = AnimatorSet()
         aniSet!!.playSequentially(aniShowSet, aniHideSet)
 
         aniSet!!.addListener(onStart = {
             this.show()
-            dotView.alpha = 0f
+//            dotView.alpha = 1f
+//            dotViewBg.alpha = 1f
             llp.width = 0
             ll_content.requestLayout()
         })

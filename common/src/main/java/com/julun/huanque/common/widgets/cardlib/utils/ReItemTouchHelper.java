@@ -27,6 +27,7 @@ import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
+import com.julun.huanque.common.helper.DensityHelper;
 import com.julun.huanque.common.widgets.cardlib.CardTouchHelperCallback;
 
 import java.util.ArrayList;
@@ -91,6 +92,8 @@ public class ReItemTouchHelper extends RecyclerView.ItemDecoration
 
     private static final int PIXELS_PER_SECOND = 1000;
 
+    //如果卡片有倾斜角度 会导致移出动画无法完全消失留一个角 所以这里增加动画距离
+    static final int TRANSLATE_EX = DensityHelper.dp2px(30);
 
     final List<View> mPendingCleanup = new ArrayList<View>();
 
@@ -440,12 +443,12 @@ public class ReItemTouchHelper extends RecyclerView.ItemDecoration
                     case START:
                     case END:
                         targetTranslateY = 0;
-                        targetTranslateX = Math.signum(mDx) * mRecyclerView.getWidth();
+                        targetTranslateX = Math.signum(mDx) * (mRecyclerView.getWidth()+TRANSLATE_EX);
                         break;
                     case UP:
                     case DOWN:
                         targetTranslateX = 0;
-                        targetTranslateY = Math.signum(mDy) * mRecyclerView.getHeight();
+                        targetTranslateY = Math.signum(mDy) * (mRecyclerView.getHeight()+TRANSLATE_EX);
                         break;
                     default:
                         targetTranslateX = 0;
