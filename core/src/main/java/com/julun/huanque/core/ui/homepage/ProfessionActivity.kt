@@ -154,6 +154,11 @@ class ProfessionActivity : BaseActivity() {
 
         tv_save.onClickNew {
             //保存
+            val curPromissionId = mViewModel.professionData.value?.professionId ?: return@onClickNew
+            if (curPromissionId == 0) {
+                ToastUtils.show("请先选择职业")
+                return@onClickNew
+            }
             //
             val form = SaveProfessionForm()
             //判断收入是否有变动
@@ -184,7 +189,7 @@ class ProfessionActivity : BaseActivity() {
             }
 
             val oriPromissionId = mViewModel.originalProfession?.professionId
-            val curPromissionId = mViewModel.professionData.value?.professionId ?: return@onClickNew
+
 
             if (curIncomeCode != mViewModel.oriIncomeCode || oriTypesStr.toString() != curTypesStr.toString() || curPromissionId != oriPromissionId) {
                 //收入有变动
