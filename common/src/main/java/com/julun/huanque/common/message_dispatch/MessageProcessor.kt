@@ -102,19 +102,19 @@ object MessageProcessor {
             } else {
                 //需要通知的私聊消息
                 val messageUser = GlobalUtils.getMessageUser(msg)
-                if (messageUser?.targetUserObj?.showMsgFee == BusiConstant.True) {
-                    //需要插入付费消息
-                    RongCloudManager.sendSimulateMessage(
-                        targetId,
-                        targetId,
-                        GlobalUtils.getMessageUser(msg)?.apply { targetUserObj?.showMsgFee = "" },
-                        Conversation.ConversationType.PRIVATE,
-                        MessageCustomBeanType.MessageFee,
-                        "私信消息30鹊币/条，亲密等级达到Lv6，可免费聊天",
-                        false,
-                        msg.sentTime + 1
-                    )
-                }
+//                if (messageUser?.targetUserObj?.showMsgFee == BusiConstant.True) {
+//                    //需要插入付费消息
+//                    RongCloudManager.sendSimulateMessage(
+//                        targetId,
+//                        targetId,
+//                        GlobalUtils.getMessageUser(msg)?.apply { targetUserObj?.showMsgFee = "" },
+//                        Conversation.ConversationType.PRIVATE,
+//                        MessageCustomBeanType.MessageFee,
+//                        "私信消息30鹊币/条，亲密等级达到Lv6，可免费聊天",
+//                        false,
+//                        msg.sentTime + 1
+//                    )
+//                }
                 EventBus.getDefault().post(
                     EventMessageBean(
                         msg.targetId ?: "",

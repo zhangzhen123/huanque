@@ -185,7 +185,9 @@ class ConversationBasicBean(
     //我是否是对方的陌生人
     var strangerToOther: String = "",
     //引导数据
-    var guideInfo: PrivateConversationGuideInfo? = null
+    var guideInfo: PrivateConversationGuideInfo? = null,
+    //是否是免费主播
+    var chatFree: String = ""
 )
 
 data class PrivateConversationGuideInfo(

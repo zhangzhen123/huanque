@@ -49,25 +49,18 @@ class WatchAdapter : BaseQuickAdapter<WatchHistoryBean, BaseViewHolder>(R.layout
             //模糊样式
             sdv_header.loadImage("${item.headPic}${BusiConstant.OSS_BLUR_02}", 56f, 56f)
             val nicknameSb = SpannableString(item.nickName)
-            val introduceSb = SpannableString("${item.visitTime} 第${item.visitCount}次访问")
             nicknameSb.setSpan(
                 MaskFilterSpan(BlurMaskFilter(10f, BlurMaskFilter.Blur.NORMAL)),
                 0, nicknameSb.length, Spanned.SPAN_INCLUSIVE_EXCLUSIVE
             );
-            introduceSb.setSpan(
-                MaskFilterSpan(BlurMaskFilter(10f, BlurMaskFilter.Blur.NORMAL)),
-                0, introduceSb.length, Spanned.SPAN_INCLUSIVE_EXCLUSIVE
-            );
-            tv_introduce.text = introduceSb
             tv_nickname.text = nicknameSb
-            tv_introduce.setLayerType(View.LAYER_TYPE_SOFTWARE,null);
-            tv_nickname.setLayerType(View.LAYER_TYPE_SOFTWARE,null);
+            tv_nickname.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         } else {
             //完全样式
             sdv_header.loadImage(item.headPic, 56f, 56f)
-            tv_introduce.text = "${item.visitTime} 第${item.visitCount}次访问"
             tv_nickname.text = item.nickName
         }
+        tv_introduce.text = "${item.visitTime} 第${item.visitCount}次访问"
 
 
 
@@ -104,18 +97,7 @@ class WatchAdapter : BaseQuickAdapter<WatchHistoryBean, BaseViewHolder>(R.layout
             } else {
                 tv_sex.setCompoundDrawables(null, null, null, null)
             }
-            if (maxCount != -1 && adapterPosition >= maxCount && needBlur) {
-                //模糊效果
-                val sexSb = SpannableString("${age}")
-                sexSb.setSpan(
-                    MaskFilterSpan(BlurMaskFilter(10f, BlurMaskFilter.Blur.NORMAL)),
-                    0, sexSb.length, Spanned.SPAN_INCLUSIVE_EXCLUSIVE
-                )
-                tv_sex.text = sexSb
-                tv_sex.setLayerType(View.LAYER_TYPE_SOFTWARE,null);
-            } else {
-                tv_sex.text = "${age}"
-            }
+            tv_sex.text = "${age}"
 
         }
 
