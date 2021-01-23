@@ -322,18 +322,6 @@ class HomePageInformationFragment : BaseFragment() {
 
     private fun showViewByData(bean: HomePageInfo) {
 
-        if (mHomePageViewModel.mineHomePage&&bean.perfectGuide?.guide == true) {
-            rl_guide_info.show()
-            tv_guide_info_per.text = "资料完整度：${bean.perfection}%"
-            rl_guide_info.onClickNew {
-                val intent = Intent(requireActivity(), EditInfoActivity::class.java)
-                if (ForceUtils.activityMatch(intent)) {
-                    startActivity(intent)
-                }
-            }
-        } else {
-            rl_guide_info.hide()
-        }
         isSameSex = bean.sex == bean.currSexType
         //家乡
         val homeTownStr = StringBuilder()

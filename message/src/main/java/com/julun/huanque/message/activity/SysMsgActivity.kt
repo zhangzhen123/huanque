@@ -1,6 +1,5 @@
 package com.julun.huanque.message.activity
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
@@ -14,9 +13,8 @@ import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.bean.beans.*
-import com.julun.huanque.common.bean.events.LoginOutEvent
-import com.julun.huanque.common.bean.events.SystemMessageRefreshBean
 import com.julun.huanque.common.constant.*
+import com.julun.huanque.common.helper.AppHelper
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.suger.*
@@ -35,7 +33,6 @@ import io.rong.imlib.model.Conversation
 import io.rong.imlib.model.Message
 import io.rong.message.TextMessage
 import kotlinx.android.synthetic.main.activity_sys_msg.*
-import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.backgroundResource
 
 /**
@@ -289,92 +286,94 @@ class SysMsgActivity : BaseActivity() {
         if (touchType.isEmpty()) {
             return
         }
+        AppHelper.openTouch(sysBean.touchType,sysBean.touchValue)
+        //RN跳转的保留
         when (touchType) {
-            MessageConstants.ACTION_URL -> {
-                //H5
-                WebActivity.startWeb(this, sysBean.touchValue)
-            }
-            MessageConstants.OfficialCertPage -> {
+//            TouchTypeConstants.ACTION_URL -> {
+//                //H5
+//                WebActivity.startWeb(this, sysBean.touchValue)
+//            }
+            TouchTypeConstants.OfficialCertPage -> {
                 //跳转官方认证
                 RNPageActivity.start(this, RnConstant.OFFICIAL_CERT_PAGE)
             }
-            MessageConstants.AnchorCertPage -> {
+            TouchTypeConstants.AnchorCertPage -> {
                 //跳转到主播认证
                 RNPageActivity.start(this, RnConstant.ANCHOR_CERT_PAGE)
             }
-            MessageConstants.EditMineHomePage -> {
-                //跳转到我的资料编辑
-//                RNPageActivity.start(this, RnConstant.EDIT_MINE_HOMEPAGE)
-                ARouter.getInstance().build(ARouterConstant.EDIT_INFO_ACTIVITY).navigation()
-            }
-            MessageConstants.RoyalPage -> {
+//            TouchTypeConstants.EditMineHomePage -> {
+//                //跳转到我的资料编辑
+////                RNPageActivity.start(this, RnConstant.EDIT_MINE_HOMEPAGE)
+//                ARouter.getInstance().build(ARouterConstant.EDIT_INFO_ACTIVITY).navigation()
+//            }
+            TouchTypeConstants.RoyalPage -> {
                 //跳转到贵族
                 RNPageActivity.start(this, RnConstant.ROYAL_PAGE)
             }
-            MessageConstants.MineHomePage -> {
-                //跳转到我的主页
-                val bundle = Bundle().apply {
-                    putLong(ParamConstant.UserId, SessionUtils.getUserId())
-                }
-                ARouter.getInstance().build(ARouterConstant.HOME_PAGE_ACTIVITY).with(bundle).navigation()
-            }
+//            TouchTypeConstants.MineHomePage -> {
+//                //跳转到我的主页
+//                val bundle = Bundle().apply {
+//                    putLong(ParamConstant.UserId, SessionUtils.getUserId())
+//                }
+//                ARouter.getInstance().build(ARouterConstant.HOME_PAGE_ACTIVITY).with(bundle).navigation()
+//            }
 
-            MessageConstants.ACTION_None -> {
-            }
-            MessageConstants.PlumFlower -> {
-                //花魁榜
-                val bundle = Bundle()
-                bundle.putString(ParamConstant.TYPE, sysBean.touchValue)
-                ARouter.getInstance().build(ARouterConstant.PLUM_FLOWER_ACTIVITY).with(bundle).navigation()
-            }
-            MessageConstants.AccostWords -> {
-                //搭讪常用语
-                UsefulWordActivity.newInstance(this)
-            }
-            MessageConstants.FateCome -> {
-                //缘分来了页面
-                YuanFenActivity.newInstance(this, 0)
-            }
-            MessageConstants.Message -> {
-                //消息列表页面
-                ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY)
-                    .withInt(IntentParamKey.TARGET_INDEX.name, MainPageIndexConst.MESSAGE_FRAGMENT_INDEX).navigation()
-            }
-            MessageConstants.FriendHome -> {
-                //交友页面
-                ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY)
-                    .withInt(IntentParamKey.TARGET_INDEX.name, MainPageIndexConst.MAIN_FRAGMENT_INDEX).navigation()
-            }
-            MessageConstants.PrivateChat -> {
-                //跳转私信
-                try {
-                    PrivateConversationActivity.newInstance(this, sysBean.touchValue.toLong())
-                } catch (e: java.lang.Exception) {
-                    e.printStackTrace()
-                }
-            }
-            MessageConstants.PostDetail -> {
-                //动态详情
-                try {
-                    val bundle = Bundle().apply {
-                        putLong(IntentParamKey.POST_ID.name, sysBean.touchValue.toLong())
-                    }
-                    ARouter.getInstance().build(ARouterConstant.DYNAMIC_DETAIL_ACTIVITY).with(bundle).navigation()
-                } catch (e: java.lang.Exception) {
-                    e.printStackTrace()
-                }
-            }
-            MessageConstants.AuthTagDetail -> {
-                try {
-                    val bundle = Bundle()
-                    bundle.putInt(ManagerTagCode.TAG_INFO, sysBean.touchValue.toInt())
-                    bundle.putBoolean("isMe", true)
-                    ARouter.getInstance().build(ARouterConstant.AUTH_TAG_PIC_ACTIVITY).with(bundle).navigation()
-                } catch (e: java.lang.Exception) {
-                    e.printStackTrace()
-                }
-
-            }
+//            TouchTypeConstants.ACTION_None -> {
+//            }
+//            TouchTypeConstants.PlumFlower -> {
+//                //花魁榜
+//                val bundle = Bundle()
+//                bundle.putString(ParamConstant.TYPE, sysBean.touchValue)
+//                ARouter.getInstance().build(ARouterConstant.PLUM_FLOWER_ACTIVITY).with(bundle).navigation()
+//            }
+//            TouchTypeConstants.AccostWords -> {
+//                //搭讪常用语
+//                UsefulWordActivity.newInstance(this)
+//            }
+//            TouchTypeConstants.FateCome -> {
+//                //缘分来了页面
+//                YuanFenActivity.newInstance(this, 0)
+//            }
+//            TouchTypeConstants.Message -> {
+//                //消息列表页面
+//                ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY)
+//                    .withInt(IntentParamKey.TARGET_INDEX.name, MainPageIndexConst.MESSAGE_FRAGMENT_INDEX).navigation()
+//            }
+//            TouchTypeConstants.FriendHome -> {
+//                //交友页面
+//                ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY)
+//                    .withInt(IntentParamKey.TARGET_INDEX.name, MainPageIndexConst.MAIN_FRAGMENT_INDEX).navigation()
+//            }
+//            TouchTypeConstants.PrivateChat -> {
+//                //跳转私信
+//                try {
+//                    PrivateConversationActivity.newInstance(this, sysBean.touchValue.toLong())
+//                } catch (e: java.lang.Exception) {
+//                    e.printStackTrace()
+//                }
+//            }
+//            TouchTypeConstants.PostDetail -> {
+//                //动态详情
+//                try {
+//                    val bundle = Bundle().apply {
+//                        putLong(IntentParamKey.POST_ID.name, sysBean.touchValue.toLong())
+//                    }
+//                    ARouter.getInstance().build(ARouterConstant.DYNAMIC_DETAIL_ACTIVITY).with(bundle).navigation()
+//                } catch (e: java.lang.Exception) {
+//                    e.printStackTrace()
+//                }
+//            }
+//            TouchTypeConstants.AuthTagDetail -> {
+//                try {
+//                    val bundle = Bundle()
+//                    bundle.putInt(ManagerTagCode.TAG_INFO, sysBean.touchValue.toInt())
+//                    bundle.putBoolean("isMe", true)
+//                    ARouter.getInstance().build(ARouterConstant.AUTH_TAG_PIC_ACTIVITY).with(bundle).navigation()
+//                } catch (e: java.lang.Exception) {
+//                    e.printStackTrace()
+//                }
+//
+//            }
 //            else -> {
 //                ToastUtils.show("没有记录的action类型 -> ${touchType}")
 //            }

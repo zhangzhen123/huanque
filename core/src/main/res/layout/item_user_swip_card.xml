@@ -18,10 +18,10 @@
     <!--        app:cardCornerRadius="8dp">-->
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/bg_white_10"
-        android:orientation="vertical">
+        android:background="@drawable/bg_white_10">
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/card_img_bg"
@@ -39,8 +39,8 @@
             app:layout_constraintDimensionRatio="1"
             app:layout_constraintTop_toTopOf="parent"
             app:placeholderImage="@drawable/logo_nearby_placeholder_bg"
-            app:roundedCornerRadius="@dimen/dimen_10"
-            app:placeholderImageScaleType="fitXY" />
+            app:placeholderImageScaleType="fitXY"
+            app:roundedCornerRadius="@dimen/dimen_10" />
 
         <View
             android:id="@+id/shadow_view"
@@ -224,12 +224,45 @@
             tools:visibility="visible" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <RelativeLayout
+        android:id="@+id/rl_guide_photo"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_40"
+        android:layout_marginStart="@dimen/dimen_15"
+        android:layout_marginTop="@dimen/dimen_36"
+        android:layout_marginEnd="@dimen/dimen_15"
+        android:background="@drawable/bg_solid_grey_btn3"
+        android:visibility="visible"
+        tools:visibility="visible">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/dimen_10"
+            android:text="封面照片>3张，即可查看TA的全部照片"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:layout_width="@dimen/dimen_10"
+            android:layout_height="@dimen/dimen_25"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/dimen_10"
+            android:gravity="center"
+            android:scaleType="fitCenter"
+            android:src="@mipmap/icon_forward_white_01" />
+
+    </RelativeLayout>
+
     <ImageView
         android:id="@+id/iv_dislike"
         android:layout_width="@dimen/dimen_80"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
-        android:layout_margin="50dp"
+        android:layout_margin="15dp"
         android:alpha="0"
         android:src="@mipmap/icon_card_unlike" />
 
@@ -238,7 +271,7 @@
         android:layout_width="@dimen/dimen_80"
         android:layout_height="wrap_content"
         android:layout_gravity="start"
-        android:layout_margin="@dimen/dimen_50"
+        android:layout_margin="@dimen/dimen_15"
         android:alpha="0"
         android:src="@mipmap/icon_card_like" />
 
@@ -251,6 +284,7 @@
         android:layout_marginBottom="@dimen/dimen_65"
         android:src="@mipmap/icon_super_like"
         android:visibility="gone" />
+
 
     <!--    </androidx.cardview.widget.CardView>-->
 </com.julun.huanque.common.widgets.cardlib.SwipeTouchLayout>

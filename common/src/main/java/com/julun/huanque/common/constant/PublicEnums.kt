@@ -306,10 +306,11 @@ object ByteConstants {
 /**
  * 消息常量类
  */
-object MessageConstants {
+object TouchTypeConstants {
     //跳转H5
     const val ACTION_URL = "Url"
-
+    //直播间
+    const val LiveRoom = "LiveRoom"
     //跳转主页
     const val ACTION_MAIN_PAGE = "main_page"
 
@@ -336,16 +337,20 @@ object MessageConstants {
 
     //好友类型
     //关注
-    const val FRIEDN_FOLLOW = "Follow"
+    const val FRIEND_FOLLOW = "Follow"
 
     //成为好友
-    const val FRIEDN = "Friend"
+    const val FRIEND = "Friend"
 
     //成为密友
-    const val FRIEDN_INTIMATE = "IntimateFriend"
+    const val FRIEND_INTIMATE = "IntimateFriend"
 
     //亲密度等级提升
-    const val FRIEDN_LEVEL_UP = "IntimateLevelUp"
+    const val FRIEND_LEVEL_UP = "IntimateLevelUp"
+
+    const val SystemNotice = "SystemNotice" //（打开系统通知页面）
+
+    const val FriendNotice = "FriendNotice"// (打开好友通知页面)
 
     //花魁榜
     const val PlumFlower = "PlumFlower"
@@ -368,9 +373,6 @@ object MessageConstants {
     //动态详情
     const val PostDetail = "PostDetail"
 
-    //标签详情
-    const val AuthTagDetail = "AuthTagDetail"
-
     //个性签名页面
     const val MySign = "MySign"
 
@@ -387,6 +389,23 @@ object MessageConstants {
     const val School = "School"
 
     const val Professional = "Professional"
+
+    //我喜欢的标签
+    const val MyLikeTag = "MyLikeTag"
+
+    //我拥有的标签
+    const val MyAuthTag = "MyAuthTag"
+
+    //标签图片查看预览
+    const val UserTagPicPreview = "UserTagPicPreview"
+
+    //真人图标
+    const val RealHead = "RealHead"
+
+    //标签详情
+    const val AuthTagDetail = "AuthTagDetail"
+    //某人的指定标签详情
+    const val AuthTagPic = "AuthTagPic"
 
 }
 
@@ -612,44 +631,46 @@ object MainPageIndexConst {
     const val MINE_FRAGMENT_INDEX = 4
 }
 
-object PushDataActionType {
-    //这个类型测试用
-    const val EditMineHomePage = "EditMineHomePage"
-    const val LiveRoom = "LiveRoom"
-    const val Url = "Url"//打开指定url
-    const val PrivateChat = "PrivateChat"//定位到私信
-    const val OfficialCertPage = "OfficialCertPage"//跳转到官方认证页面
-
-    const val AnchorCertPage = "AnchorCertPage"//跳转到主播认证页面
-    const val MineHomePage = "MineHomePage"//跳转到我的主页
-    const val SystemNotice = "SystemNotice" //（打开系统通知页面）
-    const val FriendNotice = "FriendNotice"// (打开好友通知页面)
-
-    //Yesterday：昨日榜单Tab，
-    //Today:今日榜单Tab（暂无这样的跳转需求），
-    //Famous: 名人榜单Tab
-    const val PlumFlower = "PlumFlower"//（跳转到今日花魁）
-
-    const val AccostWords = "AccostWords"//定位到搭讪常用语页面
-
-    //缘分来了
-    const val FateCome = "FateCome"
-
-    //消息列表
-    const val Message = "Message"
-
-    //交友页面
-    const val FriendHome = "FriendHome"
-
-    //我喜欢的标签
-    const val MyLikeTag = "MyLikeTag"
-
-    //我拥有的标签
-    const val MyAuthTag = "MyAuthTag"
-
-    //真人图标
-    const val RealHead = "RealHead"
-}
+//object PushDataActionType {
+//    //这个类型测试用
+//    const val EditMineHomePage = "EditMineHomePage"
+//    const val LiveRoom = "LiveRoom"
+//    const val Url = "Url"//打开指定url
+//    const val PrivateChat = "PrivateChat"//定位到私信
+//    const val OfficialCertPage = "OfficialCertPage"//跳转到官方认证页面
+//
+//    const val AnchorCertPage = "AnchorCertPage"//跳转到主播认证页面
+//    const val MineHomePage = "MineHomePage"//跳转到我的主页
+//    const val SystemNotice = "SystemNotice" //（打开系统通知页面）
+//    const val FriendNotice = "FriendNotice"// (打开好友通知页面)
+//
+//    //Yesterday：昨日榜单Tab，
+//    //Today:今日榜单Tab（暂无这样的跳转需求），
+//    //Famous: 名人榜单Tab
+//    const val PlumFlower = "PlumFlower"//（跳转到今日花魁）
+//
+//    const val AccostWords = "AccostWords"//定位到搭讪常用语页面
+//
+//    //缘分来了
+//    const val FateCome = "FateCome"
+//
+//    //消息列表
+//    const val Message = "Message"
+//
+//    //交友页面
+//    const val FriendHome = "FriendHome"
+//
+//    //我喜欢的标签
+//    const val MyLikeTag = "MyLikeTag"
+//
+//    //我拥有的标签
+//    const val MyAuthTag = "MyAuthTag"
+//
+//    //真人图标
+//    const val RealHead = "RealHead"
+//    //某人的指定标签详情
+//    const val AuthTagPic = "AuthTagPic"
+//}
 
 object HomePageOnlineStatus {
     const val Online = "Online"

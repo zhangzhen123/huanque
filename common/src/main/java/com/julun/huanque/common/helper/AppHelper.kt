@@ -10,6 +10,7 @@ import android.text.TextUtils
 import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.BuildConfig
 import com.julun.huanque.common.R
+import com.julun.huanque.common.bean.beans.UserTagBean
 import com.julun.huanque.common.bean.events.RHVerifyResult
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.init.CommonInit
@@ -20,6 +21,7 @@ import com.julun.huanque.common.utils.MD5Util
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
 import org.greenrobot.eventbus.EventBus
+import org.jetbrains.anko.startActivity
 
 
 /**
@@ -213,17 +215,17 @@ object AppHelper {
      */
     fun openTouch(touchType: String, touchValue: String = "", activity: Activity? = null) {
         when (touchType) {
-            PushDataActionType.EditMineHomePage -> {
+            TouchTypeConstants.EditMineHomePage -> {
                 ARouter.getInstance().build(ARouterConstant.EDIT_INFO_ACTIVITY).navigation(activity)
             }
-            PushDataActionType.Url -> {
+            TouchTypeConstants.ACTION_URL -> {
                 logger("开始跳转到网页:" + touchValue)
                 val extra = Bundle()
                 extra.putString(BusiConstant.WEB_URL, touchValue)
                 extra.putBoolean(IntentParamKey.EXTRA_FLAG_GO_HOME.name, false)
                 ARouter.getInstance().build(ARouterConstant.WEB_ACTIVITY).with(extra).navigation(activity)
             }
-            PushDataActionType.LiveRoom -> {
+            TouchTypeConstants.LiveRoom -> {
                 val programId: Long = touchValue.toLongOrNull() ?: return
                 logger("开始跳转到房间:$programId")
                 val bundle = Bundle().apply {
@@ -232,105 +234,144 @@ object AppHelper {
                 }
                 ARouter.getInstance().build(ARouterConstant.PLAYER_ACTIVITY).with(bundle).navigation(activity)
             }
-            PushDataActionType.MineHomePage -> {
+            TouchTypeConstants.MineHomePage -> {
                 val bundle = Bundle().apply {
                     var userId = touchValue.toLongOrNull()
-                    if (userId != null) {
+                    if (userId == null) {
                         userId = SessionUtils.getUserId()
                     }
-                    if (userId != null) {
-                        putLong(ParamConstant.UserId, userId)
-                    }
+                    putLong(ParamConstant.UserId, userId)
                 }
                 ARouter.getInstance().build(ARouterConstant.HOME_PAGE_ACTIVITY).with(bundle).navigation()
             }
-            PushDataActionType.AnchorCertPage -> {
+            TouchTypeConstants.AnchorCertPage -> {
 
             }
-            PushDataActionType.FriendNotice -> {
+            TouchTypeConstants.FriendNotice -> {
                 ARouter.getInstance().build(ARouterConstant.SysMsgActivity).with(Bundle().apply {
                     this.putString(ParamConstant.TYPE, touchValue)
                 }).navigation()
             }
-            PushDataActionType.SystemNotice -> {
+            TouchTypeConstants.SystemNotice -> {
                 ARouter.getInstance().build(ARouterConstant.SysMsgActivity).with(Bundle().apply {
                     this.putString(ParamConstant.TYPE, touchValue)
                 }).navigation()
 
             }
-            PushDataActionType.OfficialCertPage -> {
+            TouchTypeConstants.OfficialCertPage -> {
             }
-            PushDataActionType.PlumFlower -> {
+            TouchTypeConstants.PlumFlower -> {
                 ARouter.getInstance().build(ARouterConstant.PLUM_FLOWER_ACTIVITY).with(Bundle().apply {
                     this.putString(ParamConstant.TYPE, touchValue)
                 }).navigation()
             }
-            PushDataActionType.PrivateChat -> {
+            TouchTypeConstants.PrivateChat -> {
                 val targetId = touchValue.toLongOrNull() ?: return
                 ARouter.getInstance().build(ARouterConstant.PRIVATE_CONVERSATION_ACTIVITY).with(Bundle().apply {
                     this.putLong(ParamConstant.TARGET_USER_ID, targetId)
                 }).navigation()
             }
-            PushDataActionType.AccostWords -> {
+            TouchTypeConstants.AccostWords -> {
                 ARouter.getInstance().build(ARouterConstant.USE_FUL_WORD_ACTIVITY).navigation()
             }
-            PushDataActionType.FateCome -> {
+            TouchTypeConstants.FateCome -> {
                 //缘分页面
                 ARouter.getInstance().build(ARouterConstant.YUAN_FEN_ACTIVITY).navigation()
             }
-            PushDataActionType.Message -> {
+            TouchTypeConstants.Message -> {
                 //消息列表
                 ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY).with(Bundle().apply {
                     putInt(IntentParamKey.TARGET_INDEX.name, MainPageIndexConst.MESSAGE_FRAGMENT_INDEX)
                 }).navigation()
             }
-            PushDataActionType.FriendHome -> {
+            TouchTypeConstants.FriendHome -> {
                 //交友页面
                 ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY).with(Bundle().apply {
                     putInt(IntentParamKey.TARGET_INDEX.name, MainPageIndexConst.MAIN_FRAGMENT_INDEX)
                 }).navigation()
             }
-            PushDataActionType.MyLikeTag -> {
+            TouchTypeConstants.MyLikeTag -> {
                 //我喜欢的标签
                 ARouter.getInstance().build(ARouterConstant.MY_TAGS_ACTIVITY).with(Bundle().apply {
                     putString(ManagerTagCode.MANAGER_PAGER_TYPE, MyTagType.LIKE)
                 }).navigation()
             }
-            PushDataActionType.MyAuthTag -> {
+            TouchTypeConstants.MyAuthTag -> {
                 //我拥有的标签
                 ARouter.getInstance().build(ARouterConstant.MY_TAGS_ACTIVITY).with(Bundle().apply {
                     putString(ManagerTagCode.MANAGER_PAGER_TYPE, MyTagType.AUTH)
                 }).navigation()
             }
-            MessageConstants.MySign -> {
+            TouchTypeConstants.UserTagPicPreview -> {
+                val strs = touchValue.split(",")
+                val useId = strs.getOrNull(0)?.toLongOrNull() ?: return
+                val tagId = strs.getOrNull(1)?.toIntOrNull() ?: return
+                //我拥有的标签
+                ARouter.getInstance().build(ARouterConstant.TAG_USER_PICS_ACTIVITY).with(Bundle().apply {
+                    putLong(ManagerTagCode.TAG_INFO,useId)
+                    putInt(IntentParamKey.USER_ID.name,tagId)
+                }).navigation()
+            }
+            TouchTypeConstants.AuthTagPic -> {
+                val strs = touchValue.split(",")
+                val useId = strs.getOrNull(0)?.toLongOrNull() ?: return
+                val tagId = strs.getOrNull(1)?.toIntOrNull() ?: return
+                //我拥有的标签
+                val tag = UserTagBean(tagId = tagId)
+                ARouter.getInstance().build(ARouterConstant.TAG_PICS_ACTIVITY).with(Bundle().apply {
+                    putLong(IntentParamKey.USER_ID.name, useId)
+                    putSerializable(ManagerTagCode.TAG_INFO, tag)
+                }).navigation()
+            }
+            TouchTypeConstants.MySign -> {
                 //个性签名
                 ARouter.getInstance().build(ARouterConstant.UpdateSignActivity).navigation()
             }
-            MessageConstants.Voice -> {
+            TouchTypeConstants.Voice -> {
                 //语音签名
                 ARouter.getInstance().build(ARouterConstant.VOICE_SIGN_ACTIVITY).navigation()
             }
-            MessageConstants.HomeTown -> {
+            TouchTypeConstants.HomeTown -> {
                 //家乡
                 ARouter.getInstance().build(ARouterConstant.HomeTownActivity).navigation()
             }
-            MessageConstants.Birthday -> {
+            TouchTypeConstants.Birthday -> {
                 //生日
                 ARouter.getInstance().build(ARouterConstant.UpdateBirthdayActivity).navigation()
             }
-            MessageConstants.Figure -> {
+            TouchTypeConstants.Figure -> {
                 //身材
                 ARouter.getInstance().build(ARouterConstant.FigureActivity).navigation()
             }
-            MessageConstants.School -> {
+            TouchTypeConstants.School -> {
                 //学校
                 ARouter.getInstance().build(ARouterConstant.SchoolActivity).navigation()
             }
-            MessageConstants.Professional -> {
+            TouchTypeConstants.Professional -> {
                 //职业
                 ARouter.getInstance().build(ARouterConstant.ProfessionActivity).navigation()
             }
-            PushDataActionType.RealHead -> {
+            TouchTypeConstants.PostDetail -> {
+                //动态详情
+                try {
+                    val bundle = Bundle().apply {
+                        putLong(IntentParamKey.POST_ID.name, touchValue.toLong())
+                    }
+                    ARouter.getInstance().build(ARouterConstant.DYNAMIC_DETAIL_ACTIVITY).with(bundle).navigation()
+                } catch (e: java.lang.Exception) {
+                    e.printStackTrace()
+                }
+            }
+            TouchTypeConstants.AuthTagDetail -> {
+
+                val tagID = touchValue.toIntOrNull() ?: return
+                val bundle = Bundle()
+                bundle.putInt(ManagerTagCode.TAG_INFO, tagID)
+                bundle.putBoolean("isMe", true)
+                ARouter.getInstance().build(ARouterConstant.AUTH_TAG_PIC_ACTIVITY).with(bundle).navigation()
+
+            }
+            TouchTypeConstants.RealHead -> {
                 //真人
                 val service = ARouter.getInstance().build(ARouterConstant.REALNAME_SERVICE)
                     .navigation() as? IRealNameService

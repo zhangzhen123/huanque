@@ -35,7 +35,7 @@ class NearbyPicListAdapter : BaseQuickAdapter<HomePagePicBean, BaseViewHolder>(R
 //            .build()
 //        sdv.hierarchy = hierarchy
         if(item.blur){
-            ImageUtils.loadImageWithBlur(sdv,item.coverPic + BusiConstant.OSS_120, 2, 6,dp2px(28),dp2px(28))
+            ImageUtils.loadImageWithBlur(sdv,item.coverPic + BusiConstant.OSS_120, 2, 10,dp2px(28),dp2px(28))
         }else{
             sdv.loadImage(item.coverPic + BusiConstant.OSS_120, 28f, 28f)
         }

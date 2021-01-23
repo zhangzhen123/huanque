@@ -86,15 +86,15 @@ object RPushUtil {
             val bean = JsonUtil.deserializeAsObject<PushAppData>(jsonString, PushAppData::class.java)
 
             when (bean.touchType) {
-                PushDataActionType.EditMineHomePage -> {
+                TouchTypeConstants.EditMineHomePage -> {
 //                    startOpenRnPage(context, RnConstant.EDIT_MINE_HOMEPAGE)
                     ARouter.getInstance().build(ARouterConstant.EDIT_INFO_ACTIVITY).navigation()
                 }
-                PushDataActionType.Url -> {
+                TouchTypeConstants.ACTION_URL -> {
                     ULog.i(TAG, "开始跳转到网页:" + bean.touchValue)
                     startOpenLink(context, bean.touchValue)
                 }
-                PushDataActionType.LiveRoom -> {
+                TouchTypeConstants.LiveRoom -> {
                     val programId: Long? = bean.touchValue.toLongOrNull()
                     ULog.i(TAG, "开始跳转到房间:$programId")
                     if (programId != null) {
@@ -103,56 +103,56 @@ object RPushUtil {
                         shouldOpenMain(context)
                     }
                 }
-                PushDataActionType.MineHomePage -> {
+                TouchTypeConstants.MineHomePage -> {
                     val bundle = Bundle().apply {
                         putLong(ParamConstant.UserId, SessionUtils.getUserId())
                     }
                     ARouter.getInstance().build(ARouterConstant.HOME_PAGE_ACTIVITY).with(bundle).navigation()
                 }
-                PushDataActionType.AnchorCertPage -> {
+                TouchTypeConstants.AnchorCertPage -> {
                     startOpenRnPage(context, RnConstant.ANCHOR_CERT_PAGE)
                 }
-                PushDataActionType.FriendNotice -> {
+                TouchTypeConstants.FriendNotice -> {
                     startActivityByARouter(context, ARouterConstant.SysMsgActivity, bundle = Bundle().apply {
                         this.putString(ParamConstant.TYPE, bean.touchValue)
                     }, goHome = true)
 
                 }
-                PushDataActionType.SystemNotice -> {
+                TouchTypeConstants.SystemNotice -> {
                     startActivityByARouter(context, ARouterConstant.SysMsgActivity, bundle = Bundle().apply {
                         this.putString(ParamConstant.TYPE, bean.touchValue)
                     }, goHome = true)
 
                 }
-                PushDataActionType.OfficialCertPage -> {
+                TouchTypeConstants.OfficialCertPage -> {
                     startOpenRnPage(context, RnConstant.OFFICIAL_CERT_PAGE)
                 }
-                PushDataActionType.PlumFlower -> {
+                TouchTypeConstants.PlumFlower -> {
                     startActivityByARouter(context, ARouterConstant.PLUM_FLOWER_ACTIVITY, bundle = Bundle().apply {
                         this.putString(ParamConstant.TYPE, bean.touchValue)
                     }, goHome = true)
                 }
-                PushDataActionType.PrivateChat -> {
+                TouchTypeConstants.PrivateChat -> {
                     val targetId = bean.touchValue.toLongOrNull() ?: return
                     startActivityByARouter(context, ARouterConstant.PRIVATE_CONVERSATION_ACTIVITY, bundle = Bundle().apply {
                         this.putLong(ParamConstant.TARGET_USER_ID, targetId)
                     }, goHome = true)
                 }
-                PushDataActionType.AccostWords -> {
+                TouchTypeConstants.AccostWords -> {
                     startActivityByARouter(context, ARouterConstant.USE_FUL_WORD_ACTIVITY, goHome = true)
 
                 }
-                PushDataActionType.FateCome -> {
+                TouchTypeConstants.FateCome -> {
                     //缘分页面
                     startActivityByARouter(context, ARouterConstant.YUAN_FEN_ACTIVITY, goHome = true)
                 }
-                PushDataActionType.Message -> {
+                TouchTypeConstants.Message -> {
                     //消息列表
                     val bundle = Bundle()
                     bundle.putInt(IntentParamKey.TARGET_INDEX.name, MainPageIndexConst.MESSAGE_FRAGMENT_INDEX)
                     startActivityByARouter(context, ARouterConstant.MAIN_ACTIVITY, bundle = bundle, goHome = false)
                 }
-                PushDataActionType.FriendHome -> {
+                TouchTypeConstants.FriendHome -> {
                     //交友页面
                     val bundle = Bundle()
                     bundle.putInt(IntentParamKey.TARGET_INDEX.name, MainPageIndexConst.MAIN_FRAGMENT_INDEX)

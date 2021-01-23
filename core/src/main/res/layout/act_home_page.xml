@@ -20,6 +20,7 @@
             android:background="#00000000"
             app:elevation="0px"
             app:layout_behavior="com.yuruiyin.appbarlayoutbehavior.AppBarLayoutBehavior"
+            tools:layout_behavior=""
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -71,7 +72,7 @@
                         android:layout_marginStart="@dimen/dimen_15"
                         android:layout_marginTop="@dimen/dimen_74"
                         android:layout_marginEnd="@dimen/dimen_15"
-                        android:background="@drawable/bg_solid_btn1"
+                        android:background="@drawable/bg_solid_grey_btn3"
                         android:visibility="gone"
                         app:layout_constraintTop_toTopOf="@+id/bga_banner"
                         tools:visibility="visible">
@@ -211,33 +212,47 @@
                         app:layout_constraintLeft_toLeftOf="parent" />
 
                     <RelativeLayout
-                        android:id="@+id/rl_guide_real"
+                        android:id="@+id/rl_guide_info"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/dimen_40"
-                        android:layout_marginStart="@dimen/dimen_15"
-                        android:layout_marginTop="@dimen/dimen_10"
-                        android:layout_marginEnd="@dimen/dimen_15"
-                        android:background="@drawable/bg_solid_btn1"
+                        app:layout_constraintTop_toBottomOf="@+id/bga_banner"
                         android:visibility="gone"
-                        app:layout_constraintTop_toBottomOf="@id/bga_banner"
-                        tools:visibility="visible">
-
+                        tools:visibility="visible"
+                        tools:background="#F3C060"
+                        android:layout_marginTop="@dimen/dimen_4">
                         <TextView
                             android:id="@+id/tv_guide_title"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
-                            android:layout_marginStart="@dimen/dimen_10"
+                            android:layout_marginStart="@dimen/dimen_15"
                             android:textColor="@color/white"
                             android:textSize="@dimen/sp_14"
+                            android:gravity="center"
+                            tools:drawableStart="@mipmap/icon_tag_star"
+                            android:drawablePadding="@dimen/dimen_5"
+                            android:text="完成资料可获得更精准的推荐"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tv_guide_title_02"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="@dimen/dimen_5"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sp_12"
+                            tools:text="20%"
+                            android:layout_toStartOf="@+id/iv_arrow"
                             android:textStyle="bold" />
 
                         <ImageView
+                            android:id="@+id/iv_arrow"
                             android:layout_width="@dimen/dimen_10"
                             android:layout_height="@dimen/dimen_25"
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
-                            android:layout_marginEnd="@dimen/dimen_10"
+                            android:layout_marginEnd="@dimen/dimen_15"
                             android:gravity="center"
                             android:scaleType="fitCenter"
                             android:src="@mipmap/icon_forward_white_01" />
@@ -252,7 +267,7 @@
                         app:layout_constraintBottom_toTopOf="@+id/view_line_bottom"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/rl_guide_real" />
+                        app:layout_constraintTop_toBottomOf="@+id/rl_guide_info" />
 
 
                     <TextView

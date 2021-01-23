@@ -17,6 +17,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.animation.addListener
@@ -266,7 +267,7 @@ class NearbyFragment : BaseLazyFragment() {
         val layoutManager = CardLayoutManager(mReItemTouchHelper, setting)
         mRecyclerView.layoutManager = layoutManager
         mRecyclerView.adapter = cardsAdapter
-        (mRecyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations=false
+        (mRecyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         cardsAdapter.setOnItemChildClickListener { adapter, view, position ->
             logger.info("setOnItemChildClickListener 点击了${position}")
             val item = cardsAdapter.getItemOrNull(position) ?: return@setOnItemChildClickListener
@@ -284,7 +285,7 @@ class NearbyFragment : BaseLazyFragment() {
                     //todo
                     logger.info("超级喜欢")
                 }
-                R.id.card_img -> {
+                R.id.cl_container -> {
                     val parentView = view.parent as? View ?: return@setOnItemChildClickListener
                     val tempBean = cardsAdapter.getItemOrNull(position) ?: return@setOnItemChildClickListener
 
@@ -386,6 +387,12 @@ class NearbyFragment : BaseLazyFragment() {
 //                        )
 //                    ).show(requireActivity(), "CommonDialogFragment")
                 }
+                R.id.rl_guide_photo -> {
+                    val intent = Intent(requireActivity(), EditInfoActivity::class.java)
+                    if (ForceUtils.activityMatch(intent)) {
+                        startActivity(intent)
+                    }
+                }
             }
         }
 
@@ -403,6 +410,7 @@ class NearbyFragment : BaseLazyFragment() {
             val mFilterTagFragment = FilterTagFragment()
             mFilterTagFragment.show(childFragmentManager, "FilterTagFragment")
         }
+
 
     }
 
@@ -432,6 +440,7 @@ class NearbyFragment : BaseLazyFragment() {
         val tvPicCount = holder.getViewOrNull<TextView>(R.id.tv_pic_count)
         val sdv = holder.getViewOrNull<SimpleDraweeView>(R.id.card_img)
         val sdvBg = holder.getViewOrNull<SimpleDraweeView>(R.id.card_img_bg)
+        val guidePhoto = holder.getViewOrNull<RelativeLayout>(R.id.rl_guide_photo)
         val picsAdapter = rvPics?.adapter as? NearbyPicListAdapter ?: return
         val selectIndex: Int = picsAdapter.data.indexOfFirst { it.coverPic == imageUrl }
         item.selectIndex = selectIndex
@@ -448,10 +457,12 @@ class NearbyFragment : BaseLazyFragment() {
             val pic = picsAdapter.getItemOrNull(selectIndex) ?: return
 
             if (pic.blur) {
+                guidePhoto?.show()
                 sdvBg.show()
                 sdv.hide()
-                ImageUtils.loadImageWithBlur(sdvBg, pic.coverPic, 2, 15)
+                ImageUtils.loadImageWithBlur(sdvBg, pic.coverPic, 2, 150)
             } else {
+                guidePhoto?.hide()
 //                sdv.loadImageNoResize(pic.coverPic)
                 showCardImage(sdv, sdvBg, pic.coverPic)
             }
@@ -1032,7 +1043,7 @@ class NearbyFragment : BaseLazyFragment() {
                     sdv.hierarchy.roundingParams = RoundingParams.fromCornersRadius(0f)
                     layoutParams.dimensionRatio = "h,${width}:${height}"
                     sdvBg.show()
-                    ImageUtils.loadImageWithBlur(sdvBg, coverPic, 2, 20)
+                    ImageUtils.loadImageWithBlur(sdvBg, coverPic, 2, 150)
                 } else {
                     sdv.hierarchy.roundingParams = RoundingParams.fromCornersRadius(dp2pxf(10))
                     layoutParams.dimensionRatio = "0"
@@ -1057,14 +1068,15 @@ class NearbyFragment : BaseLazyFragment() {
         object : BaseQuickAdapter<NearbyUserBean, BaseViewHolder>(R.layout.item_user_swip_card, list) {
             init {
                 addChildClickViewIds(
-                    R.id.card_img,
+                    R.id.cl_container,
                     R.id.ani_tag_01,
                     R.id.ani_tag_02,
                     R.id.ani_tag_03,
                     R.id.ani_tag_04,
                     R.id.iv_super_like,
                     R.id.tv_bottom_tips,
-                    R.id.iv_auth_tag
+                    R.id.iv_auth_tag,
+                    R.id.rl_guide_photo
                 )
             }
 
@@ -1107,6 +1119,8 @@ class NearbyFragment : BaseLazyFragment() {
                 }
                 val sdv = holder.getView<SimpleDraweeView>(R.id.card_img)
                 val sdvBg = holder.getView<SimpleDraweeView>(R.id.card_img_bg)
+                val guidePhoto = holder.getView<RelativeLayout>(R.id.rl_guide_photo)
+                guidePhoto.hide()
                 showCardImage(sdv, sdvBg, item.coverPic)
                 if (item.cardType == CardType.GUIDE) {
                     holder.setGone(R.id.iv_dislike, true)
@@ -1275,7 +1289,7 @@ class NearbyFragment : BaseLazyFragment() {
                     }
 
                     item.selectIndex = position
-                    selectPic(position, mPicsAdapter, sdv, sdvBg, tvPicCount)
+                    selectPic(position, mPicsAdapter, sdv, sdvBg, tvPicCount,guidePhoto)
                     val manager = rvPics.layoutManager as AutoCenterLayoutManager
                     manager.smoothScrollToPosition(rvPics, position)
                 }
@@ -1291,7 +1305,8 @@ class NearbyFragment : BaseLazyFragment() {
                 mPicsAdapter: NearbyPicListAdapter,
                 sdv: SimpleDraweeView,
                 sdvBg: SimpleDraweeView,
-                tv: TextView
+                tv: TextView,
+                guideView:View
             ) {
                 val dataList = mPicsAdapter.data
                 dataList.forEachIndexed { index, homePagePicBean ->
@@ -1306,8 +1321,10 @@ class NearbyFragment : BaseLazyFragment() {
                 if (pic.blur) {
                     sdv.hide()
                     sdvBg.show()
-                    ImageUtils.loadImageWithBlur(sdvBg, pic.coverPic, 2, 15)
+                    guideView.show()
+                    ImageUtils.loadImageWithBlur(sdvBg, pic.coverPic, 2, 150)
                 } else {
+                    guideView.hide()
 //                    sdv.loadImageNoResize(pic.coverPic)
                     showCardImage(sdv, sdvBg, pic.coverPic)
                 }

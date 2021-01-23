@@ -11,6 +11,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.Observer
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.module.LoadMoreModule
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
@@ -22,6 +23,7 @@ import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.bean.beans.UserTagBean
 import com.julun.huanque.common.bean.beans.TagUserPic
 import com.julun.huanque.common.bean.beans.TagUserPicListBean
+import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.IntentParamKey
 import com.julun.huanque.common.constant.ManagerTagCode
 import com.julun.huanque.common.widgets.layoutmanager.stacklayout.StackAlign
@@ -47,6 +49,8 @@ import org.jetbrains.anko.startActivity
  *@Description: TagUserPicsActivity 指定标签指定用户的图片集合查看
  *
  */
+
+@Route(path = ARouterConstant.TAG_USER_PICS_ACTIVITY)
 class TagUserPicsActivity : BaseVMActivity<TagUserPicsViewModel>() {
 
     companion object {

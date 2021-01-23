@@ -11,7 +11,6 @@ import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.BusiConstant
-import com.julun.huanque.common.constant.MessageConstants
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.helper.AppHelper
 import com.julun.huanque.common.helper.MixedHelper
