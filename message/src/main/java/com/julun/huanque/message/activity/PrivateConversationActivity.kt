@@ -6,6 +6,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.media.MediaPlayer
+import android.opengl.Visibility
 import android.os.Bundle
 import android.text.*
 import android.text.style.ForegroundColorSpan
@@ -230,7 +231,7 @@ class PrivateConversationActivity : BaseActivity() {
 
 
         val targetID = intent?.getLongExtra(ParamConstant.TARGET_USER_ID, 0)
-        if(targetID == mPrivateConversationViewModel?.targetIdData?.value){
+        if (targetID == mPrivateConversationViewModel?.targetIdData?.value) {
             //就是当前用户
             return
         }
@@ -599,16 +600,21 @@ class PrivateConversationActivity : BaseActivity() {
      */
     private fun showHint() {
         val price = mPrivateConversationViewModel?.msgFeeData?.value ?: return
-        if (price == 0L) {
+        val chatFree = mPrivateConversationViewModel.basicBean.value?.chatFree ?: ""
+        if (chatFree == BusiConstant.True) {
             //免费
             iv_msg_card.hide()
-            tv_free.hide()
+            tv_msg_card_count.hide()
+        } else {
+            //收费
+            iv_msg_card.show()
+        }
+        if (price == 0L) {
+            //免费
             edit_text.hint = "聊点什么吧"
             edit_text.setPadding(dp2px(7), dp2px(7), dp2px(15), dp2px(7))
         } else {
             //不免费
-            tv_free.hide()
-            iv_msg_card.show()
             edit_text.setPadding(dp2px(41), dp2px(7), dp2px(15), dp2px(7))
             val ticketCount = mPrivateConversationViewModel?.propData?.value?.chatTicketCnt ?: 0
             if (ticketCount > 0) {
@@ -625,7 +631,7 @@ class PrivateConversationActivity : BaseActivity() {
      */
     private fun updatePropView(voiceCount: Int, chatCount: Int) {
         showHint()
-        if (chatCount > 0) {
+        if (chatCount > 0 && iv_msg_card.visibility == View.VISIBLE) {
             //有聊天券
             tv_msg_card_count.show()
             tv_msg_card_count.text = "$chatCount"

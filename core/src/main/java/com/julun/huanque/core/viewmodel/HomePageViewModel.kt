@@ -2,9 +2,9 @@ package com.julun.huanque.core.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.events.LikeEvent
-import com.julun.huanque.common.bean.forms.EvaluateForm
 import com.julun.huanque.common.bean.forms.FriendIdForm
 import com.julun.huanque.common.bean.forms.UserIdForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
@@ -74,6 +74,9 @@ class HomePageViewModel : BaseViewModel() {
 
     //真人认证标识为
     val realPeopleState: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+
+    //显示心动引导弹窗
+    val showHeartGuideContent: MutableLiveData<String> by lazy { MutableLiveData<String>() }
 
     //是否有共享元素跳转
     var shareElement = false
@@ -255,13 +258,18 @@ class HomePageViewModel : BaseViewModel() {
     fun like(userId: Long) {
         viewModelScope.launch {
             request({
-                val result = service.like(FriendIdForm(userId)).dataConvert()
+                val result = service.like(FriendIdForm(userId)).dataConvert(intArrayOf(1501))
                 heartStatus.value = BusiConstant.True
                 homeInfoBean.value?.heartTouch = BusiConstant.True
                 EventBus.getDefault().post(LikeEvent(userId, true))
+            }, {
+                if (it is ResponseError) {
+                    if (it.busiCode == 1501) {
+                        //显示弹窗
+                        showHeartGuideContent.value = it.busiMessage
+                    }
+                }
             })
         }
-
     }
-
 }

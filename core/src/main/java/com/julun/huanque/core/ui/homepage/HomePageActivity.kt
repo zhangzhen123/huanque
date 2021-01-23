@@ -117,6 +117,8 @@ class HomePageActivity : BaseActivity() {
 
     private val audioPlayerManager: AudioPlayerManager by lazy { AudioPlayerManager(this) }
 
+    private var commonDialogFragment: CommonDialogFragment? = null
+
     //实人认证邀请弹窗
     private var mRealPeopleAttentionFragment: RealPeopleAttentionFragment? = null
 
@@ -726,6 +728,16 @@ class HomePageActivity : BaseActivity() {
         mHomePageViewModel.realPeopleState.observe(this, Observer {
             if (it == true) {
                 realHeader()
+            }
+        })
+        mHomePageViewModel.showHeartGuideContent.observe(this, Observer {
+            if (it != null) {
+                CommonDialogFragment.create(
+                    dialog = commonDialogFragment, title = "心动数已达到上限",
+                    content = it,
+                    imageRes = R.mipmap.bg_dialog_heart_full,
+                    okText = "我知道了"
+                ).show(this, "CommonDialogFragment")
             }
         })
 

@@ -3,6 +3,7 @@ package com.julun.huanque.message.adapter
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.widget.BaseAdapter
+import android.widget.ImageView
 import android.widget.TextView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.module.LoadMoreModule
@@ -18,6 +19,7 @@ import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.message.R
 import org.jetbrains.anko.backgroundResource
+import org.jetbrains.anko.imageResource
 import org.jetbrains.anko.textColor
 import java.math.RoundingMode
 import java.text.DecimalFormat
@@ -56,6 +58,27 @@ class HeartBeatAdapter : BaseQuickAdapter<SingleHeartBean, BaseViewHolder>(R.lay
                 tv_distance.text = "${distance}m ${item.area} /"
             }
         }
+
+        val iv_vehicle = holder.getView<ImageView>(R.id.iv_vehicle)
+        if (item.sameCity == BusiConstant.True) {
+            //同市
+            iv_vehicle.hide()
+        } else {
+            iv_vehicle.show()
+            if (distance == 0) {
+                iv_vehicle.imageResource = R.mipmap.icon_home_distance_rocket
+            } else if (distance < 100 * 1000) {
+                //显示汽车
+                iv_vehicle.imageResource = R.mipmap.icon_home_distance_car
+            } else if (distance > 800 * 1000) {
+                //显示飞机
+                iv_vehicle.imageResource = R.mipmap.icon_home_distance_air_plan
+            } else {
+                //显示动车
+                iv_vehicle.imageResource = R.mipmap.icon_home_distance_rail_way
+            }
+        }
+
 
 
         holder.setVisible(R.id.iv_heart, item.matched == BusiConstant.True)

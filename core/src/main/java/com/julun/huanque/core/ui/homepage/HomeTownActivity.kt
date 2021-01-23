@@ -159,6 +159,10 @@ class HomeTownActivity : BaseActivity() {
             //保存
             //判断数据是否变动过
             val currentCityId = mHomeTownEditViewModel.homeTownData.value?.homeTownId ?: return@onClickNew
+            if (currentCityId == 0) {
+                ToastUtils.show("请先选择家乡")
+                return@onClickNew
+            }
             val oldCityId = mHomeTownEditViewModel.oldHownTownId
 
             val currentFoodIds = mutableListOf<Long>()

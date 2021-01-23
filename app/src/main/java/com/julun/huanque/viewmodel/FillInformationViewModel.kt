@@ -154,6 +154,13 @@ class FillInformationViewModel : BaseViewModel() {
             request({
                 val result = userService.checkNickName(NicknameForm(chickName)).dataConvert()
                 nicknameEnable.value = true
+
+                val form = UpdateInformationForm()
+                //头像有变化
+                form.headPic = headerPicData.value ?: return@request
+                //昵称有变化
+                form.nickname = chickName
+                updateCard(form)
             })
         }
     }
@@ -163,6 +170,7 @@ class FillInformationViewModel : BaseViewModel() {
      * 更新用户卡片
      */
     fun updateCard(form: UpdateInformationForm) {
+
         viewModelScope.launch {
             request({
                 val result = userService.updateCard(form).dataConvert()

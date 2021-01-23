@@ -42,6 +42,7 @@ import com.julun.huanque.core.ui.homepage.EditInfoActivity
 import com.julun.huanque.core.ui.homepage.HomePageActivity
 import com.julun.huanque.core.ui.recharge.RechargeCenterActivity
 import com.julun.huanque.fragment.InviteCodeFragment
+import com.julun.huanque.fragment.UpdateInfoFragment
 import com.julun.huanque.message.activity.ContactsActivity
 import com.julun.huanque.ui.safe.AccountAndSecurityActivity
 import com.julun.huanque.viewmodel.InviteCodeViewModel
@@ -81,6 +82,9 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
 
     //邀请弹窗
     private val mInviteCodeFragment: InviteCodeFragment by lazy { InviteCodeFragment() }
+
+    //引导弹窗
+    private val mUpdateInfoFragment: UpdateInfoFragment by lazy { UpdateInfoFragment() }
 
     override fun getLayoutId() = R.layout.fragment_mine
 
@@ -185,7 +189,13 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
         }
     }
 
+    var showed = false
     private fun loadData(info: UserDetailInfo) {
+        //显示引导弹窗
+        if (!showed) {
+            mUpdateInfoFragment.show(childFragmentManager, "UpdateInfoFragment")
+            showed = true
+        }
         judgeRedPoint()
         loadGuide(info.perfectGuide, info.userBasic.perfection)
         SharedPreferencesUtils.commitString(SPParamKey.CUSTOMER_URL, info.customerUrl)

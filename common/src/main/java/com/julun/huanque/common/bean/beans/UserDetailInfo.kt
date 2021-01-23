@@ -35,7 +35,11 @@ data class UserBasic(
     var age: Int = 0,
     //真人图片地址
     var authMark: String = "",
-    var perfection: Int = 0
+    var perfection: Int = 0,
+    //是否是默认昵称
+    var nameDefault: String = "",
+    //头像是否默认
+    var headDefault: String = ""
 )
 
 data class PerfectGuideBean(
