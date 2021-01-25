@@ -44,20 +44,30 @@ class HeartBeatAdapter : BaseQuickAdapter<SingleHeartBean, BaseViewHolder>(R.lay
         val tv_distance = holder.getView<TextView>(R.id.tv_distance)
         val distance = item.distance
 
-
         if (distance == 0) {
             val starList = mutableListOf<String>("金星", "木星", "水星", "火星", "土星")
             val currentStar = starList.random()
             tv_distance.text = currentStar
         } else {
-            if (distance >= 1000) {
-                val df = DecimalFormat("#.0")
-                df.roundingMode = RoundingMode.DOWN
-                tv_distance.text = "${df.format(distance / 1000.0)}km ${item.area}"
+            if (item.sameCity == BusiConstant.True) {
+                if (distance == 0) {
+                    val starList = mutableListOf<String>("金星", "木星", "水星", "火星", "土星")
+                    val currentStar = starList.random()
+                    tv_distance.text = currentStar
+                } else {
+                    if (distance >= 1000) {
+                        val df = DecimalFormat("#.0")
+                        df.roundingMode = RoundingMode.DOWN
+                        tv_distance.text = "${df.format(distance / 1000.0)}km ${item.area}"
+                    } else {
+                        tv_distance.text = "${distance}m ${item.area} "
+                    }
+                }
             } else {
-                tv_distance.text = "${distance}m ${item.area} /"
+                tv_distance.text = item.area
             }
         }
+
 
         val iv_vehicle = holder.getView<ImageView>(R.id.iv_vehicle)
         if (item.sameCity == BusiConstant.True) {
