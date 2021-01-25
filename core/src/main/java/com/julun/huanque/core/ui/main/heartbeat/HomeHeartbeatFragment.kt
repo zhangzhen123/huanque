@@ -70,7 +70,7 @@ class HomeHeartbeatFragment : BaseFragment() {
         return R.layout.fragment_heartbeat_container
     }
 
-    val queueList: LinkedList<TplBean> = LinkedList()
+//    val queueList: LinkedList<TplBean> = LinkedList()
 
     private val viewModel: HeartbeatViewModel by viewModels()
 
@@ -95,26 +95,27 @@ class HomeHeartbeatFragment : BaseFragment() {
             override fun processMessage(messageList: List<TplBean>) {
                 // 需要做排队
                 logger.info("收到头条消息：${messageList.getOrNull(0)?.realTxt}")
-                queueList.addAll(messageList)
-                playRunway()
+//                queueList.addAll(messageList)
+                head_runway.loadLastRunwayMessage(messageList.firstOrNull()?:return)
+//                playRunway()
             }
         })
-        runway_headLine.onClickNew {
-            currentHeadline?.let { tpl ->
-                if (tpl.textTouch != null && tpl.context?.touchValue != null) {
-                    if (tpl.textTouch == TouchTypeConstants.MineHomePage && tpl.context!!.touchValue.toLongOrNull() == SessionUtils.getUserId()) {
-                        return@onClickNew
-                    }
-                    AppHelper.openTouch(tpl.textTouch!!, tpl.context!!.touchValue)
-                }
-
-            }
-        }
+//        runway_headLine.onClickNew {
+//            currentHeadline?.let { tpl ->
+//                if (tpl.textTouch != null && tpl.context?.touchValue != null) {
+//                    if (tpl.textTouch == TouchTypeConstants.MineHomePage && tpl.context!!.touchValue.toLongOrNull() == SessionUtils.getUserId()) {
+//                        return@onClickNew
+//                    }
+//                    AppHelper.openTouch(tpl.textTouch!!, tpl.context!!.touchValue)
+//                }
+//
+//            }
+//        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        playMessageAnimator?.cancel()
+//        playMessageAnimator?.cancel()
         MessageProcessor.removeProcessors(this)
     }
 
@@ -146,50 +147,50 @@ class HomeHeartbeatFragment : BaseFragment() {
         view_pager.currentItem = 0
     }
 
-    private var isPlaying = false
-    private var playMessageAnimator: Animator? = null
+//    private var isPlaying = false
+//    private var playMessageAnimator: Animator? = null
 
-    private var currentHeadline: TplBean? = null
-    private fun playRunway() {
+//    private var currentHeadline: TplBean? = null
+//    private fun playRunway() {
+//
+//        if (!isPlaying && queueList.isNotEmpty()) {
+//
+//            isPlaying = true
+//            val tpl = queueList.pop()
+//            currentHeadline = tpl
+//            runway_headLine.render(tpl)
+//            val x = ScreenUtils.getViewRealWidth(runway_headLine)
+//            val runwayWidth = fl_runway.width
+//            val start = if (runwayWidth > 0) {
+//                runwayWidth
+//            } else {
+//                ScreenUtils.getScreenWidth() - dp2px(100)
+//            }.toFloat()
+//            val end = -x.toFloat()//这么简单的动画竟然折腾了一大圈 也是醉了
+//            playMessageAnimator = ObjectAnimator.ofFloat(runway_headLine, "translationX", start, end)
+//            playMessageAnimator?.duration = calculateDuration(x.toFloat())
+//            playMessageAnimator?.interpolator = LinearInterpolator()
+//            playMessageAnimator?.addListener(
+//                onStart = {
+//                    runway_headLine.show()
+//                },
+//                onEnd = {
+//                    runway_headLine.hide()
+//                    isPlaying = false
+//                    playRunway()
+//                })
+//            playMessageAnimator?.start()
+//        }
+//
+//    }
 
-        if (!isPlaying && queueList.isNotEmpty()) {
-
-            isPlaying = true
-            val tpl = queueList.pop()
-            currentHeadline = tpl
-            runway_headLine.render(tpl)
-            val x = ScreenUtils.getViewRealWidth(runway_headLine)
-            val runwayWidth = fl_runway.width
-            val start = if (runwayWidth > 0) {
-                runwayWidth
-            } else {
-                ScreenUtils.getScreenWidth() - dp2px(100)
-            }.toFloat()
-            val end = -x.toFloat()//这么简单的动画竟然折腾了一大圈 也是醉了
-            playMessageAnimator = ObjectAnimator.ofFloat(runway_headLine, "translationX", start, end)
-            playMessageAnimator?.duration = calculateDuration(x.toFloat())
-            playMessageAnimator?.interpolator = LinearInterpolator()
-            playMessageAnimator?.addListener(
-                onStart = {
-                    runway_headLine.show()
-                },
-                onEnd = {
-                    runway_headLine.hide()
-                    isPlaying = false
-                    playRunway()
-                })
-            playMessageAnimator?.start()
-        }
-
-    }
-
-    private fun calculateDuration(length: Float): Long {
-        val width = DensityHelper.px2dp(length)
-        //文本长度分解成固定每秒播放的dp宽度计算最终这次的文本需要的播放时间
-        val duration = (width / 50f + 0.5f) * 1000
-        logger.info("当前的view的长度：" + width + "当前的播放时长：" + duration.toLong())
-        return duration.toLong()
-    }
+//    private fun calculateDuration(length: Float): Long {
+//        val width = DensityHelper.px2dp(length)
+//        //文本长度分解成固定每秒播放的dp宽度计算最终这次的文本需要的播放时间
+//        val duration = (width / 50f + 0.5f) * 1000
+//        logger.info("当前的view的长度：" + width + "当前的播放时长：" + duration.toLong())
+//        return duration.toLong()
+//    }
 
     private fun initViewModel() {
         viewModel.tabList.observe(viewLifecycleOwner, Observer {

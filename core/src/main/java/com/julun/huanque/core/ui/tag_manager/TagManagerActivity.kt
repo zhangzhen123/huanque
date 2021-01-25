@@ -25,6 +25,7 @@ import com.google.android.flexbox.FlexboxLayoutManager
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.base.dialog.CustomDialogFragment
+import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.bean.beans.ManagerTagTabBean
 import com.julun.huanque.common.bean.beans.UserTagBean
@@ -32,6 +33,7 @@ import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.suger.dp2pxf
 import com.julun.huanque.common.suger.loadImage
 import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.utils.NotificationUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.widgets.indicator.ScaleTransitionPagerTitleView
 import com.julun.huanque.core.R
@@ -79,13 +81,12 @@ class TagManagerActivity : BaseActivity() {
             btn_action_tb.backgroundResource = R.drawable.bg_solid_btn1
             btn_action_tb.text = "完成"
             btn_action_tb.isActivated = true
-            tv_mode_des.text="点击可取消喜欢，长按可拖动"
         } else {
             btn_action_tb.backgroundResource = 0
             btn_action_tb.text = "管理"
             btn_action_tb.isActivated = false
-            tv_mode_des.text="点击管理或长按，可编辑排序"
         }
+        doTipsText(newValue)
         tagAdapter.notifyDataSetChanged()
         mFragmentList.forEach { _, value ->
             value.refreshMode(newValue)
@@ -153,7 +154,21 @@ class TagManagerActivity : BaseActivity() {
         return R.layout.activity_favorite_tag_manager
     }
 
-
+    private fun doTipsText(deleteMode:Boolean){
+        if (deleteMode) {
+            if (viewModel.currentTagList.isEmpty()) {
+                tv_mode_des.text = "点击管理或长按，可添加喜欢的标签"
+            } else {
+                tv_mode_des.text = "点击可取消喜欢，长按可拖动"
+            }
+        } else {
+            if (viewModel.currentTagList.isEmpty()) {
+                tv_mode_des.text = "点击管理或长按，可添加喜欢的标签"
+            } else {
+                tv_mode_des.text = "点击管理或长按，可编辑排序"
+            }
+        }
+    }
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         //
         //设置头部边距
@@ -180,31 +195,37 @@ class TagManagerActivity : BaseActivity() {
             if (deleteMode) {
 //                viewModel.tagCancelGroupLike(item)
 
-                val deleteEnsureDialog = CustomDialogFragment(
-                    builder = CustomDialogFragment.FDBuilder(
-                        layoutId = {
-                            return@FDBuilder R.layout.dialog_tag_cancel_ensure
-                        },
-                        onStart = { dialog ->
-                            dialog.setDialogSize(
-                                gravity = Gravity.CENTER,
-                                height = ViewGroup.LayoutParams.WRAP_CONTENT,
-                                padding = 20
-                            )
-                        },
-                        initViews = { dialog, rootView ->
-                            rootView.sdv_tag_pic.loadImage(item.tagPic, 120f, 120f)
-                            rootView.tv_content.text = "取消喜欢后，将取消【${item.tagName}】下的${item.likeCnt}个标签"
-                            rootView.tv_btn_ok.onClickNew {
-                                viewModel.tagCancelGroupLike(item)
-                                dialog.dismiss()
-                            }
-                            rootView.tv_btn_cancel.onClickNew {
-                                dialog.dismiss()
-                            }
-                        })
+//                val deleteEnsureDialog = CustomDialogFragment(
+//                    builder = CustomDialogFragment.FDBuilder(
+//                        layoutId = {
+//                            return@FDBuilder R.layout.dialog_tag_cancel_ensure
+//                        },
+//                        onStart = { dialog ->
+//                            dialog.setDialogSize(
+//                                gravity = Gravity.CENTER,
+//                                height = ViewGroup.LayoutParams.WRAP_CONTENT,
+//                                padding = 20
+//                            )
+//                        },
+//                        initViews = { dialog, rootView ->
+//                            rootView.sdv_tag_pic.loadImage(item.tagPic, 120f, 120f)
+//                            rootView.tv_content.text = "取消喜欢后，将取消【${item.tagName}】下的${item.likeCnt}个标签"
+//                            rootView.tv_btn_ok.onClickNew {
+//                                viewModel.tagCancelGroupLike(item)
+//                                dialog.dismiss()
+//                            }
+//                            rootView.tv_btn_cancel.onClickNew {
+//                                dialog.dismiss()
+//                            }
+//                        })
+//                )
+//                deleteEnsureDialog.show(supportFragmentManager, "deleteEnsureDialog")
+                MyAlertDialog(this).showAlertWithOKAndCancel(
+                    "取消喜欢后，将取消【${item.tagName}】下的${item.likeCnt}个标签", MyAlertDialog.MyDialogCallback(onRight = {
+                        viewModel.tagCancelGroupLike(item)
+                    }),
+                    "确认要取消喜欢吗", "确定取消", "在想想"
                 )
-                deleteEnsureDialog.show(supportFragmentManager, "deleteEnsureDialog")
 
             }
         }
@@ -234,14 +255,15 @@ class TagManagerActivity : BaseActivity() {
                 mTabTitles.clear()
                 mTabTitles.addAll(it.requireT())
                 refreshTabList()
-                if(viewModel.currentTagList.isEmpty()){
-                    tv_mode_des.text="点击管理或长按，可添加喜欢的标签"
+                if (viewModel.currentTagList.isEmpty()) {
+                    tv_mode_des.text = "点击管理或长按，可添加喜欢的标签"
                 }
             }
 
         })
         viewModel.tagChange.observe(this, Observer {
             if (it != null) {
+                doTipsText(deleteMode)
                 tagAdapter.notifyDataSetChanged()
             }
 

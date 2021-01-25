@@ -80,7 +80,7 @@ class FavoriteAdapter : BaseQuickAdapter<FavoriteUserBean, BaseViewHolder>(R.lay
         val age = if (item.age != 0) {
             "${item.age}岁"
         } else {
-            "未知"
+            ""
         }
         val sdvTag = holder.getView<SimpleDraweeView>(R.id.sdv_tag)
         sdvTag.loadImage(item.tagIcon, 16f, 16f)

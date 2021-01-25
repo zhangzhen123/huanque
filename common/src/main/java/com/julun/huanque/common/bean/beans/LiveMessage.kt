@@ -604,6 +604,8 @@ class TplBeanExtraContext(
 
     var runwayPlayTimes: Int = 0,
 
+    var playTimes: Int = 0,
+
     var runwayPic: String = "",
 
     //盲盒礼物数据
