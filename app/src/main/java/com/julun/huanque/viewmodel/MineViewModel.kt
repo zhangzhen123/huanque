@@ -56,10 +56,10 @@ class MineViewModel : BaseViewModel() {
                 } else {
                     codeShowStatus.value = false
                 }
-                if (user.userBasic.nameDefault == BusiConstant.True) {
+                if (user.nameDefault == BusiConstant.True) {
                     SPUtils.commitString(SPParamKey.DefaultNickname, BusiConstant.True)
                 }
-                if (user.userBasic.headDefault == BusiConstant.True) {
+                if (user.headDefault == BusiConstant.True) {
                     SPUtils.commitString(SPParamKey.DefaultHeader, BusiConstant.True)
                 }
 

@@ -11,7 +11,11 @@ data class UserDetailInfo(
     var customerUrl: String = "",
     //邀请码剩余时间
     var inviteCodeTtl: Long = 0,
-    var perfectGuide: PerfectGuideBean? = null
+    var perfectGuide: PerfectGuideBean? = null,
+    //是否是默认昵称
+    var nameDefault: String = "",
+    //头像是否默认
+    var headDefault: String = ""
 ) : Serializable
 
 data class UserBasic(
@@ -35,11 +39,7 @@ data class UserBasic(
     var age: Int = 0,
     //真人图片地址
     var authMark: String = "",
-    var perfection: Int = 0,
-    //是否是默认昵称
-    var nameDefault: String = "",
-    //头像是否默认
-    var headDefault: String = ""
+    var perfection: Int = 0
 )
 
 data class PerfectGuideBean(

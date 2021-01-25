@@ -605,17 +605,18 @@ class PrivateConversationActivity : BaseActivity() {
             //免费
             iv_msg_card.hide()
             tv_msg_card_count.hide()
+            edit_text.setPadding(dp2px(7), dp2px(7), dp2px(15), dp2px(7))
         } else {
             //收费
             iv_msg_card.show()
+            edit_text.setPadding(dp2px(41), dp2px(7), dp2px(15), dp2px(7))
         }
+
         if (price == 0L) {
             //免费
             edit_text.hint = "聊点什么吧"
-            edit_text.setPadding(dp2px(7), dp2px(7), dp2px(15), dp2px(7))
         } else {
             //不免费
-            edit_text.setPadding(dp2px(41), dp2px(7), dp2px(15), dp2px(7))
             val ticketCount = mPrivateConversationViewModel?.propData?.value?.chatTicketCnt ?: 0
             if (ticketCount > 0) {
                 edit_text.hint = "聊天券剩余${ticketCount}次"

@@ -101,12 +101,22 @@ class MessageFragment : BaseFragment() {
         }
     }
 
+    //需要刷新的标记位
+    private var mNeedRefresh = false
+
     override fun isRegisterEventBus() = true
 
     override fun getLayoutId() = R.layout.fragment_message
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         MixedHelper.setSwipeRefreshStyle(swipe_refresh)
+        val bgBorder = (ScreenUtils.getScreenWidth() - dp2px(50)) / 4 + dp2px(10)
+        updateView(view_bg_anony_voice, bgBorder)
+        updateView(view_bg_leyuan, bgBorder)
+        updateView(view_bg_heart, bgBorder)
+        updateView(view_bg_watch, bgBorder)
+
+
         initViewModel()
         initRecyclerView()
 //        initEvents()
@@ -149,6 +159,17 @@ class MessageFragment : BaseFragment() {
 
         })
     }
+
+    /**
+     * 设置View宽高
+     */
+    private fun updateView(view: View, border: Int) {
+        val borderParams = view.layoutParams
+        borderParams.width = border
+        borderParams.height = border
+        view.layoutParams = borderParams
+    }
+
 
     /**
      * 初始化RecyclerView
@@ -333,6 +354,20 @@ class MessageFragment : BaseFragment() {
                     tv_yuanfen_count.show()
                 } else {
                     tv_yuanfen_count.hide()
+                }
+                if (it.heartTouchCnt > 0) {
+                    //显示心动数量
+                    tv_heart_count.show()
+                    tv_heart_count.text = "${it.heartTouchCnt}"
+                } else {
+                    tv_heart_count.hide()
+                }
+                if (it.visitCnt > 0) {
+                    //显示访客数量
+                    tv_watch_count.show()
+                    tv_watch_count.text = "${it.visitCnt}"
+                } else {
+                    tv_watch_count.hide()
                 }
 //                val onLineResource = if (it.onlineStatus == ChatRoomBean.Online) {
 //                    R.mipmap.icon_online
@@ -544,6 +579,7 @@ class MessageFragment : BaseFragment() {
         view_watch.onClickNew {
             //看过的人
             WatchHistoryActivity.newInstance(requireActivity())
+            mNeedRefresh = true
         }
 
         view_notification.onClickNew {
@@ -569,6 +605,10 @@ class MessageFragment : BaseFragment() {
             //养鹊乐园
             ARouter.getInstance().build(ARouterConstant.LEYUAN_BIRD_ACTIVITY).navigation()
         }
+        view_heart.onClickNew {
+            HeartBeatActivity.newInstance(requireActivity())
+            mNeedRefresh = true
+        }
     }
 
     override fun onResume() {
@@ -579,9 +619,11 @@ class MessageFragment : BaseFragment() {
         } else {
             view_notification.show()
         }
-        view_heart.onClickNew {
-            HeartBeatActivity.newInstance(requireActivity())
+        if (mNeedRefresh) {
+            mMessageViewModel.chatRoom()
+            mNeedRefresh = false
         }
+
     }
 
     //设置在线状态的PopupWindow
