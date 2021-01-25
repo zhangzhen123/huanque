@@ -313,8 +313,8 @@ object AppHelper {
                 val tagId = strs.getOrNull(1)?.toIntOrNull() ?: return
                 //我拥有的标签
                 ARouter.getInstance().build(ARouterConstant.TAG_USER_PICS_ACTIVITY).with(Bundle().apply {
-                    putLong(ManagerTagCode.TAG_INFO, useId)
-                    putInt(IntentParamKey.USER_ID.name, tagId)
+                    putInt(ManagerTagCode.TAG_INFO, tagId)
+                    putLong(IntentParamKey.USER_ID.name, useId)
                 }).navigation()
             }
             TouchTypeConstants.AuthTagPic -> {
