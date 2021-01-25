@@ -4,7 +4,6 @@ import android.content.Intent
 import android.media.MediaPlayer
 import android.view.Gravity
 import android.view.ViewGroup
-import androidx.activity.viewModels
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import com.julun.huanque.common.base.BaseDialogFragment
@@ -22,10 +21,8 @@ import com.julun.huanque.core.R
 import com.julun.huanque.core.manager.AliPlayerManager
 import com.julun.huanque.core.ui.record_voice.VoiceSignActivity
 import com.julun.huanque.core.viewmodel.EditInfoViewModel
-import com.julun.rnlib.RNPageActivity
-import com.julun.rnlib.RnConstant
-import kotlinx.android.synthetic.main.act_home_page.*
 import kotlinx.android.synthetic.main.frag_voice_status.*
+import kotlinx.android.synthetic.main.frag_voice_status.lottie_voice_state
 import kotlinx.android.synthetic.main.frag_voice_status.view_voice
 
 /**
@@ -57,6 +54,7 @@ class VoiceStatusFragment : BaseDialogFragment() {
 //                AliplayerManager.soundOff()
 //                sdv_voice_state.setPadding(dp2px(5), dp2px(6), dp2px(5), dp2px(6))
 //                ImageUtils.loadGifImageLocal(sdv_voice_state, R.mipmap.voice_home_page_playing)
+                lottie_voice_state.playAnimation()
             }
 
             override fun resume() {
@@ -67,6 +65,7 @@ class VoiceStatusFragment : BaseDialogFragment() {
 //                tv_time.setCompoundDrawables(drawable, null, null, null)
 //                sdv_voice_state.setPadding(dp2px(5), dp2px(6), dp2px(5), dp2px(6))
 //                ImageUtils.loadGifImageLocal(sdv_voice_state, R.mipmap.voice_home_page_playing)
+                lottie_voice_state.resumeAnimation()
             }
 
             override fun pause() {
@@ -78,6 +77,7 @@ class VoiceStatusFragment : BaseDialogFragment() {
 //                val padding = dp2px(0)
 //                sdv_voice_state.setPadding(padding, padding, padding, padding)
 //                ImageUtils.loadImageLocal(sdv_voice_state, R.mipmap.icon_pause_home_page)
+                lottie_voice_state.pauseAnimation()
             }
 
             override fun stop() {
@@ -89,6 +89,8 @@ class VoiceStatusFragment : BaseDialogFragment() {
 //                val padding = dp2px(0)
 //                sdv_voice_state.setPadding(padding, padding, padding, padding)
 //                ImageUtils.loadImageLocal(sdv_voice_state, R.mipmap.icon_pause_home_page)
+                lottie_voice_state.cancelAnimation()
+                lottie_voice_state.progress = 0f
             }
 
 
@@ -100,7 +102,7 @@ class VoiceStatusFragment : BaseDialogFragment() {
 
             override fun onCompletion(mediaPlayer: MediaPlayer?) {
                 logger.info("onCompletion mediaPlayer=${mediaPlayer.hashCode()}")
-//                tv_time.text = "${mEditInfoViewModel?.basicInfo?.value?.voice?.length}s"
+                tv_time.text = "${mEditInfoViewModel?.basicInfo?.value?.voice?.length}s"
             }
 
             override fun onBufferingUpdate(mediaPlayer: MediaPlayer?, i: Int) {
@@ -114,7 +116,7 @@ class VoiceStatusFragment : BaseDialogFragment() {
             override fun onSeekBarProgress(progress: Int) {
 //                logger.info("onSeekBarProgress progress=${progress / 1000}")
                 val voiceLength = mEditInfoViewModel?.basicInfo?.value?.voice?.length ?: return
-//                tv_time.text = "${voiceLength - progress / 1000}s"
+                tv_time.text = "${voiceLength - progress / 1000}s"
             }
         })
 
@@ -174,6 +176,7 @@ class VoiceStatusFragment : BaseDialogFragment() {
     private fun initViewModel() {
         mEditInfoViewModel.basicInfo.observe(this, Observer {
             if (it != null) {
+                tv_time.text = "${it.voice?.length}s"
                 val voiceBean = it.voice
                 when (voiceBean.voiceStatus) {
                     VoiceBean.Wait -> {
