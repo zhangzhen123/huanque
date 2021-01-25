@@ -1098,7 +1098,7 @@ class EditInfoActivity : BaseActivity() {
             profession.professionId = info.professionId
             profession.professionTypeText = info.professionTypeText
             profession.professionName = info.professionName
-            tv_job.text = "${profession.professionTypeText}/${profession.professionName}"
+            tv_job.text = profession.professionName
             tv_job.textColor = GlobalUtils.getColor(R.color.black_333)
         }
     }

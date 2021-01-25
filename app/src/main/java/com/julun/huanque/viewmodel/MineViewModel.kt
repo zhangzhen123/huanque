@@ -7,11 +7,14 @@ import com.julun.huanque.common.basic.ReactiveData
 import com.julun.huanque.common.bean.beans.UserDetailInfo
 import com.julun.huanque.common.bean.forms.UpdateInformationForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
+import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.constant.ErrorCodes
+import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.BalanceUtils
 import com.julun.huanque.common.net.services.UserService
+import com.julun.huanque.common.utils.SPUtils
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.coroutines.launch
@@ -52,6 +55,12 @@ class MineViewModel : BaseViewModel() {
                     inviteCodeTimer(codeTtl)
                 } else {
                     codeShowStatus.value = false
+                }
+                if (user.userBasic.nameDefault == BusiConstant.True) {
+                    SPUtils.commitString(SPParamKey.DefaultNickname, BusiConstant.True)
+                }
+                if (user.userBasic.headDefault == BusiConstant.True) {
+                    SPUtils.commitString(SPParamKey.DefaultHeader, BusiConstant.True)
                 }
 
                 emit(ReactiveData(NetStateType.SUCCESS, user))

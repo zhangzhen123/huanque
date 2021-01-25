@@ -13,11 +13,13 @@ import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.bean.forms.UpdateInformationForm
 import com.julun.huanque.common.constant.BusiConstant
+import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.interfaces.EventListener
 import com.julun.huanque.common.suger.inVisible
 import com.julun.huanque.common.suger.loadImage
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
+import com.julun.huanque.common.utils.SPUtils
 import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
@@ -57,6 +59,8 @@ class UpdateInfoFragment : BaseDialogFragment(), DialogInterface.OnKeyListener {
 
     override fun initViews() {
         logger.info("Main UpdateInfoFragment act = ${requireActivity()}")
+        SPUtils.commitString(SPParamKey.DefaultHeader, "")
+        SPUtils.commitString(SPParamKey.DefaultNickname, "")
         initEvents()
         initViewModel()
         val defaultName = arguments?.getString(DefaultNickname) ?: ""
