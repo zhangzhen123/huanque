@@ -125,12 +125,12 @@
                         android:layout_width="34dp"
                         android:layout_height="10dp"
                         android:layout_marginLeft="9dp"
-                        app:lottie_repeatCount="-1"
-                        app:lottie_progress="0"
                         app:layout_constraintBottom_toBottomOf="@id/view_voice"
                         app:layout_constraintLeft_toLeftOf="@id/view_voice"
                         app:layout_constraintTop_toTopOf="@id/view_voice"
-                        app:lottie_fileName="json/voice_home_page_playing.json" />
+                        app:lottie_fileName="json/voice_home_page_playing.json"
+                        app:lottie_progress="0"
+                        app:lottie_repeatCount="-1" />
 
 
                     <TextView
@@ -217,7 +217,6 @@
                         android:id="@+id/rl_guide_info"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/dimen_40"
-                        android:layout_marginTop="@dimen/dimen_4"
                         android:visibility="gone"
                         app:layout_constraintTop_toBottomOf="@+id/bga_banner"
                         tools:background="#F3C060"

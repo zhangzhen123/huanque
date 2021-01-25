@@ -41,24 +41,16 @@
         android:layout_height="0px"
         app:layout_constraintBottom_toBottomOf="@+id/view_bottom"
         app:layout_constraintLeft_toLeftOf="@+id/view_bottom"
-        app:layout_constraintRight_toLeftOf="@+id/view_dynamic_square"
-        app:layout_constraintTop_toTopOf="@+id/view_bottom" />
-
-    <View
-        android:id="@+id/view_dynamic_square"
-        android:layout_width="0px"
-        android:layout_height="0px"
-        app:layout_constraintBottom_toBottomOf="@id/view_bottom"
-        app:layout_constraintLeft_toRightOf="@+id/view_make_friends"
         app:layout_constraintRight_toLeftOf="@+id/view_program"
         app:layout_constraintTop_toTopOf="@+id/view_bottom" />
+
 
     <View
         android:id="@+id/view_program"
         android:layout_width="0px"
         android:layout_height="0px"
         app:layout_constraintBottom_toBottomOf="@id/view_bottom"
-        app:layout_constraintLeft_toRightOf="@+id/view_dynamic_square"
+        app:layout_constraintLeft_toRightOf="@+id/view_make_friends"
         app:layout_constraintRight_toLeftOf="@+id/view_message"
         app:layout_constraintTop_toTopOf="@id/view_bottom" />
 
@@ -68,15 +60,26 @@
         android:layout_height="0px"
         app:layout_constraintBottom_toBottomOf="@id/view_bottom"
         app:layout_constraintLeft_toRightOf="@+id/view_program"
-        app:layout_constraintRight_toLeftOf="@+id/view_mine"
+        app:layout_constraintRight_toLeftOf="@+id/view_dynamic_square"
         app:layout_constraintTop_toTopOf="@id/view_bottom" />
+
+
+    <View
+        android:id="@+id/view_dynamic_square"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        app:layout_constraintBottom_toBottomOf="@id/view_bottom"
+        app:layout_constraintLeft_toRightOf="@+id/view_message"
+        app:layout_constraintRight_toLeftOf="@+id/view_mine"
+        app:layout_constraintTop_toTopOf="@+id/view_bottom" />
+
 
     <View
         android:id="@+id/view_mine"
         android:layout_width="0px"
         android:layout_height="0px"
         app:layout_constraintBottom_toBottomOf="@id/view_bottom"
-        app:layout_constraintLeft_toRightOf="@id/view_message"
+        app:layout_constraintLeft_toRightOf="@id/view_dynamic_square"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@id/view_bottom" />
 

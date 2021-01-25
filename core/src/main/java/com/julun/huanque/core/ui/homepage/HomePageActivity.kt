@@ -570,10 +570,10 @@ class HomePageActivity : BaseActivity() {
         //是否是我的主页
         mHomePageViewModel.mineHomePage = userID == SessionUtils.getUserId()
         if (mHomePageViewModel.mineHomePage) {
-//            iv_more_black.hide()
+            iv_more_black.hide()
             iv_more.hide()
         } else {
-//            iv_more_black.show()
+            iv_more_black.show()
             iv_more.show()
         }
         mHomePageViewModel.homeInfo()

@@ -6,8 +6,8 @@
     android:background="@drawable/toast_bg"
     android:orientation="vertical"
     android:padding="10dp"
-    android:paddingLeft="@dimen/dimen_10"
-    android:paddingRight="@dimen/dimen_10">
+    android:paddingLeft="@dimen/dimen_20"
+    android:paddingRight="@dimen/dimen_20">
 
     <ImageView
         android:id="@+id/customImage"

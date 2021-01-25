@@ -309,8 +309,10 @@ object ByteConstants {
 object TouchTypeConstants {
     //跳转H5
     const val ACTION_URL = "Url"
+
     //直播间
     const val LiveRoom = "LiveRoom"
+
     //跳转主页
     const val ACTION_MAIN_PAGE = "main_page"
 
@@ -404,6 +406,7 @@ object TouchTypeConstants {
 
     //标签详情
     const val AuthTagDetail = "AuthTagDetail"
+
     //某人的指定标签详情
     const val AuthTagPic = "AuthTagPic"
 
@@ -625,9 +628,9 @@ object BirdTaskAwardType {
 
 object MainPageIndexConst {
     const val MAIN_FRAGMENT_INDEX = 0
-    const val DYNAMIC_SQUARE_INDEX = 1
-    const val PROGRAM_FRAGMENT_INDEX = 2
-    const val MESSAGE_FRAGMENT_INDEX = 3
+    const val PROGRAM_FRAGMENT_INDEX = 1
+    const val MESSAGE_FRAGMENT_INDEX = 2
+    const val DYNAMIC_SQUARE_INDEX = 3
     const val MINE_FRAGMENT_INDEX = 4
 }
 
