@@ -180,17 +180,20 @@ class HeartBeatFragment : BaseFragment() {
                 }
             }
         })
-        mActViewModel.unlockLogId.observe(this, Observer {
-            if (it != null) {
-                mAdapter.data.forEachIndexed { index, singleHeartBean ->
-                    if (singleHeartBean.logId == it) {
-                        singleHeartBean.unLock = BusiConstant.True
-                        mAdapter.notifyItemChanged(index)
-                        return@Observer
+        if(mType == HeartBeanForm.HeartTouchToMe){
+            mActViewModel.unlockLogId.observe(this, Observer {
+                if (it != null) {
+                    mAdapter.data.forEachIndexed { index, singleHeartBean ->
+                        if (singleHeartBean.logId == it) {
+                            singleHeartBean.unLock = BusiConstant.True
+                            mAdapter.notifyItemChanged(index + mAdapter.headerLayoutCount)
+                            return@Observer
+                        }
                     }
                 }
-            }
-        })
+            })
+        }
+
     }
 
     override fun onResume() {

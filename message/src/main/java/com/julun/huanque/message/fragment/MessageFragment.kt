@@ -101,6 +101,9 @@ class MessageFragment : BaseFragment() {
         }
     }
 
+    //需要刷新的标记位
+    private var mNeedRefresh = false
+
     override fun isRegisterEventBus() = true
 
     override fun getLayoutId() = R.layout.fragment_message
@@ -352,6 +355,20 @@ class MessageFragment : BaseFragment() {
                 } else {
                     tv_yuanfen_count.hide()
                 }
+                if (it.heartTouchCnt > 0) {
+                    //显示心动数量
+                    tv_heart_count.show()
+                    tv_heart_count.text = "${it.heartTouchCnt}"
+                } else {
+                    tv_heart_count.hide()
+                }
+                if (it.visitCnt > 0) {
+                    //显示访客数量
+                    tv_watch_count.show()
+                    tv_watch_count.text = "${it.visitCnt}"
+                } else {
+                    tv_watch_count.hide()
+                }
 //                val onLineResource = if (it.onlineStatus == ChatRoomBean.Online) {
 //                    R.mipmap.icon_online
 //                } else {
@@ -562,6 +579,7 @@ class MessageFragment : BaseFragment() {
         view_watch.onClickNew {
             //看过的人
             WatchHistoryActivity.newInstance(requireActivity())
+            mNeedRefresh = true
         }
 
         view_notification.onClickNew {
@@ -587,6 +605,10 @@ class MessageFragment : BaseFragment() {
             //养鹊乐园
             ARouter.getInstance().build(ARouterConstant.LEYUAN_BIRD_ACTIVITY).navigation()
         }
+        view_heart.onClickNew {
+            HeartBeatActivity.newInstance(requireActivity())
+            mNeedRefresh = true
+        }
     }
 
     override fun onResume() {
@@ -597,9 +619,11 @@ class MessageFragment : BaseFragment() {
         } else {
             view_notification.show()
         }
-        view_heart.onClickNew {
-            HeartBeatActivity.newInstance(requireActivity())
+        if (mNeedRefresh) {
+            mMessageViewModel.chatRoom()
+            mNeedRefresh = false
         }
+
     }
 
     //设置在线状态的PopupWindow

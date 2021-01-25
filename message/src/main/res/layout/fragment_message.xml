@@ -318,12 +318,12 @@
             android:id="@+id/view_bg_heart"
             android:layout_width="10px"
             android:layout_height="10px"
-            tools:visibility="gone"
             android:background="@drawable/bg_msg_top"
             app:layout_constraintBottom_toBottomOf="@id/view_bg_anony_voice"
             app:layout_constraintLeft_toLeftOf="@+id/view_heart"
             app:layout_constraintRight_toRightOf="@id/view_heart"
-            app:layout_constraintTop_toTopOf="@id/view_bg_anony_voice" />
+            app:layout_constraintTop_toTopOf="@id/view_bg_anony_voice"
+            tools:visibility="gone" />
 
 
         <FrameLayout
@@ -359,6 +359,25 @@
                 app:layout_constraintRight_toRightOf="@id/view_anony_voice"
                 app:layout_constraintTop_toTopOf="@id/view_anony_voice" />
 
+            <TextView
+                android:id="@+id/tv_heart_count"
+                android:layout_width="wrap_content"
+                android:layout_height="16dp"
+                android:layout_gravity="right|top"
+                android:background="@drawable/sel_unread_count"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:textColor="@color/white"
+                android:textSize="@dimen/bottom_tab_font_size"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@id/tv_content"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tv_content"
+                tools:text="99"
+                tools:visibility="visible" />
+
 
         </FrameLayout>
 
@@ -367,11 +386,11 @@
             android:layout_width="10px"
             android:layout_height="10px"
             android:background="@drawable/bg_msg_top"
-            tools:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@id/view_bg_anony_voice"
             app:layout_constraintLeft_toLeftOf="@+id/view_watch"
             app:layout_constraintRight_toRightOf="@id/view_watch"
-            app:layout_constraintTop_toTopOf="@id/view_bg_anony_voice" />
+            app:layout_constraintTop_toTopOf="@id/view_bg_anony_voice"
+            tools:visibility="gone" />
 
 
         <FrameLayout
@@ -405,6 +424,26 @@
                 app:layout_constraintLeft_toLeftOf="@id/view_anony_voice"
                 app:layout_constraintRight_toRightOf="@id/view_anony_voice"
                 app:layout_constraintTop_toTopOf="@id/view_anony_voice" />
+
+            <TextView
+                android:id="@+id/tv_watch_count"
+                android:layout_width="wrap_content"
+                android:layout_height="16dp"
+                android:layout_gravity="right|top"
+                android:background="@drawable/sel_unread_count"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:textColor="@color/white"
+                android:textSize="@dimen/bottom_tab_font_size"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@id/tv_content"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tv_content"
+                tools:text="99"
+                tools:visibility="visible" />
+
 
         </FrameLayout>
 
