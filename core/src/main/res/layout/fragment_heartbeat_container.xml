@@ -26,41 +26,52 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <FrameLayout
-        android:id="@+id/fl_runway"
-        android:layout_width="@dimen/dimen_0"
-        android:layout_height="wrap_content"
+    <!--    <FrameLayout-->
+    <!--        android:id="@+id/fl_runway"-->
+    <!--        android:layout_width="@dimen/dimen_0"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        app:layout_constrainedWidth="true"-->
+    <!--        app:layout_constraintBottom_toBottomOf="@+id/magic_indicator"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintHorizontal_bias="1"-->
+    <!--        app:layout_constraintStart_toEndOf="@+id/magic_indicator"-->
+    <!--        app:layout_constraintTop_toTopOf="@+id/magic_indicator">-->
+
+    <!--        <HorizontalScrollView-->
+    <!--            android:id="@+id/runway_container"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_gravity="center_vertical"-->
+    <!--            android:scrollbars="none">-->
+
+    <!--            <com.julun.huanque.common.widgets.draweetext.DraweeSpanTextView-->
+    <!--                android:id="@+id/runway_headLine"-->
+    <!--                android:layout_width="wrap_content"-->
+    <!--                android:layout_height="@dimen/dimen_30"-->
+    <!--                android:background="@drawable/shape_run_way_headline"-->
+    <!--                android:gravity="center"-->
+    <!--                android:maxLines="1"-->
+    <!--                android:paddingStart="@dimen/dimen_6"-->
+    <!--                android:paddingEnd="@dimen/dimen_6"-->
+    <!--                android:textSize="12sp"-->
+    <!--                android:visibility="gone"-->
+    <!--                tools:text="我是跑道内容。我是跑道内容我是跑道内容我是我是跑道内容我是跑道内容我是"-->
+    <!--                tools:visibility="visible" />-->
+    <!--        </HorizontalScrollView>-->
+
+
+    <!--    </FrameLayout>-->
+    <com.julun.huanque.core.widgets.HomeHeadlineView
+        android:id="@+id/head_runway"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/dimen_30"
+        android:layout_marginEnd="@dimen/dimen_10"
         app:layout_constrainedWidth="true"
         app:layout_constraintBottom_toBottomOf="@+id/magic_indicator"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1"
         app:layout_constraintStart_toEndOf="@+id/magic_indicator"
-        app:layout_constraintTop_toTopOf="@+id/magic_indicator">
-
-        <HorizontalScrollView
-            android:id="@+id/runway_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:scrollbars="none">
-
-            <com.julun.huanque.common.widgets.draweetext.DraweeSpanTextView
-                android:id="@+id/runway_headLine"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/dimen_30"
-                android:background="@drawable/shape_run_way_headline"
-                android:gravity="center"
-                android:maxLines="1"
-                android:paddingStart="@dimen/dimen_6"
-                android:paddingEnd="@dimen/dimen_6"
-                android:textSize="12sp"
-                android:visibility="gone"
-                tools:text="我是跑道内容。我是跑道内容我是跑道内容我是我是跑道内容我是跑道内容我是"
-                tools:visibility="visible" />
-        </HorizontalScrollView>
-
-
-    </FrameLayout>
+        app:layout_constraintTop_toTopOf="@+id/magic_indicator" />
 
     <View
         android:id="@+id/v_filter_tag_holder"

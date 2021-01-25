@@ -22,7 +22,7 @@ import com.julun.huanque.core.R
 class NearbyPicListAdapter : BaseQuickAdapter<HomePagePicBean, BaseViewHolder>(R.layout.recycler_item_nearby_pic) {
     override fun convert(holder: BaseViewHolder, item: HomePagePicBean) {
         val sdv = holder.getView<SimpleDraweeView>(R.id.sdv)
-        holder.setVisible(R.id.view_border, item.selected == BusiConstant.True)
+        holder.setVisible(R.id.view_border, item.selected)
 //        val roundParams = RoundingParams.fromCornersRadius(dp2pxf(4))
 //        if (item.selected == BusiConstant.True) {
 //            //选中

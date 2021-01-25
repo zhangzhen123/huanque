@@ -45,6 +45,7 @@ import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.bean.beans.HomePagePicBean
 import com.julun.huanque.common.bean.beans.NearbyUserBean
 import com.julun.huanque.common.bean.beans.UserTagBean
+import com.julun.huanque.common.bean.events.CanSeeMaxCountChangeEvent
 import com.julun.huanque.common.bean.events.LikeEvent
 import com.julun.huanque.common.bean.events.PicChangeEvent
 import com.julun.huanque.common.constant.ActivityCodes
@@ -135,8 +136,9 @@ class NearbyFragment : BaseLazyFragment() {
                 return false
             }
 
+            //代表滑动多少比例才判定为移除
             override fun getSwipeThreshold(): Float {
-                return 0.15f
+                return 0.2f
             }
 
             override fun getCardScale(): Float {
@@ -186,7 +188,7 @@ class NearbyFragment : BaseLazyFragment() {
                         holder.getView<ImageView>(R.id.iv_dislike).alpha = ratio
                     }
                     ReItemTouchHelper.RIGHT -> {
-                        logger.info("swiping direction=right ratio=${ratio}")
+                        logger.info("swiping direction=right dx=$dx dy=$dy ratio=${ratio}")
                         holder.getView<ImageView>(R.id.iv_like).alpha = ratio
                     }
                 }
@@ -347,7 +349,8 @@ class NearbyFragment : BaseLazyFragment() {
                 }
                 R.id.iv_auth_tag -> {
                     //实人认证图标
-                    val userIcon = AppHelper.getUserIcon(item.headRealPeople, item.realName, "") ?: return@setOnItemChildClickListener
+                    val userIcon =
+                        AppHelper.getUserIcon(item.headRealPeople, item.realName, "") ?: return@setOnItemChildClickListener
                     if (userIcon == com.julun.huanque.common.R.mipmap.icon_real_name_home_page
                         && SPUtils.getString(SPParamKey.RealName, "") != BusiConstant.True
                     ) {
@@ -434,6 +437,16 @@ class NearbyFragment : BaseLazyFragment() {
         }
     }
 
+    //收到用户上传图片后刷新可查看图片数目
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun receiveCanSeeMaxCountChange(event: CanSeeMaxCountChangeEvent) {
+        lifecycleScope.launchWhenStarted {
+            mViewModel.currentSeeMaxCoverNum = event.seeMaxCoverNum
+            cardsAdapter.notifyDataSetChanged()
+        }
+    }
+
+
     /**
      * 让最顶部的item切换指定的缩略图索引
      */
@@ -451,11 +464,7 @@ class NearbyFragment : BaseLazyFragment() {
         if (sdv != null && sdvBg != null && tvPicCount != null) {
             val dataList = picsAdapter.data
             dataList.forEachIndexed { index, homePagePicBean ->
-                if (index == selectIndex) {
-                    homePagePicBean.selected = BusiConstant.True
-                } else {
-                    homePagePicBean.selected = BusiConstant.False
-                }
+                homePagePicBean.selected = index == selectIndex
             }
             picsAdapter.notifyDataSetChanged()
             val pic = picsAdapter.getItemOrNull(selectIndex) ?: return
@@ -900,7 +909,7 @@ class NearbyFragment : BaseLazyFragment() {
             checkPermissionTag = false
             checkPermission()
         }
-
+        startPlayAni(reset = true)
     }
 
     override fun onStop() {
@@ -1125,7 +1134,7 @@ class NearbyFragment : BaseLazyFragment() {
                 val sdvBg = holder.getView<SimpleDraweeView>(R.id.card_img_bg)
                 val guidePhoto = holder.getView<RelativeLayout>(R.id.rl_guide_photo)
                 guidePhoto.hide()
-                showCardImage(sdv, sdvBg, item.coverPic)
+//                showCardImage(sdv, sdvBg, item.coverPic)
                 if (item.cardType == CardType.GUIDE) {
                     holder.setGone(R.id.iv_dislike, true)
                     holder.setGone(R.id.iv_like, true)
@@ -1271,34 +1280,40 @@ class NearbyFragment : BaseLazyFragment() {
                 }
                 val list = mutableListOf<HomePagePicBean>()
                 item.coverPicList.forEachIndexed { index, pic ->
+
                     if (index == 0) {
-                        list.add(HomePagePicBean(pic, selected = BooleanType.TRUE))
+                        list.add(HomePagePicBean(pic, selected = index == item.selectIndex))
                     } else {
                         val mBlur = if (mViewModel.currentSeeMaxCoverNum == -1) {
                             false
                         } else {
                             index >= mViewModel.currentSeeMaxCoverNum
                         }
-                        list.add(HomePagePicBean(pic, selected = BooleanType.FALSE, blur = mBlur))
+                        list.add(HomePagePicBean(pic, selected = index == item.selectIndex, blur = mBlur))
                     }
 
                 }
                 mPicsAdapter.setList(list)
+
                 val tvPicCount = holder.getView<TextView>(R.id.tv_pic_count)
+
+                selectPic(item.selectIndex, mPicsAdapter, sdv, sdvBg, tvPicCount, guidePhoto)
+                val manager = rvPics.layoutManager as AutoCenterLayoutManager
+                manager.smoothScrollToPosition(rvPics, item.selectIndex)
 
                 mPicsAdapter.onAdapterClickNew { _, _, position ->
                     val itemPic = mPicsAdapter.getItemOrNull(position)
-                    if (itemPic?.selected == BusiConstant.True) {
+                    if (itemPic?.selected == true) {
                         return@onAdapterClickNew
                     }
 
                     item.selectIndex = position
                     selectPic(position, mPicsAdapter, sdv, sdvBg, tvPicCount, guidePhoto)
-                    val manager = rvPics.layoutManager as AutoCenterLayoutManager
+//                    val manager = rvPics.layoutManager as AutoCenterLayoutManager
                     manager.smoothScrollToPosition(rvPics, position)
                 }
 
-                tvPicCount.text = "1/${mPicsAdapter.data.size}"
+//                tvPicCount.text = "1/${mPicsAdapter.data.size}"
             }
 
             /**
@@ -1314,11 +1329,7 @@ class NearbyFragment : BaseLazyFragment() {
             ) {
                 val dataList = mPicsAdapter.data
                 dataList.forEachIndexed { index, homePagePicBean ->
-                    if (index == position) {
-                        homePagePicBean.selected = BusiConstant.True
-                    } else {
-                        homePagePicBean.selected = BusiConstant.False
-                    }
+                    homePagePicBean.selected = index == position
                 }
                 mPicsAdapter.notifyDataSetChanged()
                 val pic = mPicsAdapter.getItemOrNull(position) ?: return

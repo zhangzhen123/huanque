@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <HorizontalScrollView
+        android:id="@+id/runway_container"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_30"
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/shape_run_way_headline"
+        android:paddingStart="@dimen/dimen_6"
+        android:paddingEnd="@dimen/dimen_6"
+        android:scrollbars="none"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <com.julun.huanque.common.widgets.draweetext.DraweeSpanTextView
+            android:id="@+id/runway_headLine"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dimen_30"
+            android:gravity="center_vertical"
+            android:layout_gravity="center_vertical"
+            android:maxLines="1"
+            android:textSize="12sp"
+            android:visibility="gone"
+            tools:text="我是跑道内容。我是跑道内容我是跑道内容我是我是跑道内容我是跑道内容我是"
+            tools:visibility="visible" />
+    </HorizontalScrollView>
+
+
+</merge>

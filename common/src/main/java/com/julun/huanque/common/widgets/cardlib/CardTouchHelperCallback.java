@@ -230,7 +230,7 @@ public class CardTouchHelperCallback<T> extends ReItemTouchHelper.Callback {
     }
 
     private float getXThreshold(RecyclerView recyclerView) {
-        return recyclerView.getWidth() * 0.4f;
+        return recyclerView.getWidth() * mConfig.getSwipeThreshold();
     }
 
     private float getYThreshold(RecyclerView recyclerView) {

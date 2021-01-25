@@ -43,7 +43,7 @@ import org.jetbrains.anko.startActivity
  *
  *@Date: 2020/12/29 10:16
  *
- *@Description: TagPicsActivity
+ *@Description: TagPicsActivity 指定标签的图片集合
  *
  */
 @Route(path = ARouterConstant.TAG_PICS_ACTIVITY)
@@ -79,9 +79,9 @@ class TagPicsActivity : BaseVMActivity<TagPicsViewModel>() {
                 sdv.requestLayout()
                 sdv.loadImageInPx(item.applyPic, w, h)
                 if (item.picNum == 1) {
-                    holder.setGone(R.id.ll_top_tag, true)
+                    holder.setGone(R.id.iv_top_tag, true)
                 } else {
-                    holder.setGone(R.id.ll_top_tag, false)
+                    holder.setGone(R.id.iv_top_tag, false)
                 }
             }
 

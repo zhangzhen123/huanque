@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.view_single_video.view.*
 class HomePagePicListAdapter : BaseQuickAdapter<HomePagePicBean, BaseViewHolder>(R.layout.recycler_item_homepage_pic) {
     override fun convert(holder: BaseViewHolder, item: HomePagePicBean) {
         val sdv = holder.getView<SimpleDraweeView>(R.id.sdv)
-        holder.setVisible(R.id.view_border, item.selected == BusiConstant.True)
+        holder.setVisible(R.id.view_border, item.selected)
 //        val roundParams = RoundingParams.fromCornersRadius(dp2pxf(4))
 //        if (item.selected == BusiConstant.True) {
 //            //选中

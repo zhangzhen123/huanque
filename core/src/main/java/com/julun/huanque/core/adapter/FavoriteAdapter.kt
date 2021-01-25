@@ -80,7 +80,7 @@ class FavoriteAdapter : BaseQuickAdapter<FavoriteUserBean, BaseViewHolder>(R.lay
         val age = if (item.age != 0) {
             "${item.age}岁"
         } else {
-            "未知"
+            ""
         }
         val sdvTag = holder.getView<SimpleDraweeView>(R.id.sdv_tag)
         sdvTag.loadImage(item.tagIcon, 16f, 16f)
@@ -185,9 +185,9 @@ class FavoriteAdapter : BaseQuickAdapter<FavoriteUserBean, BaseViewHolder>(R.lay
                         return@run
                     }
                     if (index == 0) {
-                        list.add(HomePagePicBean(pic, selected = BooleanType.FALSE))
+                        list.add(HomePagePicBean(pic, selected = false))
                     } else {
-                        list.add(HomePagePicBean(pic, selected = BooleanType.FALSE))
+                        list.add(HomePagePicBean(pic, selected = false))
                     }
 
                 }
