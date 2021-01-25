@@ -241,9 +241,16 @@ object AppHelper {
             }
             TouchTypeConstants.MineHomePage -> {
                 val bundle = Bundle().apply {
-                    var userId = touchValue.toLongOrNull()
-                    if (userId == null) {
-                        userId = SessionUtils.getUserId()
+                    val userId = SessionUtils.getUserId()
+                    putLong(ParamConstant.UserId, userId)
+                }
+                ARouter.getInstance().build(ARouterConstant.HOME_PAGE_ACTIVITY).with(bundle).navigation()
+            }
+            TouchTypeConstants.OtherHomePage -> {
+                val bundle = Bundle().apply {
+                    var userId = touchValue.toLongOrNull() ?: return
+                    if (userId == SessionUtils.getUserId()) {
+                        return
                     }
                     putLong(ParamConstant.UserId, userId)
                 }

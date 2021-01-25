@@ -662,7 +662,7 @@ data class HomePageInfo(
     var realHeadGuide: RealHeadGuideBean? = null,
     //实名引导
     var realNameGuide: RealNameGuideBean? = null,
-    var currRealName : String = ""
+    var currRealName: String = ""
 ) : Serializable
 
 data class RealHeadGuideBean(var guide: Boolean = false)
@@ -1106,7 +1106,7 @@ data class HomePagePicBean(
     //真人水印
     var realPic: String = "",
     //是否选中
-    var selected: String = "",
+    var selected: Boolean = false,
     //是否是头像（编辑资料页面使用）
     var headerPic: String = "",
     //是否显示不可移动提示
@@ -1225,7 +1225,8 @@ data class UserProcessBean(
     //资料完成度
     var perfection: Int = 0,
     //添加封面的时候返回
-    var logId: Long = 0
+    var logId: Long = 0,
+    var seeMaxCoverNum: Int = 0
 ) : Serializable
 
 data class UserHeadChangeBean(

@@ -109,6 +109,17 @@ object RPushUtil {
                     }
                     ARouter.getInstance().build(ARouterConstant.HOME_PAGE_ACTIVITY).with(bundle).navigation()
                 }
+                TouchTypeConstants.OtherHomePage -> {
+                    val bundle = Bundle().apply {
+                        var userId = bean.touchValue.toLongOrNull() ?: return
+                        if (userId == SessionUtils.getUserId()) {
+                            return
+                        }
+                        putLong(ParamConstant.UserId, userId)
+                    }
+                    ARouter.getInstance().build(ARouterConstant.HOME_PAGE_ACTIVITY).with(bundle).navigation()
+                }
+
                 TouchTypeConstants.AnchorCertPage -> {
                     startOpenRnPage(context, RnConstant.ANCHOR_CERT_PAGE)
                 }

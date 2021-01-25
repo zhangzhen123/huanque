@@ -245,3 +245,10 @@ class PicChangeEvent(
     //图片下标（主页中的下标）
     var imageIndexInHomePage: Int = -1
 ) : Serializable
+
+/**
+ * 图片可查看数目
+ */
+class CanSeeMaxCountChangeEvent(
+    var seeMaxCoverNum: Int = -1
+)

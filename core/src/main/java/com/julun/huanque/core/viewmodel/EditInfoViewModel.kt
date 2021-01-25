@@ -6,6 +6,7 @@ import com.julun.huanque.common.basic.ReactiveData
 import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.bean.beans.*
+import com.julun.huanque.common.bean.events.CanSeeMaxCountChangeEvent
 import com.julun.huanque.common.bean.forms.*
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.constant.BusiConstant
@@ -17,6 +18,7 @@ import com.julun.huanque.common.suger.convertRtData
 import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.request
 import kotlinx.coroutines.launch
+import org.greenrobot.eventbus.EventBus
 import java.lang.StringBuilder
 
 /**
@@ -133,6 +135,7 @@ class EditInfoViewModel : BaseViewModel() {
                     //新增图片
                     originConverPicIdList.add(result.logId)
                 }
+                EventBus.getDefault().post(CanSeeMaxCountChangeEvent(result.seeMaxCoverNum))
             })
         }
     }

@@ -1006,7 +1006,7 @@ class HomePageActivity : BaseActivity() {
     ) {
         val picList = mutableListOf<HomePagePicBean>()
         if (headerPic.isNotEmpty()) {
-            picList.add(HomePagePicBean(headerPic, selected = BusiConstant.True, blur = false))
+            picList.add(HomePagePicBean(headerPic, selected = true, blur = false))
         }
         coverPicList.forEachIndexed { index, cover ->
             val mBlur = if (freeCount == -1) {
@@ -1173,11 +1173,7 @@ class HomePageActivity : BaseActivity() {
     private fun selectPic(position: Int, fromBga: Boolean = false) {
         val dataList = mPicAdapter.data
         dataList.forEachIndexed { index, homePagePicBean ->
-            if (index == position) {
-                homePagePicBean.selected = BusiConstant.True
-            } else {
-                homePagePicBean.selected = BusiConstant.False
-            }
+            homePagePicBean.selected = index == position
         }
         mPicAdapter.notifyDataSetChanged()
         if (!fromBga) {
@@ -1488,7 +1484,7 @@ class HomePageActivity : BaseActivity() {
         var tempIndex = -1
         var tempUrl = ""
         mPicAdapter.data.forEachIndexed { index, homePagePicBean ->
-            if (homePagePicBean.selected == BusiConstant.True) {
+            if (homePagePicBean.selected) {
                 //正在展示的图片
                 tempIndex = index
                 tempUrl = homePagePicBean.coverPic

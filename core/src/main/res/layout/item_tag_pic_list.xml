@@ -15,30 +15,17 @@
             android:id="@+id/card_img"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:layout_height="@dimen/dimen_200"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_height="@dimen/dimen_200" />
 
 
-        <LinearLayout
-            android:id="@+id/ll_top_tag"
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_top_tag"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/dimen_18"
-            android:layout_marginStart="@dimen/dimen_8"
-            android:layout_marginTop="@dimen/dimen_5"
-            android:background="@drawable/bg_shape_card_tag_02"
-            android:gravity="center"
-            android:paddingStart="@dimen/dimen_6"
-            android:paddingEnd="@dimen/dimen_6">
-
-            <com.facebook.drawee.view.SimpleDraweeView
-                android:id="@+id/sdv_tag"
-                android:layout_width="@dimen/dimen_16"
-                android:layout_height="@dimen/dimen_16"
-                app:actualImageScaleType="centerCrop"
-                app:placeholderImage="@mipmap/ic_tag_pic_more" />
-        </LinearLayout>
-
+            android:layout_height="@dimen/dimen_16"
+            android:layout_margin="@dimen/dimen_8"
+            android:src="@mipmap/ic_tag_pic_more" />
 
 
     </FrameLayout>

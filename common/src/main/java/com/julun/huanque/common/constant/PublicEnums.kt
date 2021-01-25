@@ -329,6 +329,9 @@ object TouchTypeConstants {
     //跳转我的主页
     const val MineHomePage = "MineHomePage"
 
+    //跳转他人的主页
+    const val OtherHomePage = "OtherHomePage"
+
     //跳转私聊
     const val ACTION_MESSAGE = "打开私聊"
 

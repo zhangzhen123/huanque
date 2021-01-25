@@ -185,9 +185,9 @@ class FavoriteAdapter : BaseQuickAdapter<FavoriteUserBean, BaseViewHolder>(R.lay
                         return@run
                     }
                     if (index == 0) {
-                        list.add(HomePagePicBean(pic, selected = BooleanType.FALSE))
+                        list.add(HomePagePicBean(pic, selected = false))
                     } else {
-                        list.add(HomePagePicBean(pic, selected = BooleanType.FALSE))
+                        list.add(HomePagePicBean(pic, selected = false))
                     }
 
                 }
