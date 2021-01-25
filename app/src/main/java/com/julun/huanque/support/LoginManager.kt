@@ -211,6 +211,9 @@ object LoginManager {
         type: Int = 0,
         success: (Session) -> Unit
     ) {
+        //清空昵称弹窗标记位
+        SPUtils.commitString(SPParamKey.DefaultHeader, "")
+        SPUtils.commitString(SPParamKey.DefaultNickname, "")
         if (type >= 0) {
             SharedPreferencesUtils.commitInt(SPParamKey.Last_Login, type)
         }

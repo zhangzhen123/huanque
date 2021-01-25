@@ -84,7 +84,7 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
     private val mInviteCodeFragment: InviteCodeFragment by lazy { InviteCodeFragment() }
 
     //引导弹窗
-    private val mUpdateInfoFragment: UpdateInfoFragment by lazy { UpdateInfoFragment() }
+    private var mUpdateInfoFragment: UpdateInfoFragment? = null
 
     override fun getLayoutId() = R.layout.fragment_mine
 
@@ -189,12 +189,14 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
         }
     }
 
-    var showed = false
     private fun loadData(info: UserDetailInfo) {
         //显示引导弹窗
-        if (!showed) {
-            mUpdateInfoFragment.show(childFragmentManager, "UpdateInfoFragment")
-            showed = true
+        val defaultHeader = SPUtils.getString(SPParamKey.DefaultHeader, "")
+        val defaultNickname = SPUtils.getString(SPParamKey.DefaultNickname, "")
+        if (defaultHeader == BusiConstant.True || defaultNickname == BusiConstant.True) {
+            //显示确认弹窗
+            mUpdateInfoFragment = UpdateInfoFragment.newInstance(defaultNickname, defaultHeader)
+            mUpdateInfoFragment?.show(childFragmentManager, "UpdateInfoFragment")
         }
         judgeRedPoint()
         loadGuide(info.perfectGuide, info.userBasic.perfection)

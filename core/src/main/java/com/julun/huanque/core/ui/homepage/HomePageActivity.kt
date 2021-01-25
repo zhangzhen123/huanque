@@ -36,6 +36,7 @@ import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.interfaces.routerservice.IRealNameService
 import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.manager.audio.AudioPlayerManager
+import com.julun.huanque.common.manager.audio.MediaPlayFunctionListener
 import com.julun.huanque.common.manager.audio.MediaPlayInfoListener
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.ui.image.ImageActivity
@@ -47,6 +48,7 @@ import com.julun.huanque.common.widgets.layoutmanager.AutoCenterLayoutManager
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.HomePageAdapter
 import com.julun.huanque.core.adapter.HomePagePicListAdapter
+import com.julun.huanque.core.manager.AliPlayerManager
 import com.julun.huanque.core.ui.record_voice.VoiceSignActivity
 import com.julun.huanque.core.viewmodel.HomePageViewModel
 import com.julun.rnlib.RNPageActivity
@@ -183,57 +185,63 @@ class HomePageActivity : BaseActivity() {
 
         //半秒回调一次
         audioPlayerManager.setSleep(500)
-//        audioPlayerManager.setMediaPlayFunctionListener(object : MediaPlayFunctionListener {
-//            override fun prepared() {
-//                logger.info("prepared")
-//            }
-//
-//            override fun start() {
-//                logger.info("start 总长=${audioPlayerManager.getDuration()}")
-////                val drawable = GlobalUtils.getDrawable(R.mipmap.icon_play_home_page)
-////                drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
-////                tv_time.setCompoundDrawables(drawable, null, null, null)
-//                //不使用实际的值
-////                currentPlayHomeRecomItem?.introduceVoiceLength = (audioPlayerManager.getDuration() / 1000)+1
-////                AliplayerManager.soundOff()
-//                sdv_voice_state.setPadding(dp2px(5), dp2px(6), dp2px(5), dp2px(6))
-//                ImageUtils.loadGifImageLocal(sdv_voice_state, R.mipmap.voice_home_page_playing)
-//            }
-//
-//            override fun resume() {
-//                logger.info("resume")
-//                AliPlayerManager.soundOff()
-////                val drawable = GlobalUtils.getDrawable(R.mipmap.icon_play_home_page)
-////                drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
-////                tv_time.setCompoundDrawables(drawable, null, null, null)
-//                sdv_voice_state.setPadding(dp2px(5), dp2px(6), dp2px(5), dp2px(6))
-//                ImageUtils.loadGifImageLocal(sdv_voice_state, R.mipmap.voice_home_page_playing)
-//            }
-//
-//            override fun pause() {
-//                logger.info("pause")
-//                AliPlayerManager.soundOn()
-////                val drawable = GlobalUtils.getDrawable(R.mipmap.icon_pause_home_page)
-////                drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
-////                tv_time.setCompoundDrawables(drawable, null, null, null)
+        audioPlayerManager.setMediaPlayFunctionListener(object : MediaPlayFunctionListener {
+            override fun prepared() {
+                logger.info("prepared")
+            }
+
+            override fun start() {
+                logger.info("start 总长=${audioPlayerManager.getDuration()}")
+//                val drawable = GlobalUtils.getDrawable(R.mipmap.icon_play_home_page)
+//                drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
+//                tv_time.setCompoundDrawables(drawable, null, null, null)
+                //不使用实际的值
+//                currentPlayHomeRecomItem?.introduceVoiceLength = (audioPlayerManager.getDuration() / 1000)+1
+//                AliplayerManager.soundOff()
+//                lottie_voice_state.setPadding(dp2px(5), dp2px(6), dp2px(5), dp2px(6))
+//                ImageUtils.loadGifImageLocal(lottie_voice_state, R.mipmap.voice_home_page_playing)
+                lottie_voice_state.playAnimation()
+            }
+
+
+            override fun resume() {
+                logger.info("resume")
+                AliPlayerManager.soundOff()
+//                val drawable = GlobalUtils.getDrawable(R.mipmap.icon_play_home_page)
+//                drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
+//                tv_time.setCompoundDrawables(drawable, null, null, null)
+//                lottie_voice_state.setPadding(dp2px(5), dp2px(6), dp2px(5), dp2px(6))
+//                ImageUtils.loadGifImageLocal(lottie_voice_state, R.mipmap.voice_home_page_playing)
+                lottie_voice_state.resumeAnimation()
+            }
+
+            override fun pause() {
+                logger.info("pause")
+                AliPlayerManager.soundOn()
+//                val drawable = GlobalUtils.getDrawable(R.mipmap.icon_pause_home_page)
+//                drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
+//                tv_time.setCompoundDrawables(drawable, null, null, null)
 //                val padding = dp2px(0)
-//                sdv_voice_state.setPadding(padding, padding, padding, padding)
-//                ImageUtils.loadImageLocal(sdv_voice_state, R.mipmap.icon_pause_home_page)
-//            }
-//
-//            override fun stop() {
-//                logger.info("stop")
-//                AliPlayerManager.soundOn()
-////                val drawable = GlobalUtils.getDrawable(R.mipmap.icon_pause_home_page)
-////                drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
-////                tv_time.setCompoundDrawables(drawable, null, null, null)
+//                lottie_voice_state.setPadding(padding, padding, padding, padding)
+//                ImageUtils.loadImageLocal(lottie_voice_state, R.mipmap.icon_pause_home_page)
+                lottie_voice_state.pauseAnimation()
+            }
+
+            override fun stop() {
+                logger.info("stop")
+                AliPlayerManager.soundOn()
+//                val drawable = GlobalUtils.getDrawable(R.mipmap.icon_pause_home_page)
+//                drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
+//                tv_time.setCompoundDrawables(drawable, null, null, null)
 //                val padding = dp2px(0)
-//                sdv_voice_state.setPadding(padding, padding, padding, padding)
-//                ImageUtils.loadImageLocal(sdv_voice_state, R.mipmap.icon_pause_home_page)
-//            }
-//
-//
-//        })
+//                lottie_voice_state.setPadding(padding, padding, padding, padding)
+//                ImageUtils.loadImageLocal(lottie_voice_state, R.mipmap.icon_pause_home_page)
+                lottie_voice_state.cancelAnimation()
+                lottie_voice_state.progress = 0f
+            }
+
+
+        })
         audioPlayerManager.setMediaPlayInfoListener(object : MediaPlayInfoListener {
             override fun onError(mp: MediaPlayer?, what: Int, extra: Int) {
                 logger.info("onError mediaPlayer=${mp.hashCode()} what=$what extra=$extra")
@@ -350,7 +358,7 @@ class HomePageActivity : BaseActivity() {
         view_voice.onClickNew {
             //进入语音录制页面
             val voiceBean = mHomePageViewModel.homeInfoBean.value?.voice ?: return@onClickNew
-            if (mHomePageViewModel.mineHomePage && voiceBean.voiceStatus.isEmpty()) {
+            if (mHomePageViewModel.mineHomePage && (voiceBean.voiceStatus.isEmpty() || voiceBean.voiceStatus == VoiceBean.Reject)) {
                 //录制语音
                 val intent = Intent(this, VoiceSignActivity::class.java)
                 if (ForceUtils.activityMatch(intent)) {
@@ -412,7 +420,7 @@ class HomePageActivity : BaseActivity() {
                 }
             }
         }
-        sdv_voice_state.onClickNew {
+        lottie_voice_state.onClickNew {
             tv_time.performClick()
         }
 
@@ -562,10 +570,10 @@ class HomePageActivity : BaseActivity() {
         //是否是我的主页
         mHomePageViewModel.mineHomePage = userID == SessionUtils.getUserId()
         if (mHomePageViewModel.mineHomePage) {
-//            iv_more_black.hide()
+            iv_more_black.hide()
             iv_more.hide()
         } else {
-//            iv_more_black.show()
+            iv_more_black.show()
             iv_more.show()
         }
         mHomePageViewModel.homeInfo()
@@ -858,7 +866,7 @@ class HomePageActivity : BaseActivity() {
             tv_time.text = "${bean.voice.length}″"
             view_voice.show()
             tv_time.show()
-            sdv_voice_state.show()
+            lottie_voice_state.show()
             tv_record.hide()
 //            sdv_voice_state.backgroundResource = R.drawable.bg_enable
 //            ImageUtils.loadImageLocal(sdv_voice_state, R.mipmap.icon_pause_home_page)
@@ -870,11 +878,11 @@ class HomePageActivity : BaseActivity() {
                     view_voice.show()
                     tv_record.show()
                     tv_time.hide()
-                    sdv_voice_state.hide()
+                    lottie_voice_state.hide()
                     when {
                         voiceStatus == VoiceBean.Wait -> {
                             //审核中
-                            tv_record.text = "语音审核中"
+                            tv_record.text = "审核中"
                         }
                         voiceStatus == VoiceBean.Reject -> {
                             //已拒绝
@@ -889,7 +897,7 @@ class HomePageActivity : BaseActivity() {
                 //他人主页 不显示语音签名
                 view_voice.hide()
                 tv_time.hide()
-                sdv_voice_state.hide()
+                lottie_voice_state.hide()
                 tv_record.hide()
             }
 

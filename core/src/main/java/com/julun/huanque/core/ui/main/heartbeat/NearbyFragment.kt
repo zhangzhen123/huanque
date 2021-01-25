@@ -909,7 +909,7 @@ class NearbyFragment : BaseLazyFragment() {
             checkPermissionTag = false
             checkPermission()
         }
-
+        startPlayAni(reset = true)
     }
 
     override fun onStop() {

@@ -1,7 +1,9 @@
 package com.julun.huanque.message.fragment
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.widget.TextView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,13 +22,9 @@ import com.julun.huanque.message.R
 import com.julun.huanque.message.activity.PrivateConversationActivity
 import com.julun.huanque.message.adapter.WatchAdapter
 import com.julun.huanque.message.viewmodel.WatchHistoryViewModel
-import kotlinx.android.synthetic.main.frag_heart_beat.*
-import kotlinx.android.synthetic.main.frag_watch.*
-import kotlinx.android.synthetic.main.frag_watch.cardView
 import kotlinx.android.synthetic.main.frag_watch.recycler_view
 import kotlinx.android.synthetic.main.frag_watch.state_pager_view
 import kotlinx.android.synthetic.main.frag_watch.swipe_refresh
-import kotlinx.android.synthetic.main.frag_watch.tv_attention
 
 /**
  *@创建者   dong
@@ -48,10 +46,14 @@ class WatchFragment : BaseFragment() {
     private var mNeedRefresh = false
 
     private val mAdapter = WatchAdapter()
+    private var cardView: View? = null
+    private var tv_attention: TextView? = null
+    private var mHeaderView : View? = null
     private var mType = ""
     override fun getLayoutId() = R.layout.frag_watch
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
+        MixedHelper.setSwipeRefreshStyle(swipe_refresh)
         mType = arguments?.getString(ParamConstant.TYPE) ?: ""
         if (mType != WatchForm.HaveSeen) {
             mAdapter.needBlur = true
@@ -68,7 +70,7 @@ class WatchFragment : BaseFragment() {
 
     override fun initEvents(rootView: View) {
         super.initEvents(rootView)
-        cardView.onClickNew {
+        cardView?.onClickNew {
             val touchEype = mViewModel.watchExtra.value?.touchType ?: ""
             mNeedRefresh = true
             AppHelper.openTouch(touchEype, activity = requireActivity())
@@ -82,7 +84,17 @@ class WatchFragment : BaseFragment() {
     private fun initRecyclerView() {
         recycler_view.layoutManager = LinearLayoutManager(context)
         recycler_view.adapter = mAdapter
-        mAdapter.setEmptyView(MixedHelper.getEmptyView(requireContext(), "暂无数据",imgResId = R.mipmap.icon_no_data_01))
+        if (mType == WatchForm.SeenMe) {
+            //添加header
+            val headerView = LayoutInflater.from(requireContext()).inflate(R.layout.header_watch, null)
+            cardView = headerView.findViewById(R.id.cardView)
+            tv_attention = headerView.findViewById(R.id.tv_attention)
+            mAdapter.addHeaderView(headerView)
+            mHeaderView = headerView
+        }
+
+
+        mAdapter.setEmptyView(MixedHelper.getEmptyView(requireContext(), "暂无数据", imgResId = R.mipmap.icon_no_data_01))
         mAdapter.setOnItemChildClickListener { adapter, view, position ->
             val tempHistoryBean = mAdapter.getItemOrNull(position) ?: return@setOnItemChildClickListener
             when (view.id) {
@@ -167,10 +179,10 @@ class WatchFragment : BaseFragment() {
                 mAdapter.maxCount = it.viewNum
                 mAdapter.notifyDataSetChanged()
                 if (it.guideText.isEmpty()) {
-                    cardView.hide()
+                    mHeaderView?.hide()
                 } else {
-                    cardView.show()
-                    tv_attention.text = it.guideText
+                    mHeaderView?.show()
+                    tv_attention?.text = it.guideText
                 }
             }
         })

@@ -123,15 +123,17 @@
                         tools:visibility="visible" />
 
 
-                    <com.facebook.drawee.view.SimpleDraweeView
-                        android:id="@+id/sdv_voice_state"
+                    <com.airbnb.lottie.LottieAnimationView
+                        android:id="@+id/lottie_voice_state"
                         android:layout_width="34dp"
                         android:layout_height="10dp"
                         android:layout_marginLeft="9dp"
-                        app:actualImageResource="@mipmap/icon_home_voice"
                         app:layout_constraintBottom_toBottomOf="@id/view_voice"
                         app:layout_constraintLeft_toLeftOf="@id/view_voice"
-                        app:layout_constraintTop_toTopOf="@id/view_voice" />
+                        app:layout_constraintTop_toTopOf="@id/view_voice"
+                        app:lottie_fileName="json/voice_home_page_playing.json"
+                        app:lottie_progress="0"
+                        app:lottie_repeatCount="-1" />
 
 
                     <TextView
@@ -176,7 +178,7 @@
                         android:layout_marginBottom="10dp"
                         app:layout_constraintBottom_toBottomOf="@id/bga_banner"
                         app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toLeftOf="@id/sdv_voice_state" />
+                        app:layout_constraintRight_toLeftOf="@id/lottie_voice_state" />
 
                     <TextView
                         android:id="@+id/tv_xd_time"

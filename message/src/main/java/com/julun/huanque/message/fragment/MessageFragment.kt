@@ -591,6 +591,19 @@ class MessageFragment : BaseFragment() {
         super.onHiddenChanged(hidden)
         if (hidden) {
             mOnLineStatusSettingPopupWindow?.dismiss()
+            lottie_anony_voice.cancelAnimation()
+            lottie_leyuan.cancelAnimation()
+            lottie_watch.cancelAnimation()
+            lottie_heart.cancelAnimation()
+            lottie_anony_voice.progress = 0f
+            lottie_leyuan.progress = 0f
+            lottie_watch.progress = 0f
+            lottie_heart.progress = 0f
+        } else {
+            lottie_anony_voice.playAnimation()
+            lottie_leyuan.playAnimation()
+            lottie_watch.playAnimation()
+            lottie_heart.playAnimation()
         }
     }
 

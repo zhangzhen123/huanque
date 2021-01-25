@@ -210,65 +210,166 @@
         android:id="@+id/con_top"
         android:layout_width="0px"
         android:layout_height="wrap_content"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/view_notification">
 
-        <View
+        <androidx.cardview.widget.CardView
             android:id="@+id/view_anony_voice"
             android:layout_width="0px"
             android:layout_height="0px"
             android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
             android:layout_marginRight="10dp"
-            android:background="@mipmap/icon_msg_voice"
+            app:cardCornerRadius="15dp"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@+id/view_leyuan"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/lottie_anony_voice"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:lottie_autoPlay="true"
+                app:lottie_fileName="json/msg_anony_voice.json"
+                app:lottie_progress="0" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="17dp"
+                android:layout_gravity="center_horizontal|bottom"
+                android:layout_marginBottom="7dp"
+                android:gravity="center"
+                android:text="匿名语音"
+                android:textColor="@color/black_333"
+                android:textSize="@dimen/sp_12"
+                app:layout_constraintBottom_toBottomOf="@id/view_anony_voice"
+                app:layout_constraintLeft_toLeftOf="@id/view_anony_voice"
+                app:layout_constraintRight_toRightOf="@id/view_anony_voice"
+                app:layout_constraintTop_toTopOf="@id/view_anony_voice" />
+
+
+        </androidx.cardview.widget.CardView>
 
         <View
+            android:layout_width="1px"
+            android:layout_height="1px"
+            android:layout_marginTop="10dp"
+            app:layout_constraintLeft_toLeftOf="@id/view_anony_voice"
+            app:layout_constraintTop_toBottomOf="@id/view_anony_voice" />
+
+        <androidx.cardview.widget.CardView
             android:id="@+id/view_leyuan"
             android:layout_width="0px"
             android:layout_height="0px"
             android:layout_marginRight="10dp"
             android:background="@mipmap/icon_msg_leyuan"
+            app:cardCornerRadius="15dp"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintLeft_toRightOf="@id/view_anony_voice"
             app:layout_constraintRight_toLeftOf="@+id/view_heart"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@id/view_anony_voice">
 
-        <View
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/lottie_leyuan"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:lottie_autoPlay="true"
+                app:lottie_fileName="json/msg_leyuan.json"
+                app:lottie_progress="0" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="17dp"
+                android:layout_gravity="center_horizontal|bottom"
+                android:layout_marginBottom="7dp"
+                android:gravity="center"
+                android:text="养鹊乐园"
+                android:textColor="@color/black_333"
+                android:textSize="@dimen/sp_12"
+                app:layout_constraintBottom_toBottomOf="@id/view_anony_voice"
+                app:layout_constraintLeft_toLeftOf="@id/view_anony_voice"
+                app:layout_constraintRight_toRightOf="@id/view_anony_voice"
+                app:layout_constraintTop_toTopOf="@id/view_anony_voice" />
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
             android:id="@+id/view_heart"
             android:layout_width="0px"
             android:layout_height="0px"
             android:layout_marginRight="10dp"
             android:background="@mipmap/icon_msg_heart"
+            app:cardCornerRadius="15dp"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintLeft_toRightOf="@id/view_leyuan"
             app:layout_constraintRight_toLeftOf="@+id/view_watch"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@id/view_anony_voice">
 
-        <View
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/lottie_heart"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:lottie_autoPlay="true"
+                app:lottie_fileName="json/msg_heart.json"
+                app:lottie_progress="0"
+                app:lottie_repeatCount="-1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="17dp"
+                android:layout_gravity="center_horizontal|bottom"
+                android:layout_marginBottom="7dp"
+                android:gravity="center"
+                android:text="心动的人"
+                android:textColor="@color/black_333"
+                android:textSize="@dimen/sp_12"
+                app:layout_constraintBottom_toBottomOf="@id/view_anony_voice"
+                app:layout_constraintLeft_toLeftOf="@id/view_anony_voice"
+                app:layout_constraintRight_toRightOf="@id/view_anony_voice"
+                app:layout_constraintTop_toTopOf="@id/view_anony_voice" />
+
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
             android:id="@+id/view_watch"
             android:layout_width="0px"
             android:layout_height="0px"
             android:layout_marginRight="10dp"
             android:background="@mipmap/icon_msg_watch"
+            app:cardCornerRadius="15dp"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintLeft_toRightOf="@id/view_heart"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@id/view_anony_voice">
 
-        <!--        <TextView-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:text="榜单"-->
-        <!--            app:layout_constraintBottom_toBottomOf="@id/view_list"-->
-        <!--            app:layout_constraintLeft_toLeftOf="@id/view_list"-->
-        <!--            app:layout_constraintRight_toRightOf="@id/view_list"-->
-        <!--            app:layout_constraintTop_toTopOf="@id/view_list" />-->
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/lottie_watch"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:lottie_autoPlay="true"
+                app:lottie_fileName="json/msg_watched.json"
+                app:lottie_progress="0" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="17dp"
+                android:layout_gravity="center_horizontal|bottom"
+                android:layout_marginBottom="7dp"
+                android:gravity="center"
+                android:text="看过的人"
+                android:textColor="@color/black_333"
+                android:textSize="@dimen/sp_12"
+                app:layout_constraintBottom_toBottomOf="@id/view_anony_voice"
+                app:layout_constraintLeft_toLeftOf="@id/view_anony_voice"
+                app:layout_constraintRight_toRightOf="@id/view_anony_voice"
+                app:layout_constraintTop_toTopOf="@id/view_anony_voice" />
+
+        </androidx.cardview.widget.CardView>
+
 
         <!--        <TextView-->
         <!--            android:layout_width="wrap_content"-->

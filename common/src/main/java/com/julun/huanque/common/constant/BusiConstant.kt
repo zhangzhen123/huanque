@@ -151,6 +151,12 @@ object SPParamKey {
 
     //真人认证状态
     const val RealPeople = "RealPeople"
+
+    //默认头像
+    const val DefaultHeader = "DefaultHeader"
+
+    //默认昵称
+    const val DefaultNickname = "DefaultNickname"
 }
 
 /**

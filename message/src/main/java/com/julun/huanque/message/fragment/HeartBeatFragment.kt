@@ -1,7 +1,10 @@
 package com.julun.huanque.message.fragment
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -9,11 +12,13 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.basic.NetStateType
+import com.julun.huanque.common.bean.forms.HeartBeanForm
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.helper.AppHelper
 import com.julun.huanque.common.helper.MixedHelper
+import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
@@ -22,6 +27,7 @@ import com.julun.huanque.message.R
 import com.julun.huanque.message.adapter.HeartBeatAdapter
 import com.julun.huanque.message.viewmodel.HeartBeatViewModel
 import kotlinx.android.synthetic.main.frag_heart_beat.*
+import java.util.zip.Inflater
 
 /**
  *@创建者   dong
@@ -49,14 +55,20 @@ class HeartBeatFragment : BaseFragment() {
     //解锁弹窗
     private val mHeartUnLockFragment: HeartUnLockFragment by lazy { HeartUnLockFragment() }
 
+    private var tv_action: TextView? = null
+    private var tv_attention: TextView? = null
+    private var mHeaderView: View? = null
+
     private var mType = ""
     override fun getLayoutId() = R.layout.frag_heart_beat
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
+        MixedHelper.setSwipeRefreshStyle(swipe_refresh)
         mType = arguments?.getString(ParamConstant.TYPE) ?: ""
         initRecyclerView()
         initViewModel()
         state_pager_view.showLoading()
+
         mViewModel.queryData(mType, true)
 
         swipe_refresh.setOnRefreshListener {
@@ -67,7 +79,7 @@ class HeartBeatFragment : BaseFragment() {
 
     override fun initEvents(rootView: View) {
         super.initEvents(rootView)
-        tv_action.onClickNew {
+        tv_action?.onClickNew {
             //点击事件
             var touchType = mViewModel.guideInfo.value?.touchType ?: return@onClickNew
             mNeedRefresh = true
@@ -81,7 +93,16 @@ class HeartBeatFragment : BaseFragment() {
     private fun initRecyclerView() {
         recycler_view.layoutManager = GridLayoutManager(context, 3)
         recycler_view.adapter = mAdapter
-        mAdapter.setEmptyView(MixedHelper.getEmptyView(requireContext(), "暂无数据",imgResId = R.mipmap.icon_no_data_01))
+        if (mType == HeartBeanForm.HeartTouchToMe) {
+            val headerView = LayoutInflater.from(requireContext()).inflate(R.layout.header_heart_beat, null)
+            tv_action = headerView.findViewById(R.id.tv_action)
+            tv_attention = headerView.findViewById(R.id.tv_attention)
+            mAdapter.addHeaderView(headerView)
+            mHeaderView = headerView
+        }
+
+
+        mAdapter.setEmptyView(MixedHelper.getEmptyView(requireContext(), "暂无数据", imgResId = R.mipmap.icon_no_data_01))
         mAdapter.setOnItemClickListener { adapter, view, position ->
             val tempData = mAdapter.getItemOrNull(position) ?: return@setOnItemClickListener
             if (tempData.unLock == BusiConstant.True) {
@@ -150,11 +171,11 @@ class HeartBeatFragment : BaseFragment() {
             if (it != null) {
                 //刷新
                 if (it.guideText.isEmpty()) {
-                    cardView.hide()
+                    mHeaderView?.hide()
                 } else {
-                    cardView.show()
-                    tv_attention.text = it.guideText
-                    tv_action.text = it.touchText
+                    mHeaderView?.show()
+                    tv_attention?.text = it.guideText
+                    tv_action?.text = it.touchText
                     mActViewModel.unLockCount = it.remainUnlockTimes
                 }
             }
