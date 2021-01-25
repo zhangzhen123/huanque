@@ -10,6 +10,7 @@
         android:layout_width="@dimen/dimen_16"
         android:layout_height="@dimen/dimen_16"
         android:visibility="gone"
+        android:alpha="0"
         tools:visibility="visible">
 
         <View
@@ -72,6 +73,7 @@
         android:id="@+id/fl_end_dot"
         android:layout_width="@dimen/dimen_16"
         android:layout_height="@dimen/dimen_16"
+        android:alpha="0"
         android:visibility="gone">
         <View
             android:id="@+id/v_dot_bg_end"

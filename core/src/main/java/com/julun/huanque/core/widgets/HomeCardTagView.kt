@@ -96,11 +96,11 @@ class HomeCardTagView : LinearLayout {
                 v_dot_bg_end
             }
         val ani1 = ObjectAnimator.ofFloat(dotView, View.ALPHA, 0f, 1f)
-        ani1.duration = 500
+        ani1.duration = 800
 //        ani1.repeatCount=3
-        val ani2 = ObjectAnimator.ofFloat(dotViewBg, View.SCALE_X, 0f,0.6f, 1.2f,0.6f, 0.0f)
+        val ani2 = ObjectAnimator.ofFloat(dotViewBg, View.SCALE_X, 0f, 0.6f, 1.2f, 0.6f, 0.0f)
         ani2.repeatCount = 2
-        val ani3 = ObjectAnimator.ofFloat(dotViewBg, View.SCALE_Y, 0f,0.6f, 1.2f,0.6f, 0.0f)
+        val ani3 = ObjectAnimator.ofFloat(dotViewBg, View.SCALE_Y, 0f, 0.6f, 1.2f, 0.6f, 0.0f)
         ani3.repeatCount = 2
 
         val aniSet1 = AnimatorSet()
@@ -121,7 +121,7 @@ class HomeCardTagView : LinearLayout {
             ll_content.requestLayout()
         }
         val aniSet2 = AnimatorSet()
-        aniSet2.startDelay = 500
+        aniSet2.startDelay = 300
         aniSet2.playTogether(ani21, ani22)
 
         val aniShowSet = AnimatorSet()
@@ -156,10 +156,10 @@ class HomeCardTagView : LinearLayout {
 
         aniSet!!.addListener(onStart = {
             this.show()
-//            dotView.alpha = 1f
-//            dotViewBg.alpha = 1f
             llp.width = 0
             ll_content.requestLayout()
+        }, onEnd = {
+            dotView.alpha = 0f
         })
 //        }
         if (listener != null) {
