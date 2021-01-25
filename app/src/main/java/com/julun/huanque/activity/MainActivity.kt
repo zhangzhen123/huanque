@@ -497,8 +497,8 @@ class MainActivity : BaseActivity() {
      * tab上面的imageview添加动画
      */
     private fun tabIconAnimation(index: Int) {
-        val list = arrayOf(lottie_make_friends, lottie_square, lottie_program, lottie_message, lottie_mine)
-        val textList = arrayOf(item_make_friends, item_square, item_program, item_message, item_mine)
+        val list = arrayOf(lottie_make_friends, lottie_program, lottie_message, lottie_square, lottie_mine)
+        val textList = arrayOf(item_make_friends, item_program, item_message, item_square, item_mine)
         list.forEachIndexed { position, lottieAnimationView ->
             if (index == position) {
                 if (!lottieAnimationView.isAnimating) {

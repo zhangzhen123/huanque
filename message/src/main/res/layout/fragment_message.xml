@@ -214,14 +214,23 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/view_notification">
 
-        <androidx.cardview.widget.CardView
+        <View
+            android:id="@+id/view_bg_anony_voice"
+            android:layout_width="10px"
+            android:layout_height="10px"
+            android:background="@drawable/bg_msg_top"
+            app:layout_constraintBottom_toBottomOf="@+id/view_voice_divider"
+            app:layout_constraintLeft_toLeftOf="@+id/view_anony_voice"
+            app:layout_constraintRight_toRightOf="@id/view_anony_voice"
+            app:layout_constraintTop_toTopOf="@id/view_anony_voice" />
+
+        <FrameLayout
             android:id="@+id/view_anony_voice"
             android:layout_width="0px"
             android:layout_height="0px"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginRight="10dp"
-            app:cardCornerRadius="15dp"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@+id/view_leyuan"
@@ -250,22 +259,31 @@
                 app:layout_constraintTop_toTopOf="@id/view_anony_voice" />
 
 
-        </androidx.cardview.widget.CardView>
+        </FrameLayout>
 
         <View
+            android:id="@+id/view_voice_divider"
             android:layout_width="1px"
             android:layout_height="1px"
             android:layout_marginTop="10dp"
             app:layout_constraintLeft_toLeftOf="@id/view_anony_voice"
             app:layout_constraintTop_toBottomOf="@id/view_anony_voice" />
 
-        <androidx.cardview.widget.CardView
+        <View
+            android:id="@+id/view_bg_leyuan"
+            android:layout_width="10px"
+            android:layout_height="10px"
+            android:background="@drawable/bg_msg_top"
+            app:layout_constraintBottom_toBottomOf="@id/view_bg_anony_voice"
+            app:layout_constraintLeft_toLeftOf="@+id/view_leyuan"
+            app:layout_constraintRight_toRightOf="@id/view_leyuan"
+            app:layout_constraintTop_toTopOf="@id/view_bg_anony_voice" />
+
+        <FrameLayout
             android:id="@+id/view_leyuan"
             android:layout_width="0px"
             android:layout_height="0px"
             android:layout_marginRight="10dp"
-            android:background="@mipmap/icon_msg_leyuan"
-            app:cardCornerRadius="15dp"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintLeft_toRightOf="@id/view_anony_voice"
             app:layout_constraintRight_toLeftOf="@+id/view_heart"
@@ -294,15 +312,25 @@
                 app:layout_constraintRight_toRightOf="@id/view_anony_voice"
                 app:layout_constraintTop_toTopOf="@id/view_anony_voice" />
 
-        </androidx.cardview.widget.CardView>
+        </FrameLayout>
 
-        <androidx.cardview.widget.CardView
+        <View
+            android:id="@+id/view_bg_heart"
+            android:layout_width="10px"
+            android:layout_height="10px"
+            tools:visibility="gone"
+            android:background="@drawable/bg_msg_top"
+            app:layout_constraintBottom_toBottomOf="@id/view_bg_anony_voice"
+            app:layout_constraintLeft_toLeftOf="@+id/view_heart"
+            app:layout_constraintRight_toRightOf="@id/view_heart"
+            app:layout_constraintTop_toTopOf="@id/view_bg_anony_voice" />
+
+
+        <FrameLayout
             android:id="@+id/view_heart"
             android:layout_width="0px"
             android:layout_height="0px"
             android:layout_marginRight="10dp"
-            android:background="@mipmap/icon_msg_heart"
-            app:cardCornerRadius="15dp"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintLeft_toRightOf="@id/view_leyuan"
             app:layout_constraintRight_toLeftOf="@+id/view_watch"
@@ -332,15 +360,25 @@
                 app:layout_constraintTop_toTopOf="@id/view_anony_voice" />
 
 
-        </androidx.cardview.widget.CardView>
+        </FrameLayout>
 
-        <androidx.cardview.widget.CardView
+        <View
+            android:id="@+id/view_bg_watch"
+            android:layout_width="10px"
+            android:layout_height="10px"
+            android:background="@drawable/bg_msg_top"
+            tools:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/view_bg_anony_voice"
+            app:layout_constraintLeft_toLeftOf="@+id/view_watch"
+            app:layout_constraintRight_toRightOf="@id/view_watch"
+            app:layout_constraintTop_toTopOf="@id/view_bg_anony_voice" />
+
+
+        <FrameLayout
             android:id="@+id/view_watch"
             android:layout_width="0px"
             android:layout_height="0px"
             android:layout_marginRight="10dp"
-            android:background="@mipmap/icon_msg_watch"
-            app:cardCornerRadius="15dp"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintLeft_toRightOf="@id/view_heart"
             app:layout_constraintRight_toRightOf="parent"
@@ -368,7 +406,7 @@
                 app:layout_constraintRight_toRightOf="@id/view_anony_voice"
                 app:layout_constraintTop_toTopOf="@id/view_anony_voice" />
 
-        </androidx.cardview.widget.CardView>
+        </FrameLayout>
 
 
         <!--        <TextView-->

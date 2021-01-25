@@ -107,6 +107,13 @@ class MessageFragment : BaseFragment() {
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         MixedHelper.setSwipeRefreshStyle(swipe_refresh)
+        val bgBorder = (ScreenUtils.getScreenWidth() - dp2px(50)) / 4 + dp2px(10)
+        updateView(view_bg_anony_voice, bgBorder)
+        updateView(view_bg_leyuan, bgBorder)
+        updateView(view_bg_heart, bgBorder)
+        updateView(view_bg_watch, bgBorder)
+
+
         initViewModel()
         initRecyclerView()
 //        initEvents()
@@ -149,6 +156,17 @@ class MessageFragment : BaseFragment() {
 
         })
     }
+
+    /**
+     * 设置View宽高
+     */
+    private fun updateView(view: View, border: Int) {
+        val borderParams = view.layoutParams
+        borderParams.width = border
+        borderParams.height = border
+        view.layoutParams = borderParams
+    }
+
 
     /**
      * 初始化RecyclerView
