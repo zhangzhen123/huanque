@@ -88,7 +88,7 @@ public class StackLayoutManager extends RecyclerView.LayoutManager {
 
     @Override
     public boolean isAutoMeasureEnabled() {
-        return  true;
+        return true;
     }
 
     @Override
@@ -132,7 +132,7 @@ public class StackLayoutManager extends RecyclerView.LayoutManager {
     @Override
     public void onLayoutCompleted(RecyclerView.State state) {
         super.onLayoutCompleted(state);
-        if (getItemCount()<=0)
+        if (getItemCount() <= 0)
             return;
         if (!initial) {
             fill(recycler, initialOffset, false);
@@ -592,7 +592,7 @@ public class StackLayoutManager extends RecyclerView.LayoutManager {
     public void scrollToPosition(int position) {
         if (position > getItemCount() - 1) {
             Log.i(TAG, "position is " + position + " but itemCount is " + getItemCount());
-            return;
+            position = getItemCount() - 1;
         }
         int currPosition = mTotalOffset / mUnit;
         int distance = (position - currPosition) * mUnit;

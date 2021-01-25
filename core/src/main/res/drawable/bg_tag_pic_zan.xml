@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/bg_solid_btn4" android:state_activated="true"/>
-    <item android:drawable="@drawable/bg_shape_black_p30" />
+    <item android:drawable="@drawable/bg_solid_btn4" android:state_activated="true" />
+    <item >
+        <shape android:shape="rectangle">
+            <solid android:color="#33FFFFFF" />
+            <corners android:radius="30dp" />
+        </shape>
+    </item>
 </selector>
