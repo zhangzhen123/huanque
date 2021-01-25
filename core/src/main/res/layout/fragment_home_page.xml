@@ -2,13 +2,21 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_top_radius_15"
+    android:background="@color/white"
     android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:gravity="center"
+        android:text="温馨提示\n一旦操作成功后，官方会在24小时之内进行核实\n并作出处理"
+        android:textColor="@color/black_999"
+        android:textSize="@dimen/sp_12" />
 
     <TextView
         android:id="@+id/tv_report"
         android:layout_width="match_parent"
-        android:layout_height="46dp"
+        android:layout_height="50dp"
         android:gravity="center"
         android:text="举报"
         android:textColor="@color/black_333"
@@ -17,7 +25,7 @@
     <TextView
         android:id="@+id/tv_black"
         android:layout_width="match_parent"
-        android:layout_height="46dp"
+        android:layout_height="50dp"
         android:gravity="center"
         android:text="拉黑"
         android:textColor="@color/black_333"
