@@ -96,7 +96,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_toEndOf="@id/iv_back"
+                        android:layout_marginLeft="45dp"
+                        android:layout_marginRight="45dp"
                         android:ellipsize="end"
                         android:gravity="center"
                         android:maxLines="1"
@@ -120,9 +121,9 @@
                         android:includeFontPadding="false"
                         android:maxLength="15"
                         android:text="管理"
-                        android:textStyle="bold"
                         android:textColor="@color/sel_tag_manager_action"
-                        android:textSize="@dimen/sp_12" />
+                        android:textSize="@dimen/sp_12"
+                        android:textStyle="bold" />
 
                 </RelativeLayout>
 

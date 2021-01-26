@@ -124,6 +124,9 @@ class LoginActivity2 : BaseActivity() {
 
         tv_phone_code.onClickNew {
             //获取短信验证码
+            if(!tv_phone_code.isSelected){
+                return@onClickNew
+            }
             val phoneNum = phone_num.text.toString().trim().replace(" ", "")
             if (checkPhone(phoneNum)) {
                 tv_phone_num.text = "验证码已发送至 +86 $phoneNum"
@@ -454,6 +457,11 @@ class LoginActivity2 : BaseActivity() {
         mShowCodeSet.start()
         con_weixin.hide()
         tv_fast_login.hide()
+        textView5.hide()
+        register_rule.hide()
+        tv_and.hide()
+        tv_register_privacy.hide()
+        tv_agreement.hide()
     }
 
     private val mShowInfoSet: AnimatorSet = AnimatorSet()
@@ -493,6 +501,11 @@ class LoginActivity2 : BaseActivity() {
         mShowInfoSet.start()
         con_weixin.show()
         tv_fast_login.show()
+        textView5.show()
+        register_rule.show()
+        tv_and.show()
+        tv_register_privacy.show()
+        tv_agreement.show()
     }
 
 
