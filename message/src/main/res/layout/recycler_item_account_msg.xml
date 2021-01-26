@@ -54,8 +54,7 @@
     <ImageView
         android:id="@+id/iv_pic"
         android:layout_width="46dp"
-        android:layout_height="16dp"
-        android:paddingLeft="5dp"
+        android:layout_height="wrap_content"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/tv_nickname"
         app:layout_constraintLeft_toRightOf="@id/tv_nickname"

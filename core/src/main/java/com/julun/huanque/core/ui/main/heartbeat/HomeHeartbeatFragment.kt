@@ -244,7 +244,6 @@ class HomeHeartbeatFragment : BaseFragment() {
                     simplePagerTitleView.scaleX = 0.727f
                     simplePagerTitleView.scaleY = 0.727f
                 }
-                simplePagerTitleView.backgroundResource=R.color.transparent
                 return simplePagerTitleView
             }
 

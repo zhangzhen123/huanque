@@ -52,7 +52,7 @@ class HomeHeadlineView @JvmOverloads constructor(context: Context, attrs: Attrib
         runway_headLine.onClickNew {
             logger.info("click runwayMessageText")
             currentRunwayMessage?.let { tpl ->
-                AppHelper.openTouch(tpl.textTouch!!, tpl.context!!.touchValue)
+                AppHelper.openTouch(tpl.textTouch ?: return@let, tpl.context?.touchValue ?: "")
             }
 
         }
