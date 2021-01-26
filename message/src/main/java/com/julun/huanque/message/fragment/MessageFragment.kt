@@ -139,6 +139,7 @@ class MessageFragment : BaseFragment() {
             iv_setting.hide()
             iv_contacts.hide()
             tv_message_unread.hide()
+            con_top.hide()
 
             view_top_player.show()
             tv_title_player.show()
