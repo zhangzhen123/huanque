@@ -42,6 +42,7 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNav
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerIndicator
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator
+import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.topPadding
 import java.util.*
 
@@ -243,6 +244,7 @@ class HomeHeartbeatFragment : BaseFragment() {
                     simplePagerTitleView.scaleX = 0.727f
                     simplePagerTitleView.scaleY = 0.727f
                 }
+                simplePagerTitleView.backgroundResource=R.color.transparent
                 return simplePagerTitleView
             }
 

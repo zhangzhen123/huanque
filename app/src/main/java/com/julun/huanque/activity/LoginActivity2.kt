@@ -548,7 +548,8 @@ class LoginActivity2 : BaseActivity() {
      * 关闭键盘
      */
     private fun closeKeyBoard() {
-        ScreenUtils.hideSoftInput(phone_num)
+//        ScreenUtils.hideSoftInput(phone_num)
+        ScreenUtils.hideSoftInput(this)
         phone_num.clearFocus()
         password_view.clearFocus()
     }

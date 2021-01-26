@@ -33,7 +33,10 @@ import com.julun.huanque.adapter.LoginPicAdapter
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.bean.beans.LoginPicBean
 import com.julun.huanque.common.bean.events.WeiXinCodeEvent
-import com.julun.huanque.common.constant.*
+import com.julun.huanque.common.constant.ARouterConstant
+import com.julun.huanque.common.constant.Agreement
+import com.julun.huanque.common.constant.BusiConstant
+import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.helper.ChannelCodeHelper
 import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.interfaces.LocalPreLoginListener
@@ -300,7 +303,7 @@ class WelcomeActivity : BaseActivity() {
      * OpenInstall解析之后的操作
      */
 //    private fun doOpenInstall(bean: OpenInstallParamsBean) {
-        //用户归因调用
+    //用户归因调用
 //        viewModel?.channel = bean.h5ChannelCode
 //        viewModel?.userOpenInstall(bean.h5SID, bean.h5PID, bean.h5ChannelCode)
 //    }
@@ -360,7 +363,7 @@ class WelcomeActivity : BaseActivity() {
 //            }
             //获取绑定数据
             val bindData = appData?.getData()
-            ChannelCodeHelper.saveWakeParams(appData)
+            ChannelCodeHelper.saveWakeParams(channelCode, bindData ?: "")
             logger.info("获取wakeUpAdapter数据成功：$channelCode 额外参数$bindData")
 //            val bean = ChannelCodeHelper.getWeakUpData(appData ?: return)
 //            if (viewModel != null) {
@@ -465,7 +468,12 @@ class WelcomeActivity : BaseActivity() {
                             mLoginViewModel?.fastLogin(token)
                         }
                         else -> {
-//                        JVerificationInterface.dismissLoginAuthActivity()
+                            JVerificationInterface.dismissLoginAuthActivity()
+                            val intent = Intent(this@WelcomeActivity, LoginActivity2::class.java)
+                            if (ForceUtils.activityMatch(intent)) {
+                                loginActivity = true
+                                startActivity(intent)
+                            }
 //                        if (!isGuideLoginActivity) {
 //                            EventBus.getDefault().post(LoginFragmentDismissEvent())
 //                        }
@@ -740,7 +748,7 @@ class WelcomeActivity : BaseActivity() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun receiveWeiXinCode(event: WeiXinCodeEvent) {
-        if(loginActivity){
+        if (loginActivity) {
             return
         }
         logger.info("收到微信登录code:${event.code}")

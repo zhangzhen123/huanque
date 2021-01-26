@@ -1,9 +1,6 @@
 package com.julun.huanque.common.helper
 
 import android.util.Log
-import com.fm.openinstall.OpenInstall
-import com.fm.openinstall.listener.AppInstallListener
-import com.fm.openinstall.model.AppData
 import com.julun.huanque.common.constant.MetaKey
 import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.utils.JsonUtil
@@ -20,14 +17,14 @@ import com.julun.huanque.common.utils.ULog
  *@Description: 用于获取渠道号  存储和读取当前的场景渠道号
  */
 object ChannelCodeHelper {
-    private const val H5SID = "h5Sid"
-    private const val H5PID = "h5Pid"
-    private const val HqChannelCode = "hqChannelCode"
+    const val H5SID = "h5Sid"
+    const val H5PID = "h5Pid"
+    const val HqChannelCode = "hqChannelCode"
 
     val logger = ULog.getLogger("ChannelHelper")
 
     //是否需要调用OpenInstall getInstallData
-    private const val NEEDINSTALL = "needInstall"
+    const val NEEDINSTALL = "needInstall"
 
     //存储的渠道号
     private const val CHANNELCODE = "channelCode"
@@ -49,52 +46,50 @@ object ChannelCodeHelper {
     /**
      * 获取安装参数
      */
-    fun getInstallData() {
-        val needInstall = getNeedInstall()
-        Log.i("OpenInstallManager", "开始获取渠道号：$needInstall")
-        if (needInstall) {
-            OpenInstall.getInstall(AppInstallListener { appData, error ->
-                if (error == null) {
-                    if (appData == null || appData.isEmpty) return@AppInstallListener
-                    //获取渠道数据
-                    val channelCode = appData.getChannel()
-                    //获取个性化安装数据
-                    val bindData = appData.getData()
-                    setChannelCode(channelCode)
-
-                    var channelParam = ""
-                    if (bindData.isNotBlank()) {
-                        val map = JsonUtil.toJsonMap(bindData)
-                        if (map != null) {
-                            channelParam = map[HqChannelCode] as? String ?: ""
-                        }
-                    }
-
-                    if (channelParam.isNotEmpty()) {
-                        setChannelParam(channelParam)
-                    }
-                    //使用数据后，不想再调用，将needInstall设置为false
-                    SharedPreferencesUtils.commitBoolean(NEEDINSTALL, false)
-                } else {
-                    Log.i("OpenInstallManager", "errorMsg : " + error.toString())
-                }
-
-            })
-
-        }
-//        //每次启动 保存老的metachannel
-//        setChannelNative()
-    }
+//    fun getInstallData() {
+//        val needInstall = getNeedInstall()
+//        Log.i("OpenInstallManager", "开始获取渠道号：$needInstall")
+//        if (needInstall) {
+//            OpenInstall.getInstall(AppInstallListener { appData, error ->
+//                if (error == null) {
+//                    if (appData == null || appData.isEmpty) return@AppInstallListener
+//                    //获取渠道数据
+//                    val channelCode = appData.getChannel()
+//                    //获取个性化安装数据
+//                    val bindData = appData.getData()
+//                    setChannelCode(channelCode)
+//
+//                    var channelParam = ""
+//                    if (bindData.isNotBlank()) {
+//                        val map = JsonUtil.toJsonMap(bindData)
+//                        if (map != null) {
+//                            channelParam = map[HqChannelCode] as? String ?: ""
+//                        }
+//                    }
+//
+//                    if (channelParam.isNotEmpty()) {
+//                        setChannelParam(channelParam)
+//                    }
+//                    //使用数据后，不想再调用，将needInstall设置为false
+//                    SharedPreferencesUtils.commitBoolean(NEEDINSTALL, false)
+//                } else {
+//                    Log.i("OpenInstallManager", "errorMsg : " + error.toString())
+//                }
+//
+//            })
+//
+//        }
+////        //每次启动 保存老的metachannel
+////        setChannelNative()
+//    }
 
     /**
      * 保存唤醒的外部渠道HqChannelCode
      */
-    fun saveWakeParams(appData: AppData?) {
-        val channelCode = appData?.getChannel() ?: ""
-        val extra = appData?.data ?: return
-        if (extra.isEmpty()) {
-            return
-        }
+    fun saveWakeParams(channelCode:String,extra: String) {
+//        if (extra.isEmpty()) {
+//            return
+//        }
         val map = JsonUtil.toJsonMap(extra)
         var channelParam = ""
         if (map != null) {
@@ -112,7 +107,7 @@ object ChannelCodeHelper {
         setChannelActive(activeChannel)
     }
 
-    private fun getNeedInstall(): Boolean {
+    fun getNeedInstall(): Boolean {
         return SharedPreferencesUtils.getBoolean(NEEDINSTALL, true)
     }
 
@@ -129,7 +124,7 @@ object ChannelCodeHelper {
     }
 
     //参数渠道号设置 通过前端传参配置的渠道号  hqChannelCode
-    private fun setChannelParam(channelParams: String) {
+    fun setChannelParam(channelParams: String) {
         SPUtils.commitBoolean(SPParamKey.QueryGuessYouLike, false)
         SharedPreferencesUtils.commitString(CHANNELPARAM, channelParams)
     }
