@@ -200,6 +200,12 @@ class TagFragment : BaseBottomSheetFragment() {
     private fun initRecyclerView() {
         recycler_view.layoutManager = GridLayoutManager(requireContext(), 4)
         recycler_view.adapter = mAdapter
+        val footView = View(requireContext())
+        mAdapter.setFooterView(footView)
+        val footParams = footView.layoutParams
+        footParams.height = dp2px(50)
+        footView.layoutParams = footParams
+
         mAdapter.onAdapterClickNew { _, _, position ->
             val item = mAdapter.getItemOrNull(position) ?: return@onAdapterClickNew
 //            AuthTagPicActivity.start(requireActivity(), item.tagId, mHomeViewModel.mineHomePage, mLike, isSameSex)
