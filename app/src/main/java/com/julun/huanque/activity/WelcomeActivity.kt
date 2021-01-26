@@ -32,7 +32,6 @@ import com.julun.huanque.R
 import com.julun.huanque.adapter.LoginPicAdapter
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.bean.beans.LoginPicBean
-import com.julun.huanque.common.bean.beans.OpenInstallParamsBean
 import com.julun.huanque.common.bean.events.WeiXinCodeEvent
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.ChannelCodeHelper
@@ -46,14 +45,12 @@ import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
-import com.julun.huanque.fragment.LoginFragment
 import com.julun.huanque.fragment.PersonalInformationProtectionFragment
 import com.julun.huanque.manager.FastLoginManager
 import com.julun.huanque.support.LoginManager
 import com.julun.huanque.support.WXApiManager
 import com.julun.huanque.viewmodel.LoginViewModel
 import com.julun.huanque.viewmodel.PersonalInformationProtectionViewModel
-import com.julun.huanque.viewmodel.PhoneNumLoginViewModel
 import com.julun.huanque.viewmodel.WelcomeViewModel
 import com.julun.platform_push.receiver.RPushUtil
 import io.reactivex.rxjava3.core.Observable
@@ -78,7 +75,7 @@ class WelcomeActivity : BaseActivity() {
     private var mShowFragment = false
 
     //openinstall返回的bean
-    private var mOpenInstallBean: OpenInstallParamsBean? = null
+//    private var mOpenInstallBean: OpenInstallParamsBean? = null
 
     //预取号结束的标识
     private var mPreLoginSuccess = false
@@ -285,7 +282,7 @@ class WelcomeActivity : BaseActivity() {
                 dismissLoginDialog()
             }
         })
-        doOpenInstall(mOpenInstallBean ?: return)
+//        doOpenInstall(mOpenInstallBean ?: return)
     }
 
     /**
@@ -302,11 +299,11 @@ class WelcomeActivity : BaseActivity() {
     /**
      * OpenInstall解析之后的操作
      */
-    private fun doOpenInstall(bean: OpenInstallParamsBean) {
+//    private fun doOpenInstall(bean: OpenInstallParamsBean) {
         //用户归因调用
 //        viewModel?.channel = bean.h5ChannelCode
 //        viewModel?.userOpenInstall(bean.h5SID, bean.h5PID, bean.h5ChannelCode)
-    }
+//    }
 
     private fun checkPermissions() {
         val rxPermissions = RxPermissions(this)
@@ -358,12 +355,12 @@ class WelcomeActivity : BaseActivity() {
         override fun onWakeUp(appData: AppData?) {
             //获取渠道数据
             val channelCode = appData?.getChannel() ?: ""
-            if (channelCode.isNotEmpty()) {
-                ChannelCodeHelper.setChannelCode(channelCode)
-            }
+//            if (channelCode.isNotEmpty()) {
+//                ChannelCodeHelper.setChannelCode(channelCode)
+//            }
             //获取绑定数据
             val bindData = appData?.getData()
-            ChannelCodeHelper.saveWakeParams(bindData ?: "")
+            ChannelCodeHelper.saveWakeParams(appData)
             logger.info("获取wakeUpAdapter数据成功：$channelCode 额外参数$bindData")
 //            val bean = ChannelCodeHelper.getWeakUpData(appData ?: return)
 //            if (viewModel != null) {

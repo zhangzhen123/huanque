@@ -99,8 +99,8 @@ object HeaderInfoHelper {
         }
 
         val jExtraChannelCode = ChannelCodeHelper.getExternalChannel()
-        if (jExtraChannelCode?.isNotBlank() == true) {
-            map["e"] = "$jExtraChannelCode"
+        if (jExtraChannelCode.isNotBlank()) {
+            map["e"] = jExtraChannelCode
         }
         val iei = DeviceUtils.getIMEI()
         if (iei.isNotEmpty()) {

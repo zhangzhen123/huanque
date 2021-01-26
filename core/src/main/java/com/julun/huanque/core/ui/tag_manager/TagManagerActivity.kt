@@ -270,6 +270,7 @@ class TagManagerActivity : BaseActivity() {
         })
         viewModel.saveTagList.observe(this, Observer {
             if (it != null && it.isSuccess() && it.isNew()) {
+                it.requireT()
                 ToastUtils.show("标签保存成功")
             }
 

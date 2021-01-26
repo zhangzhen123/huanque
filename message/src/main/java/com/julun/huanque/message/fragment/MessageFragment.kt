@@ -336,11 +336,11 @@ class MessageFragment : BaseFragment() {
         mMessageViewModel.unreadMsgCount.observe(this, Observer {
             if (it != null) {
                 val str = if (it > 99) {
-                    "消息(99+)"
+                    "聊天(99+)"
                 } else if (it > 0) {
-                    "消息($it)"
+                    "聊天($it)"
                 } else {
-                    "消息"
+                    "聊天"
                 }
                 tv_message_unread.text = str
             }

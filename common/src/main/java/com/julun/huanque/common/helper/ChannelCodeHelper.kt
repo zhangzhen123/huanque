@@ -3,6 +3,7 @@ package com.julun.huanque.common.helper
 import android.util.Log
 import com.fm.openinstall.OpenInstall
 import com.fm.openinstall.listener.AppInstallListener
+import com.fm.openinstall.model.AppData
 import com.julun.huanque.common.constant.MetaKey
 import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.utils.JsonUtil
@@ -17,7 +18,6 @@ import com.julun.huanque.common.utils.ULog
  *@Date: 2020/8/27 11:39
  *
  *@Description: 用于获取渠道号  存储和读取当前的场景渠道号
- * todo 等接入openInstall再处理
  */
 object ChannelCodeHelper {
     private const val H5SID = "h5Sid"
@@ -35,8 +35,8 @@ object ChannelCodeHelper {
     //存储的参数渠道号
     private const val CHANNELPARAM = "channelParam"
 
-//    //活动渠道号
-//    private const val CHANNELACTIVE = "channelActive"
+    //活动渠道号
+    private const val CHANNELACTIVE = "channelActive"
 //
 //    //存储的额外参数(包含渠道参数以及其他参数)
 //    private const val OPENINSTALLAPPDATA = "openInstallAppData"
@@ -87,19 +87,29 @@ object ChannelCodeHelper {
     }
 
     /**
-     * 保存外部渠道HqChannelCode
+     * 保存唤醒的外部渠道HqChannelCode
      */
-    fun saveWakeParams(extra: String) {
+    fun saveWakeParams(appData: AppData?) {
+        val channelCode = appData?.getChannel() ?: ""
+        val extra = appData?.data ?: return
         if (extra.isEmpty()) {
             return
         }
         val map = JsonUtil.toJsonMap(extra)
+        var channelParam = ""
         if (map != null) {
-            val channelParam = map[HqChannelCode] as? String ?: ""
-            if (channelParam.isNotEmpty()) {
-                setChannelParam(channelParam)
-            }
+            channelParam = map[HqChannelCode] as? String ?: ""
         }
+        var activeChannel = ""
+        //优先使用H5ChannelCode附带的渠道码
+        if (channelCode.isNotBlank()) {
+            activeChannel = channelCode
+        }
+        if (channelParam.isNotBlank()) {
+            activeChannel = channelParam
+        }
+
+        setChannelActive(activeChannel)
     }
 
     private fun getNeedInstall(): Boolean {
@@ -131,15 +141,15 @@ object ChannelCodeHelper {
         return cha
     }
 
-//    //活动渠道号  通过点击活动页面拉起app传回的渠道号
-//    private fun setChannelActive(channelActive: String) {
-//        SharedPreferencesUtils.commitString(CHANNELACTIVE, channelActive)
-//    }
+    //活动渠道号  通过点击活动页面拉起app传回的渠道号
+    private fun setChannelActive(channelActive: String) {
+        SharedPreferencesUtils.commitString(CHANNELACTIVE, channelActive)
+    }
 
-//    //CHANNELACTIVE
-//    fun getChannelActive(): String {
-//        return SharedPreferencesUtils.getString(CHANNELACTIVE, "")
-//    }
+    //CHANNELACTIVE
+    private fun getChannelActive(): String {
+        return SharedPreferencesUtils.getString(CHANNELACTIVE, "")
+    }
 
 //    //渠道 额外参数设置
 //    private fun setOpenInstallData(bindData: String) {
@@ -165,25 +175,24 @@ object ChannelCodeHelper {
 //        return SharedPreferencesUtils.getString(CHANNELNATIVE, "")
 //    }
 
-//    private var jExtraChannelCode: String? = null
+    private var jExtraChannelCode: String? = null
 
-//    //获取外置渠道
-//    fun getRemoteChannelId(): String {
-//
-////        if (jExtraChannelCode != null)
-////            return jExtraChannelCode!!
-////        val activeCode = getChannelActive()
-////        val param = getChannelParam()
-////        val code = getChannelCode()
-////        jExtraChannelCode = when {
-////            activeCode.isNotBlank() -> activeCode
-////            param.isNotBlank() -> param
-////            code.isNotBlank() -> code
-////            else -> ""
-////        }
-////        return jExtraChannelCode!!
-//        return getChannelParam()
-//    }
+    //获取外置渠道
+    fun getExternalChannel(): String {
+
+        if (jExtraChannelCode != null)
+            return jExtraChannelCode!!
+        val activeCode = getChannelActive()
+        val param = getChannelParam()
+        val code = getChannelCode()
+        jExtraChannelCode = when {
+            activeCode.isNotBlank() -> activeCode
+            param.isNotBlank() -> param
+            code.isNotBlank() -> code
+            else -> ""
+        }
+        return jExtraChannelCode!!
+    }
 
 
     private var jAppChannelCode: String? = null
@@ -201,14 +210,6 @@ object ChannelCodeHelper {
 //            else -> ""
 //        }
         return ""
-    }
-
-    /**
-     * 外部渠道号
-     */
-    fun getExternalChannel(): String? {
-        return getChannelParam()
-//        return "channel"
     }
 
     /**
