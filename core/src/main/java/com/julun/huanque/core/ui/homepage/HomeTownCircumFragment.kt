@@ -73,7 +73,7 @@ class HomeTownCircumFragment : BaseFragment() {
     private fun initRecyclerView() {
         recycler_view.layoutManager = GridLayoutManager(requireContext(), 2)
         recycler_view.adapter = mAdapter
-        recycler_view.isNestedScrollingEnabled = false
+//        recycler_view.isNestedScrollingEnabled = false
     }
 
     /**
