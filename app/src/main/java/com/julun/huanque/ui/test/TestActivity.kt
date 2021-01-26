@@ -1,6 +1,8 @@
 package com.julun.huanque.ui.test
 
-import android.animation.*
+//import com.julun.jpushlib.TagAliasOperatorHelper
+import android.animation.Animator
+import android.animation.ObjectAnimator
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -28,14 +30,11 @@ import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.widgets.draweetext.AnimatedRainbowSpan
 import com.julun.huanque.core.ui.dynamic.CircleActivity
 import com.julun.huanque.core.ui.live.PlayerActivity
-import com.julun.huanque.core.ui.live.dialog.CardManagerDialogFragment
-import com.julun.huanque.core.ui.tag_manager.TagManagerActivity
 import com.julun.huanque.core.ui.record_voice.VoiceSignActivity
 import com.julun.huanque.core.ui.tag_manager.MyTagsActivity
 import com.julun.huanque.message.activity.PrivateConversationActivity
 import com.julun.huanque.message.fragment.ChatSendGiftFragment
 import com.julun.huanque.support.LoginManager
-//import com.julun.jpushlib.TagAliasOperatorHelper
 import com.julun.rnlib.RNPageActivity
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureConfig
@@ -83,7 +82,10 @@ class TestActivity : BaseActivity() {
         viewModel.loadState.observe(this, Observer {
             println("我请求状态信息：=$it")
         })
-
+        test_switch_evn.onClickNew {
+            ARouter.getInstance().build(ARouterConstant.ENVIRONMENT_CONFIGURATION_ACTIVITY)
+                .navigation()
+        }
         test_net.onClickNew {
             viewModel.getInfo()
         }

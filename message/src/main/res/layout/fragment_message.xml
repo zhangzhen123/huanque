@@ -25,28 +25,23 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.cardview.widget.CardView
+    <FrameLayout
         android:id="@+id/view_notification"
         android:layout_width="0px"
-        android:layout_height="53dp"
-        android:layout_marginStart="@dimen/dimen_10"
+        android:layout_height="63dp"
         android:layout_marginTop="@dimen/dimen_5"
-        android:layout_marginEnd="@dimen/dimen_10"
-        android:background="@color/white"
+        android:background="@drawable/bg_nine_white_01"
         android:visibility="gone"
-        app:cardCornerRadius="@dimen/dimen_25"
-        app:cardElevation="@dimen/dimen_3"
-        app:cardMaxElevation="@dimen/dimen_15"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view_top"
-        tools:visibility="visible">
+        tools:visibility="gone">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginStart="@dimen/dimen_20"
+            android:layout_marginStart="@dimen/dimen_10"
             android:text="开启通知，别错过TA的任何消息"
             android:textColor="@color/black_333"
             android:textSize="@dimen/sp_14"
@@ -57,7 +52,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|end"
             android:layout_marginStart="@dimen/dimen_20"
-            android:layout_marginEnd="@dimen/dimen_41"
+            android:layout_marginEnd="@dimen/dimen_31"
             android:text="去开启"
             android:textColor="@color/colorAccent_lib"
             android:textSize="@dimen/sp_14"
@@ -68,11 +63,10 @@
             android:layout_width="@dimen/dimen_30"
             android:layout_height="@dimen/dimen_30"
             android:layout_gravity="center_vertical|end"
-            android:layout_marginEnd="@dimen/dimen_8"
             android:scaleType="centerInside"
             android:src="@mipmap/icon_close_grey_01" />
 
-    </androidx.cardview.widget.CardView>
+    </FrameLayout>
 
 
     <ImageView
@@ -229,7 +223,7 @@
             android:layout_width="0px"
             android:layout_height="0px"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:layout_marginRight="10dp"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintLeft_toLeftOf="parent"

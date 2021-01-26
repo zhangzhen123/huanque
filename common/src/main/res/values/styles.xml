@@ -8,6 +8,8 @@
         <item name="android:windowBackground">@color/default_bg</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowAnimationStyle">@style/FeelYouWindowAnimTheme</item>
+        <item name="android:selectableItemBackground">@null</item>
+        <item name="android:selectableItemBackgroundBorderless" tools:targetApi="lollipop">@null</item>
     </style>
 
     <style name="BaseAppThemeTrans" parent="Theme.AppCompat.Light.NoActionBar">

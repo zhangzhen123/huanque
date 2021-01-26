@@ -745,11 +745,20 @@ class HomePageActivity : BaseActivity() {
         })
         mHomePageViewModel.showHeartGuideContent.observe(this, Observer {
             if (it != null) {
+                val res=if(SessionUtils.getSex()==Sex.MALE){
+                    R.mipmap.bg_dialog_heart_full_male
+                }else{
+                    R.mipmap.bg_dialog_heart_full_female
+                }
                 CommonDialogFragment.create(
                     dialog = commonDialogFragment, title = "心动数已达到上限",
                     content = it,
-                    imageRes = R.mipmap.bg_dialog_heart_full,
-                    okText = "我知道了"
+                    imageRes = res,
+                    okText = "我知道了",
+                    cancelText = "去看看我心动的人",
+                    callback = CommonDialogFragment.Callback(onCancel = {
+                        ARouter.getInstance().build(ARouterConstant.HEART_BEAT_ACTIVITY).navigation()
+                    })
                 ).show(this, "CommonDialogFragment")
             }
         })
@@ -1326,7 +1335,7 @@ class HomePageActivity : BaseActivity() {
             content = "通过人脸识别技术确认照片为真人将获得认证标识，提高交友机会哦~",
             imageRes = R.mipmap.bg_dialog_real_auth,
             okText = "去认证",
-            cancelText = "取消",
+            cancelText = "以后再说",
             callback = CommonDialogFragment.Callback(
                 onOk = {
                     (ARouter.getInstance().build(ARouterConstant.REALNAME_SERVICE)
@@ -1359,7 +1368,7 @@ class HomePageActivity : BaseActivity() {
             content = "完成实名认证，提高真人交友可信度，将获得更多推荐机会~",
             imageRes = R.mipmap.bg_dialog_real_name,
             okText = "去认证",
-            cancelText = "取消",
+            cancelText = "以后再说",
             callback = CommonDialogFragment.Callback(
                 onOk = {
                     ARouter.getInstance().build(ARouterConstant.REAL_NAME_MAIN_ACTIVITY)

@@ -8,10 +8,9 @@ import android.content.Context
 import android.os.Handler
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
-import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AnticipateOvershootInterpolator
-import android.view.animation.BounceInterpolator
 import android.view.animation.LinearInterpolator
 import android.widget.FrameLayout
 import androidx.core.view.ViewCompat
@@ -52,11 +51,17 @@ class HomeHeadlineView @JvmOverloads constructor(context: Context, attrs: Attrib
         this.isClickable = true
         runway_headLine.onClickNew {
             logger.info("click runwayMessageText")
-//            checkoutRoom()
             currentRunwayMessage?.let { tpl ->
-                AppHelper.openTouch(tpl.textTouch!!, tpl.context!!.touchValue)
+                AppHelper.openTouch(tpl.textTouch ?: return@let, tpl.context?.touchValue ?: "")
             }
 
+        }
+        runway_container.setOnTouchListener { _, event ->
+            logger.info("touch runway_layout")
+            if (event.action == MotionEvent.ACTION_DOWN) {
+                runway_headLine.performClick()
+            }
+            true
         }
     }
 

@@ -76,6 +76,8 @@ object ARouterConstant {
 
     //联系人页面
     const val ContactsActivity = "/$MESSAGE$PREFIX_ACTIVITY/ContactsActivity"
+    //心动历史界面
+    const val HEART_BEAT_ACTIVITY = "/$MESSAGE$PREFIX_ACTIVITY/HeartBeatActivity"
 
     const val SysMsgActivity = "/$MESSAGE$PREFIX_ACTIVITY/SysMsgActivity"
 

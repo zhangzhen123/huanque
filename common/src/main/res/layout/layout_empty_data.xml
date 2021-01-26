@@ -32,7 +32,7 @@
         android:textSize="@dimen/size_16"
         android:gravity="center"
         android:background="@drawable/bg_solid_btn2"
-        android:textColor="@color/black_333"
+        android:textColor="@color/white"
         tools:text="知道了"
         tools:visibility="visible"
         android:visibility="gone" />

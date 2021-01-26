@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.multidex.MultiDexApplication
 import cn.jiguang.verifysdk.api.JVerificationInterface
 import com.fm.openinstall.OpenInstall
+import com.fm.openinstall.listener.AppInstallListener
 import com.ishumei.smantifraud.SmAntiFraud
 import com.jakewharton.processphoenix.ProcessPhoenix
 import com.julun.huanque.BuildConfig
@@ -26,6 +27,7 @@ import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.utils.ForceUtils
+import com.julun.huanque.common.utils.JsonUtil
 import com.julun.huanque.common.utils.SharedPreferencesUtils
 import com.julun.huanque.common.utils.ULog
 import com.julun.huanque.core.init.HuanQueInit
@@ -71,7 +73,7 @@ open class HuanQueApp : MultiDexApplication() {
             SharedPreferencesUtils.init(this)
             OpenInstall.init(this)
             //获取安装参数
-            ChannelCodeHelper.getInstallData()
+            getInstallData()
             MMKV.initialize(this)
             val baseUrl = if (BuildConfig.DEBUG) {
                 val url = MMKV.defaultMMKV().decodeString(MMKVConstant.URL)
@@ -329,5 +331,45 @@ open class HuanQueApp : MultiDexApplication() {
             }
         }
         SmAntiFraud.create(application, option)
+    }
+
+    /**
+     * 获取安装参数
+     */
+    private fun getInstallData() {
+        val needInstall = ChannelCodeHelper.getNeedInstall()
+        Log.i("HuanQueApp", "开始获取渠道号：$needInstall")
+        if (needInstall) {
+            OpenInstall.getInstall(AppInstallListener { appData, error ->
+                if (error == null) {
+                    if (appData == null || appData.isEmpty) return@AppInstallListener
+                    //获取渠道数据
+                    val channelCode = appData.getChannel()
+                    //获取个性化安装数据
+                    val bindData = appData.getData()
+                    ChannelCodeHelper.setChannelCode(channelCode)
+
+                    var channelParam = ""
+                    if (bindData.isNotBlank()) {
+                        val map = JsonUtil.toJsonMap(bindData)
+                        if (map != null) {
+                            channelParam = map[ChannelCodeHelper.HqChannelCode] as? String ?: ""
+                        }
+                    }
+
+                    if (channelParam.isNotEmpty()) {
+                        ChannelCodeHelper.setChannelParam(channelParam)
+                    }
+                    //使用数据后，不想再调用，将needInstall设置为false
+                    SharedPreferencesUtils.commitBoolean(ChannelCodeHelper.NEEDINSTALL, false)
+                } else {
+                    Log.i("OpenInstallManager", "errorMsg : $error")
+                }
+
+            })
+
+        }
+//        //每次启动 保存老的metachannel
+//        setChannelNative()
     }
 }
