@@ -224,7 +224,7 @@ class TagManagerActivity : BaseActivity() {
                     "取消喜欢后，将取消【${item.tagName}】下的${item.likeCnt}个标签", MyAlertDialog.MyDialogCallback(onRight = {
                         viewModel.tagCancelGroupLike(item)
                     }),
-                    "确认要取消喜欢吗", "确定取消", "在想想"
+                    "确认要取消喜欢吗", "确定取消", "再想想"
                 )
 
             }

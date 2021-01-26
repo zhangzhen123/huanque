@@ -139,6 +139,7 @@ class MessageFragment : BaseFragment() {
             iv_setting.hide()
             iv_contacts.hide()
             tv_message_unread.hide()
+            con_top.hide()
 
             view_top_player.show()
             tv_title_player.show()
@@ -457,7 +458,7 @@ class MessageFragment : BaseFragment() {
     private fun showEmptyView() {
         pageView.showEmpty(
             false,
-            R.mipmap.icon_default_empty,
+            R.mipmap.icon_no_data_01,
             emptyTxt = "快去找个有趣的人聊吧~",
             onClick = View.OnClickListener {
                 ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY)

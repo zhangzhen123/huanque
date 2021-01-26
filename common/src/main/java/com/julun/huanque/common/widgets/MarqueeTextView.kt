@@ -1,4 +1,4 @@
-package com.julun.huanque.core.widgets
+package com.julun.huanque.common.widgets
 
 import android.content.Context
 import android.graphics.Rect

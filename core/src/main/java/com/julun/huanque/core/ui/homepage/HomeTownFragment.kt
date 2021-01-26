@@ -9,9 +9,8 @@ import android.view.animation.DecelerateInterpolator
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import com.julun.huanque.common.base.BaseBottomSheetFragment
-import com.julun.huanque.common.suger.dp2px
-import com.julun.huanque.common.utils.ViewPager2Helper
+import androidx.viewpager.widget.ViewPager
+import com.julun.huanque.common.viewpagerofbottomsheet.ViewPagerBottomSheetDialogFragment
 import com.julun.huanque.common.widgets.indicator.ScaleTransitionPagerTitleView
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.HomeTownCircumAdapter
@@ -24,29 +23,27 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNav
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerIndicator
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator
-import java.lang.StringBuilder
 
 /**
  *@创建者   dong
  *@创建时间 2020/12/28 20:05
  *@描述 家乡弹窗
  */
-class HomeTownFragment : BaseBottomSheetFragment() {
+class HomeTownFragment : ViewPagerBottomSheetDialogFragment() {
     private val mHomeViewModel: HomePageViewModel by activityViewModels()
     private val mHomeTownViewModel: HomeTownViewModel by activityViewModels()
     private val mTabTitles = mutableListOf<String>("美食", "景点", "名人")
 
     //类型列表
     private val mTypeList = mutableListOf<String>()
-    override fun getLayoutId() = R.layout.frag_home_town
 
-    override fun initViews() {
-
+    override fun initView() {
         val userIdListBean = mHomeViewModel.homeInfoBean.value?.userId ?: return
         mHomeTownViewModel.queryHomeTownInfo(userIdListBean)
     }
 
-    override fun getHeight() = dp2px(523)
+
+//    override fun getHeight() = dp2px(523)
 
     override fun onStart() {
         super.onStart()
@@ -58,6 +55,10 @@ class HomeTownFragment : BaseBottomSheetFragment() {
             parent.setBackgroundColor(Color.TRANSPARENT)
         }
 
+    }
+
+    override fun setLayoutId(): Int {
+        return R.layout.frag_home_town
     }
 
     /**
@@ -96,8 +97,24 @@ class HomeTownFragment : BaseBottomSheetFragment() {
      * 初始化ViewPager2
      */
     private fun initViewPager2(typeList: MutableList<String>) {
-        view_pager2.adapter = HomeTownCircumAdapter(requireActivity(), typeList)
         view_pager2.offscreenPageLimit = typeList.size
+        view_pager2.adapter = HomeTownCircumAdapter(childFragmentManager, typeList)
+    }
+
+    override fun setListener() {
+        super.setListener()
+        view_pager2.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrollStateChanged(state: Int) {
+            }
+
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+                onPageChange(view_pager2) // 不要忘了这句 用于更新viewpager的 子view
+            }
+
+            override fun onPageSelected(position: Int) {
+            }
+
+        })
     }
 
     private lateinit var mCommonNavigator: CommonNavigator
@@ -166,7 +183,7 @@ class HomeTownFragment : BaseBottomSheetFragment() {
             }
         }
         magic_indicator.navigator = mCommonNavigator
-        ViewPager2Helper.bind(magic_indicator, view_pager2)
+        ViewPagerHelper.bind(magic_indicator, view_pager2)
     }
 
 }

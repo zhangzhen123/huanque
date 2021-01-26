@@ -600,23 +600,29 @@ class PrivateConversationActivity : BaseActivity() {
      */
     private fun showHint() {
         val price = mPrivateConversationViewModel?.msgFeeData?.value ?: return
-        val chatFree = mPrivateConversationViewModel.basicBean.value?.chatFree ?: ""
-        if (chatFree == BusiConstant.True) {
+//        val chatFree = mPrivateConversationViewModel.basicBean.value?.chatFree ?: ""
+//        if (chatFree == BusiConstant.True) {
+//            //免费
+//            iv_msg_card.hide()
+//            tv_msg_card_count.hide()
+//            edit_text.setPadding(dp2px(7), dp2px(7), dp2px(15), dp2px(7))
+//        } else {
+//            //收费
+//            iv_msg_card.show()
+//            edit_text.setPadding(dp2px(41), dp2px(7), dp2px(15), dp2px(7))
+//        }
+
+        if (price == 0L) {
             //免费
             iv_msg_card.hide()
             tv_msg_card_count.hide()
             edit_text.setPadding(dp2px(7), dp2px(7), dp2px(15), dp2px(7))
-        } else {
-            //收费
-            iv_msg_card.show()
-            edit_text.setPadding(dp2px(41), dp2px(7), dp2px(15), dp2px(7))
-        }
-
-        if (price == 0L) {
-            //免费
             edit_text.hint = "聊点什么吧"
+            tv_msg_card_count.hide()
         } else {
             //不免费
+            iv_msg_card.show()
+            edit_text.setPadding(dp2px(41), dp2px(7), dp2px(15), dp2px(7))
             val ticketCount = mPrivateConversationViewModel?.propData?.value?.chatTicketCnt ?: 0
             if (ticketCount > 0) {
                 edit_text.hint = "聊天券剩余${ticketCount}次"
@@ -632,8 +638,10 @@ class PrivateConversationActivity : BaseActivity() {
      */
     private fun updatePropView(voiceCount: Int, chatCount: Int) {
         showHint()
-        if (chatCount > 0 && iv_msg_card.visibility == View.VISIBLE) {
-            //有聊天券
+        val price = mPrivateConversationViewModel?.msgFeeData?.value ?: return
+//        val chatFree = mPrivateConversationViewModel.basicBean.value?.chatFree ?: ""
+        if (chatCount > 0 && iv_msg_card.visibility == View.VISIBLE && price > 0) {
+            //有聊天券，并且不免费
             tv_msg_card_count.show()
             tv_msg_card_count.text = "$chatCount"
         } else {
