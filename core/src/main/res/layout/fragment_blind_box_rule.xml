@@ -56,7 +56,7 @@
 <!--            app:layout_constraintRight_toRightOf="@id/view_award"-->
 <!--            app:layout_constraintTop_toTopOf="@id/view_award" />-->
 
-        <com.julun.huanque.core.widgets.MarqueeTextView
+        <com.julun.huanque.common.widgets.MarqueeTextView
             android:id="@+id/tv_barrier"
             android:layout_width="0px"
             android:layout_height="0px"

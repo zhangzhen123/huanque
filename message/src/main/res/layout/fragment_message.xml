@@ -161,7 +161,7 @@
         android:layout_marginLeft="20dp"
         android:gravity="center"
         android:includeFontPadding="false"
-        android:text="消息"
+        android:text="聊天"
         android:textColor="@color/black_333"
         android:textSize="22sp"
         android:textStyle="bold"

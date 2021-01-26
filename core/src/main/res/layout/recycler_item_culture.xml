@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <com.julun.huanque.core.widgets.MarqueeTextView
+    <com.julun.huanque.common.widgets.MarqueeTextView
         android:id="@+id/tv_content"
         android:layout_width="0px"
         android:layout_height="wrap_content"

@@ -575,7 +575,7 @@ class LoginActivity2 : BaseActivity() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun receiveWeiXinCode(event: WeiXinCodeEvent) {
-        logger.info("收到微信登录code:${event.code}")
+        logger.info("收到微信登录code LoginActivty2:${event.code}")
         mLoginViewModel.weiXinLogin(event.code)
     }
 }

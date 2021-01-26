@@ -180,7 +180,7 @@ class HeartBeatFragment : BaseFragment() {
                 }
             }
         })
-        if(mType == HeartBeanForm.HeartTouchToMe){
+        if (mType == HeartBeanForm.HeartTouchToMe) {
             mActViewModel.unlockLogId.observe(this, Observer {
                 if (it != null) {
                     mAdapter.data.forEachIndexed { index, singleHeartBean ->

@@ -220,6 +220,10 @@ class ProfessionActivity : BaseActivity() {
                     spfc.mark = if (contains) BusiConstant.True else BusiConstant.False
                 }
                 mViewModel.featureData.value = it.featureConfigList
+                if (it.professionId == 0) {
+                    //没有选择职业，显示弹窗
+                    tv_profression_title.performClick()
+                }
             }
         })
         mViewModel.featureData.observe(this, Observer {

@@ -746,7 +746,7 @@ class WelcomeActivity : BaseActivity() {
         if(loginActivity){
             return
         }
-        logger.info("收到微信登录code:${event.code}")
+        logger.info("welcome 收到微信登录code:${event.code}")
         mLoginViewModel.weiXinLogin(event.code)
     }
 
