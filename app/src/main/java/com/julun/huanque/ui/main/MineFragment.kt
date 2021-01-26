@@ -368,7 +368,7 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
                     content = "通过人脸识别技术确认照片为真人将获得认证标识，提高交友机会哦~",
                     imageRes = com.julun.huanque.core.R.mipmap.bg_dialog_real_auth,
                     okText = "去认证",
-                    cancelText = "取消",
+                    cancelText = "以后再说",
                     callback = CommonDialogFragment.Callback(
                         onOk = {
                             (ARouter.getInstance().build(ARouterConstant.REALNAME_SERVICE)
@@ -389,7 +389,7 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
 //                                    CommonDialogFragment.create(
 //                                        title = "修改提示",
 //                                        content = e.busiMessage.toString(),
-//                                        imageRes = com.julun.huanque.core.R.mipmap.bg_dialog_heart_full,
+//                                        imageRes = com.julun.huanque.core.R.mipmap.bg_dialog_heart_full_female,
 //                                        okText = "修改头像",
 //                                        cancelText = "取消",
 //                                        callback = CommonDialogFragment.MyDialogCallback(

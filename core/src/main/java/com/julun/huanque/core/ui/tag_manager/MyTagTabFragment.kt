@@ -1,7 +1,11 @@
 package com.julun.huanque.core.ui.tag_manager
 
 import android.os.Bundle
+import android.view.Gravity
 import android.view.View
+import android.widget.TextView
+import android.widget.Toast
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.chad.library.adapter.base.BaseQuickAdapter
@@ -19,6 +23,7 @@ import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.loadImage
 import com.julun.huanque.common.suger.onAdapterClickNew
 import com.julun.huanque.common.suger.show
+import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.viewmodel.TagManagerViewModel
 import com.julun.huanque.common.widgets.recycler.decoration.GridLayoutSpaceItemDecoration2
 import com.julun.huanque.core.R
@@ -152,32 +157,32 @@ class MyTagTabFragment : BaseLazyFragment() {
 
 
     private fun initViewModel() {
-//        tagManagerViewModel.tagChangeStatus.observe(this, Observer {
-//            if (it.isSuccess()) {
-//                if (it.isNew() && it.requireT().like) {
-//                    ToastUtils.showToastCustom(R.layout.layout_toast_tag, action = { view, t ->
-//                        val tv = view.findViewById<TextView>(R.id.toastContent)
-//                        t.duration = Toast.LENGTH_SHORT
-//                        t.setGravity(Gravity.CENTER, 0, 0)
-//                        tv.text = "已喜欢"
-//                    })
-//                }
-//                val tag = it.requireT()
-//                if (tag.parentTagId != currentTab?.tagId) {
-//                    return@Observer
-//                }
-//                val result = mAdapter.data.firstOrNull { item -> item.tagId == tag.tagId } ?: return@Observer
-//                result.like = tag.like
-//                val index = mAdapter.data.indexOf(result)
-//                logger.info("index=$index")
-//                MixedHelper.safeNotifyItem(index, postList, mAdapter)
-//
-//            } else if (it.state == NetStateType.ERROR) {
-////                if (it.isNew()) {
-////                    ToastUtils.show("网络异常")
-////                }
-//            }
-//        })
+        tagManagerViewModel.tagChangeStatus.observe(this, Observer {
+            if (it.isSuccess()) {
+                if (it.isNew() && it.requireT().like) {
+                    ToastUtils.showToastCustom(R.layout.layout_toast_tag, action = { view, t ->
+                        val tv = view.findViewById<TextView>(R.id.toastContent)
+                        t.duration = Toast.LENGTH_SHORT
+                        t.setGravity(Gravity.CENTER, 0, 0)
+                        tv.text = "已喜欢"
+                    })
+                }
+                val tag = it.requireT()
+                if (currentTab?.showType == MyTagType.AUTH) {
+                    return@Observer
+                }
+                val result = mAdapter.data.firstOrNull { item -> item.tagId == tag.tagId } ?: return@Observer
+                if (tag.like) {
+                    result.mark = BooleanType.TRUE
+                } else {
+                    result.mark = BooleanType.FALSE
+                }
+                val index = mAdapter.data.indexOf(result)
+                logger.info("index=$index")
+                MixedHelper.safeNotifyItem(index, postList, mAdapter)
+
+            }
+        })
 
     }
 

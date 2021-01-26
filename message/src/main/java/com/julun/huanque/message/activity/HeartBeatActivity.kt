@@ -9,8 +9,10 @@ import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import androidx.core.content.ContextCompat
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.bean.forms.HeartBeanForm
+import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.common.utils.ViewPager2Helper
@@ -30,6 +32,7 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.Li
  *@创建时间 2021/1/18 19:16
  *@描述 心动页面
  */
+@Route(path = ARouterConstant.HEART_BEAT_ACTIVITY)
 class HeartBeatActivity : BaseActivity() {
     companion object {
         fun newInstance(act: Activity) {
