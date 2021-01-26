@@ -240,9 +240,9 @@ class TagUserPicsActivity : BaseVMActivity<TagUserPicsViewModel>() {
         picList.addAll(tuthPicList)
         picListAdapter.notifyDataSetChanged()
 //        var tempIndex = -1
-//        rv_pics.post {
-//            rv_pics.scrollToPosition(picListAdapter.data.size)
-//        }
+        rv_pics.post {
+            rv_pics.scrollToPosition(picListAdapter.data.size)
+        }
 //        rv_pics.post {
 //            if (tempIndex >= 0) {
 //                rv_pics.scrollToPosition(tempIndex)
@@ -250,6 +250,7 @@ class TagUserPicsActivity : BaseVMActivity<TagUserPicsViewModel>() {
 //                rv_pics.scrollToPosition(picListAdapter.data.size)
 //            }
 //        }
+
 
         zan_num.text = "${info.praiseNum}"
 

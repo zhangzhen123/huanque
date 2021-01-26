@@ -944,6 +944,7 @@ class NearbyFragment : BaseLazyFragment() {
         mRecyclerView.postDelayed({
             if (reset) {
                 currentAniIndex = 0
+                stopAni()
             }
             //获取到当前最上方的item
             val item = cardsAdapter.getItemOrNull(0) ?: return@postDelayed
@@ -1026,7 +1027,7 @@ class NearbyFragment : BaseLazyFragment() {
     private var lastDoTime: Long = 0
     private fun stopAni() {
         val currentTime = Calendar.getInstance().timeInMillis
-        if (currentTime - lastDoTime >= 300) {
+        if (currentTime - lastDoTime >= 200) {
             lastDoTime = currentTime
             logger.info("停止动画")
             val item = cardsAdapter.getItemOrNull(0) ?: return
@@ -1144,6 +1145,7 @@ class NearbyFragment : BaseLazyFragment() {
                     holder.setGone(R.id.tv_pic_count, true)
                     holder.setGone(R.id.ll_info, true)
                     holder.setGone(R.id.tv_top_right_tips, true)
+                    showCardImage(sdv, sdvBg, item.coverPic)
                     return
                 } else {
                     holder.setGone(R.id.iv_dislike, false)

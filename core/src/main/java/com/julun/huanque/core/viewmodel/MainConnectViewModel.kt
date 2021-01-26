@@ -77,7 +77,7 @@ class MainConnectViewModel : BaseViewModel() {
     }
     init {
         mLocationService.setLocationOption(mLocationService.defaultLocationClientOption.apply {
-//            this.setScanSpan(0)
+            this.setScanSpan(0)
             this.isOpenGps = true
         })
     }
