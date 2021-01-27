@@ -53,9 +53,9 @@ class MessageSettingActivity : BaseActivity() {
         //铃声来了铃声
         if (SessionUtils.getSex() == Sex.FEMALE) {
             //女性
-            view_fate_voice.show()
-            tv_fate_title.show()
-            iv_fate_voice.show()
+            view_fate_voice.hide()
+            tv_fate_title.hide()
+            iv_fate_voice.hide()
             iv_fate_voice.isSelected = SPUtils.getBoolean(SPParamKey.Fate_Voice_Open, true)
         }
 
