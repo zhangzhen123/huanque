@@ -341,6 +341,7 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
     override fun initEvents(rootView: View) {
         clHeadRoot.onClickNew {
 //            RNPageActivity.start(requireActivity(), RnConstant.MINE_HOMEPAGE)
+            mNeedRefresh = true
             HomePageActivity.newInstance(requireActivity(), SessionUtils.getUserId())
         }
 

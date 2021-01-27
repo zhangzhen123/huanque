@@ -144,7 +144,7 @@
                         app:layout_constraintEnd_toEndOf="@+id/tvCertification"
                         app:layout_constraintStart_toStartOf="@+id/tvCertification" />
 
-                    <LinearLayout
+                    <RelativeLayout
                         android:id="@+id/flNickNameRoot"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -167,24 +167,28 @@
                             android:includeFontPadding="false"
                             android:maxLines="1"
                             android:textColor="@color/black_333"
+                            android:paddingEnd="35dp"
                             android:textSize="@dimen/sp_16"
                             android:textStyle="bold"
-                            tools:text="昵称" />
+                            tools:text="昵称昵昵称昵昵称昵昵称昵昵称昵昵称昵" />
 
                         <TextView
                             android:id="@+id/tvSex"
                             android:layout_width="wrap_content"
                             android:layout_height="@dimen/dimen_16"
-                            android:layout_marginStart="@dimen/dimen_6"
                             android:background="@drawable/bg_shape_mine_sex_male"
                             android:gravity="center"
+                            tools:drawableStart="@mipmap/icon_sex_female_white"
+                            android:maxLines="1"
+                            android:layout_alignEnd="@+id/tvNickName"
+                            android:layout_centerVertical="true"
                             android:includeFontPadding="false"
                             android:paddingLeft="@dimen/dimen_5"
                             android:paddingRight="@dimen/dimen_5"
                             android:textColor="@color/white"
                             android:textSize="10sp"
                             tools:text="18" />
-                    </LinearLayout>
+                    </RelativeLayout>
 
                     <TextView
                         android:id="@+id/tvUserId"
@@ -218,7 +222,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginEnd="@dimen/dimen_15"
+                        android:layout_marginEnd="@dimen/dimen_10"
                         android:drawableRight="@mipmap/icon_forward_black_01"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
