@@ -366,6 +366,10 @@ class HomePageActivity : BaseActivity() {
                     startActivity(intent)
                 }
             }
+            if (voiceBean.voiceStatus == VoiceBean.Pass) {
+                //播放音效
+                tv_time.performClick()
+            }
         }
 
 
@@ -511,7 +515,7 @@ class HomePageActivity : BaseActivity() {
                 simplePagerTitleView.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
                 simplePagerTitleView.minScale = 0.7f
                 simplePagerTitleView.text = mTabTitles[index]
-                simplePagerTitleView.setPadding(DensityHelper.dp2px(8),0, DensityHelper.dp2px(8),0)
+                simplePagerTitleView.setPadding(DensityHelper.dp2px(8), 0, DensityHelper.dp2px(8), 0)
                 simplePagerTitleView.textSize = 20f
                 simplePagerTitleView.normalColor =
                     ContextCompat.getColor(context, R.color.black_666)
@@ -747,9 +751,9 @@ class HomePageActivity : BaseActivity() {
         })
         mHomePageViewModel.showHeartGuideContent.observe(this, Observer {
             if (it != null) {
-                val res=if(SessionUtils.getSex()==Sex.MALE){
+                val res = if (SessionUtils.getSex() == Sex.MALE) {
                     R.mipmap.bg_dialog_heart_full_male
-                }else{
+                } else {
                     R.mipmap.bg_dialog_heart_full_female
                 }
                 CommonDialogFragment.create(

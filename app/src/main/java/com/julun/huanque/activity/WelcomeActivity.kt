@@ -468,12 +468,16 @@ class WelcomeActivity : BaseActivity() {
                             mLoginViewModel?.fastLogin(token)
                         }
                         else -> {
-                            JVerificationInterface.dismissLoginAuthActivity()
-                            val intent = Intent(this@WelcomeActivity, LoginActivity2::class.java)
-                            if (ForceUtils.activityMatch(intent)) {
-                                loginActivity = true
-                                startActivity(intent)
+                            if (code != 6002) {
+                                //取消一键登录
+                                JVerificationInterface.dismissLoginAuthActivity()
+                                val intent = Intent(this@WelcomeActivity, LoginActivity2::class.java)
+                                if (ForceUtils.activityMatch(intent)) {
+                                    loginActivity = true
+                                    startActivity(intent)
+                                }
                             }
+
 //                        if (!isGuideLoginActivity) {
 //                            EventBus.getDefault().post(LoginFragmentDismissEvent())
 //                        }
