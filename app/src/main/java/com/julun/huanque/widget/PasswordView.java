@@ -409,7 +409,7 @@ public class PasswordView extends View {
             if (error) {
                 paint.setColor(errorBorderColor);
             } else {
-                if(i <= cursorPosition){
+                if(hasFocus() && i <= cursorPosition){
                     paint.setColor(fullBorderColor);
                 }else {
                     paint.setColor(borderColor);

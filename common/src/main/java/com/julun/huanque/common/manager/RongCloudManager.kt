@@ -1235,7 +1235,7 @@ object RongCloudManager {
                     EventBus.getDefault().post(RongConnectEvent(RONG_CONNECTED))
                 }
                 RongIMClient.ConnectionStatusListener.ConnectionStatus.KICKED_OFFLINE_BY_OTHER_CLIENT -> {
-                    ToastUtils.showErrorMessage("您已在其它客户端登陆，当前客户端已下线~")
+                    ToastUtils.show("您已在其它客户端登陆，当前客户端已下线~")
                     //抢登事件
                     //清空session
                     SessionUtils.clearSession()
