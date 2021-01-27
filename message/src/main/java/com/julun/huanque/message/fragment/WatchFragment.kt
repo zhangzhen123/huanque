@@ -92,7 +92,7 @@ class WatchFragment : BaseFragment() {
             mAdapter.addHeaderView(headerView)
             mHeaderView = headerView
         }
-
+        mAdapter.headerWithEmptyEnable = true
 
         mAdapter.setEmptyView(MixedHelper.getEmptyView(requireContext(), "暂无数据", imgResId = R.mipmap.icon_no_data_01))
         mAdapter.setOnItemChildClickListener { adapter, view, position ->

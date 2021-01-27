@@ -25,6 +25,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
@@ -48,10 +49,6 @@ import com.julun.huanque.common.bean.beans.UserTagBean
 import com.julun.huanque.common.bean.events.CanSeeMaxCountChangeEvent
 import com.julun.huanque.common.bean.events.LikeEvent
 import com.julun.huanque.common.bean.events.PicChangeEvent
-import com.julun.huanque.common.constant.ActivityCodes
-import com.julun.huanque.common.constant.BooleanType
-import com.julun.huanque.common.constant.BusiConstant
-import com.julun.huanque.common.constant.HomeTabType
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.AppHelper
 import com.julun.huanque.common.helper.reportCrash
@@ -697,8 +694,8 @@ class NearbyFragment : BaseLazyFragment() {
         waterRv.distance = 3
         waterRv.setCircleStrokeWidth(dp2pxf(1))
         waterRv.startMoving()
-        val ani1 = ObjectAnimator.ofFloat(sd_header, View.SCALE_X, 1.3f, 1f, 1.3f)
-        val ani2 = ObjectAnimator.ofFloat(sd_header, View.SCALE_Y, 1.3f, 1f, 1.3f)
+        val ani1 = ObjectAnimator.ofFloat(sd_header, View.SCALE_X, 1f, 1.3f, 1f)
+        val ani2 = ObjectAnimator.ofFloat(sd_header, View.SCALE_Y, 1f, 1.3f, 1f)
         loadingSetAni = AnimatorSet()
         loadingSetAni!!.playTogether(ani1, ani2)
         loadingSetAni!!.duration = 1000L
@@ -941,7 +938,7 @@ class NearbyFragment : BaseLazyFragment() {
         val dist = max((randomDistance * Random.nextFloat()).toInt(), dp2px(10))
 //        logger.info("随机的距离=$dist")
         if (rd.id == R.id.ani_tag_01 || rd.id == R.id.ani_tag_02) {
-            rdLp.topMargin = dist
+            rdLp.topMargin = dist+dp2px(80)
         } else {
             rdLp.bottomMargin = dist
         }
@@ -950,84 +947,86 @@ class NearbyFragment : BaseLazyFragment() {
     }
 
     private fun startPlayAni(reset: Boolean = false) {
-        mRecyclerView.postDelayed({
-            if (reset) {
-                currentAniIndex = 0
-                stopAni()
-            }
-            //获取到当前最上方的item
-            val item = cardsAdapter.getItemOrNull(0) ?: return@postDelayed
-            val tags = item.tagList
-            if (tags.isEmpty()) {
-                return@postDelayed
-            }
-            val first: UserTagBean? = tags.getOrNull(currentAniIndex)
-            currentAniIndex++
-            val second: UserTagBean? = tags.getOrNull(currentAniIndex)
-            currentAniIndex++
+        //todo
+        if (lifecycle.currentState.isAtLeast(Lifecycle.State.CREATED))
+            mRecyclerView.postDelayed({
+                if (reset) {
+                    currentAniIndex = 0
+                    stopAni()
+                }
+                //获取到当前最上方的item
+                val item = cardsAdapter.getItemOrNull(0) ?: return@postDelayed
+                val tags = item.tagList
+                if (tags.isEmpty()) {
+                    return@postDelayed
+                }
+                val first: UserTagBean? = tags.getOrNull(currentAniIndex)
+                currentAniIndex++
+                val second: UserTagBean? = tags.getOrNull(currentAniIndex)
+                currentAniIndex++
 
-            if (first == null && second == null) {
-                logger.info("没有数据了 停止动画")
-                startPlayAni(true)
-                return@postDelayed
-            }
+                if (first == null && second == null) {
+                    logger.info("没有数据了 停止动画")
+                    startPlayAni(true)
+                    return@postDelayed
+                }
 
-            val holder = mRecyclerView?.findViewHolderForAdapterPosition(0) as? BaseViewHolder ?: return@postDelayed
-            val aniViewArray1 = mutableListOf<HomeCardTagView>(
-                holder.getView<HomeCardTagView>(R.id.ani_tag_01),
+                val holder = mRecyclerView?.findViewHolderForAdapterPosition(0) as? BaseViewHolder ?: return@postDelayed
+                val aniViewArray1 = mutableListOf<HomeCardTagView>(
+                    holder.getView<HomeCardTagView>(R.id.ani_tag_01),
 //                holder.getView<HomeCardTagView>(R.id.ani_tag_02),
-                holder.getView<HomeCardTagView>(R.id.ani_tag_03)
+                    holder.getView<HomeCardTagView>(R.id.ani_tag_03)
 //                holder.getView<HomeCardTagView>(R.id.ani_tag_04)
-            )
-            val aniViewArray2 = mutableListOf<HomeCardTagView>(
+                )
+                val aniViewArray2 = mutableListOf<HomeCardTagView>(
 //                holder.getView<HomeCardTagView>(R.id.ani_tag_01),
-                holder.getView<HomeCardTagView>(R.id.ani_tag_02),
+                    holder.getView<HomeCardTagView>(R.id.ani_tag_02),
 //                holder.getView<HomeCardTagView>(R.id.ani_tag_03),
-                holder.getView<HomeCardTagView>(R.id.ani_tag_04)
-            )
-            val rd1 = aniViewArray1.random()
-            val rd2 = aniViewArray2.random()
+                    holder.getView<HomeCardTagView>(R.id.ani_tag_04)
+                )
+                val rd1 = aniViewArray1.random()
+                val rd2 = aniViewArray2.random()
 //            logger.info("开始做标签显隐动画 rd1=${rd1.id} rd2=${rd2.id}")
 
-            rd1.removeListener()
-            rd2.removeListener()
-            randomLocation(rd1)
-            randomLocation(rd2)
+                rd1.removeListener()
+                rd2.removeListener()
+                randomLocation(rd1)
+                randomLocation(rd2)
 
-            rd1.listener = object : Animator.AnimatorListener {
-                var isCancelTag = false
-                override fun onAnimationRepeat(animation: Animator?) {
-                }
-
-                override fun onAnimationEnd(animation: Animator?) {
-//                    logger.info("一次动画完成")
-                    if (isCancelTag) {
-                        isCancelTag = false
-                    } else {
-                        startPlayAni()
+                rd1.listener = object : Animator.AnimatorListener {
+                    var isCancelTag = false
+                    override fun onAnimationRepeat(animation: Animator?) {
                     }
 
-                }
+                    override fun onAnimationEnd(animation: Animator?) {
+//                    logger.info("一次动画完成")
+                        if (isCancelTag) {
+                            isCancelTag = false
+                        } else {
+                            startPlayAni()
+                        }
 
-                override fun onAnimationCancel(animation: Animator?) {
+                    }
+
+                    override fun onAnimationCancel(animation: Animator?) {
 //                    logger.info("一次动画取消")
-                    isCancelTag = true
+                        isCancelTag = true
+                    }
+
+                    override fun onAnimationStart(animation: Animator?) {
+
+                    }
                 }
 
-                override fun onAnimationStart(animation: Animator?) {
-
+                val delay = if (!reset) 0 else 1000L
+                if (first != null) {
+                    rd1.startSetDataAndAni(first, delay)
                 }
-            }
+                if (second != null) {
+                    rd2.startSetDataAndAni(second, delay)
+                }
 
-            val delay = if (!reset) 0 else 1000L
-            if (first != null) {
-                rd1.startSetDataAndAni(first, delay)
-            }
-            if (second != null) {
-                rd2.startSetDataAndAni(second, delay)
-            }
-
-        }, 50)
+            }, 50)
 
 
     }

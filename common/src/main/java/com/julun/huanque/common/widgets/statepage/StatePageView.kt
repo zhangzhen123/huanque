@@ -68,7 +68,7 @@ class StatePageView : FrameLayout {
 
     fun showEmpty(
         isImageHide: Boolean = false,
-        @DrawableRes emptyRes: Int = R.mipmap.icon_default_empty,
+        @DrawableRes emptyRes: Int = R.mipmap.icon_no_data_01,
         emptyTxt: String = "",
         onClick: View.OnClickListener? = null,
         btnTex: String? = null

@@ -9,6 +9,7 @@
         android:id="@+id/postList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_9"
         android:layout_marginStart="@dimen/dimen_15"
         android:layout_marginEnd="@dimen/dimen_15" />
 

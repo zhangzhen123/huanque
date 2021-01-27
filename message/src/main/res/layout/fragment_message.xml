@@ -28,14 +28,15 @@
     <FrameLayout
         android:id="@+id/view_notification"
         android:layout_width="0px"
-        android:layout_height="63dp"
-        android:layout_marginTop="@dimen/dimen_5"
+        android:layout_height="62dp"
         android:background="@drawable/bg_nine_white_01"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="@dimen/dimen_4"
         android:visibility="gone"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view_top"
-        tools:visibility="gone">
+        tools:visibility="visible">
 
         <TextView
             android:layout_width="wrap_content"
@@ -64,7 +65,7 @@
             android:layout_height="@dimen/dimen_30"
             android:layout_gravity="center_vertical|end"
             android:scaleType="centerInside"
-            android:src="@mipmap/icon_close_grey_01" />
+            android:src="@mipmap/icon_close_grey_02" />
 
     </FrameLayout>
 
@@ -152,7 +153,7 @@
         android:id="@+id/tv_message_unread"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
+        android:layout_marginLeft="18dp"
         android:gravity="center"
         android:includeFontPadding="false"
         android:text="聊天"

@@ -273,8 +273,8 @@ class ContactsActivity : BaseActivity() {
                     val indicator = LinePagerIndicator(context)
                     indicator.mode = LinePagerIndicator.MODE_EXACTLY
                     indicator.lineHeight = UIUtil.dip2px(context, 3.0).toFloat()
-                    indicator.lineWidth = UIUtil.dip2px(context, 29.0).toFloat()
-                    indicator.roundRadius = UIUtil.dip2px(context, 3.0).toFloat()
+                    indicator.lineWidth = UIUtil.dip2px(context, 6.0).toFloat()
+                    indicator.roundRadius = UIUtil.dip2px(context, 2.0).toFloat()
                     indicator.startInterpolator = AccelerateInterpolator()
                     indicator.endInterpolator = DecelerateInterpolator(2.0f)
                     indicator.yOffset = DensityHelper.dp2px(4f).toFloat()

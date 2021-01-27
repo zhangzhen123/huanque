@@ -227,7 +227,7 @@ class WaterRippleView @JvmOverloads constructor(
      * @return
      */
     private fun updateCircleAlpha(radius: Float): Int {
-        var alpha = ((maxRadius - radius) * 0.8 * 255 / maxRadius).toInt()
+        var alpha = ((maxRadius - radius) * 1.0 * 255 / maxRadius).toInt()
         if (alpha < 0) {
             alpha = 0
         }

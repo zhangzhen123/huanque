@@ -45,7 +45,7 @@ class FigureFragment : BaseBottomSheetFragment() {
     }
 
 
-    override fun getHeight() = dp2px(423)
+    override fun getHeight() = dp2px(453)
 
     /**
      * 初始化ViewModel

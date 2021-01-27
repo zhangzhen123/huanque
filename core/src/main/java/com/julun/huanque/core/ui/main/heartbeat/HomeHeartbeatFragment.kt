@@ -232,6 +232,7 @@ class HomeHeartbeatFragment : BaseFragment() {
                 simplePagerTitleView.minScale = 0.727f
                 simplePagerTitleView.text = mTabTitles[index].typeName
                 simplePagerTitleView.textSize = 22f
+                simplePagerTitleView.setPadding(DensityHelper.dp2px(8),0, DensityHelper.dp2px(8),0)
                 simplePagerTitleView.normalColor = ContextCompat.getColor(context, R.color.black_666)
                 simplePagerTitleView.selectedColor = ContextCompat.getColor(context, R.color.black_333)
                 simplePagerTitleView.setOnClickListener { view_pager.currentItem = index }

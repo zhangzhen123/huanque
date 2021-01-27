@@ -138,7 +138,7 @@ class MyTagsActivity : BaseVMActivity<MyTagViewModel>() {
 
                 val simplePagerTitleView: ScaleTransitionPagerTitleView = ScaleTransitionPagerTitleView(context)
                 simplePagerTitleView.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
-                simplePagerTitleView.minScale = 0.727f
+                simplePagerTitleView.minScale = 0.7f
                 simplePagerTitleView.text = mTabTitles[index].tabTagName
                 simplePagerTitleView.textSize = 20f
                 simplePagerTitleView.normalColor = ContextCompat.getColor(context, R.color.black_333)
@@ -162,8 +162,8 @@ class MyTagsActivity : BaseVMActivity<MyTagViewModel>() {
 //                }
                 val indicator = LinePagerIndicator(context)
                 indicator.mode = LinePagerIndicator.MODE_EXACTLY
-                indicator.lineHeight = dp2pxf(4)
-                indicator.lineWidth = dp2pxf(13)
+                indicator.lineHeight = dp2pxf(3)
+                indicator.lineWidth = dp2pxf(6)
                 indicator.roundRadius = dp2pxf(2)
                 indicator.startInterpolator = AccelerateInterpolator()
                 indicator.endInterpolator = DecelerateInterpolator(2.0f)

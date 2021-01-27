@@ -41,6 +41,15 @@
         android:layout_height="0px"
         app:layout_constraintBottom_toBottomOf="@+id/view_bottom"
         app:layout_constraintLeft_toLeftOf="@+id/view_bottom"
+        app:layout_constraintRight_toLeftOf="@+id/view_dynamic_square"
+        app:layout_constraintTop_toTopOf="@+id/view_bottom" />
+
+    <View
+        android:id="@+id/view_dynamic_square"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        app:layout_constraintBottom_toBottomOf="@id/view_bottom"
+        app:layout_constraintLeft_toRightOf="@+id/view_make_friends"
         app:layout_constraintRight_toLeftOf="@+id/view_program"
         app:layout_constraintTop_toTopOf="@+id/view_bottom" />
 
@@ -50,7 +59,7 @@
         android:layout_width="0px"
         android:layout_height="0px"
         app:layout_constraintBottom_toBottomOf="@id/view_bottom"
-        app:layout_constraintLeft_toRightOf="@+id/view_make_friends"
+        app:layout_constraintLeft_toRightOf="@+id/view_dynamic_square"
         app:layout_constraintRight_toLeftOf="@+id/view_message"
         app:layout_constraintTop_toTopOf="@id/view_bottom" />
 
@@ -60,18 +69,8 @@
         android:layout_height="0px"
         app:layout_constraintBottom_toBottomOf="@id/view_bottom"
         app:layout_constraintLeft_toRightOf="@+id/view_program"
-        app:layout_constraintRight_toLeftOf="@+id/view_dynamic_square"
-        app:layout_constraintTop_toTopOf="@id/view_bottom" />
-
-
-    <View
-        android:id="@+id/view_dynamic_square"
-        android:layout_width="0px"
-        android:layout_height="0px"
-        app:layout_constraintBottom_toBottomOf="@id/view_bottom"
-        app:layout_constraintLeft_toRightOf="@+id/view_message"
         app:layout_constraintRight_toLeftOf="@+id/view_mine"
-        app:layout_constraintTop_toTopOf="@+id/view_bottom" />
+        app:layout_constraintTop_toTopOf="@id/view_bottom" />
 
 
     <View
@@ -79,24 +78,26 @@
         android:layout_width="0px"
         android:layout_height="0px"
         app:layout_constraintBottom_toBottomOf="@id/view_bottom"
-        app:layout_constraintLeft_toRightOf="@id/view_dynamic_square"
+        app:layout_constraintLeft_toRightOf="@id/view_message"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@id/view_bottom" />
 
 
     <FrameLayout
         android:id="@+id/fl_make_friends"
-        android:layout_width="0px"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="@id/view_make_friends"
         app:layout_constraintLeft_toLeftOf="@id/view_make_friends"
-        app:layout_constraintRight_toRightOf="@id/view_make_friends">
+        app:layout_constraintRight_toRightOf="@id/view_make_friends"
+        app:layout_constraintTop_toTopOf="@+id/view_make_friends">
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/lottie_make_friends"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/dimen_5"
             android:layout_marginBottom="14dp"
             app:lottie_fileName="json/home.json" />
 
@@ -115,21 +116,21 @@
 
     <FrameLayout
         android:id="@+id/fl_square"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_width="50dp"
+        android:layout_height="0dp"
         android:layout_gravity="top"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="@+id/view_dynamic_square"
         app:layout_constraintLeft_toLeftOf="@+id/view_dynamic_square"
-        app:layout_constraintRight_toRightOf="@+id/view_dynamic_square">
+        app:layout_constraintRight_toRightOf="@+id/view_dynamic_square"
+        app:layout_constraintTop_toTopOf="@+id/view_dynamic_square">
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/lottie_square"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="14dp"
+            android:layout_marginTop="@dimen/dimen_5"
             app:lottie_fileName="json/dynamic.json" />
 
         <TextView
@@ -148,20 +149,21 @@
 
     <FrameLayout
         android:id="@+id/fl_program"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_width="50dp"
+        android:layout_height="0dp"
         android:layout_gravity="top"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="@id/view_program"
         app:layout_constraintLeft_toLeftOf="@id/view_program"
-        app:layout_constraintRight_toRightOf="@id/view_program">
+        app:layout_constraintRight_toRightOf="@id/view_program"
+        app:layout_constraintTop_toTopOf="@+id/view_program">
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/lottie_program"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/dimen_5"
             android:layout_marginBottom="14dp"
             app:lottie_fileName="json/live.json" />
 
@@ -182,21 +184,22 @@
 
     <FrameLayout
         android:id="@+id/fl_message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/dimen_50"
+        android:layout_height="0dp"
         android:layout_alignParentBottom="true"
         android:layout_gravity="top"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="@id/view_message"
         app:layout_constraintLeft_toLeftOf="@id/view_message"
-        app:layout_constraintRight_toRightOf="@id/view_message">
+        app:layout_constraintRight_toRightOf="@id/view_message"
+        app:layout_constraintTop_toTopOf="@+id/view_message">
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/lottie_message"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="14dp"
+            android:layout_marginTop="@dimen/dimen_5"
             app:lottie_fileName="json/message.json" />
 
         <TextView
@@ -215,8 +218,9 @@
             android:id="@+id/tv_unread_count"
             android:layout_width="wrap_content"
             android:layout_height="15dp"
-            android:layout_gravity="right|bottom"
-            android:layout_marginBottom="30dp"
+            android:layout_gravity="end|top"
+            android:layout_marginTop="@dimen/dimen_4"
+            android:layout_marginEnd="@dimen/dimen_2"
             android:background="@drawable/bg_unread_count"
             android:gravity="center"
             android:includeFontPadding="false"
@@ -232,21 +236,22 @@
 
     <FrameLayout
         android:id="@+id/fl_mine"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="0dp"
         android:layout_alignParentBottom="true"
         android:layout_gravity="top"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="@id/view_mine"
         app:layout_constraintLeft_toLeftOf="@id/view_mine"
-        app:layout_constraintRight_toRightOf="@id/view_mine">
+        app:layout_constraintRight_toRightOf="@id/view_mine"
+        app:layout_constraintTop_toTopOf="@+id/view_mine">
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/lottie_mine"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="14dp"
+            android:layout_marginTop="@dimen/dimen_5"
             app:lottie_fileName="json/mine.json" />
 
         <TextView
@@ -264,9 +269,9 @@
             android:id="@+id/tv_red_point"
             android:layout_width="9dp"
             android:layout_height="9dp"
-            android:layout_gravity="right|bottom"
-            android:layout_marginRight="6dp"
-            android:layout_marginBottom="33dp"
+            android:layout_gravity="end|top"
+            android:layout_marginTop="@dimen/dimen_5"
+            android:layout_marginEnd="@dimen/dimen_4"
             android:background="@drawable/bg_unread_count"
             android:gravity="center"
             android:includeFontPadding="false"

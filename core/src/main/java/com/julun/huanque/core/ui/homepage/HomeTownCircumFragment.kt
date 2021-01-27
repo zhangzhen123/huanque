@@ -1,6 +1,7 @@
 package com.julun.huanque.core.ui.homepage
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
@@ -74,6 +75,7 @@ class HomeTownCircumFragment : BaseFragment() {
         recycler_view.layoutManager = GridLayoutManager(requireContext(), 2)
         recycler_view.adapter = mAdapter
 //        recycler_view.isNestedScrollingEnabled = false
+        mAdapter.addFooterView(LayoutInflater.from(context).inflate(R.layout.view_bottom_holder, null))
     }
 
     /**

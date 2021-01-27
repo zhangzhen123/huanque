@@ -1,6 +1,7 @@
 package com.julun.huanque.core.adapter
 
 import android.animation.Animator
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
@@ -52,7 +53,7 @@ class FavoriteAdapter : BaseQuickAdapter<FavoriteUserBean, BaseViewHolder>(R.lay
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         val holder = super.onCreateViewHolder(parent, viewType)
         if (viewType == 0) {
-            val cardView = holder.getView<CardView>(R.id.card_view)
+            val cardView = holder.getView<View>(R.id.ct_layout)
             val sdvLp = cardView.layoutParams
             sdvLp.height = itemHeight
         }

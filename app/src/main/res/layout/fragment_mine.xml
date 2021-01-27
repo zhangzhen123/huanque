@@ -62,39 +62,39 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <RelativeLayout
-                    android:id="@+id/rl_guide"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dimen_40"
-                    android:layout_marginStart="@dimen/dimen_15"
-                    android:layout_marginEnd="@dimen/dimen_15"
-                    android:background="@drawable/bg_mine_guide">
+<!--                <RelativeLayout-->
+<!--                    android:id="@+id/rl_guide"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="@dimen/dimen_40"-->
+<!--                    android:layout_marginStart="@dimen/dimen_15"-->
+<!--                    android:layout_marginEnd="@dimen/dimen_15"-->
+<!--                    android:background="@drawable/bg_mine_guide">-->
 
-                    <TextView
-                        android:id="@+id/tv_guide_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginStart="@dimen/dimen_10"
-                        android:text="完成资料可获得更精准的推荐"
-                        android:textColor="@color/black_333"
-                        android:textSize="@dimen/sp_14"
-                        android:textStyle="bold" />
+<!--                    <TextView-->
+<!--                        android:id="@+id/tv_guide_title"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_centerVertical="true"-->
+<!--                        android:layout_marginStart="@dimen/dimen_10"-->
+<!--                        android:text="完成资料可获得更精准的推荐"-->
+<!--                        android:textColor="@color/black_333"-->
+<!--                        android:textSize="@dimen/sp_14"-->
+<!--                        android:textStyle="bold" />-->
 
-                    <TextView
-                        android:id="@+id/tv_guide_title2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
-                        android:drawableRight="@mipmap/icon_forward_black_01"
-                        android:gravity="center"
-                        android:textColor="@color/black_333"
-                        android:textSize="@dimen/sp_12"
-                        android:textStyle="bold"
-                        tools:text="资料完整度：20%" />
+<!--                    <TextView-->
+<!--                        android:id="@+id/tv_guide_title2"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_alignParentEnd="true"-->
+<!--                        android:layout_centerVertical="true"-->
+<!--                        android:drawableRight="@mipmap/icon_forward_black_01"-->
+<!--                        android:gravity="center"-->
+<!--                        android:textColor="@color/black_333"-->
+<!--                        android:textSize="@dimen/sp_12"-->
+<!--                        android:textStyle="bold"-->
+<!--                        tools:text="资料完整度：20%" />-->
 
-                </RelativeLayout>
+<!--                </RelativeLayout>-->
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/clHeadRoot"
@@ -153,7 +153,7 @@
                         android:gravity="center_vertical"
                         app:layout_constraintBottom_toTopOf="@+id/tvUserId"
                         app:layout_constraintLeft_toRightOf="@+id/headImage"
-                        app:layout_constraintRight_toLeftOf="@+id/ivImage"
+                        app:layout_constraintRight_toLeftOf="@+id/tv_complete_info"
                         app:layout_constraintTop_toTopOf="@+id/headImage"
                         app:layout_constraintVertical_chainStyle="packed">
 
@@ -201,16 +201,34 @@
                         tools:text="1111111111111" />
 
 
-                    <ImageView
-                        android:id="@+id/ivImage"
+<!--                    <ImageView-->
+<!--                        android:id="@+id/ivImage"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginEnd="@dimen/dimen_15"-->
+<!--                        android:layout_marginRight="@dimen/dimen_15"-->
+<!--                        android:src="@mipmap/icon_forward_black_01"-->
+<!--                        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                        app:layout_constraintRight_toRightOf="parent"-->
+<!--                        app:layout_constraintTop_toTopOf="parent" />-->
+
+                    <TextView
+                        android:id="@+id/tv_complete_info"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
                         android:layout_marginEnd="@dimen/dimen_15"
-                        android:layout_marginRight="@dimen/dimen_15"
-                        android:src="@mipmap/icon_forward_black_01"
+                        android:drawableRight="@mipmap/icon_forward_black_01"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:gravity="center"
+                        android:textColor="@color/black_333"
+                        android:textSize="@dimen/sp_12"
+                        android:textStyle="bold"
+                        tools:text="资料完成 20%" />
+
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

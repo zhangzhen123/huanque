@@ -110,7 +110,7 @@ class HomeCardTagView : LinearLayout {
 
         val ani21 = ObjectAnimator.ofFloat(ll_content, View.ALPHA, 0f, 1f)
         ani21.duration = 350
-        val width = dp2px(16 + 18 + 16) + (data.tagName).length * tv_tag.textSize
+        val width = dp2px(13 + 18 + 8) + (data.tagName).length * tv_tag.textSize
         val ani22 = ValueAnimator.ofInt(0, width.toInt())
 //        logger.info("ll_content.width=${ll_content.width}")
         val llp = ll_content.layoutParams

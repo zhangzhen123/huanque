@@ -268,7 +268,8 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
                 }
                 tvSex.backgroundResource =
                     com.julun.huanque.core.R.drawable.bg_shape_mine_sex_female
-                tvSex.text = "${info.userBasic.age}"
+                if (info.userBasic.age != 0)
+                    tvSex.text = "${info.userBasic.age}"
             }
             else -> {
                 val drawable = ContextCompat.getDrawable(
@@ -280,7 +281,8 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
                     tvSex.setCompoundDrawables(drawable, null, null, null)
                 }
                 tvSex.backgroundResource = com.julun.huanque.core.R.drawable.bg_shape_mine_sex_male
-                tvSex.text = "${info.userBasic.age}"
+                if (info.userBasic.age != 0)
+                    tvSex.text = "${info.userBasic.age}"
             }
         }
 
@@ -293,14 +295,18 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
     private fun loadGuide(perfectGuide: PerfectGuideBean?, perfection: Int) {
         if (perfectGuide != null) {
             if (perfection == 100) {
-                rl_guide.hide()
+//                rl_guide.hide()
+                tv_complete_info.hide()
             } else {
-                rl_guide.show()
-                tv_guide_title.text=perfectGuide.guideText
-                tv_guide_title2.text = "资料完整度：${perfection}%"
+//                rl_guide.show()
+//                tv_guide_title.text = perfectGuide.guideText
+                tv_complete_info.show()
+                tv_complete_info.text = "资料完成 ${perfection}%"
             }
         } else {
-            rl_guide.hide()
+//            rl_guide.hide()
+            tv_complete_info.show()
+            tv_complete_info.text=""
         }
     }
 
@@ -500,12 +506,12 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
             mInviteCodeFragment.show(childFragmentManager, "InviteCodeFragment")
         }
 
-        rl_guide.onClickNew {
-            val intent = Intent(requireActivity(), EditInfoActivity::class.java)
-            if (ForceUtils.activityMatch(intent)) {
-                startActivity(intent)
-            }
-        }
+//        rl_guide.onClickNew {
+//            val intent = Intent(requireActivity(), EditInfoActivity::class.java)
+//            if (ForceUtils.activityMatch(intent)) {
+//                startActivity(intent)
+//            }
+//        }
 
     }
 

@@ -37,7 +37,6 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginRight="15dp"
-                android:background="@drawable/bg_edit_progress_view"
                 android:visibility="gone"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
@@ -48,6 +47,7 @@
                     android:id="@+id/view_progress_top"
                     android:layout_width="0px"
                     android:layout_height="30dp"
+                    android:background="@drawable/bg_edit_progress_view"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -56,7 +56,6 @@
                     android:id="@+id/tv_progress_bottom"
                     android:layout_width="0px"
                     android:layout_height="20dp"
-                    android:background="@drawable/bg_progress_bottom"
                     android:gravity="center"
                     android:textColor="@color/black_666"
                     android:textSize="@dimen/sp_10"
@@ -84,6 +83,8 @@
                     android:layout_height="24dp"
                     android:layout_marginRight="8dp"
                     android:src="@mipmap/icon_close_grey_01"
+                    android:scaleType="fitXY"
+                    android:padding="@dimen/dimen_5"
                     app:layout_constraintBottom_toBottomOf="@id/view_progress_top"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="@id/view_progress_top" />

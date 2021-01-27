@@ -23,9 +23,9 @@
 
     <ImageView
         android:id="@+id/iv_search"
-        android:layout_width="@dimen/dimen_32"
+        android:layout_width="@dimen/dimen_44"
         android:layout_height="@dimen/dimen_32"
-        android:layout_marginEnd="@dimen/dimen_15"
+        android:layout_marginEnd="@dimen/dimen_5"
         android:scaleType="centerInside"
         android:src="@mipmap/icon_search_big_01"
         app:layout_constraintBottom_toBottomOf="@+id/magic_indicator"

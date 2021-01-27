@@ -70,7 +70,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="2dp"
+                android:layout_marginTop="1dp"
                 android:textColor="@color/black_333"
                 android:textSize="@dimen/sp_10"
                 android:textStyle="bold"

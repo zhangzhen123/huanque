@@ -197,7 +197,7 @@ class YuanFenActivity : BaseActivity() {
                     mAdapter.loadMoreModule.loadMoreComplete()
                 }
             } else {
-                commonView.showEmpty(false, R.mipmap.icon_default_empty, "暂无数据", null, "去看看")
+                commonView.showEmpty(false, R.mipmap.icon_no_data_01, "暂无数据", null, "去看看")
             }
         })
 

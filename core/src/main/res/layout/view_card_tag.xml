@@ -37,8 +37,8 @@
         android:id="@+id/ll_content"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/dimen_26"
-        android:layout_marginStart="@dimen/dimen_5"
-        android:layout_marginEnd="@dimen/dimen_5"
+        android:layout_marginStart="@dimen/dimen_1"
+        android:layout_marginEnd="@dimen/dimen_1"
         android:background="@drawable/bg_shape_card_tag_text"
         android:gravity="center"
         android:paddingStart="@dimen/dimen_8"
@@ -46,8 +46,8 @@
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/sdv_tag"
-            android:layout_width="@dimen/dimen_18"
-            android:layout_height="@dimen/dimen_18"
+            android:layout_width="@dimen/dimen_13"
+            android:layout_height="@dimen/dimen_16"
             app:actualImageScaleType="centerCrop"
             app:placeholderImage="@mipmap/logo_placeholder_small" />
 

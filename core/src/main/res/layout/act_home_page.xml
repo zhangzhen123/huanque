@@ -514,11 +514,12 @@
     <RelativeLayout
         android:id="@+id/rl_edit_info"
         android:layout_width="0px"
-        android:layout_height="40dp"
+        android:layout_height="50dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:background="@drawable/bg_enable"
         android:visibility="gone"
+        tools:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@id/view_action"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -528,11 +529,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:drawableLeft="@mipmap/icon_home_page_edit_info"
             android:drawablePadding="3dp"
             android:text="编辑资料"
-            android:textColor="@color/black_333"
-            android:textSize="@dimen/sp_12"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_16"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent" />
 

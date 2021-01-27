@@ -13,6 +13,8 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.bean.forms.HeartBeanForm
 import com.julun.huanque.common.constant.ARouterConstant
+import com.julun.huanque.common.helper.DensityHelper.Companion.dp2px
+import com.julun.huanque.common.suger.dp2pxf
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.common.utils.ViewPager2Helper
@@ -87,9 +89,10 @@ class HeartBeatActivity : BaseActivity() {
                 val simplePagerTitleView: ScaleTransitionPagerTitleView =
                     ScaleTransitionPagerTitleView(context)
                 simplePagerTitleView.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
-                simplePagerTitleView.minScale = 0.583f
+                simplePagerTitleView.minScale = 0.727f
                 simplePagerTitleView.text = mTabTitles[index]
-                simplePagerTitleView.textSize = 24f
+                simplePagerTitleView.textSize = 22f
+                simplePagerTitleView.setPadding(dp2px(8),0,dp2px(8),0)
                 simplePagerTitleView.normalColor =
                     ContextCompat.getColor(context, R.color.black_666)
                 simplePagerTitleView.selectedColor =
@@ -111,8 +114,8 @@ class HeartBeatActivity : BaseActivity() {
                             R.color.black_666
                         )
                     )
-                    simplePagerTitleView.scaleX = 0.583f
-                    simplePagerTitleView.scaleY = 0.583f
+                    simplePagerTitleView.scaleX = 0.727f
+                    simplePagerTitleView.scaleY = 0.727f
                 }
                 return simplePagerTitleView
             }
@@ -123,9 +126,9 @@ class HeartBeatActivity : BaseActivity() {
 //                }
                 val indicator = LinePagerIndicator(context)
                 indicator.mode = LinePagerIndicator.MODE_EXACTLY
-                indicator.lineHeight = 6f
-                indicator.lineWidth = 12f
-                indicator.roundRadius = 6f
+                indicator.lineHeight = dp2pxf(3)
+                indicator.lineWidth = dp2pxf(6)
+                indicator.roundRadius = dp2pxf(2)
                 indicator.startInterpolator = AccelerateInterpolator()
                 indicator.endInterpolator = DecelerateInterpolator(2.0f)
                 indicator.yOffset = 12f

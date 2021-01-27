@@ -26,14 +26,15 @@
 
     <TextView
         android:id="@+id/tv_button"
-        android:layout_width="160dp"
-        android:layout_height="40dp"
+        android:layout_width="220dp"
+        android:layout_height="50dp"
         android:layout_marginTop="@dimen/dimen_10"
         android:textSize="@dimen/size_16"
         android:gravity="center"
-        android:background="@drawable/bg_solid_btn2"
+        android:background="@drawable/bg_solid_btn3"
         android:textColor="@color/white"
         tools:text="知道了"
+        android:textStyle="bold"
         tools:visibility="visible"
         android:visibility="gone" />
 

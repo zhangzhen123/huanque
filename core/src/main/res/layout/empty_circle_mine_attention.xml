@@ -9,7 +9,7 @@
         android:id="@+id/iv_pic"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:src="@mipmap/icon_default_empty"
+        android:src="@mipmap/icon_no_data_01"
         app:layout_constraintBottom_toTopOf="@+id/tv_attetnion_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

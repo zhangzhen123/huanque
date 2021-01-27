@@ -2,11 +2,8 @@ package com.julun.huanque.message.fragment
 
 import android.animation.ObjectAnimator
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
-import android.view.Gravity
-import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.widget.PopupWindow
@@ -20,7 +17,6 @@ import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.VoidResult
-import com.julun.huanque.common.bean.beans.ChatRoomBean
 import com.julun.huanque.common.bean.beans.AdInfoBean
 import com.julun.huanque.common.bean.events.*
 import com.julun.huanque.common.constant.*
@@ -45,11 +41,11 @@ import com.luck.picture.lib.tools.StatusBarUtil
 import io.rong.imlib.RongIMClient
 import io.rong.imlib.model.Conversation
 import kotlinx.android.synthetic.main.fragment_message.*
-import kotlinx.android.synthetic.main.fragment_message.view_notification
-import kotlinx.android.synthetic.main.fragment_message.view_top
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.jetbrains.anko.*
+import org.jetbrains.anko.backgroundColor
+import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.topPadding
 
 /**
  *@创建者   dong
@@ -595,6 +591,7 @@ class MessageFragment : BaseFragment() {
             }
         }
         iv_notification_close.onClickNew {
+            userClose = true
             view_notification.hide()
         }
 
@@ -612,14 +609,18 @@ class MessageFragment : BaseFragment() {
         }
     }
 
+    private var userClose = false
     override fun onResume() {
         super.onResume()
         val open = NotificationUtils.areNotificationsEnabled(requireContext())
-        if (open) {
-            view_notification.hide()
-        } else {
-            view_notification.show()
+        if (!userClose) {
+            if (open) {
+                view_notification.hide()
+            } else {
+                view_notification.show()
+            }
         }
+
         if (mNeedRefresh) {
             mMessageViewModel.chatRoom()
             mNeedRefresh = false

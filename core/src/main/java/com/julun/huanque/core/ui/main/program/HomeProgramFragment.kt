@@ -24,6 +24,7 @@ import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.bean.beans.FollowProgramInfo
 import com.julun.huanque.common.bean.beans.PagerTab
 import com.julun.huanque.common.constant.BusiConstant
+import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.suger.dp2pxf
@@ -185,6 +186,7 @@ class HomeProgramFragment : BaseFragment() {
                 simplePagerTitleView.minScale = 0.727f
                 simplePagerTitleView.text = mTabTitles[index].typeName
                 simplePagerTitleView.textSize = 22f
+                simplePagerTitleView.setPadding(DensityHelper.dp2px(8),0, DensityHelper.dp2px(8),0)
                 simplePagerTitleView.normalColor = ContextCompat.getColor(context, R.color.black_666)
                 simplePagerTitleView.selectedColor = ContextCompat.getColor(context, R.color.black_333)
                 simplePagerTitleView.setOnClickListener { view_pager.currentItem = index }

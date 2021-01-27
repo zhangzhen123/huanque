@@ -32,6 +32,7 @@ import com.julun.huanque.common.bean.events.ImagePositionEvent
 import com.julun.huanque.common.bean.events.PicChangeEvent
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.AppHelper
+import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.interfaces.routerservice.IRealNameService
 import com.julun.huanque.common.manager.HuanViewModelManager
@@ -510,6 +511,7 @@ class HomePageActivity : BaseActivity() {
                 simplePagerTitleView.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
                 simplePagerTitleView.minScale = 0.7f
                 simplePagerTitleView.text = mTabTitles[index]
+                simplePagerTitleView.setPadding(DensityHelper.dp2px(8),0, DensityHelper.dp2px(8),0)
                 simplePagerTitleView.textSize = 20f
                 simplePagerTitleView.normalColor =
                     ContextCompat.getColor(context, R.color.black_666)
@@ -805,8 +807,12 @@ class HomePageActivity : BaseActivity() {
             rl_guide_info.backgroundColor = Color.parseColor("#CACED7")
             tv_guide_title.text = bean.perfectGuide?.guideText
             tv_guide_title_02.show()
-            tv_guide_title_02.text = "资料完整度：${bean.perfection}%"
-            tv_guide_title.setCompoundDrawables(null, null, null, null)
+            tv_guide_title_02.text = "资料完整度 ${bean.perfection}%"
+            val drawable = ContextCompat.getDrawable(this, R.mipmap.icon_warn_white_01)
+            if (drawable != null) {
+                drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
+                tv_guide_title.setCompoundDrawables(drawable, null, null, null)
+            }
             rl_guide_info.onClickNew {
                 val intent = Intent(this, EditInfoActivity::class.java)
                 if (ForceUtils.activityMatch(intent)) {

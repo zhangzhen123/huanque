@@ -10,6 +10,8 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.viewpager.widget.ViewPager
+import com.julun.huanque.common.suger.dp2px
+import com.julun.huanque.common.suger.dp2pxf
 import com.julun.huanque.common.viewpagerofbottomsheet.ViewPagerBottomSheetDialogFragment
 import com.julun.huanque.common.widgets.indicator.ScaleTransitionPagerTitleView
 import com.julun.huanque.core.R
@@ -136,13 +138,14 @@ class HomeTownFragment : ViewPagerBottomSheetDialogFragment() {
                 val simplePagerTitleView: ScaleTransitionPagerTitleView =
                     ScaleTransitionPagerTitleView(context)
                 simplePagerTitleView.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
-                simplePagerTitleView.minScale = 0.727f
+                simplePagerTitleView.minScale = 0.7f
                 simplePagerTitleView.text = mTabTitles[index]
-                simplePagerTitleView.textSize = 24f
+                simplePagerTitleView.textSize = 20f
                 simplePagerTitleView.normalColor =
                     ContextCompat.getColor(context, R.color.black_666)
                 simplePagerTitleView.selectedColor =
                     ContextCompat.getColor(context, R.color.black_333)
+                simplePagerTitleView.setPadding(dp2px(15),0,dp2px(15),0)
                 simplePagerTitleView.setOnClickListener { view_pager2.currentItem = index }
                 if (view_pager2.currentItem == index) {
                     simplePagerTitleView.setTextColor(
@@ -160,8 +163,8 @@ class HomeTownFragment : ViewPagerBottomSheetDialogFragment() {
                             R.color.black_666
                         )
                     )
-                    simplePagerTitleView.scaleX = 0.727f
-                    simplePagerTitleView.scaleY = 0.727f
+                    simplePagerTitleView.scaleX = 0.7f
+                    simplePagerTitleView.scaleY = 0.7f
                 }
                 return simplePagerTitleView
             }
@@ -172,9 +175,9 @@ class HomeTownFragment : ViewPagerBottomSheetDialogFragment() {
 //                }
                 val indicator = LinePagerIndicator(context)
                 indicator.mode = LinePagerIndicator.MODE_EXACTLY
-                indicator.lineHeight = 6f
-                indicator.lineWidth = 12f
-                indicator.roundRadius = 6f
+                indicator.lineHeight = dp2pxf(3)
+                indicator.lineWidth = dp2pxf(6)
+                indicator.roundRadius = dp2pxf(2)
                 indicator.startInterpolator = AccelerateInterpolator()
                 indicator.endInterpolator = DecelerateInterpolator(2.0f)
                 indicator.yOffset = 12f

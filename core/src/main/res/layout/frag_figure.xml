@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="423dp"
+    android:layout_height="443dp"
     android:background="@drawable/bg_top_radius_10">
 
     <View
@@ -38,7 +38,7 @@
 
     <View
         android:layout_width="0px"
-        android:layout_height="377dp"
+        android:layout_height="407dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/view_top" />

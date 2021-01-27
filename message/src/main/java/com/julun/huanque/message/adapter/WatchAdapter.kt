@@ -48,9 +48,9 @@ class WatchAdapter : BaseQuickAdapter<WatchHistoryBean, BaseViewHolder>(R.layout
         if (maxCount != -1 && adapterPosition >= maxCount && needBlur) {
             //模糊样式
             sdv_header.loadImage("${item.headPic}${BusiConstant.OSS_BLUR_02}", 56f, 56f)
-            val nicknameSb = SpannableString(item.nickName)
+            val nicknameSb = SpannableString(" ${item.nickName} ")
             nicknameSb.setSpan(
-                MaskFilterSpan(BlurMaskFilter(10f, BlurMaskFilter.Blur.NORMAL)),
+                MaskFilterSpan(BlurMaskFilter(12f, BlurMaskFilter.Blur.NORMAL)),
                 0, nicknameSb.length, Spanned.SPAN_INCLUSIVE_EXCLUSIVE
             );
             tv_nickname.text = nicknameSb

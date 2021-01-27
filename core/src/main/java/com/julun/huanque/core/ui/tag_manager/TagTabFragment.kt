@@ -93,8 +93,8 @@ class TagTabFragment : BaseLazyFragment() {
         }
         currentTab = arguments?.getSerializable(IntentParamKey.TAB_TYPE.name) as? ManagerTagTabBean
         initViewModel()
-        postList.layoutManager = GridLayoutManager(requireContext(), 4)
-        postList.addItemDecoration(GridLayoutSpaceItemDecoration2(dp2px(6)))
+        postList.layoutManager = GridLayoutManager(requireContext(), 3)
+        postList.addItemDecoration(GridLayoutSpaceItemDecoration2(dp2px(15)))
         postList.adapter = mAdapter
 
         (postList.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false

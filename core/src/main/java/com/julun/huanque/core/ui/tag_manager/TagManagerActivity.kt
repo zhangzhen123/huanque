@@ -329,8 +329,8 @@ class TagManagerActivity : BaseActivity() {
 //                }
                 val indicator = LinePagerIndicator(context)
                 indicator.mode = LinePagerIndicator.MODE_EXACTLY
-                indicator.lineHeight = dp2pxf(4)
-                indicator.lineWidth = dp2pxf(13)
+                indicator.lineHeight = dp2pxf(3)
+                indicator.lineWidth = dp2pxf(6)
                 indicator.roundRadius = dp2pxf(2)
                 indicator.startInterpolator = AccelerateInterpolator()
                 indicator.endInterpolator = DecelerateInterpolator(2.0f)

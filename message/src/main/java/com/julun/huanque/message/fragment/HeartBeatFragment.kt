@@ -3,7 +3,6 @@ package com.julun.huanque.message.fragment
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -18,7 +17,6 @@ import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.helper.AppHelper
 import com.julun.huanque.common.helper.MixedHelper
-import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
@@ -27,7 +25,6 @@ import com.julun.huanque.message.R
 import com.julun.huanque.message.adapter.HeartBeatAdapter
 import com.julun.huanque.message.viewmodel.HeartBeatViewModel
 import kotlinx.android.synthetic.main.frag_heart_beat.*
-import java.util.zip.Inflater
 
 /**
  *@创建者   dong
@@ -101,7 +98,7 @@ class HeartBeatFragment : BaseFragment() {
             mHeaderView = headerView
         }
 
-
+        mAdapter.headerWithEmptyEnable = true
         mAdapter.setEmptyView(MixedHelper.getEmptyView(requireContext(), "暂无数据", imgResId = R.mipmap.icon_no_data_01))
         mAdapter.setOnItemClickListener { adapter, view, position ->
             val tempData = mAdapter.getItemOrNull(position) ?: return@setOnItemClickListener

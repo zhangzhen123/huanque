@@ -16,9 +16,9 @@
 
     <ImageView
         android:id="@+id/tv_filter_tag"
-        android:layout_width="@dimen/dimen_30"
+        android:layout_width="@dimen/dimen_44"
         android:layout_height="40dp"
-        android:layout_marginEnd="@dimen/dimen_3"
+        android:layout_marginEnd="@dimen/dimen_5"
         android:gravity="center"
         android:scaleType="centerInside"
         android:src="@mipmap/icon_nearby_filter"
@@ -71,19 +71,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1"
         app:layout_constraintStart_toEndOf="@+id/magic_indicator"
-        app:layout_constraintTop_toTopOf="@+id/magic_indicator" />
+        app:layout_constraintTop_toTopOf="@+id/magic_indicator"
+        tools:visibility="gone" />
 
     <View
         android:id="@+id/v_filter_tag_holder"
-        android:layout_width="@dimen/dimen_30"
-        android:layout_height="40dp"
-        android:layout_marginEnd="@dimen/dimen_3"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:gravity="center"
         android:scaleType="centerInside"
-        android:src="@mipmap/icon_nearby_filter"
-        app:layout_constraintBottom_toBottomOf="@+id/magic_indicator"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toBottomOf="@+id/tv_filter_tag"
+        app:layout_constraintEnd_toEndOf="@+id/tv_filter_tag"
+        app:layout_constraintStart_toStartOf="@+id/tv_filter_tag"
+        app:layout_constraintTop_toTopOf="@+id/tv_filter_tag" />
 
     <com.julun.huanque.common.widgets.viewpager.NoScrollViewPager
         android:id="@+id/view_pager"

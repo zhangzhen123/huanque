@@ -62,10 +62,11 @@
 
     <TextView
         android:id="@+id/tv_cancel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_35"
+        android:layout_marginTop="5dp"
         android:text="取消"
+        android:gravity="center"
         android:textColor="@color/black_999"
         android:textSize="@dimen/sp_16"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -75,7 +76,7 @@
     <View
         android:layout_width="1px"
         android:layout_height="1px"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="15dp"
         app:layout_constraintLeft_toLeftOf="@id/tv_cancel"
         app:layout_constraintTop_toBottomOf="@id/tv_cancel" />
 
