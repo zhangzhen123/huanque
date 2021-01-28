@@ -13,7 +13,6 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.PopupWindow
 import androidx.activity.viewModels
@@ -27,6 +26,7 @@ import com.julun.huanque.common.bean.events.WeiXinCodeEvent
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.Agreement
 import com.julun.huanque.common.constant.SPParamKey
+import com.julun.huanque.common.helper.ChannelCodeHelper
 import com.julun.huanque.common.helper.StorageHelper
 import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.hide
@@ -104,12 +104,26 @@ class LoginActivity2 : BaseActivity() {
         }
     }
 
+    private var lastClickTime = 0L
+    private var clickCount = 0
     override fun initEvents(rootView: View) {
         super.initEvents(rootView)
-        if(BuildConfig.DEBUG){
+        if (BuildConfig.DEBUG) {
             view_holder.onClickNew {
                 ARouter.getInstance().build(ARouterConstant.ENVIRONMENT_CONFIGURATION_ACTIVITY)
                     .navigation()
+            }
+        } else {
+            view_holder.onClickNew {
+                val currentTime = System.currentTimeMillis()
+                if (currentTime - lastClickTime < 1000) {
+                    clickCount++
+                }
+                if (clickCount > 8) {
+                    ToastUtils.show(ChannelCodeHelper.getInnerChannel())
+                    clickCount = 0
+                }
+                lastClickTime = currentTime
             }
         }
 
@@ -134,7 +148,7 @@ class LoginActivity2 : BaseActivity() {
 
         tv_phone_code.onClickNew {
             //获取短信验证码
-            if(!tv_phone_code.isSelected){
+            if (!tv_phone_code.isSelected) {
                 return@onClickNew
             }
             val phoneNum = phone_num.text.toString().trim().replace(" ", "")

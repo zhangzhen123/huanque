@@ -59,7 +59,7 @@ class TodayFateDialogFragment : BaseDialogFragment() {
     }
 
     override fun configDialog() {
-        setDialogSize(gravity = Gravity.CENTER, height = ViewGroup.LayoutParams.WRAP_CONTENT,padding =  28)
+        setDialogSize(gravity = Gravity.CENTER, marginWidth = 28, height = ViewGroup.LayoutParams.WRAP_CONTENT)
     }
     override fun initViews() {
 

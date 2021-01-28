@@ -17,6 +17,7 @@ import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.bean.beans.UserTagBean
+import com.julun.huanque.common.bean.events.LoginEvent
 import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.removeDuplicate
@@ -24,15 +25,14 @@ import com.julun.huanque.common.viewmodel.TagManagerViewModel
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.tag_manager.TagManagerActivity
 import kotlinx.android.synthetic.main.fragment_favorite_container.*
-import kotlinx.android.synthetic.main.fragment_favorite_container.magic_indicator
-import kotlinx.android.synthetic.main.fragment_favorite_container.state_pager_view
-import kotlinx.android.synthetic.main.fragment_favorite_container.view_pager
 import net.lucode.hackware.magicindicator.ViewPagerHelper
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNavigatorAdapter
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerIndicator
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.CommonPagerTitleView
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.backgroundResource
 
 /**
@@ -86,6 +86,9 @@ class FavoriteFragment : BaseLazyFragment() {
         return R.layout.fragment_favorite_container
     }
 
+    override fun isRegisterEventBus(): Boolean {
+        return true
+    }
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
 
@@ -141,7 +144,7 @@ class FavoriteFragment : BaseLazyFragment() {
         tagManagerViewModel.tagHasChange.observe(this, Observer {
             val list = tagManagerViewModel.currentTagList
             logger.info("我是选择的结果=${list}")
-            if(viewModel.firstListData.value==null){
+            if (viewModel.firstListData.value == null) {
                 logger.info("基础数据还没就位 这里直接返回")
                 return@Observer
             }
@@ -149,7 +152,7 @@ class FavoriteFragment : BaseLazyFragment() {
             val first = mTabTitles.firstOrNull()
             mTabTitles.clear()
 
-            if(first!=null){
+            if (first != null) {
                 mTabTitles.add(first)
             }
             mTabTitles.addAll(list)
@@ -285,6 +288,15 @@ class FavoriteFragment : BaseLazyFragment() {
 
     override fun lazyLoadData() {
         viewModel.queryInfo()
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun receiveLoginCode(event: LoginEvent) {
+        logger.info("登录事件:${event.result}")
+        if (event.result) {
+            viewModel.queryInfo()
+        }
+
     }
 
     override fun onHiddenChanged(hidden: Boolean) {

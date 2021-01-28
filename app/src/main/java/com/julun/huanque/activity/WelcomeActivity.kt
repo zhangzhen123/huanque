@@ -498,8 +498,8 @@ class WelcomeActivity : BaseActivity() {
                 DensityHelper.px2dp(heightPx.toFloat()), 0, 0, true
             )
         //设置logo
-        uiConfigBuilder.setLogoWidth(208)
-        uiConfigBuilder.setLogoHeight(44)
+        uiConfigBuilder.setLogoWidth(194)
+        uiConfigBuilder.setLogoHeight(32)
         uiConfigBuilder.setLogoImgPath("content_login")
         uiConfigBuilder.setLogoHidden(false)
 //        uiConfigBuilder.setLogoOffsetY(110)

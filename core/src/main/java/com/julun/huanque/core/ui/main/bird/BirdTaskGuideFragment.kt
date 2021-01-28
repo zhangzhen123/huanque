@@ -50,7 +50,7 @@ class BirdTaskGuideFragment : BaseVMDialogFragment<BirdTaskViewModel>() {
 
 
     override fun configDialog() {
-        setDialogSize(gravity = Gravity.CENTER, height = ViewGroup.LayoutParams.WRAP_CONTENT,padding = 45)
+        setDialogSize(gravity = Gravity.CENTER, marginWidth = 45, height = ViewGroup.LayoutParams.WRAP_CONTENT)
     }
     private var currentTask: TaskGuideInfo? = null
     private var programId: Long? = null

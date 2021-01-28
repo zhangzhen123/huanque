@@ -959,7 +959,7 @@ class HomePageActivity : BaseActivity() {
                 //没有城市，显示星球
                 val starList = mutableListOf<String>("金星", "木星", "水星", "火星", "土星")
                 val currentStar = starList.random()
-                tv_distance.text = currentStar
+                tv_distance.text = "${currentStar} /"
                 iv_vehicle.show()
                 iv_vehicle.imageResource = R.mipmap.icon_home_distance_rocket
             } else {
@@ -979,7 +979,7 @@ class HomePageActivity : BaseActivity() {
                 if (bean.distanceCity.sameCity != BusiConstant.True) {
                     //不同市
                     iv_vehicle.show()
-                    tv_distance.text = bean.distanceCity.curryCityName
+                    tv_distance.text = "${bean.distanceCity.curryCityName} /"
                     if (distance < 100 * 1000) {
                         //显示汽车
                         iv_vehicle.imageResource = R.mipmap.icon_home_distance_car

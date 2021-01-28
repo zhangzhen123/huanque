@@ -926,6 +926,7 @@ class MainActivity : BaseActivity() {
 //            mLocationService.start()
             mainConnectViewModel.hasLocation = false
             mainConnectViewModel.startLocation()
+            mainConnectViewModel.refreshNearby.value = true
         } else {
             mMessageViewModel.unreadMsgCount.value = 0
         }

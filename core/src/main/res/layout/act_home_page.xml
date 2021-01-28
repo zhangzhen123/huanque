@@ -326,6 +326,7 @@
                             android:id="@+id/iv_vehicle"
                             android:layout_width="16dp"
                             android:layout_height="20dp"
+                            android:layout_marginEnd="@dimen/dimen_2"
                             android:visibility="gone" />
 
                         <TextView

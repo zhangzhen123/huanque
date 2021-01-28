@@ -1,5 +1,6 @@
 package com.julun.huanque.core.ui.live.dialog
 
+import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.fragment.app.activityViewModels
 import com.julun.huanque.common.base.BaseDialogFragment
@@ -40,7 +41,7 @@ class GuideFollowFragment : BaseDialogFragment() {
 
 
     override fun configDialog() {
-        setDialogSize()
+        setDialogSize(width = ViewGroup.LayoutParams.MATCH_PARENT)
         dialog?.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
     }
     override fun initViews() {

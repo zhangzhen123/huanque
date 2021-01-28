@@ -43,7 +43,7 @@ class BirdFunctionDialogFragment : BaseDialogFragment() {
     }
 
     override fun configDialog() {
-        setDialogSize(gravity = Gravity.CENTER, height = ViewGroup.LayoutParams.WRAP_CONTENT,padding = 45)
+        setDialogSize(gravity = Gravity.CENTER, marginWidth = 45, height = ViewGroup.LayoutParams.WRAP_CONTENT)
     }
     fun setBird(bird: FunctionBirdDes) {
         arguments?.putSerializable("bird", bird)
