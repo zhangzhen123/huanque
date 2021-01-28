@@ -434,7 +434,7 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                 .imageFormat(PictureMimeType.PNG)// 拍照保存图片格式后缀,默认jpeg
                 //.setOutputCameraPath("/CustomPath")// 自定义拍照保存路径
                 .enableCrop(true)// 是否裁剪
-                .withAspectRatio(1, 1)// 裁剪比例 如16:9 3:2 3:4 1:1 可自定义
+                .withAspectRatio(3, 4)// 裁剪比例 如16:9 3:2 3:4 1:1 可自定义
                 .hideBottomControls(true)// 是否显示uCrop工具栏，默认不显示
                 .freeStyleCropEnabled(false)// 裁剪框是否可拖拽
                 .isDragFrame(false)

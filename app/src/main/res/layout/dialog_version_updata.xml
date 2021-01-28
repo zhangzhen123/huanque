@@ -73,7 +73,8 @@
             android:background="@drawable/selector_btn_solid"
             android:gravity="center"
             android:text="@string/update_now"
-            android:textColor="@color/black_333"
+            android:textStyle="bold"
+            android:textColor="@color/white"
             android:textSize="16sp" />
     </LinearLayout>
 
