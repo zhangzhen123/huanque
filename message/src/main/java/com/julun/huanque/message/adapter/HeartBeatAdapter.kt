@@ -68,27 +68,33 @@ class HeartBeatAdapter : BaseQuickAdapter<SingleHeartBean, BaseViewHolder>(R.lay
             }
         }
 
-
         val iv_vehicle = holder.getView<ImageView>(R.id.iv_vehicle)
-        if (item.sameCity == BusiConstant.True) {
-            //同市
-            iv_vehicle.hide()
-        } else {
+        if (distance == 0) {
+            //距离为空
             iv_vehicle.show()
-            if (distance == 0) {
-                iv_vehicle.imageResource = R.mipmap.icon_home_distance_rocket
-            } else if (distance < 100 * 1000) {
-                //显示汽车
-                iv_vehicle.imageResource = R.mipmap.icon_home_distance_car
-            } else if (distance > 800 * 1000) {
-                //显示飞机
-                iv_vehicle.imageResource = R.mipmap.icon_home_distance_air_plan
-            } else {
-                //显示动车
-                iv_vehicle.imageResource = R.mipmap.icon_home_distance_rail_way
-            }
+            iv_vehicle.imageResource = R.mipmap.icon_home_distance_rocket
+        } else {
+            iv_vehicle.hide()
         }
-
+//
+//        if (item.sameCity == BusiConstant.True) {
+//            //同市
+//            iv_vehicle.hide()
+//        } else {
+//            iv_vehicle.show()
+//            if (distance == 0) {
+//                iv_vehicle.imageResource = R.mipmap.icon_home_distance_rocket
+//            } else if (distance < 100 * 1000) {
+//                //显示汽车
+//                iv_vehicle.imageResource = R.mipmap.icon_home_distance_car
+//            } else if (distance > 800 * 1000) {
+//                //显示飞机
+//                iv_vehicle.imageResource = R.mipmap.icon_home_distance_air_plan
+//            } else {
+//                //显示动车
+//                iv_vehicle.imageResource = R.mipmap.icon_home_distance_rail_way
+//            }
+//        }
 
 
         holder.setVisible(R.id.iv_heart, item.matched == BusiConstant.True)
