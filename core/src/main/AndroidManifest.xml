@@ -127,7 +127,7 @@
 
         <activity
             android:name=".ui.homepage.HomePageActivity"
-            android:launchMode="singleTask"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/CustomToolBarTheme" />
         <activity

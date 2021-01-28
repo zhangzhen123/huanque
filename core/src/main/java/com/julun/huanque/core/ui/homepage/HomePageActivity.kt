@@ -26,8 +26,11 @@ import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.dialog.CommonDialogFragment
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.NetStateType
+import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.basic.ResponseError
-import com.julun.huanque.common.bean.beans.*
+import com.julun.huanque.common.bean.beans.HomePageInfo
+import com.julun.huanque.common.bean.beans.HomePagePicBean
+import com.julun.huanque.common.bean.beans.VoiceBean
 import com.julun.huanque.common.bean.events.ImagePositionEvent
 import com.julun.huanque.common.bean.events.PicChangeEvent
 import com.julun.huanque.common.constant.*
@@ -64,7 +67,8 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.Li
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.jetbrains.anko.*
+import org.jetbrains.anko.backgroundColor
+import org.jetbrains.anko.imageResource
 import java.math.RoundingMode
 import java.text.DecimalFormat
 import kotlin.math.abs
@@ -607,7 +611,7 @@ class HomePageActivity : BaseActivity() {
                 when (it.state) {
                     NetStateType.SUCCESS -> {
                         state_pager_view.showSuccess()
-//                        mPagerAdapter?.notifyDataSetChanged()
+                        mPagerAdapter?.notifyDataSetChanged()
                     }
                     NetStateType.NETWORK_ERROR -> {
                         ToastUtils.show("网络异常")
@@ -1468,7 +1472,7 @@ class HomePageActivity : BaseActivity() {
         } else {
             //重新获取数据
 //        if (mHomePageViewModel.mineHomePage) {
-            mHomePageViewModel.homeInfo()
+            mHomePageViewModel.homeInfo(queryType = QueryType.REFRESH)
 //        }
         }
 
@@ -1528,6 +1532,10 @@ class HomePageActivity : BaseActivity() {
         super.onNewIntent(intent)
         setIntent(intent)
         if (intent != null) {
+            val userID = intent.getLongExtra(ParamConstant.UserId, 0)
+            if (userID != 0L && userID == mHomePageViewModel.targetUserId) {
+                return
+            }
             resetView(intent)
         }
     }

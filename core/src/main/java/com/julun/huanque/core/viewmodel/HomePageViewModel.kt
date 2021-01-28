@@ -2,8 +2,12 @@ package com.julun.huanque.core.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.basic.ResponseError
-import com.julun.huanque.common.bean.beans.*
+import com.julun.huanque.common.bean.beans.AppraiseBean
+import com.julun.huanque.common.bean.beans.CloseConfidantBean
+import com.julun.huanque.common.bean.beans.EvaluateTags
+import com.julun.huanque.common.bean.beans.HomePageInfo
 import com.julun.huanque.common.bean.events.LikeEvent
 import com.julun.huanque.common.bean.forms.FriendIdForm
 import com.julun.huanque.common.bean.forms.UserIdForm
@@ -95,7 +99,7 @@ class HomePageViewModel : BaseViewModel() {
     /**
      * 获取基础信息
      */
-    fun homeInfo() {
+    fun homeInfo(queryType: QueryType = QueryType.INIT) {
         viewModelScope.launch {
             request({
                 val result = userService.homeInfo(UserIdForm(targetUserId)).dataConvert()
@@ -103,7 +107,7 @@ class HomePageViewModel : BaseViewModel() {
                 blackStatus.value = result.black
                 followStatus.value = result.follow
 //                heartStatus.value = result.heartTouch
-            }, {}, needLoadState = true)
+            }, {}, needLoadState = queryType==QueryType.INIT)
         }
     }
 
