@@ -2,6 +2,6 @@
 <bitmap xmlns:android="http://schemas.android.com/apk/res/android"
     android:dither="true"
     android:filter="true"
-    android:gravity="top|fill_horizontal"
+    android:gravity="center"
     android:src="@mipmap/startup_top"
-    android:tileMode="clamp"></bitmap>
+    android:tileMode="disabled"/>

@@ -19,9 +19,12 @@ import android.widget.PopupWindow
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import cn.jiguang.verifysdk.api.JVerificationInterface
+import com.alibaba.android.arouter.launcher.ARouter
+import com.julun.huanque.BuildConfig
 import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.bean.events.WeiXinCodeEvent
+import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.Agreement
 import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.helper.StorageHelper
@@ -103,6 +106,13 @@ class LoginActivity2 : BaseActivity() {
 
     override fun initEvents(rootView: View) {
         super.initEvents(rootView)
+        if(BuildConfig.DEBUG){
+            view_holder.onClickNew {
+                ARouter.getInstance().build(ARouterConstant.ENVIRONMENT_CONFIGURATION_ACTIVITY)
+                    .navigation()
+            }
+        }
+
         con_weixin.onClickNew {
             mLoginViewModel.weixinLoginFlag.value = true
 //            val intent = Intent(requireActivity(), TestAnimationActivity::class.java)

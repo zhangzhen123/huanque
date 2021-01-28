@@ -163,7 +163,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="unspecified"
             android:theme="@style/ActivityDialogStyleaa"
-            tools:replace="android:theme"></activity>
+            tools:replace="android:theme"/>
         <activity android:name=".ui.test.TestPKActivity" />
 
         <meta-data

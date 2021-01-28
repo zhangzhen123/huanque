@@ -316,7 +316,7 @@ class CreateAccountActivity : BaseActivity() {
 //            .cropWH(200, 200)// 裁剪宽高比，设置如果大于图片本身宽高则无效
             .withAspectRatio(3, 4)// 裁剪比例 如16:9 3:2 3:4 1:1 可自定义
             .hideBottomControls(true)// 是否显示uCrop工具栏，默认不显示
-            .freeStyleCropEnabled(true)// 裁剪框是否可拖拽
+            .freeStyleCropEnabled(false)// 裁剪框是否可拖拽
             .isDragFrame(false)
 //            .circleDimmedLayer(true)// 是否圆形裁剪
 //            .showCropFrame(false)// 是否显示裁剪矩形边框 圆形裁剪时建议设为false

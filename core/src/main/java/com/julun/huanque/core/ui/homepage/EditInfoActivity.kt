@@ -7,7 +7,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.view.animation.BounceInterpolator
 import android.view.animation.OvershootInterpolator
 import android.widget.TextView
 import androidx.activity.viewModels
@@ -24,16 +23,11 @@ import com.julun.huanque.common.base.dialog.LoadingDialog
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.bean.beans.*
-import com.julun.huanque.common.bean.forms.InviteCompleteForm
 import com.julun.huanque.common.bean.forms.UpdateUserInfoForm
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.interfaces.routerservice.IRealNameService
 import com.julun.huanque.common.manager.aliyunoss.OssUpLoadManager
-import com.julun.huanque.common.suger.dp2px
-import com.julun.huanque.common.suger.hide
-import com.julun.huanque.common.suger.logger
-import com.julun.huanque.common.suger.onClickNew
-import com.julun.huanque.common.suger.show
+import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
 import com.julun.huanque.core.R
@@ -403,6 +397,9 @@ class EditInfoActivity : BaseActivity() {
 
                     }
                 }
+                if (mLoadingDialog.isShowing) {
+                    mLoadingDialog.dismiss()
+                }
             }
         })
         mEditInfoViewModel.homePagePicChangeBean.observe(this, Observer {
@@ -415,6 +412,10 @@ class EditInfoActivity : BaseActivity() {
             if (it != null) {
                 updateProgress(it.perfection)
             }
+            if (mLoadingDialog.isShowing) {
+                mLoadingDialog.dismiss()
+            }
+
         })
 
         mEditInfoViewModel.coverOrderSaveFlag.observe(this, Observer {
@@ -985,6 +986,11 @@ class EditInfoActivity : BaseActivity() {
                                 BottomActionCode.ADD -> {
                                     mEditInfoViewModel.updateCover(null, coverPic = first)
                                 }
+                                else -> {
+                                    if (mLoadingDialog.isShowing) {
+                                        mLoadingDialog.dismiss()
+                                    }
+                                }
                             }
 
                         }
@@ -992,11 +998,13 @@ class EditInfoActivity : BaseActivity() {
 
                     } else {
                         ToastUtils.show("上传失败，请稍后重试")
-
+                        if (mLoadingDialog.isShowing) {
+                            mLoadingDialog.dismiss()
+                        }
                     }
-                    if (mLoadingDialog.isShowing) {
-                        mLoadingDialog.dismiss()
-                    }
+//                    if (mLoadingDialog.isShowing) {
+//                        mLoadingDialog.dismiss()
+//                    }
 
                 }
 

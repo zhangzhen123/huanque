@@ -40,7 +40,7 @@ object BusiConstant {
 
     const val OSS_BLUR_01 = "?x-oss-process=image/blur,r_50,s_50"
 
-    const val OSS_BLUR_02 = "?x-oss-process=image/blur,r_50,s_25"
+    const val OSS_BLUR_02 = "?x-oss-process=image/blur,r_50,s_50"
 
     const val DESTROY_ACCOUNT_RESULT_CODE = 502 //注销账号result_code
 
