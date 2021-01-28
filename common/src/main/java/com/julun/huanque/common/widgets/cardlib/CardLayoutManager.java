@@ -1,13 +1,13 @@
 package com.julun.huanque.common.widgets.cardlib;
 
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.julun.huanque.common.utils.ULog;
 import com.julun.huanque.common.widgets.cardlib.utils.ReItemTouchHelper;
@@ -15,7 +15,7 @@ import com.julun.huanque.common.widgets.cardlib.utils.ReItemTouchHelper;
 
 /**
  * @author yuqirong
- *         modified by linchen
+ * modified by linchen
  */
 
 public class CardLayoutManager extends RecyclerView.LayoutManager {
@@ -95,7 +95,7 @@ public class CardLayoutManager extends RecyclerView.LayoutManager {
                             break;
                     }
                 } else {
-                    ((SwipeTouchLayout)layout).setSwipeTouchListener(mSwipeTouchListener);
+                    ((SwipeTouchLayout) layout).setSwipeTouchListener(mSwipeTouchListener);
                 }
             }
         } else {
@@ -110,7 +110,7 @@ public class CardLayoutManager extends RecyclerView.LayoutManager {
                         widthSpace / 2 + getDecoratedMeasuredWidth(view),
                         heightSpace / 2 + getDecoratedMeasuredHeight(view));
 
-                if (position > 0) {
+//                if (position >= 0) {
                     view.setScaleX(1 - position * defaultScale);
                     view.setScaleY(1 - position * defaultScale);
                     switch (mConfig.getStackDirection()) {
@@ -128,7 +128,9 @@ public class CardLayoutManager extends RecyclerView.LayoutManager {
                             view.setTranslationY(position * view.getMeasuredHeight() / mConfig.getCardTranslateDistance());
                             break;
                     }
-                } else {
+//                }
+
+                if (position == 0) {
                     if (view instanceof SwipeTouchLayout) {
                         ((SwipeTouchLayout) view).setSwipeTouchListener(mSwipeTouchListener);
                     } else {
@@ -168,7 +170,7 @@ public class CardLayoutManager extends RecyclerView.LayoutManager {
     };
     private SwipeTouchLayout.SwipeTouchListener mSwipeTouchListener = new SwipeTouchLayout.SwipeTouchListener() {
         @Override
-        public void onTouchDown(View v,MotionEvent event) {
+        public void onTouchDown(View v, MotionEvent event) {
 //            RecyclerView.ViewHolder childViewHolder = mRecyclerView.getChildViewHolder(v);
 //            mItemTouchHelper.startSwipe(childViewHolder);
         }
@@ -180,7 +182,7 @@ public class CardLayoutManager extends RecyclerView.LayoutManager {
 
         @Override
         public void onTouchMove(View v, MotionEvent event) {
-            ULog.Companion.i("onTouchMove="+event.getX());
+            ULog.Companion.i("onTouchMove=" + event.getX());
             RecyclerView.ViewHolder childViewHolder = mRecyclerView.getChildViewHolder(v);
             mItemTouchHelper.startSwipe(childViewHolder);
         }
