@@ -5,8 +5,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.julun.huanque.common.base.BaseFragment
-import com.julun.huanque.message.fragment.HeartBeatFragment
-import com.julun.huanque.message.fragment.WatchFragment
+import com.julun.huanque.message.fragment.HeartBeatHistoryFragment
 
 /**
  *@创建者   dong
@@ -24,7 +23,7 @@ class HeartBeatFragmentAdapter(act: FragmentActivity, val typeList: MutableList<
 
     private fun getFragment(position: Int): BaseFragment {
         val type = typeList[position]
-        val frag = HeartBeatFragment.newInstance(type)
+        val frag = HeartBeatHistoryFragment.newInstance(type)
         mFragmentList.put(position, frag)
         return frag
     }

@@ -17,6 +17,7 @@ import com.julun.huanque.common.suger.convertError
 import com.julun.huanque.common.suger.convertRtData
 import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.request
+import com.julun.huanque.common.utils.SessionUtils
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import java.lang.StringBuilder
@@ -149,6 +150,7 @@ class EditInfoViewModel : BaseViewModel() {
         viewModelScope.launch {
             request({
                 val result = userService.updateHeadPic(UserUpdateHeadForm(headPic, check)).dataConvert(intArrayOf(ErrorCodes.USER_LOSE_REAL_HEAD))
+                SessionUtils.setHeaderPic(headPic)
                 updateHeadResult.value = result.convertRtData()
             }, error = {
                 updateHeadResult.value = it.convertError()

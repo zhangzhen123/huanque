@@ -31,10 +31,10 @@ import kotlinx.android.synthetic.main.frag_heart_beat.*
  *@创建时间 2021/1/18 20:11
  *@描述 访问历史
  */
-class HeartBeatFragment : BaseFragment() {
+class HeartBeatHistoryFragment : BaseFragment() {
     companion object {
-        fun newInstance(type: String): HeartBeatFragment {
-            val fragment = HeartBeatFragment()
+        fun newInstance(type: String): HeartBeatHistoryFragment {
+            val fragment = HeartBeatHistoryFragment()
             fragment.arguments = Bundle().apply { putString(ParamConstant.TYPE, type) }
             return fragment
         }
