@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    app:cardCornerRadius="@dimen/dimen_10"
+    app:cardMaxElevation="@dimen/dimen_3"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/card_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:padding="@dimen/dimen_12">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/card_img"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:actualImageScaleType="centerCrop"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintTop_toTopOf="parent"
+                app:roundedCornerRadius="@dimen/dimen_10" />
+
+            <View
+                android:id="@+id/shadow_view"
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:background="@drawable/bg_shape_card_shadow"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+            <LinearLayout
+                android:id="@+id/ll_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_10"
+                android:layout_marginBottom="@dimen/dimen_8"
+                android:gravity="bottom"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+
+                <TextView
+                    android:id="@+id/tv_area"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="start|center_vertical"
+                    android:includeFontPadding="false"
+                    android:paddingStart="@dimen/dimen_1"
+                    android:paddingEnd="@dimen/dimen_1"
+                    android:paddingBottom="@dimen/dimen_2"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_10"
+                    tools:text="km 余杭区" />
+
+                <ImageView
+                    android:id="@+id/iv_sex"
+                    android:layout_width="@dimen/dimen_18"
+                    android:layout_height="@dimen/dimen_18"
+                    android:layout_marginStart="@dimen/dimen_15"
+                    android:gravity="center"
+                    android:scaleType="fitCenter"
+                    tools:src="@mipmap/icon_sex_male" />
+
+                <TextView
+                    android:id="@+id/tv_age"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="start|center_vertical"
+                    android:includeFontPadding="false"
+                    android:textColor="#FFCC00"
+                    android:textSize="@dimen/sp_12"
+                    android:textStyle="bold"
+                    tools:text="23.3" />
+
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/tv_user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_10"
+                android:layout_marginBottom="@dimen/dimen_8"
+                android:gravity="start|center_vertical"
+                android:includeFontPadding="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_20"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/ll_info"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="清蝶泳" />
+
+            <ImageView
+                android:id="@+id/iv_auth_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dimen_18"
+                android:layout_marginStart="@dimen/dimen_4"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_user_name"
+                app:layout_constraintStart_toEndOf="@+id/tv_user_name"
+                app:layout_constraintTop_toTopOf="@+id/tv_user_name" />
+
+
+            <View
+                android:id="@+id/tv_top_holder"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.julun.huanque.core.widgets.HomeCardTagView
+                android:id="@+id/ani_tag_01"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_10"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_top_holder"
+                tools:visibility="visible" />
+
+            <com.julun.huanque.core.widgets.HomeCardTagView
+                android:id="@+id/ani_tag_02"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/dimen_10"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_top_holder"
+                tools:visibility="visible" />
+
+            <com.julun.huanque.core.widgets.HomeCardTagView
+                android:id="@+id/ani_tag_04"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/dimen_10"
+                android:visibility="gone"
+                app:layout_constraintBottom_toTopOf="@+id/tv_user_name"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:visibility="visible" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/tv_sign"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_10"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="2"
+            android:textColor="@color/black_333"
+            android:textSize="@dimen/sp_12"
+            android:textStyle="bold"
+            tools:text="抠脚大抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_46"
+            android:layout_marginTop="@dimen/dimen_10"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/bg_shape_black_p20"
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                android:paddingStart="@dimen/dimen_10"
+                android:paddingEnd="@dimen/dimen_10">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="理想型："
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/tv_like_tags"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textSize="12sp"
+                    tools:text="理想型,理想型w,理想型" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/dimen_30"
+                android:layout_weight="1"
+                android:background="@drawable/bg_shape_black_p20"
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                android:paddingStart="@dimen/dimen_10"
+                android:paddingEnd="@dimen/dimen_10">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="社交意愿："
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/tv_social_wish"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    tools:text="谈甜甜的恋爱" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/dimen_10"
+            android:background="@drawable/bg_shape_black_p20"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/appCompatImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dimen_10"
+                android:src="@mipmap/ic_launcher"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="@dimen/dimen_5"
+                android:layout_marginEnd="5dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/share_card_tips_01"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/iv_q_code"
+                app:layout_constraintStart_toEndOf="@+id/appCompatImageView"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_q_code"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="@dimen/dimen_5"
+                android:layout_marginEnd="@dimen/dimen_10"
+                android:layout_marginBottom="@dimen/dimen_5"
+                android:scaleType="fitCenter"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@mipmap/ic_launcher" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

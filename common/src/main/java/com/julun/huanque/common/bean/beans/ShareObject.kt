@@ -65,8 +65,8 @@ open class ShareObject : Serializable {
     /** 来源 **/
     var source: String? = null
 
-    /** 节目id **/
-    var userId: String? = null
+    /** 用户id **/
+    var userId: Long? = null
 
     /** 分享平台 (本地传递使用)**/
     var platForm: String? = null
@@ -166,3 +166,21 @@ class ShareType {
     var url: String = ""
     var res: Int = -1
 }
+
+data class UserCardShareInfo(
+    var age: Int = 0,
+    var area: String = "",
+    var authTagList: List<UserTagBean> = listOf(),
+    var constellation: String = "",
+    var headPic: String = "",
+    var headRealPeople: Boolean = false,
+    var likeTagList: List<UserTagBean> = listOf(),
+    var mySign: String = "",
+    var nickname: String = "",
+    var qrCodeBase64: String = "",
+    var qrCodeUrl: String = "",
+    var realName: Boolean = false,
+    var sexType: String = "",
+    var wish: String = "",
+    var bitmaps: MutableList<Bitmap> = mutableListOf()
+)

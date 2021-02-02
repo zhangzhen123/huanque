@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:cardCornerRadius="@dimen/dimen_10"
+    app:cardMaxElevation="@dimen/dimen_3">
+
+    <LinearLayout
+        android:id="@+id/card_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:padding="@dimen/dimen_10">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/con_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.julun.huanque.common.widgets.bgabanner.BGABanner
+                android:id="@+id/bga_banner"
+                android:layout_width="0px"
+                android:layout_height="0px"
+                app:banner_indicatorGravity="bottom|center_horizontal"
+                app:banner_isNeedShowIndicatorOnOnlyOnePage="false"
+                app:banner_pageChangeDuration="1000"
+                app:banner_pointContainerBackground="@color/transparent"
+                app:banner_pointContainerLeftRightPadding="0dp"
+                app:banner_pointDrawable="@color/transparent"
+                app:banner_pointLeftRightMargin="2dp"
+                app:banner_pointTopBottomMargin="25dp"
+                app:layout_constraintDimensionRatio="375:356"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:layout_width="0px"
+                android:layout_height="120dp"
+                android:background="@drawable/bg_home_pic_shader"
+                app:layout_constraintBottom_toBottomOf="@id/bga_banner"
+                app:layout_constraintLeft_toLeftOf="@id/bga_banner"
+                app:layout_constraintRight_toRightOf="@id/bga_banner" />
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView_piclist"
+                android:layout_width="0px"
+                android:layout_height="40dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="10dp"
+                app:layout_constraintBottom_toBottomOf="@id/bga_banner"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/view_voice" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_nickname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:textColor="@color/black_333"
+                android:textSize="@dimen/sp_24"
+                android:textStyle="bold"
+                tools:text="抠脚大汉" />
+
+            <ImageView
+                android:id="@+id/iv_mark"
+                android:layout_width="wrap_content"
+                android:layout_height="18dp"
+                android:layout_marginStart="6dp"
+                tools:src="@mipmap/icon_mine_tag_auth" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_sign"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="2"
+            android:textColor="@color/black_666"
+            android:textSize="@dimen/sp_16"
+            android:textStyle="bold"
+            tools:text="抠脚大抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="5dp">
+
+            <View
+                android:id="@+id/view_home_town"
+                android:layout_width="0px"
+                android:layout_height="55dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="@dimen/dimen_5"
+                android:background="@drawable/bg_home_town"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/view_social"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_goneMarginTop="0dp" />
+
+
+            <View
+                android:id="@+id/view_social"
+                android:layout_width="0px"
+                android:layout_height="55dp"
+                android:layout_marginStart="9dp"
+                android:layout_marginTop="@dimen/dimen_5"
+                android:layout_marginEnd="15dp"
+                android:background="@drawable/bg_home_town"
+                app:layout_constraintLeft_toRightOf="@+id/view_home_town"
+                app:layout_constraintRight_toLeftOf="@+id/view_age"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/view_age"
+                android:layout_width="0px"
+                android:layout_height="55dp"
+                android:layout_marginTop="@dimen/dimen_5"
+                android:background="@drawable/bg_home_town"
+                app:layout_constraintLeft_toRightOf="@id/view_social"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_profression_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:drawableRight="@mipmap/icon_home_town"
+                android:drawablePadding="4dp"
+                android:text="家乡"
+                android:textColor="#B2B2B2"
+                android:textSize="@dimen/sp_12"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/tv_home_town"
+                app:layout_constraintLeft_toLeftOf="@id/view_home_town"
+                app:layout_constraintTop_toTopOf="@id/view_home_town"
+                app:layout_constraintVertical_chainStyle="packed" />
+
+            <TextView
+                android:id="@+id/tv_home_town"
+                android:layout_width="0px"
+                android:layout_height="20dp"
+                android:layout_marginTop="2dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="10dp"
+                android:singleLine="true"
+                android:textColor="@color/black_333"
+                android:textSize="@dimen/sp_12"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/view_home_town"
+                app:layout_constraintLeft_toLeftOf="@id/view_home_town"
+                app:layout_constraintRight_toRightOf="@id/view_home_town"
+                app:layout_constraintTop_toBottomOf="@id/tv_profression_title"
+                tools:text="浙江省/杭州市" />
+
+
+            <TextView
+                android:id="@+id/tv_social_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:drawableEnd="@mipmap/icon_social_wish"
+                android:drawablePadding="4dp"
+                android:text="社交意愿"
+                android:textColor="#B2B2B2"
+                android:textSize="@dimen/sp_12"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/tv_social_wish"
+                app:layout_constraintLeft_toLeftOf="@id/view_social"
+                app:layout_constraintTop_toTopOf="@id/view_social"
+                app:layout_constraintVertical_chainStyle="packed" />
+
+            <TextView
+                android:id="@+id/tv_social_wish"
+                android:layout_width="0px"
+                android:layout_height="20dp"
+                android:layout_marginTop="2dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="10dp"
+                android:singleLine="true"
+                android:textColor="@color/black_333"
+                android:textSize="@dimen/sp_12"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/view_social"
+                app:layout_constraintLeft_toLeftOf="@id/view_social"
+                app:layout_constraintRight_toRightOf="@id/view_social"
+                app:layout_constraintTop_toBottomOf="@id/tv_social_title"
+                tools:text="浙江省/杭州市" />
+
+
+            <TextView
+                android:id="@+id/tv_age_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:drawableEnd="@mipmap/icon_social_wish"
+                android:drawablePadding="4dp"
+                android:text="年龄"
+                android:textColor="#B2B2B2"
+                android:textSize="@dimen/sp_12"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/tv_age"
+                app:layout_constraintLeft_toLeftOf="@id/view_age"
+                app:layout_constraintTop_toTopOf="@id/view_age"
+                app:layout_constraintVertical_chainStyle="packed" />
+
+            <TextView
+                android:id="@+id/tv_age"
+                android:layout_width="0px"
+                android:layout_height="20dp"
+                android:layout_marginTop="2dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="10dp"
+                android:singleLine="true"
+                android:textColor="@color/black_333"
+                android:textSize="@dimen/sp_12"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/view_age"
+                app:layout_constraintLeft_toLeftOf="@+id/view_age"
+                app:layout_constraintRight_toRightOf="@+id/view_age"
+                app:layout_constraintTop_toBottomOf="@+id/tv_age_title"
+                tools:text="浙江省/杭州市" />
+
+            <LinearLayout
+                android:id="@+id/ll_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/bg_home_town"
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/view_home_town">
+
+                <TextView
+                    android:id="@+id/tv_tag_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:includeFontPadding="false"
+                    android:text="TA拥有的标签"
+                    android:textColor="@color/black_333"
+                    android:textSize="@dimen/sp_14"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@id/ll_tag"
+                    app:layout_constraintLeft_toLeftOf="@id/ll_tag"
+                    app:layout_constraintTop_toTopOf="@id/ll_tag" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_view_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="12dp"
+                    android:overScrollMode="never"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/ll_tag" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/ll_like_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_5"
+                android:background="@drawable/bg_home_town"
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/iv_q_code"
+                app:layout_constraintTop_toBottomOf="@id/ll_tag">
+
+                <TextView
+                    android:id="@+id/tv_like_tag_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:includeFontPadding="false"
+                    android:text="TA喜欢的标签"
+                    android:textColor="@color/black_333"
+                    android:textSize="@dimen/sp_14"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@id/ll_tag"
+                    app:layout_constraintLeft_toLeftOf="@id/ll_tag"
+                    app:layout_constraintTop_toTopOf="@id/ll_tag" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_view_like_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="12dp"
+                    android:overScrollMode="never"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/ll_like_tag" />
+
+            </LinearLayout>
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_q_code"
+                android:layout_width="@dimen/dimen_50"
+                android:layout_height="@dimen/dimen_50"
+                android:scaleType="fitCenter"
+                app:layout_constraintBottom_toBottomOf="@+id/ll_like_tag"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1"
+                app:layout_constraintTop_toBottomOf="@+id/ll_tag" />
+
+            <TextView
+                android:id="@+id/tv_bottom_tips"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
+                android:background="@drawable/bg_home_id"
+                android:gravity="center_vertical"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="@string/share_card_tips_01"
+                android:textColor="#B2B2B2"
+                android:textSize="@dimen/sp_10"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ll_like_tag" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

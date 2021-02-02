@@ -134,6 +134,8 @@ object ARouterConstant {
 
     //邀友分享
     const val INVITE_SHARE_ACTIVITY = "/$CORE$PREFIX_ACTIVITY/InviteShareActivity"
+    //卡片分享
+    const val USER_CARD_SHARE_ACTIVITY = "/$CORE$PREFIX_ACTIVITY/UserCardShareActivity"
 
     //提现页面
     const val WITHDRAW_ACTIVITY = "/$CORE$PREFIX_ACTIVITY/WithdrawActivity"

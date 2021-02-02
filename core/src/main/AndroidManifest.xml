@@ -103,6 +103,10 @@
         <activity
             android:name=".ui.share.LiveShareActivity"
             android:theme="@style/ShareTheme" />
+
+        <activity
+            android:name=".ui.share.UserCardShareActivity"
+            android:theme="@style/ShareTheme" />
         <activity
             android:name=".ui.live.PlayerActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"

@@ -216,6 +216,10 @@ class TestActivity : BaseActivity() {
             ARouter.getInstance().build(ARouterConstant.INVITE_SHARE_ACTIVITY)
                 .withString(IntentParamKey.TYPE.name, ShareFromModule.Invite).navigation()
         }
+        test_card_invite.onClickNew {
+            ARouter.getInstance().build(ARouterConstant.USER_CARD_SHARE_ACTIVITY)
+                .withLong(ParamConstant.UserId,20000519).navigation()
+        }
 
         btn_usercard.onClickNew {
             //标签管理

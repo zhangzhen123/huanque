@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_share_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/percent40translucentBlack"
+    android:orientation="vertical">
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_share_contents"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/dimen_15"
+        android:layout_weight="1" />
+
+
+    <TextView
+        android:id="@+id/tv_index"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dimen_20"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/dimen_10"
+        android:layout_marginBottom="@dimen/dimen_10"
+        android:background="@drawable/bg_shape_black_p20"
+        android:paddingStart="@dimen/dimen_10"
+        android:paddingEnd="@dimen/dimen_10"
+        android:textColor="@color/white"
+        tools:text="1/3" />
+
+    <LinearLayout
+        android:id="@+id/ll_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_shape_top_white1"
+        android:orientation="vertical">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_share_types"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginStart="@dimen/dimen_7"
+            android:layout_marginTop="@dimen/dimen_15" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_1"
+            android:background="#F3F4F5" />
+
+        <TextView
+            android:id="@+id/tv_cancel_share"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_46"
+            android:gravity="center"
+            android:text="取消分享"
+            android:textColor="@color/black_333"
+            android:textSize="@dimen/size_16"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</LinearLayout>
+
