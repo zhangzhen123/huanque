@@ -3,10 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_view"
-    android:layout_width="match_parent"
-    app:cardCornerRadius="@dimen/dimen_10"
-    app:cardMaxElevation="@dimen/dimen_3"
-    android:layout_height="match_parent">
+    android:layout_width="265dp"
+    android:layout_height="471dp"
+    app:cardCornerRadius="@dimen/dimen_4">
 
     <LinearLayout
         android:id="@+id/card_container"
@@ -14,7 +13,7 @@
         android:layout_height="match_parent"
         android:background="@color/white"
         android:orientation="vertical"
-        android:padding="@dimen/dimen_12">
+        android:padding="@dimen/dimen_7">
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -27,23 +26,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 app:actualImageScaleType="centerCrop"
-                app:layout_constraintDimensionRatio="1:1"
-                app:layout_constraintTop_toTopOf="parent"
-                app:roundedCornerRadius="@dimen/dimen_10" />
+                app:layout_constraintDimensionRatio="1:1.21"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <View
                 android:id="@+id/shadow_view"
                 android:layout_width="match_parent"
-                android:layout_height="180dp"
-                android:background="@drawable/bg_shape_card_shadow"
+                android:layout_height="57dp"
+                android:background="@drawable/bg_home_pic_shader"
                 app:layout_constraintBottom_toBottomOf="parent" />
 
             <LinearLayout
                 android:id="@+id/ll_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dimen_10"
-                android:layout_marginBottom="@dimen/dimen_8"
+                android:layout_marginStart="@dimen/dimen_15"
+                android:layout_marginBottom="@dimen/dimen_10"
                 android:gravity="bottom"
                 android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -58,19 +56,9 @@
                     android:includeFontPadding="false"
                     android:paddingStart="@dimen/dimen_1"
                     android:paddingEnd="@dimen/dimen_1"
-                    android:paddingBottom="@dimen/dimen_2"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/sp_10"
-                    tools:text="km 余杭区" />
-
-                <ImageView
-                    android:id="@+id/iv_sex"
-                    android:layout_width="@dimen/dimen_18"
-                    android:layout_height="@dimen/dimen_18"
-                    android:layout_marginStart="@dimen/dimen_15"
-                    android:gravity="center"
-                    android:scaleType="fitCenter"
-                    tools:src="@mipmap/icon_sex_male" />
+                    android:textSize="7sp"
+                    tools:text="杭州 余杭区" />
 
                 <TextView
                     android:id="@+id/tv_age"
@@ -78,10 +66,10 @@
                     android:layout_height="wrap_content"
                     android:gravity="start|center_vertical"
                     android:includeFontPadding="false"
-                    android:textColor="#FFCC00"
-                    android:textSize="@dimen/sp_12"
+                    android:textColor="@color/white"
+                    android:textSize="7sp"
                     android:textStyle="bold"
-                    tools:text="23.3" />
+                    tools:text=" / 23.3岁 女" />
 
             </LinearLayout>
 
@@ -90,19 +78,19 @@
                 android:id="@+id/tv_user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dimen_10"
-                android:layout_marginBottom="@dimen/dimen_8"
+                android:layout_marginStart="@dimen/dimen_15"
+                android:layout_marginBottom="@dimen/dimen_9"
                 android:gravity="start|center_vertical"
                 android:includeFontPadding="false"
                 android:textColor="@color/white"
-                android:textSize="@dimen/sp_20"
+                android:textSize="@dimen/sp_14"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/ll_info"
                 app:layout_constraintStart_toStartOf="parent"
                 tools:text="清蝶泳" />
 
             <ImageView
-                android:id="@+id/iv_auth_tag"
+                android:id="@+id/iv_auth"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/dimen_18"
                 android:layout_marginStart="@dimen/dimen_4"
@@ -112,38 +100,40 @@
                 app:layout_constraintTop_toTopOf="@+id/tv_user_name" />
 
 
-            <View
-                android:id="@+id/tv_top_holder"
-                android:layout_width="wrap_content"
-                android:layout_height="35dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
             <com.julun.huanque.core.widgets.HomeCardTagView
                 android:id="@+id/ani_tag_01"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_10"
+                android:layout_marginTop="144dp"
+                android:scaleX="0.66"
+                android:scaleY="0.66"
                 android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_top_holder"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:visibility="visible" />
 
             <com.julun.huanque.core.widgets.HomeCardTagView
                 android:id="@+id/ani_tag_02"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_25"
                 android:layout_marginEnd="@dimen/dimen_10"
+                android:scaleX="0.66"
+                android:scaleY="0.66"
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_top_holder"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:visibility="visible" />
 
             <com.julun.huanque.core.widgets.HomeCardTagView
-                android:id="@+id/ani_tag_04"
+                android:id="@+id/ani_tag_03"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/dimen_10"
+                android:layout_marginBottom="@dimen/dimen_51"
+                android:scaleX="0.66"
+                android:scaleY="0.66"
                 android:visibility="gone"
                 app:layout_constraintBottom_toTopOf="@+id/tv_user_name"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -154,113 +144,146 @@
             android:id="@+id/tv_sign"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimen_10"
+            android:layout_marginStart="@dimen/dimen_2"
+            android:layout_marginTop="@dimen/dimen_11"
+            android:layout_marginEnd="@dimen/dimen_2"
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:maxLines="2"
             android:textColor="@color/black_333"
-            android:textSize="@dimen/sp_12"
+            android:textSize="8sp"
             android:textStyle="bold"
             tools:text="抠脚大抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dimen_46"
+            android:layout_height="@dimen/dimen_39"
+            android:layout_marginStart="@dimen/dimen_2"
             android:layout_marginTop="@dimen/dimen_10"
+            android:layout_marginEnd="@dimen/dimen_2"
             android:orientation="horizontal">
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/bg_shape_black_p20"
+                android:background="@drawable/bg_home_town"
                 android:gravity="center_vertical"
                 android:orientation="vertical"
-                android:paddingStart="@dimen/dimen_10"
-                android:paddingEnd="@dimen/dimen_10">
+                android:paddingStart="@dimen/dimen_7"
+                android:paddingEnd="@dimen/dimen_7">
 
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:id="@+id/tv_title1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dimen_12"
                     android:text="理想型："
-                    android:textSize="12sp" />
+                    android:textColor="#B2B2B2"
+                    android:textSize="8sp" />
 
                 <TextView
                     android:id="@+id/tv_like_tags"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_title1"
+                    android:layout_marginTop="@dimen/dimen_4"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:textSize="12sp"
+                    android:textColor="@color/black_333"
+                    android:textSize="8sp"
                     tools:text="理想型,理想型w,理想型" />
-            </LinearLayout>
 
-            <LinearLayout
+                <ImageView
+                    android:layout_width="@dimen/dimen_11"
+                    android:layout_height="8dp"
+                    android:layout_alignTop="@+id/tv_title1"
+                    android:layout_alignBottom="@+id/tv_title1"
+                    android:layout_toEndOf="@+id/tv_title1"
+                    android:src="@mipmap/icon_school" />
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginStart="@dimen/dimen_30"
+                android:layout_marginStart="@dimen/dimen_11"
                 android:layout_weight="1"
-                android:background="@drawable/bg_shape_black_p20"
+                android:background="@drawable/bg_home_town"
                 android:gravity="center_vertical"
                 android:orientation="vertical"
-                android:paddingStart="@dimen/dimen_10"
-                android:paddingEnd="@dimen/dimen_10">
+                android:paddingStart="@dimen/dimen_7"
+                android:paddingEnd="@dimen/dimen_7">
 
                 <TextView
+                    android:id="@+id/tv_title2"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/dimen_12"
                     android:text="社交意愿："
-                    android:textSize="12sp" />
+                    android:textColor="#B2B2B2"
+                    android:textSize="8sp" />
 
                 <TextView
                     android:id="@+id/tv_social_wish"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="12sp"
-                    tools:text="谈甜甜的恋爱" />
+                    android:layout_below="@+id/tv_title2"
+                    android:layout_marginTop="@dimen/dimen_4"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="@color/black_333"
+                    android:textSize="8sp"
+                    tools:text="理想型,理想型w,理想型" />
 
-            </LinearLayout>
+                <ImageView
+                    android:layout_width="@dimen/dimen_11"
+                    android:layout_height="8dp"
+                    android:layout_alignTop="@+id/tv_title2"
+                    android:layout_alignBottom="@+id/tv_title2"
+                    android:layout_toEndOf="@+id/tv_title2"
+                    android:scaleType="fitCenter"
+                    android:src="@mipmap/icon_social_wish" />
+            </RelativeLayout>
 
         </LinearLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/dimen_10"
-            android:background="@drawable/bg_shape_black_p20"
-            android:gravity="center"
+            android:layout_marginStart="@dimen/dimen_2"
+            android:layout_marginTop="@dimen/dimen_15"
+            android:layout_marginEnd="@dimen/dimen_2"
+            android:layout_marginBottom="@dimen/dimen_14"
             android:orientation="horizontal">
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/appCompatImageView"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dimen_10"
-                android:src="@mipmap/ic_launcher"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_height="@dimen/dimen_20"
+                android:src="@mipmap/icon_share_logo"
+                app:layout_constraintBottom_toTopOf="@+id/text2"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="packed" />
 
             <TextView
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginStart="@dimen/dimen_5"
+                android:id="@+id/text2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_6"
                 android:layout_marginEnd="5dp"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/share_card_tips_01"
+                android:textColor="@color/black_999"
+                android:textSize="8sp"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/iv_q_code"
-                app:layout_constraintStart_toEndOf="@+id/appCompatImageView"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintStart_toStartOf="@+id/appCompatImageView"
+                app:layout_constraintTop_toBottomOf="@+id/appCompatImageView" />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/iv_q_code"
                 android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginTop="@dimen/dimen_5"
-                android:layout_marginEnd="@dimen/dimen_10"
-                android:layout_marginBottom="@dimen/dimen_5"
+                android:layout_height="42dp"
                 android:scaleType="fitCenter"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintDimensionRatio="1"

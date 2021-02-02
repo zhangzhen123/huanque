@@ -67,7 +67,7 @@ class UserCardShareViewModel : BaseViewModel() {
             request({
                 val result = service.cardInfo(UserIdForm(userId)).dataConvert()
 
-                repeat(3) {
+                repeat(2) {
                     val bitmap = BitmapUtil.base64ToBitmap(result.qrCodeBase64.replace("data:image/png;base64,", ""))
                     if (bitmap != null) {
                         result.bitmaps.add(bitmap)

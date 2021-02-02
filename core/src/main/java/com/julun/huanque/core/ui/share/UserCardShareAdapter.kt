@@ -3,19 +3,16 @@ package com.julun.huanque.core.ui.share
 import android.graphics.Bitmap
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageView
-import androidx.cardview.widget.CardView
 import com.chad.library.adapter.base.BaseDelegateMultiAdapter
 import com.chad.library.adapter.base.delegate.BaseMultiTypeDelegate
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.bean.beans.UserCardShareInfo
 import com.julun.huanque.common.constant.Sex
-import com.julun.huanque.common.suger.dp2px
-import com.julun.huanque.common.suger.loadImage
-import com.julun.huanque.common.suger.loadImageNoResize
-import com.julun.huanque.common.suger.logger
-import com.julun.huanque.common.utils.ScreenUtils
+import com.julun.huanque.common.suger.*
+import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.core.R
+import com.julun.huanque.core.widgets.HomeCardTagView
 
 class UserCardShareAdapter(var info: UserCardShareInfo? = null) : BaseDelegateMultiAdapter<Any, BaseViewHolder>(null) {
 
@@ -23,10 +20,10 @@ class UserCardShareAdapter(var info: UserCardShareInfo? = null) : BaseDelegateMu
     companion object {
         const val FIRST_TYPE = 1
         const val SECOND_TYPE = 2
-        const val THIRD_TYPE = 3
+//        const val THIRD_TYPE = 3
     }
 
-    private val with = ScreenUtils.getScreenWidth() - dp2px(20) * 2
+//    private val with = ScreenUtils.getScreenWidth() - dp2px(55) * 2
 
     init {
         setMultiTypeDelegate(object : BaseMultiTypeDelegate<Any>() {
@@ -35,30 +32,34 @@ class UserCardShareAdapter(var info: UserCardShareInfo? = null) : BaseDelegateMu
                     0 -> {
                         FIRST_TYPE
                     }
-                    1 -> {
+                    else -> {
                         SECOND_TYPE
                     }
-                    else -> {
-                        THIRD_TYPE
-                    }
+//                    else -> {
+//                        THIRD_TYPE
+//                    }
                 }
             }
         })
         // 第二部，绑定 item 类型
         getMultiTypeDelegate()?.addItemType(FIRST_TYPE, R.layout.item_user_share_card_01)
             ?.addItemType(SECOND_TYPE, R.layout.item_user_share_card_02)
-            ?.addItemType(THIRD_TYPE, R.layout.item_user_share_card_03)
+//            ?.addItemType(THIRD_TYPE, R.layout.item_user_share_card_03)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         logger("onCreateViewHolder itemViewType:$viewType")
         val holder = super.onCreateViewHolder(parent, viewType)
-        val container = holder.getViewOrNull<CardView>(R.id.card_view)
-        container?.let {
-            val cl = container.layoutParams
-            cl.width = with
+//        val container = holder.getViewOrNull<CardView>(R.id.card_view)
+//        container?.let {
+//            val cl = container.layoutParams
+//            cl.width = with
+//        }
+        if (viewType == FIRST_TYPE) {
+            holder.getViewOrNull<HomeCardTagView>(R.id.ani_tag_01)?.setLeftDot(false)
+            holder.getViewOrNull<HomeCardTagView>(R.id.ani_tag_02)?.setLeftDot(true)
+            holder.getViewOrNull<HomeCardTagView>(R.id.ani_tag_03)?.setLeftDot(true)
         }
-
         return holder
     }
 
@@ -71,6 +72,19 @@ class UserCardShareAdapter(var info: UserCardShareInfo? = null) : BaseDelegateMu
             FIRST_TYPE -> {
                 val img = holder.getView<SimpleDraweeView>(R.id.card_img)
                 img.loadImageNoResize(userInfo.headPic)
+                when {
+                    userInfo.realName -> {
+                        holder.setGone(R.id.iv_auth, false)
+                        holder.setImageResource(R.id.iv_auth, R.mipmap.icon_auth_success_share)
+                    }
+                    userInfo.headRealPeople -> {
+                        holder.setGone(R.id.iv_auth, false)
+                        holder.setImageResource(R.id.iv_auth, R.mipmap.icon_real_head_share)
+                    }
+                    else -> {
+                        holder.setGone(R.id.iv_auth, true)
+                    }
+                }
                 var tags = ""
                 kotlin.run {
                     userInfo.likeTagList.forEachIndexed { index, userTagBean ->
@@ -81,31 +95,92 @@ class UserCardShareAdapter(var info: UserCardShareInfo? = null) : BaseDelegateMu
                         tags += userTagBean.tagName + "、"
                     }
                 }
-
-                holder.setText(R.id.tv_user_name, userInfo.nickname).setText(R.id.tv_sign, userInfo.mySign)
-                    .setText(R.id.tv_area, userInfo.area).setText(R.id.tv_age, "${userInfo.age}")
-                    .setText(R.id.tv_like_tags, tags).setText(R.id.tv_social_wish, userInfo.wish)
-                if (userInfo.sexType == Sex.MALE) {
-                    holder.setImageResource(R.id.iv_sex, R.mipmap.icon_sex_male)
+                if (tags.isNotEmpty()) {
+                    holder.setText(R.id.tv_like_tags, tags)
                 } else {
-                    holder.setImageResource(R.id.iv_sex, R.mipmap.icon_sex_female)
+                    holder.setText(R.id.tv_like_tags, "你就是我的理想型")
+                }
+                holder.setText(R.id.tv_user_name, userInfo.nickname).setText(R.id.tv_sign, userInfo.mySign)
+                    .setText(R.id.tv_age, "${userInfo.age}").setText(R.id.tv_social_wish, userInfo.wish)
+
+                val baseViewHolder = if (userInfo.area.isNotEmpty()) {
+                    holder.setText(R.id.tv_area, userInfo.area)
+                } else {
+                    val starList = mutableListOf<String>("金星", "木星", "水星", "火星", "土星")
+                    val currentStar = starList.random()
+                    holder.setText(R.id.tv_area, currentStar)
                 }
 
+                val strAgeSex = if (userInfo.sexType == Sex.MALE) {
+                    " / ${userInfo.age}岁 男"
+                } else {
+                    " / ${userInfo.age}岁 女"
+                }
+                holder.setText(R.id.tv_age, strAgeSex)
+
+                val tagView01 = holder.getView<HomeCardTagView>(R.id.ani_tag_01)
+                val tag01 = userInfo.authTagList.getOrNull(0)
+                if (tag01 != null) {
+                    tagView01.show()
+                    tagView01.startSetData(tag01)
+                } else {
+                    tagView01.hide()
+                }
+                val tagView02 = holder.getView<HomeCardTagView>(R.id.ani_tag_02)
+                val tag02 = userInfo.authTagList.getOrNull(1)
+                if (tag02 != null) {
+                    tagView02.show()
+                    tagView02.startSetData(tag02)
+                } else {
+                    tagView02.hide()
+                }
+                val tagView03 = holder.getView<HomeCardTagView>(R.id.ani_tag_03)
+                val tag03 = userInfo.authTagList.getOrNull(2)
+                if (tag03 != null) {
+                    tagView03.show()
+                    tagView03.startSetData(tag03)
+                } else {
+                    tagView03.hide()
+                }
 
             }
 
             SECOND_TYPE -> {
                 val img = holder.getView<SimpleDraweeView>(R.id.card_img)
+                val imgBg = holder.getView<SimpleDraweeView>(R.id.card_img_bg)
                 img.loadImage(userInfo.headPic, 50f, 50f)
-                holder.setText(R.id.tv_wish, userInfo.wish).setText(R.id.tv_user_name, userInfo.nickname)
-                    .setText(R.id.tv_sign, userInfo.mySign).setText(R.id.tv_area, userInfo.area)
+                ImageUtils.loadImageWithBlur(imgBg, userInfo.headPic, 2, 150)
+                holder.setText(R.id.tv_social_wish, userInfo.wish).setText(R.id.tv_user_name, userInfo.nickname)
+                    .setText(R.id.tv_sign, userInfo.mySign)
                     .setText(R.id.tv_age, "${userInfo.age}")
 
-                if (userInfo.sexType == Sex.MALE) {
-                    holder.setImageResource(R.id.iv_sex, R.mipmap.icon_sex_male)
+                val baseViewHolder = if (userInfo.area.isNotEmpty()) {
+                    holder.setText(R.id.tv_area, userInfo.area)
                 } else {
-                    holder.setImageResource(R.id.iv_sex, R.mipmap.icon_sex_female)
+                    val starList = mutableListOf<String>("金星", "木星", "水星", "火星", "土星")
+                    val currentStar = starList.random()
+                    holder.setText(R.id.tv_area, currentStar)
                 }
+                when {
+                    userInfo.realName -> {
+                        holder.setGone(R.id.iv_auth, false)
+                        holder.setImageResource(R.id.iv_auth, R.mipmap.icon_auth_success_share)
+                    }
+                    userInfo.headRealPeople -> {
+                        holder.setGone(R.id.iv_auth, false)
+                        holder.setImageResource(R.id.iv_auth, R.mipmap.icon_real_head_share)
+                    }
+                    else -> {
+                        holder.setGone(R.id.iv_auth, true)
+                    }
+                }
+
+                val strAgeSex = if (userInfo.sexType == Sex.MALE) {
+                    "${userInfo.age}岁 男"
+                } else {
+                    "${userInfo.age}岁 女"
+                }
+                holder.setText(R.id.tv_age, strAgeSex)
                 var myTags = ""
                 kotlin.run {
                     userInfo.authTagList.forEachIndexed { index, userTagBean ->
@@ -113,7 +188,7 @@ class UserCardShareAdapter(var info: UserCardShareInfo? = null) : BaseDelegateMu
                             myTags += userTagBean.tagName
                             return@run
                         }
-                        myTags += userTagBean.tagName + "\n"
+                        myTags += userTagBean.tagName + "、"
                     }
                 }
                 var myLikeTags = ""
@@ -123,14 +198,27 @@ class UserCardShareAdapter(var info: UserCardShareInfo? = null) : BaseDelegateMu
                             myLikeTags += userTagBean.tagName
                             return@run
                         }
-                        myLikeTags += userTagBean.tagName + "\n"
+                        myLikeTags += userTagBean.tagName + "、"
                     }
                 }
-                holder.setText(R.id.tv_my_tags, myTags).setText(R.id.tv_like_tags, myLikeTags)
-            }
-            THIRD_TYPE -> {
+                if (myTags.isNotEmpty()) {
+                    holder.setText(R.id.tv_my_tags, myTags)
+                } else {
+                    holder.setText(R.id.tv_my_tags, "等待发掘")
+                }
+                if (myLikeTags.isNotEmpty()) {
+                    holder.setText(R.id.tv_like_tags, myLikeTags)
+                } else {
+                    holder.setText(R.id.tv_like_tags, "你就是我的理想型")
+                }
 
+                if (userInfo.constellation.isNotEmpty()) {
+                    holder.setText(R.id.tv_constellation, userInfo.constellation).setGone(R.id.fl_constellation, false)
+                } else {
+                    holder.setGone(R.id.fl_constellation, true)
+                }
             }
+
 
         }
     }

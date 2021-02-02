@@ -3,286 +3,297 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_view"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:cardCornerRadius="@dimen/dimen_10"
-    app:cardBackgroundColor="@color/black_999"
-    app:cardMaxElevation="@dimen/dimen_3">
+    android:layout_width="265dp"
+    android:layout_height="471dp"
+    app:cardCornerRadius="@dimen/dimen_4">
 
-    <LinearLayout
+<!--    多套一层的目的是防止截图时布局位移-->
+    <FrameLayout
         android:id="@+id/card_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white"
-        android:orientation="vertical"
-        android:padding="@dimen/dimen_10">
+        android:layout_height="match_parent">
 
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_container"
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/card_img_bg"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <com.facebook.drawee.view.SimpleDraweeView
-                android:id="@+id/card_img"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                app:actualImageScaleType="centerCrop"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:placeholderImage="@mipmap/logo_placeholder_small"
-                app:roundAsCircle="true" />
-
-            <TextView
-                android:id="@+id/tv_wish"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bg_solid_grey_btn1"
-                android:gravity="start|center_vertical"
-                android:includeFontPadding="false"
-                android:textColor="@color/black_333"
-                android:textSize="@dimen/sp_15"
-                android:padding="@dimen/dimen_5"
-                android:textStyle="bold"
-                app:layout_constraintHorizontal_bias="0"
-                app:layout_constraintBottom_toBottomOf="@+id/card_img"
-                app:layout_constraintEnd_toStartOf="@+id/card_img"
-                app:layout_constraintStart_toStartOf="parent"
-                tools:text="谈甜甜的恋爱" />
-
-
-            <TextView
-                android:id="@+id/tv_user_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_10"
-                android:layout_marginBottom="@dimen/dimen_8"
-                android:gravity="start|center_vertical"
-                android:includeFontPadding="false"
-                android:textColor="@color/black_333"
-                android:textSize="@dimen/sp_20"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/ll_info"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/card_img"
-                tools:text="清蝶泳" />
-
-            <ImageView
-                android:id="@+id/iv_auth_tag"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/dimen_18"
-                android:layout_marginStart="@dimen/dimen_4"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="@+id/tv_user_name"
-                app:layout_constraintStart_toEndOf="@+id/tv_user_name"
-                app:layout_constraintTop_toTopOf="@+id/tv_user_name" />
-
-            <TextView
-                android:id="@+id/tv_sign"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:gravity="center_vertical"
-                android:maxLines="2"
-                android:textColor="@color/black_999"
-                android:textSize="@dimen/sp_13"
-                android:layout_marginTop="@dimen/dimen_15"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_user_name"
-                tools:text="抠脚大抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉" />
-
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:layout_marginTop="@dimen/dimen_10"
-            android:background="@color/black_666" />
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
-        <TextView
-            android:id="@+id/tv_product_number"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="@dimen/dimen_10"
-            android:layout_marginBottom="@dimen/dimen_8"
-            android:background="@drawable/bg_shape_black_p20"
-            android:gravity="center"
-            android:includeFontPadding="false"
-            android:padding="@dimen/dimen_5"
-            android:text="产品型号"
-            android:textColor="@color/black_333"
-            android:textSize="@dimen/sp_14" />
-
+            android:layout_height="match_parent"
+            app:actualImageScaleType="centerCrop"
+            tools:background="@color/black_999" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dimen_35"
-            android:layout_marginTop="@dimen/dimen_10"
-            android:gravity="center"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/dimen_11"
+            android:layout_marginTop="@dimen/dimen_35"
+            android:layout_marginEnd="@dimen/dimen_11"
+            android:layout_marginBottom="@dimen/dimen_11"
+            android:background="@mipmap/bg_share_card2"
+            android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/iv_sex"
-                android:layout_width="@dimen/dimen_18"
-                android:layout_height="@dimen/dimen_18"
-                android:layout_marginStart="@dimen/dimen_15"
-                android:gravity="center"
-                android:scaleType="fitCenter"
-                tools:src="@mipmap/icon_sex_male" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/card_img"
+                    android:layout_width="71dp"
+                    android:layout_height="71dp"
+                    android:layout_marginTop="@dimen/dimen_4"
+                    app:actualImageScaleType="centerCrop"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:placeholderImage="@mipmap/logo_placeholder_small"
+                    app:roundAsCircle="true" />
+
+                <ImageView
+                    android:id="@+id/iv_auth"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimen_10"
+                    android:layout_marginTop="@dimen/dimen_47"
+                    android:background="@drawable/bg_solid_grey_btn1"
+                    android:gravity="start|center_vertical"
+                    app:layout_constraintHorizontal_bias="0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:src="@mipmap/icon_auth_head_success" />
+
+
+                <TextView
+                    android:id="@+id/tv_user_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimen_39"
+                    android:layout_marginTop="@dimen/dimen_14"
+                    android:layout_marginEnd="@dimen/dimen_39"
+                    android:layout_marginBottom="@dimen/dimen_8"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:singleLine="true"
+                    android:textColor="@color/black_333"
+                    android:textSize="@dimen/sp_17"
+                    android:textStyle="bold"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/card_img"
+                    tools:text="清蝶泳清蝶泳清蝶泳清蝶泳清蝶泳" />
+
+                <TextView
+                    android:id="@+id/tv_sign"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimen_39"
+                    android:layout_marginTop="@dimen/dimen_13"
+                    android:layout_marginEnd="@dimen/dimen_39"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:maxLines="2"
+                    android:textColor="@color/black_333"
+                    android:textSize="7sp"
+                    android:textStyle="bold"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_user_name"
+                    tools:text="抠脚大抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
 
             <TextView
-                android:id="@+id/tv_age"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/black_333"
-                android:textStyle="bold"
-                tools:text="23" />
+                android:layout_gravity="start"
+                android:layout_marginStart="@dimen/dimen_39"
+                android:layout_marginTop="@dimen/dimen_16"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:text="简介"
+                android:textColor="#B2B2B2"
+                android:textSize="8sp" />
 
-            <FrameLayout
-                android:layout_width="0dp"
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_39"
+                android:layout_marginTop="@dimen/dimen_4"
+                android:layout_marginEnd="@dimen/dimen_39"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_age"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black_333"
+                    android:textSize="8sp"
+                    android:textStyle="bold"
+                    tools:text="23" />
+
+                <FrameLayout
+                    android:id="@+id/fl_constellation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimen_15">
+
+                    <TextView
+                        android:id="@+id/tv_constellation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:textColor="@color/black_333"
+                        android:textSize="8sp"
+                        android:textStyle="bold"
+                        tools:drawableStart="@mipmap/icon_sex_male"
+                        tools:text="摩羯座" />
+
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/tv_area"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimen_15"
+                    android:textColor="@color/black_333"
+                    android:textSize="8sp"
+                    android:textStyle="bold"
+                    tools:text="区域" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginStart="@dimen/dimen_39"
+                android:layout_marginTop="@dimen/dimen_10"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:text="特征"
+                android:textColor="#B2B2B2"
+                android:textSize="8sp" />
+
+            <TextView
+                android:id="@+id/tv_my_tags"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_39"
+                android:layout_marginTop="@dimen/dimen_4"
+                android:layout_marginEnd="@dimen/dimen_39"
+                android:gravity="start"
+                android:lineSpacingExtra="@dimen/dimen_5"
+                android:textColor="@color/black_333"
+                android:textSize="8sp"
+                android:textStyle="bold"
+                tools:text="相机 汽车王者荣耀" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginStart="@dimen/dimen_39"
+                android:layout_marginTop="@dimen/dimen_10"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:text="理想型"
+                android:textColor="#B2B2B2"
+                android:textSize="8sp" />
+
+            <TextView
+                android:id="@+id/tv_like_tags"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_39"
+                android:layout_marginTop="@dimen/dimen_4"
+                android:layout_marginEnd="@dimen/dimen_39"
+                android:gravity="start"
+                android:lineSpacingExtra="@dimen/dimen_5"
+                android:textColor="@color/black_333"
+                android:textSize="8sp"
+                android:textStyle="bold"
+                tools:text="相机 汽车王者荣耀" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginStart="@dimen/dimen_39"
+                android:layout_marginTop="@dimen/dimen_10"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:text="社交意愿"
+                android:textColor="#B2B2B2"
+                android:textSize="8sp" />
+
+            <TextView
+                android:id="@+id/tv_social_wish"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_39"
+                android:layout_marginTop="@dimen/dimen_4"
+                android:layout_marginEnd="@dimen/dimen_39"
+                android:gravity="start"
+                android:textColor="@color/black_333"
+                android:textSize="8sp"
+                android:textStyle="bold"
+                tools:text="相机 汽车王者荣耀" />
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginStart="@dimen/dimen_39"
+                android:layout_marginTop="@dimen/dimen_35"
+                android:layout_marginEnd="@dimen/dimen_39"
                 android:layout_weight="1">
 
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/appCompatImageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dimen_20"
+                    android:src="@mipmap/icon_share_logo"
+                    app:layout_constraintBottom_toTopOf="@+id/text2"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_chainStyle="packed" />
+
                 <TextView
-                    android:id="@+id/tv_start_year"
+                    android:id="@+id/text2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:textColor="@color/black_333"
+                    android:layout_marginTop="@dimen/dimen_6"
+                    android:layout_marginEnd="5dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/share_card_tips_01"
+                    android:textColor="@color/black_999"
+                    android:textSize="8sp"
                     android:textStyle="bold"
-                    tools:drawableStart="@mipmap/icon_sex_male"
-                    tools:text="摩羯座" />
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/appCompatImageView"
+                    app:layout_constraintTop_toBottomOf="@+id/appCompatImageView" />
 
-            </FrameLayout>
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_q_code"
+                    android:layout_width="0dp"
+                    android:layout_height="42dp"
+                    android:scaleType="fitCenter"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintDimensionRatio="1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:src="@mipmap/ic_launcher" />
 
-            <TextView
-                android:id="@+id/tv_area"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/black_333"
-                android:textStyle="bold"
-                tools:drawableStart="@mipmap/icon_sex_male"
-                tools:text="区域" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="@dimen/dimen_10"
-                    android:layout_marginBottom="@dimen/dimen_8"
-                    android:background="@drawable/bg_shape_black_p20"
-                    android:gravity="center"
-                    android:includeFontPadding="false"
-                    android:padding="@dimen/dimen_5"
-                    android:text="产品特点"
-                    android:textColor="@color/black_333"
-                    android:textSize="@dimen/sp_14" />
-
-                <TextView
-                    android:id="@+id/tv_my_tags"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:lineSpacingExtra="@dimen/dimen_5"
-                    android:textColor="@color/black_333"
-                    android:textSize="@dimen/sp_13"
-                    android:textStyle="bold"
-                    tools:text="相机\n 汽车\n王者荣耀" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="@dimen/dimen_10"
-                    android:layout_marginBottom="@dimen/dimen_8"
-                    android:background="@drawable/bg_shape_black_p20"
-                    android:gravity="center"
-                    android:includeFontPadding="false"
-                    android:padding="@dimen/dimen_5"
-                    android:text="产品适配"
-                    android:textColor="@color/black_333"
-                    android:textSize="@dimen/sp_14" />
-
-                <TextView
-                    android:id="@+id/tv_like_tags"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:lineSpacingExtra="@dimen/dimen_5"
-                    android:textColor="@color/black_333"
-                    android:textSize="@dimen/sp_13"
-                    android:textStyle="bold"
-                    tools:text="相机\n 汽车\n王者荣耀" />
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dimen_68"
-            android:layout_marginTop="@dimen/dimen_10"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:padding="@dimen/dimen_5">
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/ic_launcher" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dimen_15"
-                android:layout_marginEnd="@dimen/dimen_15"
-                android:layout_weight="1"
-                android:text="@string/share_card_tips_01" />
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/iv_q_code"
-                android:layout_width="@dimen/dimen_60"
-                android:layout_height="@dimen/dimen_60"
-                android:scaleType="fitCenter"
-                android:src="@mipmap/ic_launcher" />
-
-        </LinearLayout>
-
-
-    </LinearLayout>
+    </FrameLayout>
 </androidx.cardview.widget.CardView>

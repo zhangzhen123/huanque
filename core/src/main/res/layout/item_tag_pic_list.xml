@@ -17,6 +17,8 @@
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:placeholderImageScaleType="fitXY"
+            app:placeholderImage="@drawable/logo_nearby_placeholder_bg"
             tools:layout_height="@dimen/dimen_200" />
 
 

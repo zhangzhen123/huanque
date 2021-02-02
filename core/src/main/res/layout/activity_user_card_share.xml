@@ -23,9 +23,10 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/dimen_10"
         android:layout_marginBottom="@dimen/dimen_10"
-        android:background="@drawable/bg_shape_black_p20"
+        android:background="@drawable/bg_shape_black_p30_02"
         android:paddingStart="@dimen/dimen_10"
         android:paddingEnd="@dimen/dimen_10"
+        android:textStyle="bold"
         android:textColor="@color/white"
         tools:text="1/3" />
 

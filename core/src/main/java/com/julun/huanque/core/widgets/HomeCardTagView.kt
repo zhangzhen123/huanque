@@ -169,6 +169,22 @@ class HomeCardTagView : LinearLayout {
         aniSet?.start()
     }
 
+    fun startSetData(data: UserTagBean) {
+        if (isLeft) {
+            fl_start_dot.show()
+            fl_start_dot.alpha = 1f
+            fl_end_dot.hide()
+        } else {
+            fl_start_dot.hide()
+            fl_end_dot.show()
+            fl_end_dot.alpha = 1f
+        }
+        _currentData = data
+        this.show()
+        tv_tag.text = data.tagName
+        sdv_tag.loadImage(data.tagIcon, 18f, 18f)
+    }
+
     fun removeListener() {
         if (aniSet != null && listener != null) {
             aniSet!!.removeListener(listener)
