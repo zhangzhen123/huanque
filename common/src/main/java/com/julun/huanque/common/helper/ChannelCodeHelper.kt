@@ -16,6 +16,7 @@ object ChannelCodeHelper {
     const val H5SID = "h5Sid"
     const val H5PID = "h5Pid"
     const val H5UID = "h5Uid"
+    const val H5MUID = "h5MUid"//分享对象人id
     const val HqChannelCode = "hqChannelCode"
 
     val logger = ULog.getLogger("ChannelHelper")
@@ -144,11 +145,11 @@ object ChannelCodeHelper {
             val roomId: Long = pid.toLongOrNull()?:return
             SPUtils.commitLong(H5PID,roomId)
 
-        } else if (channelActive.contains(ChannelCodeKey.UID)) {
+        } else if (channelActive.contains(ChannelCodeKey.MUID)) {
             val mapTemp = GlobalUtils.channel2Map(channelActive)
-            val uid = mapTemp[ChannelCodeKey.UID] ?: ""
+            val uid = mapTemp[ChannelCodeKey.MUID] ?: ""
             val userId: Long = uid.toLongOrNull()?:return
-            SPUtils.commitLong(H5UID,userId)
+            SPUtils.commitLong(H5MUID,userId)
         }
 
     }

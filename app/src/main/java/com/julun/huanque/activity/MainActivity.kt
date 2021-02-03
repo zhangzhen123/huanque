@@ -215,16 +215,16 @@ class MainActivity : BaseActivity() {
             return
         }
         val pid = SPUtils.getLong(ChannelCodeHelper.H5PID, 0L)
-        val uid = SPUtils.getLong(ChannelCodeHelper.H5UID, 0L)
+        val mUid = SPUtils.getLong(ChannelCodeHelper.H5MUID, 0L)
 
         if (pid != 0L) {
             mMainViewModel.lastWatch(pid)
             SPUtils.commitLong(ChannelCodeHelper.H5PID, 0L)
-        } else if (uid != 0L) {
+        } else if (mUid != 0L) {
 //            lifecycleScope.launchWhenResumed {
-                val userCardDialog = UserCardDialogFragment.newInstance(uid)
+                val userCardDialog = UserCardDialogFragment.newInstance(mUid)
                 OrderDialogManager.addGlobalOrderDialog(userCardDialog)
-                SPUtils.commitLong(ChannelCodeHelper.H5UID, 0L)
+                SPUtils.commitLong(ChannelCodeHelper.H5MUID, 0L)
 //            }
         }
     }

@@ -30,10 +30,10 @@ class UserCardShareAdapter(var info: UserCardShareInfo? = null) : BaseDelegateMu
             override fun getItemType(data: List<Any>, position: Int): Int {
                 return when (position) {
                     0 -> {
-                        FIRST_TYPE
+                        SECOND_TYPE
                     }
                     else -> {
-                        SECOND_TYPE
+                        FIRST_TYPE
                     }
 //                    else -> {
 //                        THIRD_TYPE

@@ -285,6 +285,10 @@ class HomePageActivity : BaseActivity() {
             mHomePageActionFragment = mHomePageActionFragment ?: HomePageActionFragment()
             mHomePageActionFragment?.show(supportFragmentManager, "HomePageActionFragment")
         }
+        iv_share_black.onClickNew {
+            ARouter.getInstance().build(ARouterConstant.USER_CARD_SHARE_ACTIVITY)
+                .withLong(ParamConstant.UserId, mHomePageViewModel.targetUserId).navigation()
+        }
 
 //        iv_more_black.onClickNew {
 //            //更多操作
@@ -316,6 +320,8 @@ class HomePageActivity : BaseActivity() {
                         iv_more_black.alpha = 0f
                         iv_close.alpha = 1f
                         iv_close_black.alpha = 0f
+                        iv_share_white.alpha = 1f
+                        iv_share_black.alpha = 0f
                     }
                     changeEnableDistance >= mChangeDistance -> {
                         tv_user_name.alpha = 1f
@@ -324,6 +330,9 @@ class HomePageActivity : BaseActivity() {
                         iv_more_black.alpha = 1f
                         iv_close.alpha = 0f
                         iv_close_black.alpha = 1f
+
+                        iv_share_white.alpha = 0f
+                        iv_share_black.alpha = 1f
                     }
                     else -> {
                         val alpha = changeEnableDistance / mChangeDistance.toFloat()
@@ -333,6 +342,9 @@ class HomePageActivity : BaseActivity() {
                         iv_more.alpha = (1 - alpha)
                         iv_more_black.alpha = alpha
                         tv_user_name.alpha = alpha
+
+                        iv_share_white.alpha = (1 - alpha)
+                        iv_share_black.alpha = alpha
                     }
                 }
 
