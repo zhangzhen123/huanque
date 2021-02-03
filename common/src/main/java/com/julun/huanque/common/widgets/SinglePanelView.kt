@@ -121,16 +121,16 @@ class SinglePanelView(val type: String, context: Context, attrs: AttributeSet?) 
      * 特权表情的遮罩是否显示
      */
     private fun showPrivilegeShade() {
-        if (!hasManager &&  type == EmojiType.PREROGATIVE && (mNeedLevel > mCurrentLevel || mCurrentLevel == 0)) {
-            //需要显示特权表情遮罩
-            view_shade.show()
-            tv_privilege_attetnion.show()
-            tv_privilege_attetnion.text = "亲密等级Lv3可解锁"
-
-        } else {
+//        if (!hasManager &&  type == EmojiType.PREROGATIVE && (mNeedLevel > mCurrentLevel || mCurrentLevel == 0)) {
+//            //需要显示特权表情遮罩
+//            view_shade.show()
+//            tv_privilege_attetnion.show()
+//            tv_privilege_attetnion.text = "亲密等级Lv3可解锁"
+//
+//        } else {
             view_shade.hide()
             tv_privilege_attetnion.hide()
-        }
+//        }
 
     }
 
