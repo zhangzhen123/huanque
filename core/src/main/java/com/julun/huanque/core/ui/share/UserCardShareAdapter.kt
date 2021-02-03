@@ -101,9 +101,9 @@ class UserCardShareAdapter(var info: UserCardShareInfo? = null) : BaseDelegateMu
                     holder.setText(R.id.tv_like_tags, "你就是我的理想型")
                 }
                 holder.setText(R.id.tv_user_name, userInfo.nickname).setText(R.id.tv_sign, userInfo.mySign)
-                    .setText(R.id.tv_age, "${userInfo.age}").setText(R.id.tv_social_wish, userInfo.wish)
+                    .setText(R.id.tv_social_wish, userInfo.wish)
 
-                val baseViewHolder = if (userInfo.area.isNotEmpty()) {
+                if (userInfo.area.isNotEmpty()) {
                     holder.setText(R.id.tv_area, userInfo.area)
                 } else {
                     val starList = mutableListOf<String>("金星", "木星", "水星", "火星", "土星")
@@ -152,9 +152,8 @@ class UserCardShareAdapter(var info: UserCardShareInfo? = null) : BaseDelegateMu
                 ImageUtils.loadImageWithBlur(imgBg, userInfo.headPic, 2, 150)
                 holder.setText(R.id.tv_social_wish, userInfo.wish).setText(R.id.tv_user_name, userInfo.nickname)
                     .setText(R.id.tv_sign, userInfo.mySign)
-                    .setText(R.id.tv_age, "${userInfo.age}")
 
-                val baseViewHolder = if (userInfo.area.isNotEmpty()) {
+                if (userInfo.area.isNotEmpty()) {
                     holder.setText(R.id.tv_area, userInfo.area)
                 } else {
                     val starList = mutableListOf<String>("金星", "木星", "水星", "火星", "土星")

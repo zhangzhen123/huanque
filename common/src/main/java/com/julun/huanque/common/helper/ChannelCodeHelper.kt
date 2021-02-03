@@ -1,11 +1,8 @@
 package com.julun.huanque.common.helper
 
+import com.julun.huanque.common.constant.ChannelCodeKey
 import com.julun.huanque.common.constant.MetaKey
-import com.julun.huanque.common.constant.SPParamKey
-import com.julun.huanque.common.utils.JsonUtil
-import com.julun.huanque.common.utils.SPUtils
-import com.julun.huanque.common.utils.SharedPreferencesUtils
-import com.julun.huanque.common.utils.ULog
+import com.julun.huanque.common.utils.*
 
 /**
  *
@@ -18,6 +15,7 @@ import com.julun.huanque.common.utils.ULog
 object ChannelCodeHelper {
     const val H5SID = "h5Sid"
     const val H5PID = "h5Pid"
+    const val H5UID = "h5Uid"
     const val HqChannelCode = "hqChannelCode"
 
     val logger = ULog.getLogger("ChannelHelper")
@@ -124,7 +122,6 @@ object ChannelCodeHelper {
 
     //参数渠道号设置 通过前端传参配置的渠道号  hqChannelCode
     fun setChannelParam(channelParams: String) {
-        SPUtils.commitBoolean(SPParamKey.QueryGuessYouLike, false)
         SharedPreferencesUtils.commitString(CHANNELPARAM, channelParams)
     }
 
@@ -138,6 +135,22 @@ object ChannelCodeHelper {
     //活动渠道号  通过点击活动页面拉起app传回的渠道号
     private fun setChannelActive(channelActive: String) {
         SharedPreferencesUtils.commitString(CHANNELACTIVE, channelActive)
+
+
+        //处理额外的参数或邀请码
+        if (channelActive.contains(ChannelCodeKey.PID)) {
+            val mapTemp = GlobalUtils.channel2Map(channelActive)
+            val pid = mapTemp[ChannelCodeKey.PID] ?: ""
+            val roomId: Long = pid.toLongOrNull()?:return
+            SPUtils.commitLong(H5PID,roomId)
+
+        } else if (channelActive.contains(ChannelCodeKey.UID)) {
+            val mapTemp = GlobalUtils.channel2Map(channelActive)
+            val uid = mapTemp[ChannelCodeKey.UID] ?: ""
+            val userId: Long = uid.toLongOrNull()?:return
+            SPUtils.commitLong(H5UID,userId)
+        }
+
     }
 
     //CHANNELACTIVE
@@ -190,6 +203,7 @@ object ChannelCodeHelper {
 
 
     private var jAppChannelCode: String? = null
+
     /**
      * 内部渠道号
      */

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_dialog_alert"
+    android:orientation="vertical">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_25"
+        android:layout_marginTop="@dimen/dimen_25"
+        android:layout_marginEnd="@dimen/dimen_25">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/card_img"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:actualImageScaleType="centerCrop"
+            app:layout_constraintDimensionRatio="1:1.217"
+            app:layout_constraintTop_toTopOf="parent"
+            app:placeholderImage="@drawable/logo_nearby_placeholder_bg"
+            app:placeholderImageScaleType="fitXY"
+            app:roundedCornerRadius="@dimen/dimen_10" />
+
+        <View
+            android:id="@+id/shadow_view"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:background="@drawable/bg_shape_card_shadow"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/ll_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_15"
+            android:layout_marginBottom="@dimen/dimen_12"
+            android:gravity="bottom"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+
+            <TextView
+                android:id="@+id/tv_area"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="start|center_vertical"
+                android:includeFontPadding="false"
+                android:paddingStart="@dimen/dimen_1"
+                android:paddingEnd="@dimen/dimen_1"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                tools:text="杭州 余杭区" />
+
+            <TextView
+                android:id="@+id/tv_age"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="start|center_vertical"
+                android:includeFontPadding="false"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                tools:text=" / 23.3岁 女" />
+
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/tv_user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_15"
+            android:layout_marginBottom="@dimen/dimen_9"
+            android:gravity="start|center_vertical"
+            android:includeFontPadding="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_20"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/ll_info"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="清蝶泳" />
+
+        <ImageView
+            android:id="@+id/iv_auth"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dimen_18"
+            android:layout_marginStart="@dimen/dimen_5"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_user_name"
+            app:layout_constraintStart_toEndOf="@+id/tv_user_name"
+            app:layout_constraintTop_toTopOf="@+id/tv_user_name" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/okText"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_50"
+        android:layout_marginStart="@dimen/dimen_25"
+        android:layout_marginTop="@dimen/dimen_20"
+        android:layout_marginEnd="@dimen/dimen_25"
+        android:background="@drawable/bg_alertbutton_right"
+        android:gravity="center"
+        android:text="立即和她互动"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/cancelText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_25"
+        android:layout_marginTop="@dimen/dimen_5"
+        android:layout_marginBottom="@dimen/dimen_10"
+        android:layout_marginEnd="@dimen/dimen_25"
+        android:padding="@dimen/dimen_10"
+        android:gravity="center"
+        android:text="@string/cancel"
+        android:textColor="@color/black_999"
+        android:textSize="16sp"
+        tools:visibility="visible" />
+
+</LinearLayout>

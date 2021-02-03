@@ -131,7 +131,6 @@ class OrderDialogManager(val act: BaseActivity) {
                 when (event) {
 
                     Lifecycle.Event.ON_CREATE -> {
-
                     }
                     Lifecycle.Event.ON_RESUME -> {
                         startManager(this@OrderDialogManager)
@@ -144,6 +143,7 @@ class OrderDialogManager(val act: BaseActivity) {
             }
 
         })
+        currentManager=this@OrderDialogManager
     }
 
     private fun showDialog(it: BaseDialogFragment) {
