@@ -1,11 +1,9 @@
 package com.julun.huanque.core.viewmodel
 
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.baidu.location.BDAbstractLocationListener
 import com.baidu.location.BDLocation
-import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.bean.beans.NearbyUserBean
 import com.julun.huanque.common.bean.forms.SaveLocationForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
@@ -15,8 +13,6 @@ import com.julun.huanque.common.net.services.UserService
 import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.request
-import com.julun.huanque.common.utils.ToastUtils
-import com.julun.huanque.core.init.HuanQueInit
 import com.julun.maplib.LocationService
 import kotlinx.coroutines.launch
 

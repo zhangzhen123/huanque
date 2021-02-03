@@ -1,6 +1,5 @@
 package com.julun.huanque.common.helper
 
-import android.util.Log
 import com.julun.huanque.common.constant.MetaKey
 import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.utils.JsonUtil
@@ -86,7 +85,7 @@ object ChannelCodeHelper {
     /**
      * 保存唤醒的外部渠道HqChannelCode
      */
-    fun saveWakeParams(channelCode:String,extra: String) {
+    fun saveWakeParams(channelCode: String, extra: String) {
 //        if (extra.isEmpty()) {
 //            return
 //        }
@@ -191,27 +190,13 @@ object ChannelCodeHelper {
 
 
     private var jAppChannelCode: String? = null
-
-    //获取内置渠道 对于安装升级的情况 如果新包有新的内置渠道使用新包的  没有则使用保存的安装前上一版的渠道
-    fun getNativeChannelId(): String {
-
-//        if (jAppChannelCode != null)
-//            return jAppChannelCode!!
-//        val metaChannel = AppHelper.getAppMetaData(MetaKey.DOWNLOAD_CHANNEL)
-//        val native = getChannelNative()
-//        jAppChannelCode = when {
-//            metaChannel.isNotBlank() -> metaChannel
-//            native.isNotBlank() -> native
-//            else -> ""
-//        }
-        return ""
-    }
-
     /**
      * 内部渠道号
      */
     fun getInnerChannel(): String? {
-//        return "channel"
-        return AppHelper.getAppMetaData(MetaKey.DOWNLOAD_CHANNEL)
+        if (jAppChannelCode != null)
+            return jAppChannelCode!!
+        jAppChannelCode = AppHelper.getAppMetaData(MetaKey.DOWNLOAD_CHANNEL)
+        return jAppChannelCode
     }
 }

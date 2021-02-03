@@ -40,32 +40,20 @@ class HuanQueInit private constructor() {
         this.debug = deBug
     }
 
-    /**
-     * SDK类型
-     */
-    fun setSdkType(type: String) {
-//        CommonInit.getInstance().setSdkType(type)
-    }
-
     fun getDebug(): Boolean {
         return debug
     }
 
     fun init(application: Application) {
-//        mContext = application
+        mContext = application
         if (AppHelper.isMainProcess(application)) {
 //            CommonInit.getInstance().setBaseUrlByMode(debug)
             //使用TaskDispatcher分发进行初始化
             CommonInit.getInstance().init(application)
         }
     }
-
-    fun initContext(application: Application){
-        mContext = application
-    }
-
     suspend fun initWithCoroutine(application: Application) {
-//        mContext = application
+        mContext = application
         if (AppHelper.isMainProcess(application)) {
 //            CommonInit.getInstance().setBaseUrlByMode(debug)
             //使用协程初始化
