@@ -206,7 +206,7 @@ class LoginActivity2 : BaseActivity() {
                     }
                     if (stringBuilder.toString() != charSequence.toString()) {
                         var index = start + 1
-                        if (stringBuilder[start] == ' ') {
+                        if (stringBuilder.getOrNull(start) == ' ') {
                             if (before == 0) {
                                 index++
                             } else {
