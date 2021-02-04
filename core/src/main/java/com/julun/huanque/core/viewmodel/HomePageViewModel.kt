@@ -82,6 +82,9 @@ class HomePageViewModel : BaseViewModel() {
     //显示心动引导弹窗
     val showHeartGuideContent: MutableLiveData<String> by lazy { MutableLiveData<String>() }
 
+    //是否选中动态模块
+    val showDynamic: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+
     //是否有共享元素跳转
     var shareElement = false
 //
@@ -107,7 +110,7 @@ class HomePageViewModel : BaseViewModel() {
                 blackStatus.value = result.black
                 followStatus.value = result.follow
 //                heartStatus.value = result.heartTouch
-            }, {}, needLoadState = queryType==QueryType.INIT)
+            }, {}, needLoadState = queryType == QueryType.INIT)
         }
     }
 

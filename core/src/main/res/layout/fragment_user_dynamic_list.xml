@@ -23,6 +23,7 @@
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="@dimen/dimen_15"
         android:layout_marginBottom="@dimen/dimen_80"
+        android:visibility="gone"
         android:src="@mipmap/icon_publish_dynamic" />
 
     <com.julun.huanque.common.widgets.statepage.StatePageView

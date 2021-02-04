@@ -108,10 +108,10 @@ class UserDynamicFragment : BaseVMFragment<UserDynamicViewModel>() {
         isMe = currentUserId == SessionUtils.getUserId()
         if (isMe) {
             dynamicAdapter.showType = DynamicListAdapter.POST_LIST_ME
-            publish_dynamic.show()
+//            publish_dynamic.show()
         } else {
             dynamicAdapter.showType = DynamicListAdapter.POST_LIST_OTHER
-            publish_dynamic.hide()
+//            publish_dynamic.hide()
         }
         postList.layoutManager = LinearLayoutManager(requireContext())
         dynamicAdapter.loadMoreModule.setOnLoadMoreListener {
@@ -240,19 +240,19 @@ class UserDynamicFragment : BaseVMFragment<UserDynamicViewModel>() {
             startActivityForResult(intent,PublishRequestCode)
         }
 
-        postList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    //停止状态，显示发布按钮
-                    showOrHidePublish(true)
-                } else {
-                    //滑动状态，隐藏发布按钮
-                    showOrHidePublish(false)
-                }
-            }
-
-        })
+//        postList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+//            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+//                super.onScrollStateChanged(recyclerView, newState)
+//                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+//                    //停止状态，显示发布按钮
+//                    showOrHidePublish(true)
+//                } else {
+//                    //滑动状态，隐藏发布按钮
+//                    showOrHidePublish(false)
+//                }
+//            }
+//
+//        })
     }
 
     private fun initViewModel() {
@@ -390,14 +390,7 @@ class UserDynamicFragment : BaseVMFragment<UserDynamicViewModel>() {
                 dynamicAdapter.setEmptyView(
                     MixedHelper.getEmptyView(
                         requireContext(),
-                        msg = "暂无动态，快去发布一条吧~", btnTex = "去发布", onClick = View.OnClickListener {
-                            //跳转发布页面
-                            reportClick(
-                                StatisticCode.PubPost + StatisticCode.MyPost
-                            )
-                            val intent=Intent(requireActivity(),PublishStateActivity::class.java)
-                            startActivityForResult(intent,PublishRequestCode)
-                        }
+                        msg = "暂无动态，快去发布一条吧~", btnTex = "去发布"
                     )
                 )
             } else {

@@ -14,6 +14,7 @@ import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import androidx.activity.viewModels
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
@@ -53,10 +54,13 @@ import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.HomePageAdapter
 import com.julun.huanque.core.adapter.HomePagePicListAdapter
 import com.julun.huanque.core.manager.AliPlayerManager
+import com.julun.huanque.core.ui.dynamic.UserDynamicFragment
+import com.julun.huanque.core.ui.publish_dynamic.PublishStateActivity
 import com.julun.huanque.core.ui.record_voice.VoiceSignActivity
 import com.julun.huanque.core.viewmodel.HomePageViewModel
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
+import com.yuruiyin.appbarlayoutbehavior.AppBarLayoutBehavior
 import kotlinx.android.synthetic.main.act_home_page.*
 import net.lucode.hackware.magicindicator.ViewPagerHelper
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
@@ -89,6 +93,19 @@ class HomePageActivity : BaseActivity() {
                 act.startActivity(intent)
             }
         }
+
+        /**
+         * 选中动态
+         */
+        fun newInstanceByDynamic(act: Activity, userId: Long) {
+            val intent = Intent(act, HomePageActivity::class.java)
+            if (ForceUtils.activityMatch(intent)) {
+                intent.putExtra(ParamConstant.UserId, userId)
+                intent.putExtra(ParamConstant.ShowDynamic, true)
+                act.startActivity(intent)
+            }
+        }
+
     }
 
     private val mHomePageViewModel: HomePageViewModel by viewModels()
@@ -144,6 +161,7 @@ class HomePageActivity : BaseActivity() {
         val statusHeight = StatusBarUtil.getStatusBarHeight(this)
         mStartChange = ScreenUtils.getScreenWidth() * 308 / 375 - dp2px(44) - statusHeight
 
+
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 //            /**
 //             * 1、设置相同的TransitionName
@@ -183,6 +201,8 @@ class HomePageActivity : BaseActivity() {
         initRecyclerView()
         initViewPager()
         initMagicIndicator()
+        val showDynamic = intent?.getBooleanExtra(ParamConstant.ShowDynamic, false) ?: false
+        mHomePageViewModel.showDynamic.value = showDynamic
         val params = view_top.layoutParams as? ConstraintLayout.LayoutParams
         params?.topMargin = statusHeight
         view_top.layoutParams = params
@@ -445,10 +465,16 @@ class HomePageActivity : BaseActivity() {
         rl_edit_info.onClickNew {
             //跳转编辑资料页面
 //            RNPageActivity.start(this, RnConstant.EDIT_MINE_HOMEPAGE)
-            val intent = Intent(this, EditInfoActivity::class.java)
-            if (ForceUtils.activityMatch(intent)) {
-                startActivity(intent)
+            if (mHomePageViewModel.showDynamic.value == true) {
+                val intent = Intent(this, PublishStateActivity::class.java)
+                startActivityForResult(intent, UserDynamicFragment.PublishRequestCode)
+            } else {
+                val intent = Intent(this, EditInfoActivity::class.java)
+                if (ForceUtils.activityMatch(intent)) {
+                    startActivity(intent)
+                }
             }
+
         }
 
         view_heart.onClickNew {
@@ -497,6 +523,20 @@ class HomePageActivity : BaseActivity() {
         //配置预加载页数
 //        view_pager.offscreenPageLimit = 2
         view_pager.currentItem = 0
+        view_pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrollStateChanged(state: Int) {
+            }
+
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+            }
+
+            override fun onPageSelected(position: Int) {
+                if (mHomePageViewModel.mineHomePage) {
+                    mHomePageViewModel.showDynamic.value = position == 1
+                }
+            }
+
+        })
 
     }
 
@@ -628,6 +668,10 @@ class HomePageActivity : BaseActivity() {
         mHomePageViewModel.homeInfoBean.observe(this, Observer {
             if (it != null) {
                 showViewByData(it)
+                if (mHomePageViewModel.showDynamic.value == true) {
+                    view_pager.currentItem = 1
+                    scrollToTop(false)
+                }
             }
 
 //            con_header.post {
@@ -637,6 +681,17 @@ class HomePageActivity : BaseActivity() {
 //            }
         })
 
+        mHomePageViewModel.showDynamic.observe(this, Observer {
+            if (!mHomePageViewModel.mineHomePage) {
+                return@Observer
+            }
+            if (it == true) {
+                //选中了动态
+                tv_edit_content.text = "发布动态"
+            } else {
+                tv_edit_content.text = "编辑资料"
+            }
+        })
 
         mHomePageViewModel.closeListData.observe(this, Observer {
             if (it != null) {
@@ -781,6 +836,18 @@ class HomePageActivity : BaseActivity() {
                 }
             }
         })
+    }
+
+    private fun scrollToTop(flag: Boolean) {
+        val behavior: AppBarLayoutBehavior =
+            (appBarLayout.layoutParams as CoordinatorLayout.LayoutParams).getBehavior() as? AppBarLayoutBehavior ?: return
+        val appBarLayoutBehavior = behavior
+        if (flag) {
+            appBarLayoutBehavior.topAndBottomOffset = 0 //快熟滑动到顶部
+        } else {
+            val hight: Int = appBarLayout.getHeight()
+            appBarLayoutBehavior.topAndBottomOffset = -hight //快速滑动实现吸顶效果
+        }
     }
 
     private var cSeeMaxCoverNum: Int = -1
