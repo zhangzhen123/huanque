@@ -12,6 +12,10 @@ import android.webkit.WebView
 import android.widget.FrameLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.ProcessLifecycleOwner
 import com.alibaba.android.arouter.launcher.ARouter
 import com.facebook.cache.common.CacheErrorLogger
 import com.facebook.cache.disk.DiskCacheConfig
@@ -28,18 +32,21 @@ import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.manager.aliyunoss.OssUpLoadManager
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.suger.dp2px
-import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.logger
-import com.julun.huanque.common.utils.*
+import com.julun.huanque.common.utils.ScreenUtils
+import com.julun.huanque.common.utils.SharedPreferencesUtils
+import com.julun.huanque.common.utils.ToastUtils
+import com.julun.huanque.common.utils.ULog
 import com.julun.huanque.common.utils.svga.SVGAHelper
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import org.greenrobot.eventbus.EventBus
 import org.jay.launchstarter.TaskDispatcher
 import org.jetbrains.anko.backgroundColor
 import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.dip
 import java.io.File
-import java.lang.Exception
 import java.lang.ref.WeakReference
 
 /**
@@ -131,79 +138,10 @@ class CommonInit {
         return mContext
     }
 
-    fun initContext(application: Application) {
-        mContext = application
-    }
-
     fun init(application: Application) {
-//        mContext = application
-        GlobalDialogManager.init(application)
-        application.registerActivityLifecycleCallbacks(object :
-            Application.ActivityLifecycleCallbacks {
-            override fun onActivityPaused(activity: Activity?) {
-                isAppOnForeground = false
-            }
-
-            override fun onActivityResumed(activity: Activity) {
-                setCurrentActivity(activity)
-                isAppOnForeground = true
-
-                if (activity != null && (activity.localClassName == "com.cmic.sso.sdk.activity.LoginAuthActivity" || activity.localClassName == "cn.jiguang.verifysdk.CtLoginActivity")) {
-                    val contentView =
-                        activity.window?.peekDecorView()?.findViewById<View>(android.R.id.content)
-                            ?: return
-                    //获取号码栏
-                    val phoneView = getMatchTextView(contentView, "****") ?: return
-                    val viewContent = phoneView.text.toString().trim()
-                    if (viewContent.contains("一键登录")) {
-                        return
-                    }
-                    val realContent = "$viewContent 一键登录"
-                    phoneView.text = realContent
-                    phoneView.backgroundResource = R.drawable.bg_phone_number_fast_login
-                    //设置宽高
-                    val params = phoneView.layoutParams
-                    params.height = activity.dip(50)
-                    val phoneNumWidthPx = ScreenUtils.getScreenWidth() - activity.dip(38) * 2
-                    params.width = phoneNumWidthPx
-                    phoneView.layoutParams = params
-                    //获取隐私栏
-//                    val privacyView = getMatchTextView(contentView, "登录即为同意欢鹊") ?: return
-//                    val privacyText = privacyView.text
-//                    if(privacyText is SpannableString){
-//                        privacyText.getSpans()
-//                    }
-                }
-
-            }
-
-            override fun onActivityStarted(activity: Activity) {
-                logger("onActivityStarted:$activity")
-                mActCount++
-                setCurrentActivity(activity)
-            }
-
-            override fun onActivityDestroyed(activity: Activity) {
-                ActivitiesManager.INSTANCE.removeActivities(activity)
-            }
-
-            override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle?) {
-            }
-
-            override fun onActivityStopped(activity: Activity) {
-                logger("onActivityStopped:$activity")
-                mActCount--
-                if (mActCount == 0) {
-                    //从前台退到后台
-                    EventBus.getDefault().post(HideFloatingEvent())
-                }
-            }
-
-            override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
-                ActivitiesManager.INSTANCE.push(activity)
-            }
-
-        })
+        mContext = application
+        SharedPreferencesUtils.init(application)
+        sameInit(application)
         initTask(application)
     }
 
@@ -227,6 +165,11 @@ class CommonInit {
     fun getBaseUrl(): String {
         return mBaseUrl ?: BuildConfig.SERVICE_BASE_URL_PRODUCT
 //        return BuildConfig.SERVICE_BASE_URL_PRODUCT
+    }
+
+    //改变基本域名 自己内部使用
+    fun setBaseUrl(baseUrl: String) {
+        mBaseUrl = baseUrl
     }
 
     private var mBaseUrl: String? = null //内部用
@@ -273,12 +216,7 @@ class CommonInit {
         }
     }
 
-    //改变基本域名 自己内部使用
-    fun setBaseUrl(baseUrl: String) {
-        mBaseUrl = baseUrl
-    }
-
-//    //从直播间触发登录的时候使用
+    //    //从直播间触发登录的时候使用
 //    private var programId: Long? = null
 //
 //    fun setProgramId(programId: Long?) {
@@ -287,7 +225,7 @@ class CommonInit {
 //
 //    fun getProgramId() = programId
 //
-//    private var mSdkType = BusiConstant.SDKType.BAOMIHUA
+//    private var mSdkType = ""
 //
 //    /**
 //     * SDK类型
@@ -328,90 +266,8 @@ class CommonInit {
     suspend fun initWithCoroutines(application: Application) {
         val currentTime = System.currentTimeMillis()
         logger("common initWithCoroutines start----${Thread.currentThread()} ")
-        GlobalDialogManager.init(application)
-//        mContext = application
-        application.registerActivityLifecycleCallbacks(object :
-            Application.ActivityLifecycleCallbacks {
-            override fun onActivityPaused(activity: Activity?) {
-                isAppOnForeground = false
-                if (activity != null && (activity.localClassName == "com.cmic.sso.sdk.activity.LoginAuthActivity" || activity.localClassName == "cn.jiguang.verifysdk.CtLoginActivity")) {
-                    mFastLoginContentView = null
-                }
-            }
-
-            override fun onActivityResumed(activity: Activity) {
-                setCurrentActivity(activity)
-                isAppOnForeground = true
-
-                if (activity != null && (activity.localClassName == "com.cmic.sso.sdk.activity.LoginAuthActivity" || activity.localClassName == "cn.jiguang.verifysdk.CtLoginActivity")) {
-                    val contentView =
-                        activity.window?.peekDecorView()?.findViewById<View>(android.R.id.content)
-                            ?: return
-                    mFastLoginContentView = contentView as? FrameLayout
-                    //获取号码栏
-                    val phoneView = getMatchTextView(contentView, "****") ?: return
-                    val viewContent = phoneView.text.toString().trim()
-                    if (viewContent.contains("一键登录")) {
-                        return
-                    }
-                    mFastLoginContentView?.backgroundColor = Color.TRANSPARENT
-                    val firstRLChild = mFastLoginContentView?.getChildAt(0)
-                    firstRLChild?.backgroundColor = Color.TRANSPARENT
-                    (firstRLChild as? RelativeLayout)?.let { fv ->
-                        val bottomView = View(fv.context).apply { backgroundColor = Color.WHITE }
-                        val bottomParams = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp2px(275))
-                        bottomParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE)
-                        fv.addView(bottomView, 0, bottomParams)
-
-                    }
-
-                    val realContent = "$viewContent 一键登录"
-                    phoneView.text = realContent
-                    phoneView.backgroundResource = R.drawable.bg_phone_number_fast_login
-                    //设置宽高
-                    val params = phoneView.layoutParams
-                    params.height = activity.dip(50)
-                    val phoneNumWidthPx = ScreenUtils.getScreenWidth() - activity.dip(38) * 2
-                    params.width = phoneNumWidthPx
-                    phoneView.layoutParams = params
-                    //获取隐私栏
-//                    val privacyView = getMatchTextView(contentView, "登录即为同意欢鹊") ?: return
-//                    val privacyText = privacyView.text
-//                    if(privacyText is SpannableString){
-//                        privacyText.getSpans()
-//                    }
-                }
-
-            }
-
-            override fun onActivityStarted(activity: Activity) {
-                logger("onActivityStarted:$activity")
-                mActCount++
-                setCurrentActivity(activity)
-            }
-
-            override fun onActivityDestroyed(activity: Activity) {
-                ActivitiesManager.INSTANCE.removeActivities(activity)
-            }
-
-            override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle?) {
-            }
-
-            override fun onActivityStopped(activity: Activity) {
-                logger("onActivityStopped:$activity")
-                mActCount--
-                if (mActCount == 0) {
-                    //从前台退到后台
-                    EventBus.getDefault().post(HideFloatingEvent())
-                }
-            }
-
-            override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
-                ActivitiesManager.INSTANCE.push(activity)
-            }
-
-        })
-
+        mContext = application
+        sameInit(application)
         coroutineScope {
             val timeC = System.currentTimeMillis()
             logger("Common  coroutineScope start launch----${Thread.currentThread()} ")
@@ -516,5 +372,104 @@ class CommonInit {
         }
         logger("Common initWithCoroutines end----${Thread.currentThread()} duration=${System.currentTimeMillis() - currentTime} ")
 
+    }
+
+    private fun sameInit(application: Application){
+        GlobalDialogManager.init(application)
+        application.registerActivityLifecycleCallbacks(object :
+            Application.ActivityLifecycleCallbacks {
+            override fun onActivityPaused(activity: Activity?) {
+//                isAppOnForeground = false
+                if (activity != null && (activity.localClassName == "com.cmic.sso.sdk.activity.LoginAuthActivity" || activity.localClassName == "cn.jiguang.verifysdk.CtLoginActivity")) {
+                    mFastLoginContentView = null
+                }
+            }
+
+            override fun onActivityResumed(activity: Activity) {
+                setCurrentActivity(activity)
+//                isAppOnForeground = true
+
+                if (activity != null && (activity.localClassName == "com.cmic.sso.sdk.activity.LoginAuthActivity" || activity.localClassName == "cn.jiguang.verifysdk.CtLoginActivity")) {
+                    val contentView =
+                        activity.window?.peekDecorView()?.findViewById<View>(android.R.id.content)
+                            ?: return
+                    mFastLoginContentView = contentView as? FrameLayout
+                    //获取号码栏
+                    val phoneView = getMatchTextView(contentView, "****") ?: return
+                    val viewContent = phoneView.text.toString().trim()
+                    if (viewContent.contains("一键登录")) {
+                        return
+                    }
+                    mFastLoginContentView?.backgroundColor = Color.TRANSPARENT
+                    val firstRLChild = mFastLoginContentView?.getChildAt(0)
+                    firstRLChild?.backgroundColor = Color.TRANSPARENT
+                    (firstRLChild as? RelativeLayout)?.let { fv ->
+                        val bottomView = View(fv.context).apply { backgroundColor = Color.WHITE }
+                        val bottomParams = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp2px(275))
+                        bottomParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE)
+                        fv.addView(bottomView, 0, bottomParams)
+
+                    }
+
+                    val realContent = "$viewContent 一键登录"
+                    phoneView.text = realContent
+                    phoneView.backgroundResource = R.drawable.bg_phone_number_fast_login
+                    //设置宽高
+                    val params = phoneView.layoutParams
+                    params.height = activity.dip(50)
+                    val phoneNumWidthPx = ScreenUtils.getScreenWidth() - activity.dip(38) * 2
+                    params.width = phoneNumWidthPx
+                    phoneView.layoutParams = params
+                    //获取隐私栏
+//                    val privacyView = getMatchTextView(contentView, "登录即为同意欢鹊") ?: return
+//                    val privacyText = privacyView.text
+//                    if(privacyText is SpannableString){
+//                        privacyText.getSpans()
+//                    }
+                }
+
+            }
+
+            override fun onActivityStarted(activity: Activity) {
+                logger("onActivityStarted:$activity")
+                mActCount++
+                setCurrentActivity(activity)
+            }
+
+            override fun onActivityDestroyed(activity: Activity) {
+                ActivitiesManager.INSTANCE.removeActivities(activity)
+            }
+
+            override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle?) {
+            }
+
+            override fun onActivityStopped(activity: Activity) {
+                logger("onActivityStopped:$activity")
+                mActCount--
+//                if (mActCount == 0) {
+//                    //从前台退到后台
+//                    EventBus.getDefault().post(HideFloatingEvent())
+//                }
+            }
+
+            override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
+                ActivitiesManager.INSTANCE.push(activity)
+            }
+
+        })
+        ProcessLifecycleOwner.get().lifecycle.addObserver(object : LifecycleObserver {
+            @OnLifecycleEvent(Lifecycle.Event.ON_START)
+            private fun onAppForeground() {
+                logger("onAppForeground ")
+                isAppOnForeground = true
+            }
+
+            @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+            private fun onAppBackground() {
+                logger("onAppBackground ")
+                isAppOnForeground = false
+                EventBus.getDefault().post(HideFloatingEvent())
+            }
+        })
     }
 }

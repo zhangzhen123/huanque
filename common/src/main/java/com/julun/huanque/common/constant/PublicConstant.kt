@@ -1,5 +1,11 @@
 package com.julun.huanque.common.constant
 
+object ChannelCodeKey {
+    const val PID = "pid"
+    const val UID = "uid"
+    const val MUID = "muid"
+}
+
 object HomeTabType {
     const val Hot = "Hot"
     const val Dancer = "Dancer"

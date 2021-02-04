@@ -268,7 +268,7 @@ object DialogOrderNumber {
 
     const val ROYAL_CARD_ACTIVE_FRAGMENT = 9 //贵族体验卡弹窗
 
-
+    const val USER_CARD_SHARE_FRAGMENT = 10 //用户分享卡片弹窗
     //局部弹窗的排序  目前不需要优先级排序 默认就排到尾端 这里设置一个固定大值
     const val LOCAL_DIALOG = 9999 //
 

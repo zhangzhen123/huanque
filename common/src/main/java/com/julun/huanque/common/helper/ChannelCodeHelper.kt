@@ -1,12 +1,8 @@
 package com.julun.huanque.common.helper
 
-import android.util.Log
+import com.julun.huanque.common.constant.ChannelCodeKey
 import com.julun.huanque.common.constant.MetaKey
-import com.julun.huanque.common.constant.SPParamKey
-import com.julun.huanque.common.utils.JsonUtil
-import com.julun.huanque.common.utils.SPUtils
-import com.julun.huanque.common.utils.SharedPreferencesUtils
-import com.julun.huanque.common.utils.ULog
+import com.julun.huanque.common.utils.*
 
 /**
  *
@@ -19,6 +15,8 @@ import com.julun.huanque.common.utils.ULog
 object ChannelCodeHelper {
     const val H5SID = "h5Sid"
     const val H5PID = "h5Pid"
+    const val H5UID = "h5Uid"
+    const val H5MUID = "h5MUid"//分享对象人id
     const val HqChannelCode = "hqChannelCode"
 
     val logger = ULog.getLogger("ChannelHelper")
@@ -86,7 +84,7 @@ object ChannelCodeHelper {
     /**
      * 保存唤醒的外部渠道HqChannelCode
      */
-    fun saveWakeParams(channelCode:String,extra: String) {
+    fun saveWakeParams(channelCode: String, extra: String) {
 //        if (extra.isEmpty()) {
 //            return
 //        }
@@ -125,7 +123,6 @@ object ChannelCodeHelper {
 
     //参数渠道号设置 通过前端传参配置的渠道号  hqChannelCode
     fun setChannelParam(channelParams: String) {
-        SPUtils.commitBoolean(SPParamKey.QueryGuessYouLike, false)
         SharedPreferencesUtils.commitString(CHANNELPARAM, channelParams)
     }
 
@@ -139,6 +136,22 @@ object ChannelCodeHelper {
     //活动渠道号  通过点击活动页面拉起app传回的渠道号
     private fun setChannelActive(channelActive: String) {
         SharedPreferencesUtils.commitString(CHANNELACTIVE, channelActive)
+
+
+        //处理额外的参数或邀请码
+        if (channelActive.contains(ChannelCodeKey.PID)) {
+            val mapTemp = GlobalUtils.channel2Map(channelActive)
+            val pid = mapTemp[ChannelCodeKey.PID] ?: ""
+            val roomId: Long = pid.toLongOrNull()?:return
+            SPUtils.commitLong(H5PID,roomId)
+
+        } else if (channelActive.contains(ChannelCodeKey.MUID)) {
+            val mapTemp = GlobalUtils.channel2Map(channelActive)
+            val uid = mapTemp[ChannelCodeKey.MUID] ?: ""
+            val userId: Long = uid.toLongOrNull()?:return
+            SPUtils.commitLong(H5MUID,userId)
+        }
+
     }
 
     //CHANNELACTIVE
@@ -192,26 +205,13 @@ object ChannelCodeHelper {
 
     private var jAppChannelCode: String? = null
 
-    //获取内置渠道 对于安装升级的情况 如果新包有新的内置渠道使用新包的  没有则使用保存的安装前上一版的渠道
-    fun getNativeChannelId(): String {
-
-//        if (jAppChannelCode != null)
-//            return jAppChannelCode!!
-//        val metaChannel = AppHelper.getAppMetaData(MetaKey.DOWNLOAD_CHANNEL)
-//        val native = getChannelNative()
-//        jAppChannelCode = when {
-//            metaChannel.isNotBlank() -> metaChannel
-//            native.isNotBlank() -> native
-//            else -> ""
-//        }
-        return ""
-    }
-
     /**
      * 内部渠道号
      */
     fun getInnerChannel(): String? {
-//        return "channel"
-        return AppHelper.getAppMetaData(MetaKey.DOWNLOAD_CHANNEL)
+        if (jAppChannelCode != null)
+            return jAppChannelCode!!
+        jAppChannelCode = AppHelper.getAppMetaData(MetaKey.DOWNLOAD_CHANNEL)
+        return jAppChannelCode
     }
 }

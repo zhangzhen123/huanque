@@ -613,6 +613,26 @@
         app:layout_constraintRight_toRightOf="@id/view_top"
         app:layout_constraintTop_toTopOf="@id/view_top" />
 
+    <ImageView
+        android:id="@+id/iv_share_white"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:alpha="0"
+        android:padding="10dp"
+        android:src="@mipmap/icon_share_white_01"
+        app:layout_constraintBottom_toBottomOf="@id/view_top"
+        app:layout_constraintRight_toLeftOf="@+id/iv_more"
+        app:layout_constraintTop_toTopOf="@id/view_top" />
+    <ImageView
+        android:id="@+id/iv_share_black"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:alpha="0"
+        android:padding="10dp"
+        android:src="@mipmap/icon_share_black_01"
+        app:layout_constraintBottom_toBottomOf="@id/view_top"
+        app:layout_constraintRight_toLeftOf="@+id/iv_more_black"
+        app:layout_constraintTop_toTopOf="@id/view_top" />
     <TextView
         android:id="@+id/tv_user_name"
         android:layout_width="wrap_content"

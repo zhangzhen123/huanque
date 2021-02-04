@@ -119,8 +119,6 @@ object SPParamKey {
     //是否同意隐私协议
     const val AgreeUp = "AgreeUp"
 
-    //是否请求过猜你喜欢
-    const val QueryGuessYouLike = "QueryGuessYouLike"
 
     //oaid是否支持
     const val Support_Oaid = "Support_Oaid"

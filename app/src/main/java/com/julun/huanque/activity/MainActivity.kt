@@ -12,8 +12,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
-import com.baidu.location.BDAbstractLocationListener
-import com.baidu.location.BDLocation
 import com.julun.huanque.R
 import com.julun.huanque.agora.activity.AnonymousVoiceActivity
 import com.julun.huanque.app.update.AppChecker
@@ -24,7 +22,6 @@ import com.julun.huanque.common.base.dialog.LoadingDialog
 import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.events.*
-import com.julun.huanque.common.bean.forms.SaveLocationForm
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.AppHelper
 import com.julun.huanque.common.helper.ChannelCodeHelper
@@ -43,25 +40,21 @@ import com.julun.huanque.core.manager.VideoPlayerManager
 import com.julun.huanque.core.ui.live.fragment.FirstRechargeReceivedFragment
 import com.julun.huanque.core.ui.main.dynamic_square.DynamicSquareFragment
 import com.julun.huanque.core.ui.main.heartbeat.HomeHeartbeatFragment
-import com.julun.huanque.core.ui.main.home.HomeFragment
 import com.julun.huanque.core.ui.main.program.HomeProgramFragment
 import com.julun.huanque.core.viewmodel.MainConnectViewModel
 import com.julun.huanque.core.viewmodel.TodayFateViewModel
-import com.julun.huanque.fragment.*
+import com.julun.huanque.fragment.LastWatchFragment
+import com.julun.huanque.fragment.PersonalInformationProtectionFragment
+import com.julun.huanque.fragment.UserCardDialogFragment
 import com.julun.huanque.message.fragment.MessageFragment
 import com.julun.huanque.message.viewmodel.MessageViewModel
 import com.julun.huanque.support.LoginManager
 import com.julun.huanque.ui.main.MineFragment
 import com.julun.huanque.viewmodel.FillInformationViewModel
 import com.julun.huanque.viewmodel.MainViewModel
-import com.julun.maplib.LocationService
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureConfig
 import com.luck.picture.lib.config.PictureMimeType
-import com.trello.rxlifecycle4.android.ActivityEvent
-import com.trello.rxlifecycle4.kotlin.bindUntilEvent
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Observable
 import io.rong.imlib.RongIMClient
 import io.rong.imlib.model.Conversation
 import kotlinx.android.synthetic.main.main_activity.*
@@ -69,7 +62,6 @@ import me.leolin.shortcutbadger.ShortcutBadger
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import java.util.concurrent.TimeUnit
 import kotlin.math.abs
 import kotlin.math.min
 
@@ -152,7 +144,7 @@ class MainActivity : BaseActivity() {
             }
         }
         judgeUpdateInfoFragment(intent)
-        doWithChannel()
+        doWithChannelCode()
         CommonInit.getInstance().setMainActivity(this)
         initViewModel()
         initBottomTab()
@@ -216,24 +208,24 @@ class MainActivity : BaseActivity() {
 
     /**
      * 根据channel判断是否需要跳转直播间
+     * channel附带的code 做相应处理
      */
-    private fun doWithChannel() {
-        if (!SessionUtils.getIsRegUser() || SPUtils.getBoolean(SPParamKey.QueryGuessYouLike, false)) {
+    private fun doWithChannelCode() {
+        if (!SessionUtils.getIsRegUser()) {
             return
         }
-        val key = "pid"
-        SPUtils.commitBoolean(SPParamKey.QueryGuessYouLike, true)
-        val channel = ChannelCodeHelper.getExternalChannel() ?: return
-        logger.info("channel = $channel")
-        if (channel.contains(key)) {
-            val mapTemp = GlobalUtils.channel2Map(channel)
-            val pid = mapTemp[key] ?: ""
-            val roomId: Long? = try {
-                pid.toLong()
-            } catch (e: NumberFormatException) {
-                null
-            }
-            mMainViewModel.lastWatch(roomId ?: return)
+        val pid = SPUtils.getLong(ChannelCodeHelper.H5PID, 0L)
+        val mUid = SPUtils.getLong(ChannelCodeHelper.H5MUID, 0L)
+
+        if (pid != 0L) {
+            mMainViewModel.lastWatch(pid)
+            SPUtils.commitLong(ChannelCodeHelper.H5PID, 0L)
+        } else if (mUid != 0L) {
+//            lifecycleScope.launchWhenResumed {
+                val userCardDialog = UserCardDialogFragment.newInstance(mUid)
+                OrderDialogManager.addGlobalOrderDialog(userCardDialog)
+                SPUtils.commitLong(ChannelCodeHelper.H5MUID, 0L)
+//            }
         }
     }
 

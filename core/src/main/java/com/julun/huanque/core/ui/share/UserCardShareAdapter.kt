@@ -30,10 +30,10 @@ class UserCardShareAdapter(var info: UserCardShareInfo? = null) : BaseDelegateMu
             override fun getItemType(data: List<Any>, position: Int): Int {
                 return when (position) {
                     0 -> {
-                        FIRST_TYPE
+                        SECOND_TYPE
                     }
                     else -> {
-                        SECOND_TYPE
+                        FIRST_TYPE
                     }
 //                    else -> {
 //                        THIRD_TYPE
@@ -101,9 +101,9 @@ class UserCardShareAdapter(var info: UserCardShareInfo? = null) : BaseDelegateMu
                     holder.setText(R.id.tv_like_tags, "你就是我的理想型")
                 }
                 holder.setText(R.id.tv_user_name, userInfo.nickname).setText(R.id.tv_sign, userInfo.mySign)
-                    .setText(R.id.tv_age, "${userInfo.age}").setText(R.id.tv_social_wish, userInfo.wish)
+                    .setText(R.id.tv_social_wish, userInfo.wish)
 
-                val baseViewHolder = if (userInfo.area.isNotEmpty()) {
+                if (userInfo.area.isNotEmpty()) {
                     holder.setText(R.id.tv_area, userInfo.area)
                 } else {
                     val starList = mutableListOf<String>("金星", "木星", "水星", "火星", "土星")
@@ -112,9 +112,17 @@ class UserCardShareAdapter(var info: UserCardShareInfo? = null) : BaseDelegateMu
                 }
 
                 val strAgeSex = if (userInfo.sexType == Sex.MALE) {
-                    " / ${userInfo.age}岁 男"
+                    if(userInfo.age==0){
+                        " / 男"
+                    }else{
+                        " / ${userInfo.age}岁 男"
+                    }
                 } else {
-                    " / ${userInfo.age}岁 女"
+                    if(userInfo.age==0){
+                        " / 女"
+                    }else{
+                        " / ${userInfo.age}岁 女"
+                    }
                 }
                 holder.setText(R.id.tv_age, strAgeSex)
 
@@ -152,9 +160,8 @@ class UserCardShareAdapter(var info: UserCardShareInfo? = null) : BaseDelegateMu
                 ImageUtils.loadImageWithBlur(imgBg, userInfo.headPic, 2, 150)
                 holder.setText(R.id.tv_social_wish, userInfo.wish).setText(R.id.tv_user_name, userInfo.nickname)
                     .setText(R.id.tv_sign, userInfo.mySign)
-                    .setText(R.id.tv_age, "${userInfo.age}")
 
-                val baseViewHolder = if (userInfo.area.isNotEmpty()) {
+                if (userInfo.area.isNotEmpty()) {
                     holder.setText(R.id.tv_area, userInfo.area)
                 } else {
                     val starList = mutableListOf<String>("金星", "木星", "水星", "火星", "土星")
@@ -176,15 +183,23 @@ class UserCardShareAdapter(var info: UserCardShareInfo? = null) : BaseDelegateMu
                 }
 
                 val strAgeSex = if (userInfo.sexType == Sex.MALE) {
-                    "${userInfo.age}岁 男"
+                    if(userInfo.age==0){
+                        "男"
+                    }else{
+                        "${userInfo.age}岁 男"
+                    }
                 } else {
-                    "${userInfo.age}岁 女"
+                    if(userInfo.age==0){
+                        "女"
+                    }else{
+                        "${userInfo.age}岁 女"
+                    }
                 }
                 holder.setText(R.id.tv_age, strAgeSex)
                 var myTags = ""
                 kotlin.run {
                     userInfo.authTagList.forEachIndexed { index, userTagBean ->
-                        if (index == 2 || index == userInfo.likeTagList.size - 1) {
+                        if (index == 2 || index == userInfo.authTagList.size - 1) {
                             myTags += userTagBean.tagName
                             return@run
                         }
