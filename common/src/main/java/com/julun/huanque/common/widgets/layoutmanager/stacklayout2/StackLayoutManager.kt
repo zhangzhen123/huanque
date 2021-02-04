@@ -309,7 +309,7 @@ class StackLayoutManager(scrollOrientation: ScrollOrientation,
 
     override fun scrollToPosition(position: Int) {
         if (position < 0 || position >= itemCount) {
-            throw ArrayIndexOutOfBoundsException("$position is out of bound [0..$itemCount-1]")
+            return
         }
         mScrollOffset = getPositionOffset(position)
         requestLayout()
