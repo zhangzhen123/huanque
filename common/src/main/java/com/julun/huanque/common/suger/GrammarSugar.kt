@@ -99,7 +99,8 @@ fun <T> MutableList<T>.sliceFromStart(subSize: Int = this.size - 1, removeSource
         result.addAll(subLIst)
 
         if (removeSource) {
-            this.removeAll(subLIst)
+            //这里有个坑 不能直接删除subLIst 低版本会报错
+            this.removeAll(result)
         }
     } else {
         result.addAll(this)
