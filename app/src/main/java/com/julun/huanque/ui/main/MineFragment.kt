@@ -20,6 +20,7 @@ import com.julun.huanque.BuildConfig
 import com.julun.huanque.R
 import com.julun.huanque.activity.SettingActivity
 import com.julun.huanque.adapter.MineDynamicPicAdapter
+import com.julun.huanque.adapter.MineTagAdapter
 import com.julun.huanque.common.base.BaseVMFragment
 import com.julun.huanque.common.base.dialog.CommonDialogFragment
 import com.julun.huanque.common.base.dialog.MyAlertDialog
@@ -38,9 +39,14 @@ import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.widgets.bgabanner.BGABanner
+import com.julun.huanque.core.ui.dynamic.UserDynamicFragment
 import com.julun.huanque.core.ui.homepage.EditInfoActivity
 import com.julun.huanque.core.ui.homepage.HomePageActivity
+import com.julun.huanque.core.ui.publish_dynamic.PublishStateActivity
 import com.julun.huanque.core.ui.recharge.RechargeCenterActivity
+import com.julun.huanque.core.ui.tag_manager.AuthTagPicActivity
+import com.julun.huanque.core.ui.tag_manager.MyTagsActivity
+import com.julun.huanque.core.ui.tag_manager.TagPicsActivity
 import com.julun.huanque.fragment.InviteCodeFragment
 import com.julun.huanque.fragment.UpdateInfoFragment
 import com.julun.huanque.message.activity.ContactsActivity
@@ -88,12 +94,18 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
     //动态图片
     private val mDynamicPicAdapter = MineDynamicPicAdapter()
 
+    private val mMineTagAdapter = MineTagAdapter()
+
     override fun getLayoutId() = R.layout.fragment_mine
 
     override fun isRegisterEventBus(): Boolean = true
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         val lt = llTitleRootView.layoutParams as ConstraintLayout.LayoutParams
         lt.topMargin = StatusBarUtil.getStatusBarHeight(requireContext())
+
+        val tagParams = con_tag.layoutParams
+        tagParams.height = (ScreenUtils.getScreenWidth() - dp2px(30)) * 60 / 345
+        con_tag.layoutParams = tagParams
 
         rv_tabs_info.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
         rv_tabs_info.adapter = infoTabAdapter
@@ -133,6 +145,14 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
     private fun initRecyclerView() {
         recycler_view_dynamic.layoutManager = LinearLayoutManager(requireActivity(), RecyclerView.HORIZONTAL, false)
         recycler_view_dynamic.adapter = mDynamicPicAdapter
+
+        recycler_view_tag.layoutManager = LinearLayoutManager(requireActivity(), RecyclerView.HORIZONTAL, false)
+        recycler_view_tag.adapter = mMineTagAdapter
+        mMineTagAdapter.setOnItemClickListener { adapter, view, position ->
+            val tempData = mMineTagAdapter.getItemOrNull(position) ?: return@setOnItemClickListener
+            AuthTagPicActivity.start(requireActivity(), tempData.tagId, true, false, true)
+            mNeedRefresh = true
+        }
     }
 
 
@@ -231,6 +251,12 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
             recycler_view_dynamic.show()
         } else {
             recycler_view_dynamic.hide()
+        }
+        mMineTagAdapter.setList(info.tagList)
+        if (info.tagList.isEmpty()) {
+            tv_auth.text = "去认证"
+        } else {
+            tv_auth.text = "认证标签"
         }
 
         //显示图标
@@ -555,7 +581,19 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
             RNPageActivity.start(requireActivity(), RnConstant.INVITE_FRIENDS_PAGE)
         }
         con_dynamic.onClickNew {
-            HomePageActivity.newInstanceByDynamic(requireActivity(), SessionUtils.getUserId())
+            if (mViewModel.userInfo.value?.isSuccess() != true) {
+                return@onClickNew
+            }
+            val postNum = mViewModel.userInfo.value?.getT()?.post?.postNum ?: 0
+            if (postNum > 0) {
+                HomePageActivity.newInstanceByDynamic(requireActivity(), SessionUtils.getUserId())
+            } else {
+                //跳转发布页面
+                val intent = Intent(requireActivity(), PublishStateActivity::class.java)
+                if (ForceUtils.activityMatch(intent)) {
+                    startActivity(intent)
+                }
+            }
         }
 
         con_service.onClickNew {
@@ -568,7 +606,10 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
             intent.putExtras(extra)
             startActivity(intent)
         }
-
+        con_user_card.onClickNew {
+            ARouter.getInstance().build(ARouterConstant.USER_CARD_SHARE_ACTIVITY)
+                .withLong(ParamConstant.UserId, SessionUtils.getUserId()).navigation()
+        }
         iv_invite.onClickNew {
             //邀请码弹窗
             mInviteCodeFragment.show(childFragmentManager, "InviteCodeFragment")
@@ -586,7 +627,10 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
                     userBasic.royalPic
                 )
             }
+        }
 
+        tv_auth.onClickNew {
+            MyTagsActivity.start(requireActivity(), MyTagType.AUTH)
         }
 
 //        rl_guide.onClickNew {

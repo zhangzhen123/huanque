@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="26dp"
+    android:paddingLeft="4dp"
+    android:paddingRight="4dp">
+
+    <View
+        android:id="@+id/view_bg"
+        android:layout_width="0px"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_mine_tag"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="@+id/view_left"
+        app:layout_constraintRight_toRightOf="@+id/view_right"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_tag"
+        android:layout_width="13dp"
+        android:layout_height="16dp"
+        app:layout_constraintBottom_toBottomOf="@id/view_bg"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintLeft_toLeftOf="@id/view_bg"
+        app:layout_constraintRight_toLeftOf="@+id/tv_tag"
+        app:layout_constraintTop_toTopOf="@id/view_bg"
+        app:placeholderImage="@mipmap/logo_placeholder_medium" />
+
+    <TextView
+        android:id="@+id/tv_tag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="2dp"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_10"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/sdv_tag"
+        app:layout_constraintRight_toRightOf="@id/view_bg"
+        app:layout_constraintTop_toTopOf="@id/view_bg"
+        tools:text="可见当年" />
+
+    <View
+        android:id="@+id/view_left"
+        android:layout_width="1px"
+        android:layout_height="1px"
+        android:layout_marginRight="7dp"
+        app:layout_constraintRight_toLeftOf="@id/sdv_tag"
+        app:layout_constraintTop_toTopOf="@id/sdv_tag" />
+
+    <View
+        android:id="@+id/view_right"
+        android:layout_width="1px"
+        android:layout_height="1px"
+        android:layout_marginLeft="7dp"
+        app:layout_constraintLeft_toRightOf="@id/tv_tag"
+        app:layout_constraintTop_toTopOf="@id/sdv_tag" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
