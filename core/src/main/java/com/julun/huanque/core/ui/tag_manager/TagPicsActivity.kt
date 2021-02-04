@@ -69,7 +69,7 @@ class TagPicsActivity : BaseVMActivity<TagPicsViewModel>() {
                 val sdvLp = sdv.layoutParams as FrameLayout.LayoutParams
                 logger.info("holder.adapterPosition =${holder.adapterPosition}")
                 val w = width
-                val h = if (holder.adapterPosition == 0) {
+                val h = if (holder.adapterPosition == 1) {
                     width
                 } else {
                     (width * 1.411).toInt()

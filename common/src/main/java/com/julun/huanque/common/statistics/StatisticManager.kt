@@ -1,10 +1,12 @@
 package com.julun.huanque.common.statistics
 
 import android.os.Handler
+import com.julun.huanque.common.bean.forms.ShareForm
 import com.julun.huanque.common.bean.forms.StatisticForm
 import com.julun.huanque.common.bean.forms.StatisticItem
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.StatisticService
+import com.julun.huanque.common.net.services.UserService
 import com.julun.huanque.common.suger.coroutineExceptionHandler
 import com.julun.huanque.common.suger.nothing
 import com.julun.huanque.common.utils.JsonUtil
@@ -27,6 +29,8 @@ object StatisticManager {
     private val logger = ULog.getLogger("StatisticManager")
 
     private val service: StatisticService by lazy { Requests.create(StatisticService::class.java) }
+
+    private val userService: UserService by lazy { Requests.create(UserService::class.java) }
 
     //eventType
     const val Click = "Click"
@@ -134,6 +138,12 @@ object StatisticManager {
     fun destroy() {
         queue.clear()
         handler.removeCallbacksAndMessages(null)
+    }
+
+    fun shareLog(form: ShareForm) {
+        GlobalScope.launch(coroutineExceptionHandler) {
+            userService.shareLog(form).nothing()
+        }
     }
 
 }
