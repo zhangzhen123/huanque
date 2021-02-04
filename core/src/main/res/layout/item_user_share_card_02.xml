@@ -94,7 +94,7 @@
                     android:gravity="center_vertical"
                     android:maxLines="2"
                     android:textColor="@color/black_333"
-                    android:textSize="7sp"
+                    android:textSize="9sp"
                     android:textStyle="bold"
                     app:layout_constrainedWidth="true"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -116,7 +116,7 @@
                 android:includeFontPadding="false"
                 android:text="简介"
                 android:textColor="#B2B2B2"
-                android:textSize="8sp" />
+                android:textSize="9sp" />
 
 
             <LinearLayout
@@ -132,7 +132,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black_333"
-                    android:textSize="8sp"
+                    android:textSize="9sp"
                     android:textStyle="bold"
                     tools:text="23" />
 
@@ -148,7 +148,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:textColor="@color/black_333"
-                        android:textSize="8sp"
+                        android:textSize="9sp"
                         android:textStyle="bold"
                         tools:drawableStart="@mipmap/icon_sex_male"
                         tools:text="摩羯座" />
@@ -161,7 +161,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/dimen_15"
                     android:textColor="@color/black_333"
-                    android:textSize="8sp"
+                    android:textSize="9sp"
                     android:textStyle="bold"
                     tools:text="区域" />
 
@@ -177,7 +177,7 @@
                 android:includeFontPadding="false"
                 android:text="特征"
                 android:textColor="#B2B2B2"
-                android:textSize="8sp" />
+                android:textSize="9sp" />
 
             <TextView
                 android:id="@+id/tv_my_tags"
@@ -189,7 +189,7 @@
                 android:gravity="start"
                 android:lineSpacingExtra="@dimen/dimen_5"
                 android:textColor="@color/black_333"
-                android:textSize="8sp"
+                android:textSize="9sp"
                 android:textStyle="bold"
                 tools:text="相机 汽车王者荣耀" />
 
@@ -203,7 +203,7 @@
                 android:includeFontPadding="false"
                 android:text="理想型"
                 android:textColor="#B2B2B2"
-                android:textSize="8sp" />
+                android:textSize="9sp" />
 
             <TextView
                 android:id="@+id/tv_like_tags"
@@ -215,7 +215,7 @@
                 android:gravity="start"
                 android:lineSpacingExtra="@dimen/dimen_5"
                 android:textColor="@color/black_333"
-                android:textSize="8sp"
+                android:textSize="9sp"
                 android:textStyle="bold"
                 tools:text="相机 汽车王者荣耀" />
 
@@ -229,7 +229,7 @@
                 android:includeFontPadding="false"
                 android:text="社交意愿"
                 android:textColor="#B2B2B2"
-                android:textSize="8sp" />
+                android:textSize="9sp" />
 
             <TextView
                 android:id="@+id/tv_social_wish"
@@ -240,7 +240,7 @@
                 android:layout_marginEnd="@dimen/dimen_39"
                 android:gravity="start"
                 android:textColor="@color/black_333"
-                android:textSize="8sp"
+                android:textSize="9sp"
                 android:textStyle="bold"
                 tools:text="相机 汽车王者荣耀" />
 

@@ -112,9 +112,17 @@ class UserCardShareAdapter(var info: UserCardShareInfo? = null) : BaseDelegateMu
                 }
 
                 val strAgeSex = if (userInfo.sexType == Sex.MALE) {
-                    " / ${userInfo.age}岁 男"
+                    if(userInfo.age==0){
+                        " / 男"
+                    }else{
+                        " / ${userInfo.age}岁 男"
+                    }
                 } else {
-                    " / ${userInfo.age}岁 女"
+                    if(userInfo.age==0){
+                        " / 女"
+                    }else{
+                        " / ${userInfo.age}岁 女"
+                    }
                 }
                 holder.setText(R.id.tv_age, strAgeSex)
 
@@ -175,15 +183,23 @@ class UserCardShareAdapter(var info: UserCardShareInfo? = null) : BaseDelegateMu
                 }
 
                 val strAgeSex = if (userInfo.sexType == Sex.MALE) {
-                    "${userInfo.age}岁 男"
+                    if(userInfo.age==0){
+                        "男"
+                    }else{
+                        "${userInfo.age}岁 男"
+                    }
                 } else {
-                    "${userInfo.age}岁 女"
+                    if(userInfo.age==0){
+                        "女"
+                    }else{
+                        "${userInfo.age}岁 女"
+                    }
                 }
                 holder.setText(R.id.tv_age, strAgeSex)
                 var myTags = ""
                 kotlin.run {
                     userInfo.authTagList.forEachIndexed { index, userTagBean ->
-                        if (index == 2 || index == userInfo.likeTagList.size - 1) {
+                        if (index == 2 || index == userInfo.authTagList.size - 1) {
                             myTags += userTagBean.tagName
                             return@run
                         }
