@@ -246,13 +246,25 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
         } else {
             tv_empty_dynamic.hide()
         }
-        mDynamicPicAdapter.setList(post.lastPostPics)
+        val postPics = post.lastPostPics
+
         if (post.lastPostPics.isNotEmpty()) {
             recycler_view_dynamic.show()
+            if (postPics.size <= 3) {
+                mDynamicPicAdapter.setList(postPics)
+            } else {
+                mDynamicPicAdapter.setList(postPics.subList(0, 3))
+            }
         } else {
             recycler_view_dynamic.hide()
         }
-        mMineTagAdapter.setList(info.tagList)
+        val tagList = info.tagList
+
+        if (tagList.size <= 3) {
+            mMineTagAdapter.setList(tagList)
+        } else {
+            mMineTagAdapter.setList(tagList.subList(0, 3))
+        }
         if (info.tagList.isEmpty()) {
             tv_auth.text = "去认证"
         } else {
