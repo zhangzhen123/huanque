@@ -391,6 +391,7 @@
                 </FrameLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/con_dynamic"
                     android:layout_width="match_parent"
                     android:layout_height="60dp">
 
@@ -484,6 +485,7 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/con_invite_friend"
                     android:layout_width="match_parent"
                     android:layout_height="60dp">
 
@@ -567,6 +569,7 @@
 
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/con_setting"
                     android:layout_width="match_parent"
                     android:layout_height="60dp">
 
@@ -608,6 +611,7 @@
 
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/con_service"
                     android:layout_width="match_parent"
                     android:layout_height="60dp">
 

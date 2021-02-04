@@ -240,9 +240,8 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
         val realName = info.userBasic.realName == BusiConstant.True
         val userIcon = AppHelper.getUserIcon(headRealPeople, realName, "")
         if (userIcon == null) {
-            iv_mark.hide()
+            iv_mark.setImageResource(R.mipmap.icon_mine_empty_status)
         } else {
-            iv_mark.show()
             iv_mark.setImageResource(userIcon)
         }
 
@@ -391,9 +390,14 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
             HomePageActivity.newInstance(requireActivity(), SessionUtils.getUserId())
         }
 
-        headImage.onClickNew {
+        iv_mark.onClickNew {
 
-            if (mViewModel.userInfo.value?.getT()?.userBasic?.headRealPeople != true) {
+            if (mViewModel.userInfo.value?.isSuccess() != true) {
+                return@onClickNew
+            }
+
+            val userBasic = mViewModel.userInfo.value?.getT()?.userBasic ?: return@onClickNew
+            if (!userBasic.headRealPeople && userBasic.realName != BusiConstant.True) {
                 //未处于头像认证状态
 //                MyAlertDialog(requireActivity()).showAlertWithOKAndCancel(
 //                    "通过人脸识别技术确认照片为真人将获得认证标识，提高交友机会哦~",
@@ -538,6 +542,23 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
             tv_test.hide()
         }
         iv_edit.onClickNew {
+            val intent = Intent(requireActivity(), EditInfoActivity::class.java)
+            if (ForceUtils.activityMatch(intent)) {
+                startActivity(intent)
+            }
+            mNeedRefresh = true
+        }
+        con_setting.onClickNew {
+            ivSetting.performClick()
+        }
+        con_invite_friend.onClickNew {
+            RNPageActivity.start(requireActivity(), RnConstant.INVITE_FRIENDS_PAGE)
+        }
+        con_dynamic.onClickNew {
+            HomePageActivity.newInstanceByDynamic(requireActivity(), SessionUtils.getUserId())
+        }
+
+        con_service.onClickNew {
             val extra = Bundle()
             extra.putString(
                 BusiConstant.WEB_URL,
