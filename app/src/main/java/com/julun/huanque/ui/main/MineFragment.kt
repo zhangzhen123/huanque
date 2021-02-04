@@ -148,11 +148,11 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
 
         recycler_view_tag.layoutManager = LinearLayoutManager(requireActivity(), RecyclerView.HORIZONTAL, false)
         recycler_view_tag.adapter = mMineTagAdapter
-        mMineTagAdapter.setOnItemClickListener { adapter, view, position ->
-            val tempData = mMineTagAdapter.getItemOrNull(position) ?: return@setOnItemClickListener
-            AuthTagPicActivity.start(requireActivity(), tempData.tagId, true, false, true)
-            mNeedRefresh = true
-        }
+//        mMineTagAdapter.setOnItemClickListener { adapter, view, position ->
+//            val tempData = mMineTagAdapter.getItemOrNull(position) ?: return@setOnItemClickListener
+//            AuthTagPicActivity.start(requireActivity(), tempData.tagId, true, false, true)
+//            mNeedRefresh = true
+//        }
     }
 
 
@@ -265,10 +265,12 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
         } else {
             mMineTagAdapter.setList(tagList.subList(0, 3))
         }
-        if (info.tagList.isEmpty()) {
+        if (tagList.isEmpty()) {
             tv_auth.text = "去认证"
+            iv_empty_tag.show()
         } else {
             tv_auth.text = "认证标签"
+            iv_empty_tag.hide()
         }
 
         //显示图标
@@ -641,7 +643,7 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
             }
         }
 
-        tv_auth.onClickNew {
+        view_tag.onClickNew {
             MyTagsActivity.start(requireActivity(), MyTagType.AUTH)
         }
 
