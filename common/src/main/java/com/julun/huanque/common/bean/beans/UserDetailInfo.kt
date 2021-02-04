@@ -15,7 +15,19 @@ data class UserDetailInfo(
     //是否是默认昵称
     var nameDefault: String = "",
     //头像是否默认
-    var headDefault: String = ""
+    var headDefault: String = "",
+    //动态数据
+    var post: PostBean = PostBean(),
+    //标签数据
+    var tagList: List<UserTagBean> = listOf()
+) : Serializable
+
+data class PostBean(
+    //动态图片数据
+    var lastPostPics: List<String> = listOf(),
+    //动态数量
+    var postNum: Int = 0
+
 ) : Serializable
 
 data class UserBasic(
@@ -39,7 +51,9 @@ data class UserBasic(
     var age: Int = 0,
     //真人图片地址
     var authMark: String = "",
-    var perfection: Int = 0
+    var perfection: Int = 0,
+    //是否真人
+    var realName: String = ""
 )
 
 data class PerfectGuideBean(

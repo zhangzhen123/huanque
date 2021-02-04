@@ -87,6 +87,9 @@
         <activity
             android:name=".activity.PhoneNumLoginActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.main.MyLiveInfoActivity"
+            android:screenOrientation="portrait" />
 
         <activity android:name=".ui.cockroach.SecondAct" />
         <activity android:name=".ui.cockroach.LifecycleExceptionActivity" />
@@ -163,7 +166,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="unspecified"
             android:theme="@style/ActivityDialogStyleaa"
-            tools:replace="android:theme"/>
+            tools:replace="android:theme" />
         <activity android:name=".ui.test.TestPKActivity" />
 
         <meta-data

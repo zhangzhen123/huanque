@@ -114,7 +114,8 @@ class PrivateChatPanelView(context: Context, attrs: AttributeSet?) : IPanelView,
                     val tempView = viewPager.getChildAt(position)
                     if (tempView is SinglePanelView && tempView.type == EmojiType.PREROGATIVE) {
                         //亲密度表情
-                        tempView.setIntimate(mNeedLevel, mCurrentLevel,hasManager)
+//                        tempView.setIntimate(mNeedLevel, mCurrentLevel,hasManager)
+                        tempView.setIntimate(0, mCurrentLevel,hasManager)
                     }
                 }
             }
@@ -135,7 +136,8 @@ class PrivateChatPanelView(context: Context, attrs: AttributeSet?) : IPanelView,
         (0 until childCount).forEach {
             val tempView = viewPager.getChildAt(it)
             if (tempView is SinglePanelView && tempView.type == EmojiType.PREROGATIVE) {
-                tempView.setIntimate(needLevel, currentLevel,hasManager)
+//                tempView.setIntimate(needLevel, currentLevel,hasManager)
+                tempView.setIntimate(0, currentLevel,hasManager)
                 return@forEach
             }
         }

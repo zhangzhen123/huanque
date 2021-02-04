@@ -697,7 +697,8 @@ class PrivateConversationActivity : BaseActivity() {
         IntimateUtil.intimatePrivilegeList.forEach {
             if (it.key == "ZSBQ") {
                 val emojiLevel = it.minLevel
-                panel_emotion.setIntimate(emojiLevel, currentLent, hasManager)
+//                panel_emotion.setIntimate(emojiLevel, currentLent, hasManager)
+                panel_emotion.setIntimate(0, currentLent, hasManager)
                 return
             }
         }
@@ -2252,10 +2253,10 @@ class PrivateConversationActivity : BaseActivity() {
                     permission.granted -> {
                         logger.info("获取权限成功")
                         //判断亲密特权
-                        val result = hasManager || judgeIntimate("FSTP", "亲密等级达到lv2才能发送图片哦")
-                        if (result) {
-                            goToPictureSelectPager()
-                        }
+//                        val result = hasManager
+//                        if (result) {
+                        goToPictureSelectPager()
+//                        }
                     }
                     permission.shouldShowRequestPermissionRationale -> // Oups permission denied
                         ToastUtils.show("权限无法获取")
