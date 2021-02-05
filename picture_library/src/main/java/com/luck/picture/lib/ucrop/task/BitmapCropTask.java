@@ -139,11 +139,17 @@ public class BitmapCropTask extends AsyncTask<Void, Void, Throwable> {
             mViewBitmap = rotatedBitmap;
         }
 
-        cropOffsetX = Math.round((mCropRect.left - mCurrentImageRect.left) / mCurrentScale);
-        cropOffsetY = Math.round((mCropRect.top - mCurrentImageRect.top) / mCurrentScale);
-        mCroppedImageWidth = Math.round(mCropRect.width() / mCurrentScale);
-        mCroppedImageHeight = Math.round(mCropRect.height() / mCurrentScale);
+//        cropOffsetX = Math.round((mCropRect.left - mCurrentImageRect.left) / mCurrentScale);
+//        cropOffsetY = Math.round((mCropRect.top - mCurrentImageRect.top) / mCurrentScale);
+//        mCroppedImageWidth = Math.round(mCropRect.width() / mCurrentScale);
+//        mCroppedImageHeight = Math.round(mCropRect.height() / mCurrentScale);
 
+        //解决计算中Math.round的四舍6入5成双导致最终会多出1像素而报错 x + width must be <= bitmap.width()
+        //这里全部向下取整 防止报错
+        cropOffsetX = (int)((mCropRect.left - mCurrentImageRect.left) / mCurrentScale);
+        cropOffsetY = (int)((mCropRect.top - mCurrentImageRect.top) / mCurrentScale);
+        mCroppedImageWidth = (int)(mCropRect.width() / mCurrentScale);
+        mCroppedImageHeight = (int)(mCropRect.height() / mCurrentScale);
         boolean shouldCrop = shouldCrop(mCroppedImageWidth, mCroppedImageHeight);
         Log.i(TAG, "Should crop: " + shouldCrop);
 
