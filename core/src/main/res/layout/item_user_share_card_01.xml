@@ -198,7 +198,7 @@
                     android:layout_alignTop="@+id/tv_title1"
                     android:layout_alignBottom="@+id/tv_title1"
                     android:layout_toEndOf="@+id/tv_title1"
-                    android:src="@mipmap/icon_school" />
+                    android:src="@mipmap/icon_share_card_like" />
             </RelativeLayout>
 
             <RelativeLayout

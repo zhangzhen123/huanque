@@ -77,7 +77,6 @@ class DynamicDetailViewModel : BaseViewModel() {
         viewModelScope.launch {
             request({
                 val result = service.queryPostDetail(PostDetailForm(postId)).dataConvert(intArrayOf(501))
-                //todo
 //                result.comments.clear()
                 dynamicInfo.value = result
                 mOffset += result.comments.size

@@ -90,12 +90,6 @@ class ScoreDialogFragment : BaseDialogFragment() {
      * 初始化ViewModel相关
      */
     private fun initViewModel() {
-//        playerViewModel.privateMessageView.observe(this, object : Observer<PrivateMessageBean> {
-//            override fun onChanged(t: PrivateMessageBean?) {
-//                //todo
-//            }
-//
-//        })
 
         playerViewModel.scoreDismissFlag.observe(this, Observer {
             if (it != null) {

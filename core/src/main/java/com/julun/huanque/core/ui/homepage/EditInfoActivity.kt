@@ -409,8 +409,8 @@ class EditInfoActivity : BaseActivity() {
             }
         })
         mEditInfoViewModel.processData.observe(this, Observer {
-            if (it != null) {
-                updateProgress(it.perfection)
+            if (it != null&&it.isSuccess()) {
+                updateProgress(it.requireT().perfection)
             }
             if (mLoadingDialog.isShowing) {
                 mLoadingDialog.dismiss()

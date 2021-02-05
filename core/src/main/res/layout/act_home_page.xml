@@ -520,24 +520,31 @@
         android:layout_marginRight="15dp"
         android:background="@drawable/bg_enable"
         android:visibility="gone"
-        tools:visibility="visible"
+        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="@id/view_action"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/view_action">
+        app:layout_constraintTop_toTopOf="@id/view_action"
+        tools:visibility="visible">
+
+        <ImageView
+            android:id="@+id/iv_edit_title"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dimen_50"
+            android:src="@mipmap/icon_home_page_edit_info" />
 
         <TextView
             android:id="@+id/tv_edit_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:drawablePadding="3dp"
+            android:layout_toEndOf="@+id/iv_edit_title"
+            android:layout_centerVertical="true"
+            android:includeFontPadding="false"
+            android:layout_marginStart="@dimen/dimen_5"
             android:text="编辑资料"
-            android:textStyle="bold"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_16"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent" />
+            android:textStyle="bold" />
 
 
     </RelativeLayout>
@@ -623,6 +630,7 @@
         app:layout_constraintBottom_toBottomOf="@id/view_top"
         app:layout_constraintRight_toLeftOf="@+id/iv_more"
         app:layout_constraintTop_toTopOf="@id/view_top" />
+
     <ImageView
         android:id="@+id/iv_share_black"
         android:layout_width="44dp"
@@ -633,6 +641,7 @@
         app:layout_constraintBottom_toBottomOf="@id/view_top"
         app:layout_constraintRight_toLeftOf="@+id/iv_more_black"
         app:layout_constraintTop_toTopOf="@id/view_top" />
+
     <TextView
         android:id="@+id/tv_user_name"
         android:layout_width="wrap_content"

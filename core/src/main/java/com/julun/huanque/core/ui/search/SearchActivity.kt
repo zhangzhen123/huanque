@@ -509,6 +509,6 @@ class SearchActivity : BaseVMActivity<SearchViewModel>() {
     }
 
     override fun showLoadState(state: NetState) {
-        TODO("Not yet implemented")
+
     }
 }

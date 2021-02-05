@@ -256,7 +256,7 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
         }
         mAdapter.onAdapterChildClickNew { _, view, position ->
             when (view.id) {
-                //todo
+
 //                R.id.btn_action -> {
 //
 //                    val bean = mAdapter.getItemOrNull(position)?.content as? HomeRecomItem ?: return@onAdapterChildClickNew

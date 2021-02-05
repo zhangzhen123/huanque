@@ -43,7 +43,7 @@ class EditInfoViewModel : BaseViewModel() {
     val socialSuccessData: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
     //资料完善度数据
-    val processData: MutableLiveData<UserProcessBean> by lazy { MutableLiveData<UserProcessBean>() }
+    val processData: MutableLiveData<ReactiveData<UserProcessBean>> by lazy { MutableLiveData<ReactiveData<UserProcessBean>>() }
 
     //封面数据变动
     val homePagePicChangeBean: MutableLiveData<HomePagePicBean> by lazy { MutableLiveData<HomePagePicBean>() }
@@ -115,7 +115,7 @@ class EditInfoViewModel : BaseViewModel() {
         viewModelScope.launch {
             request({
                 val result = userService.updateCover(SaveCoverForm(logId, coverPic)).dataConvert()
-                processData.value = result
+                processData.value = result.convertRtData()
                 val picBean = HomePagePicBean()
                 picBean.coverPic = coverPic ?: ""
                 if (result.logId != 0L) {
@@ -136,6 +136,8 @@ class EditInfoViewModel : BaseViewModel() {
                     originConverPicIdList.add(result.logId)
                 }
                 EventBus.getDefault().post(CanSeeMaxCountChangeEvent(result.seeMaxCoverNum))
+            },error = {
+                processData.value=it.convertError()
             })
         }
     }

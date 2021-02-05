@@ -282,7 +282,6 @@ class UserCardShareActivity : BaseVMActivity<UserCardShareViewModel>() {
         })
         mViewModel.userCardInfo.observe(this, Observer {
             if (it.isSuccess()) {
-                //todo test
                 cardAdapter.info = it.requireT()
                 cardAdapter.setList(it.requireT().bitmaps)
                 rv_share_contents.post {

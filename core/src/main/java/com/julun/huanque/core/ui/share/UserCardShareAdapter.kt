@@ -183,12 +183,14 @@ class UserCardShareAdapter(var info: UserCardShareInfo? = null) : BaseDelegateMu
                 }
 
                 val strAgeSex = if (userInfo.sexType == Sex.MALE) {
+                    holder.setImageResource(R.id.iv_sex, R.mipmap.icon_share_card_sex_male)
                     if(userInfo.age==0){
                         "男"
                     }else{
                         "${userInfo.age}岁 男"
                     }
                 } else {
+                    holder.setImageResource(R.id.iv_sex, R.mipmap.icon_share_card_sex_male)
                     if(userInfo.age==0){
                         "女"
                     }else{

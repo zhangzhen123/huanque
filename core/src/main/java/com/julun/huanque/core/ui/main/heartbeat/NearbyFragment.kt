@@ -947,7 +947,7 @@ class NearbyFragment : BaseLazyFragment() {
     }
 
     private fun startPlayAni(reset: Boolean = false) {
-        //todo
+
         if (lifecycle.currentState.isAtLeast(Lifecycle.State.CREATED))
             mRecyclerView.postDelayed({
                 if (reset) {

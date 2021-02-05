@@ -701,8 +701,10 @@ class HomePageActivity : BaseActivity() {
             if (it == true) {
                 //选中了动态
                 tv_edit_content.text = "发布动态"
+                iv_edit_title.setImageResource(R.mipmap.icon_home_page_publish)
             } else {
                 tv_edit_content.text = "编辑资料"
+                iv_edit_title.setImageResource(R.mipmap.icon_home_page_edit_info)
             }
         })
 

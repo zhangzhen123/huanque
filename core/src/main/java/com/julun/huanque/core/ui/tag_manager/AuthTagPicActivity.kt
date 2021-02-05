@@ -15,6 +15,7 @@ import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.base.BaseVMActivity
 import com.julun.huanque.common.base.dialog.BottomActionDialog
+import com.julun.huanque.common.base.dialog.CommonDialogFragment
 import com.julun.huanque.common.base.dialog.LoadingDialog
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.NetState
@@ -27,7 +28,6 @@ import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.BottomActionCode
 import com.julun.huanque.common.constant.ManagerTagCode
 import com.julun.huanque.common.constant.TagPicAuthStatus
-import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.manager.aliyunoss.OssUpLoadManager
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.ToastUtils
@@ -76,8 +76,6 @@ class AuthTagPicActivity : BaseVMActivity<AuthTagPicViewModel>() {
 
     override fun getLayoutId(): Int = R.layout.activity_tag_auth_pic
 
-    //认证失败弹窗
-    private var mTagAuthFailFragment: TagAuthFailFragment? = null
 
     private val mLoadingDialog: LoadingDialog by lazy { LoadingDialog(this) }
     private var bottomDialog: BottomActionDialog? = null
@@ -244,8 +242,14 @@ class AuthTagPicActivity : BaseVMActivity<AuthTagPicViewModel>() {
             when (view.id) {
                 R.id.tv_fail_reason -> {
                     //认证失败
-                    mTagAuthFailFragment = TagAuthFailFragment.newInstance(tempData.auditReason)
-                    mTagAuthFailFragment?.show(supportFragmentManager, "TagAuthFailFragment")
+//                    mTagAuthFailFragment = TagAuthFailFragment.newInstance(tempData.auditReason)
+//                    mTagAuthFailFragment?.show(supportFragmentManager, "TagAuthFailFragment")
+                    CommonDialogFragment.create(
+                        title = "审核失败原因",
+                        content = tempData.auditReason,
+                        imageRes = R.mipmap.bg_dialog_error,
+                        okText = "我知道了"
+                    ).show(this@AuthTagPicActivity)
                 }
                 R.id.tv_add_pic -> {
                     logger.info("添加图片")

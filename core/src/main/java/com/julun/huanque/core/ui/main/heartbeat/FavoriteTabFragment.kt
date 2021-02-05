@@ -139,7 +139,6 @@ class FavoriteTabFragment : BaseVMFragment<FavoriteTabViewModel>() {
         authorAdapter.animationEnable = true
         authorAdapter.setAnimationWithDefault(BaseQuickAdapter.AnimationType.SlideInBottom)
 //        authorAdapter.addFooterView(bottomLayout)
-        //todo
 //        mRefreshLayout.isEnabled = false
 //        mRefreshLayout.setOnRefreshListener {
 //            requestData(QueryType.REFRESH, currentTab?.typeCode)
@@ -183,7 +182,6 @@ class FavoriteTabFragment : BaseVMFragment<FavoriteTabViewModel>() {
 //                            val totalItemCount = layoutManager.itemCount
 //                            val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
 //                            if (!loading && totalItemCount <= lastVisibleItem + 1) {
-//                                //todo 加载下一页
 //                                logger.info("加载下一页")
 //                                requestData(QueryType.LOAD_MORE, currentTab?.typeCode)
 //                                actionDone = true

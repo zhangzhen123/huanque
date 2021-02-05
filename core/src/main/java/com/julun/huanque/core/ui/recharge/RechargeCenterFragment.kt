@@ -525,7 +525,6 @@ class RechargeCenterFragment : BaseVMFragment<RechargeFragmentViewModel>() {
                 BannerTouchType.Toast -> {
                     //弹窗类型
                     if (model.touchValue == "FirstRecharge") {
-                        //todo
 //                        val rechargeInfo = mFirstRechargeViewModel?.oneYuanInfo?.value
 //                            ?: return@Delegate
 //                        OneYuanDialogFragment.newInstance(rechargeInfo).showPositive(childFragmentManager, "OneYuanDialogFragment")
