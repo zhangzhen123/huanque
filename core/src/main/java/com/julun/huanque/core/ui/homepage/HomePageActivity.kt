@@ -479,7 +479,8 @@ class HomePageActivity : BaseActivity() {
 //            RNPageActivity.start(this, RnConstant.EDIT_MINE_HOMEPAGE)
             if (mHomePageViewModel.showDynamic.value == true) {
                 val intent = Intent(this, PublishStateActivity::class.java)
-                startActivityForResult(intent, UserDynamicFragment.PublishRequestCode)
+//                startActivityForResult(intent, UserDynamicFragment.PublishRequestCode)
+                mPagerAdapter?.getItem(1)?.startActivityForResult(intent, UserDynamicFragment.PublishRequestCode)
             } else {
                 val intent = Intent(this, EditInfoActivity::class.java)
                 if (ForceUtils.activityMatch(intent)) {
