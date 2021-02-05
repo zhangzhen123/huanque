@@ -133,8 +133,8 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
         initRecyclerView()
 //        rvUserTools.layoutManager = GridLayoutManager(context, 4)
 //        rvUserTools.adapter = toolsAdapter
-        tvQueBi.setTFDinAltB()
-        tvLingQian.setTFDinAltB()
+        tvQueBi.setTFDinCdc2()
+        tvLingQian.setTFDinCdc2()
         MixedHelper.setSwipeRefreshStyle(refreshView)
         initViewModel()
     }
