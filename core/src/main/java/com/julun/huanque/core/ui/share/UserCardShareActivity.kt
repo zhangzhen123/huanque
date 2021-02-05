@@ -19,11 +19,15 @@ import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.base.BaseVMActivity
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.NetState
-import com.julun.huanque.common.bean.beans.*
+import com.julun.huanque.common.bean.beans.ShareObject
+import com.julun.huanque.common.bean.beans.SharePosterInfo
+import com.julun.huanque.common.bean.beans.ShareType
+import com.julun.huanque.common.bean.forms.ShareForm
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.interfaces.routerservice.LoginAndShareService
 import com.julun.huanque.common.net.NAction
+import com.julun.huanque.common.statistics.StatisticManager
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.FileUtils
 import com.julun.huanque.common.utils.ForceUtils
@@ -74,11 +78,7 @@ class UserCardShareActivity : BaseVMActivity<UserCardShareViewModel>() {
     private lateinit var mStackLayoutManager: StackLayoutManager
     private var currentSelectView: View? = null
 
-    //分享目标类型(可选项：Banner、Room、InviteFriend、Other)
-    private var mShareKeyType = ""
-
-    //分享目标Id ，如果是直播间，则填直播间ID, 如果是邀友，则填邀友海报ID
-    private var mShareKeyId = ""
+    private var mShareKeyType = "SocialCard"
 
     private var mUserId = 0L
 
@@ -110,7 +110,6 @@ class UserCardShareActivity : BaseVMActivity<UserCardShareViewModel>() {
         rv_share_contents.layoutManager = mStackLayoutManager
         rv_share_contents.adapter = cardAdapter
 
-
         ll_bottom.onClick { }
         mViewModel.queryCardInfo(mUserId)
         mViewModel.queryShareType()
@@ -135,10 +134,13 @@ class UserCardShareActivity : BaseVMActivity<UserCardShareViewModel>() {
         mStackLayoutManager.setItemChangedListener(object : StackLayoutManager.ItemChangedListener {
             override fun onItemChanged(position: Int) {
                 logger.info("onItemChanged pos=$position")
-                tv_index.text="${position+1}/${cardAdapter.data.size}"
+                tv_index.text = "${position + 1}/${cardAdapter.data.size}"
                 currentSelectView = cardAdapter.getViewByPosition(position, R.id.card_container)
             }
         })
+        cardAdapter.setOnItemClickListener { _, _, _ ->
+            finish()
+        }
         shareAdapter.onAdapterClickNew { _, _, position ->
 
             val item = shareAdapter.getItemOrNull(position) ?: return@onAdapterClickNew
@@ -169,6 +171,7 @@ class UserCardShareActivity : BaseVMActivity<UserCardShareViewModel>() {
      * 分享图片
      */
     private fun shareImage(type: String, bitmap: Bitmap) {
+        val mShareKeyId = "$mUserId"
         when (type) {
             ShareTypeEnum.FriendCircle -> {
                 //朋友圈
@@ -222,7 +225,8 @@ class UserCardShareActivity : BaseVMActivity<UserCardShareViewModel>() {
                     }.observeOn(AndroidSchedulers.mainThread()).subscribe {
                         if (it == true) {
                             ToastUtils.show("保存成功")
-
+                            val form = ShareForm("SocialCard", "$mUserId", ShareTypeEnum.SaveImage)
+                            StatisticManager.shareLog(form)
                         }
                     }
                 }
@@ -270,7 +274,6 @@ class UserCardShareActivity : BaseVMActivity<UserCardShareViewModel>() {
     }
 
 
-
     private fun initViewModel() {
         mViewModel.shares.observe(this, Observer {
             if (it.isSuccess()) {
@@ -283,7 +286,7 @@ class UserCardShareActivity : BaseVMActivity<UserCardShareViewModel>() {
                 cardAdapter.info = it.requireT()
                 cardAdapter.setList(it.requireT().bitmaps)
                 rv_share_contents.post {
-                    tv_index.text="1/${cardAdapter.data.size}"
+                    tv_index.text = "1/${cardAdapter.data.size}"
                     currentSelectView = cardAdapter.getViewByPosition(0, R.id.card_container)
                 }
             }

@@ -39,7 +39,7 @@ public class StackLayoutManager extends RecyclerView.LayoutManager {
     /**
      * the offset unit,deciding current position(the sum of  {@link #mItemWidth} and {@link #mSpace})
      */
-    private int mUnit;
+    private int mUnit = mSpace;//防止除零报错
     //item width
     private int mItemWidth;
     private int mItemHeight;

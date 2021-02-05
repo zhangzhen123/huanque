@@ -6,6 +6,7 @@ import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.R
 import com.julun.huanque.common.bean.beans.ChooseTagBean
 import com.julun.huanque.common.bean.beans.LoginPicBean
+import com.julun.huanque.common.suger.loadImageNoResize
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.ScreenUtils
 
@@ -28,7 +29,9 @@ class LoginPicAdapter() : BaseQuickAdapter<LoginPicBean, BaseViewHolder>(R.layou
         }
         holder.itemView.layoutParams = params
         val headImage = holder.getView<SimpleDraweeView>(R.id.headImage)
-        ImageUtils.loadImageLocal(headImage, item.resourceId)
+//        ImageUtils.loadImageLocal(headImage, item.resourceId)
+        val url="social/login/tag_${item.resourceId}.jpg"
+        headImage.loadImageNoResize(url)
     }
 
 

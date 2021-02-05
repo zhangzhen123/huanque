@@ -57,7 +57,7 @@
                     android:paddingStart="@dimen/dimen_1"
                     android:paddingEnd="@dimen/dimen_1"
                     android:textColor="@color/white"
-                    android:textSize="7sp"
+                    android:textSize="8sp"
                     tools:text="杭州 余杭区" />
 
                 <TextView
@@ -67,8 +67,7 @@
                     android:gravity="start|center_vertical"
                     android:includeFontPadding="false"
                     android:textColor="@color/white"
-                    android:textSize="7sp"
-                    android:textStyle="bold"
+                    android:textSize="8sp"
                     tools:text=" / 23.3岁 女" />
 
             </LinearLayout>
@@ -151,7 +150,7 @@
             android:gravity="center_vertical"
             android:maxLines="2"
             android:textColor="@color/black_333"
-            android:textSize="8sp"
+            android:textSize="9sp"
             android:textStyle="bold"
             tools:text="抠脚大抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉抠脚大汉" />
 
@@ -179,7 +178,7 @@
                     android:layout_height="@dimen/dimen_12"
                     android:text="理想型："
                     android:textColor="#B2B2B2"
-                    android:textSize="8sp" />
+                    android:textSize="9sp" />
 
                 <TextView
                     android:id="@+id/tv_like_tags"
@@ -190,7 +189,7 @@
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:textColor="@color/black_333"
-                    android:textSize="8sp"
+                    android:textSize="9sp"
                     tools:text="理想型,理想型w,理想型" />
 
                 <ImageView
@@ -219,7 +218,7 @@
                     android:layout_height="@dimen/dimen_12"
                     android:text="社交意愿："
                     android:textColor="#B2B2B2"
-                    android:textSize="8sp" />
+                    android:textSize="9sp" />
 
                 <TextView
                     android:id="@+id/tv_social_wish"
@@ -230,7 +229,7 @@
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:textColor="@color/black_333"
-                    android:textSize="8sp"
+                    android:textSize="9sp"
                     tools:text="理想型,理想型w,理想型" />
 
                 <ImageView

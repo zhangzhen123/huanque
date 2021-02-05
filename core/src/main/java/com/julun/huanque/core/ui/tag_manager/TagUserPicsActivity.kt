@@ -9,7 +9,6 @@ import android.view.Gravity
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.view.ViewCompat
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.chad.library.adapter.base.BaseQuickAdapter
@@ -20,15 +19,12 @@ import com.julun.huanque.common.base.BaseVMActivity
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.QueryType
-import com.julun.huanque.common.bean.beans.UserTagBean
 import com.julun.huanque.common.bean.beans.TagUserPic
 import com.julun.huanque.common.bean.beans.TagUserPicListBean
+import com.julun.huanque.common.bean.beans.UserTagBean
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.IntentParamKey
 import com.julun.huanque.common.constant.ManagerTagCode
-import com.julun.huanque.common.widgets.layoutmanager.stacklayout.StackAlign
-import com.julun.huanque.common.widgets.layoutmanager.stacklayout.StackLayoutConfig
-import com.julun.huanque.common.widgets.layoutmanager.stacklayout.StackLayoutManager
 import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.ScreenUtils
@@ -37,7 +33,6 @@ import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.viewmodel.TagManagerViewModel
 import com.julun.huanque.core.R
 import kotlinx.android.synthetic.main.activity_tag_user_pics.*
-import kotlinx.android.synthetic.main.view_runway_simple.view.*
 import org.jetbrains.anko.startActivity
 
 /**
@@ -80,7 +75,7 @@ class TagUserPicsActivity : BaseVMActivity<TagUserPicsViewModel>() {
                 sdv_tag.loadImage(cTagUserPicListBean?.tagIcon ?: "", 16f, 16f)
                 holder.setText(R.id.tv_tag, cTagUserPicListBean?.tagName)
                 val totalCount = picListAdapter.data.size
-                holder.setText(R.id.tv_index, "${totalCount - holder.adapterPosition}/${totalCount}")
+                holder.setText(R.id.tv_index, "${holder.adapterPosition+1}/${totalCount}")
             }
 
         }
@@ -104,14 +99,19 @@ class TagUserPicsActivity : BaseVMActivity<TagUserPicsViewModel>() {
         currentTagId = intent.extras?.getInt(ManagerTagCode.TAG_INFO)
         currentLikeUserId = intent.extras?.getLong(IntentParamKey.USER_ID.name)
 
-        val config = StackLayoutConfig()
-        config.secondaryScale = 1f
-        config.scaleRatio = 0.4f
-        config.maxStackCount = 2
-        config.initialStackCount = 2
-        config.space = dp2px(10)
-        config.align = StackAlign.RIGHT
-        rv_pics.layoutManager = StackLayoutManager(config)
+//        val config = StackLayoutConfig()
+//        config.secondaryScale = 1f
+//        config.scaleRatio = 0.4f
+//        config.maxStackCount = 2
+//        config.initialStackCount = 2
+//        config.space = dp2px(10)
+//        config.align = StackAlign.RIGHT
+//        rv_pics.layoutManager = StackLayoutManager(config)
+        val manger = com.julun.huanque.common.widgets.layoutmanager.stacklayout2.StackLayoutManager(
+            com.julun.huanque.common.widgets.layoutmanager.stacklayout2.StackLayoutManager.ScrollOrientation.RIGHT_TO_LEFT,
+            2
+        )
+        rv_pics.layoutManager = manger
 
 
         rv_pics.adapter = picListAdapter
@@ -236,18 +236,16 @@ class TagUserPicsActivity : BaseVMActivity<TagUserPicsViewModel>() {
     }
 
     private fun renderData(info: TagUserPicListBean) {
-        val tuthPicList = info.authPicList.reversed()
-        picList.addAll(tuthPicList)
+//        val tuthPicList = info.authPicList.reversed()
+        picList.addAll(info.authPicList)
         picListAdapter.notifyDataSetChanged()
 //        var tempIndex = -1
-        rv_pics.post {
-            rv_pics.scrollToPosition(picListAdapter.data.size)
-        }
 //        rv_pics.post {
-//            if (tempIndex >= 0) {
-//                rv_pics.scrollToPosition(tempIndex)
-//            } else {
-//                rv_pics.scrollToPosition(picListAdapter.data.size)
+//            rv_pics.scrollToPosition(picListAdapter.data.size)
+//        }
+//        rv_pics.post {
+//            if (picListAdapter.data.size > 0) {
+//                rv_pics.scrollToPosition(picListAdapter.data.size - 1)
 //            }
 //        }
 

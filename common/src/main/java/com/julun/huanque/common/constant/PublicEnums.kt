@@ -447,7 +447,7 @@ object ShareTypeEnum {
     const val FriendCircle = "FriendCircle"
     const val Sina = "Sina"
     const val ShareImage = "ShareImage"
-    const val SaveImage = "SaveImage"
+    const val SaveImage = "Photo"
 
     //站内分享
     const val Chat = "Chat"

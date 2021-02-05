@@ -4,6 +4,7 @@
     android:id="@+id/root_share_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="bottom"
     android:background="@color/percent40translucentBlack"
     android:orientation="vertical">
 
@@ -11,9 +12,8 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_share_contents"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="@dimen/dimen_15"
-        android:layout_weight="1" />
+        android:layout_marginBottom="@dimen/dimen_5"
+        android:layout_height="480dp" />
 
 
     <TextView
@@ -21,13 +21,14 @@
         android:layout_width="wrap_content"
         android:layout_height="@dimen/dimen_20"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/dimen_1"
         android:layout_marginBottom="@dimen/dimen_8"
         android:background="@drawable/bg_shape_black_p30_02"
+        android:includeFontPadding="false"
         android:paddingStart="@dimen/dimen_10"
         android:paddingEnd="@dimen/dimen_10"
-        android:textStyle="bold"
+        android:gravity="center"
         android:textColor="@color/white"
+        android:textStyle="bold"
         tools:text="1/3" />
 
     <LinearLayout
