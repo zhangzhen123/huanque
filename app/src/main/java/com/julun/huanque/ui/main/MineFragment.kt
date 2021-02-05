@@ -103,6 +103,15 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
         val lt = llTitleRootView.layoutParams as ConstraintLayout.LayoutParams
         lt.topMargin = StatusBarUtil.getStatusBarHeight(requireContext())
 
+        val biWidth = ScreenUtils.getScreenWidth() / 2 + dp2px(7)
+        val rlQueBiParams = rlQueBi.layoutParams
+        rlQueBiParams.width = biWidth
+        rlQueBi.layoutParams = rlQueBiParams
+
+        val rlLingQianParams = rlLingQian.layoutParams
+        rlLingQianParams.width = biWidth
+        rlLingQian.layoutParams = rlLingQianParams
+
         val tagParams = con_tag.layoutParams
         tagParams.height = (ScreenUtils.getScreenWidth() - dp2px(30)) * 60 / 345
         con_tag.layoutParams = tagParams
@@ -133,8 +142,8 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
         initRecyclerView()
 //        rvUserTools.layoutManager = GridLayoutManager(context, 4)
 //        rvUserTools.adapter = toolsAdapter
-        tvQueBi.setTFDinAltB()
-        tvLingQian.setTFDinAltB()
+        tvQueBi.setTFDinCdc2()
+        tvLingQian.setTFDinCdc2()
         MixedHelper.setSwipeRefreshStyle(refreshView)
         initViewModel()
     }

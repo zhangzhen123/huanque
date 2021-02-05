@@ -238,7 +238,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="15dp"
-                        android:src="@mipmap/icon_arrow_right_gray"
+                        android:src="@mipmap/icon_mine_arrow_right"
                         app:layout_constraintBottom_toBottomOf="@id/headImage"
                         app:layout_constraintRight_toRightOf="parent"
                         app:layout_constraintTop_toTopOf="@id/headImage" />
@@ -340,10 +340,10 @@
                         android:layout_width="212dp"
                         android:layout_height="34dp"
                         android:layout_marginLeft="20dp"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
+                        android:src="@mipmap/bg_mine_empty_tag"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        android:src="@mipmap/bg_mine_empty_tag"/>
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <View
                         android:id="@+id/view_tag"
@@ -359,35 +359,37 @@
 
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dimen_70"
-                    android:layout_marginTop="15dp">
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp">
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:layout_gravity="bottom"
-                        android:background="@drawable/bg_shape_top_white1" />
+                    <!--                    <View-->
+                    <!--                        android:layout_width="match_parent"-->
+                    <!--                        android:layout_height="40dp"-->
+                    <!--                        android:layout_gravity="bottom"-->
+                    <!--                        android:background="@drawable/bg_shape_top_white1" />-->
 
-                    <LinearLayout
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/dimen_70"
-                        android:gravity="center_vertical"
-                        android:paddingLeft="13dp"
-                        android:paddingRight="13dp">
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical">
 
                         <LinearLayout
                             android:id="@+id/rlQueBi"
-                            android:layout_width="0dp"
+                            android:layout_width="200dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:background="@drawable/bg_user_balance"
-                            android:orientation="vertical">
+                            android:orientation="vertical"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
 
                             <TextView
                                 android:id="@+id/tvQueBiTitle"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="15dp"
+                                android:layout_marginTop="9dp"
                                 android:text="鹊币"
                                 android:textColor="@color/black_999"
                                 android:textSize="@dimen/sp_12" />
@@ -398,8 +400,8 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="15dp"
                                 android:layout_marginTop="7dp"
+                                android:layout_marginBottom="9dp"
                                 android:gravity="center"
-                                android:includeFontPadding="false"
                                 android:textColor="@color/black_333"
                                 android:textSize="22sp"
                                 android:textStyle="bold"
@@ -410,13 +412,13 @@
 
                         <LinearLayout
                             android:id="@+id/rlLingQian"
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_marginStart="@dimen/dimen_15"
-                            android:layout_marginLeft="@dimen/dimen_15"
-                            android:layout_weight="1"
+                            android:layout_width="200dp"
+                            android:layout_height="wrap_content"
                             android:background="@drawable/bg_user_balance"
-                            android:orientation="vertical">
+                            android:orientation="vertical"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
 
 
                             <TextView
@@ -424,6 +426,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="15dp"
+                                android:layout_marginTop="9dp"
                                 android:text="零钱"
                                 android:textColor="@color/black_999"
                                 android:textSize="@dimen/sp_12" />
@@ -435,15 +438,15 @@
                                 android:layout_below="@+id/tvLQTitle"
                                 android:layout_marginLeft="15dp"
                                 android:layout_marginTop="7dp"
+                                android:layout_marginBottom="9dp"
                                 android:drawablePadding="@dimen/dimen_2"
                                 android:gravity="center"
-                                android:includeFontPadding="false"
                                 android:textColor="@color/black_333"
                                 android:textSize="22sp"
                                 android:textStyle="bold"
                                 tools:text="9999999" />
                         </LinearLayout>
-                    </LinearLayout>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                 </FrameLayout>
 
@@ -493,7 +496,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="15dp"
-                        android:src="@mipmap/icon_arrow_right_gray"
+                        android:src="@mipmap/icon_mine_arrow_right"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
@@ -534,7 +537,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="15dp"
-                        android:src="@mipmap/icon_arrow_right_gray"
+                        android:src="@mipmap/icon_mine_arrow_right"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
@@ -575,7 +578,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="15dp"
-                        android:src="@mipmap/icon_arrow_right_gray"
+                        android:src="@mipmap/icon_mine_arrow_right"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
@@ -617,7 +620,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="15dp"
-                        android:src="@mipmap/icon_arrow_right_gray"
+                        android:src="@mipmap/icon_mine_arrow_right"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
@@ -659,7 +662,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="15dp"
-                        android:src="@mipmap/icon_arrow_right_gray"
+                        android:src="@mipmap/icon_mine_arrow_right"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
@@ -701,7 +704,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="15dp"
-                        android:src="@mipmap/icon_arrow_right_gray"
+                        android:src="@mipmap/icon_mine_arrow_right"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
