@@ -41,7 +41,7 @@ class WatchAdapter : BaseQuickAdapter<WatchHistoryBean, BaseViewHolder>(R.layout
     var needBlur = false
 
     override fun convert(holder: BaseViewHolder, item: WatchHistoryBean) {
-        val adapterPosition = holder.adapterPosition
+        val adapterPosition = holder.adapterPosition-headerLayoutCount
         val sdv_header = holder.getView<SimpleDraweeView>(R.id.sdv_header)
         val tv_nickname = holder.getView<TextView>(R.id.tv_nickname)
         val tv_introduce = holder.getView<TextView>(R.id.tv_introduce)

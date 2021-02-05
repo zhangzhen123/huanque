@@ -159,6 +159,7 @@ class WatchFragment : BaseFragment() {
         mViewModel.historyData.observe(this, Observer {
             if (it != null) {
                 swipe_refresh.isRefreshing = false
+                mAdapter.maxCount = it.extData?.viewNum?:0
                 if (it.isPull) {
                     //刷新
                     mAdapter.setList(it.list)
@@ -176,8 +177,8 @@ class WatchFragment : BaseFragment() {
 
         mViewModel.watchExtra.observe(this, Observer {
             if (it != null) {
-                mAdapter.maxCount = it.viewNum
-                mAdapter.notifyDataSetChanged()
+//                mAdapter.maxCount = it.viewNum
+//                mAdapter.notifyDataSetChanged()
                 if (it.guideText.isEmpty()) {
                     mHeaderView?.hide()
                 } else {
