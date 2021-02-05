@@ -48,7 +48,7 @@ class UserCardDialogFragment : BaseVMDialogFragment<UserCardShareViewModel>() {
     }
 
     override fun initViews() {
-        val userId = arguments?.getLong(IntentParamKey.USER_ID.name)?:return
+        val userId = arguments?.getLong(IntentParamKey.USER_ID.name) ?: return
         initViewModel()
 
         okText.onClickNew {
@@ -105,9 +105,20 @@ class UserCardDialogFragment : BaseVMDialogFragment<UserCardShareViewModel>() {
         }
 
         val strAgeSex = if (userInfo.sexType == Sex.MALE) {
-            " / ${userInfo.age}岁 男"
+            okText.text = "立即和他互动"
+            if (userInfo.age == 0) {
+                " / 男"
+            } else {
+                " / ${userInfo.age}岁 男"
+            }
+
         } else {
-            " / ${userInfo.age}岁 女"
+            okText.text = "立即和她互动"
+            if (userInfo.age == 0) {
+                " / 女"
+            } else {
+                " / ${userInfo.age}岁 女"
+            }
         }
         tv_age.text = strAgeSex
 

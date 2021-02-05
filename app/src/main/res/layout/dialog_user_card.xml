@@ -110,7 +110,7 @@
         android:layout_marginEnd="@dimen/dimen_25"
         android:background="@drawable/bg_alertbutton_right"
         android:gravity="center"
-        android:text="立即和她互动"
+        android:text="立即和Ta互动"
         android:textStyle="bold"
         android:textColor="@color/white"
         android:textSize="16sp" />
