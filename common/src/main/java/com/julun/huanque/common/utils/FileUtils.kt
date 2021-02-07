@@ -816,12 +816,13 @@ object FileUtils {
         val fileName: String
         val file: File
         val brand: String = Build.BRAND
+        val suffix = ".jpg"
         fileName = if (brand == "xiaomi") { // 小米手机brand.equals("xiaomi")
-            Environment.getExternalStorageDirectory().path + "/DCIM/Camera/" + bitName
+            Environment.getExternalStorageDirectory().path + "/DCIM/Camera/" + bitName + suffix
         } else if (brand.equals("Huawei", ignoreCase = true)) {
-            Environment.getExternalStorageDirectory().path + "/DCIM/Camera/" + bitName
+            Environment.getExternalStorageDirectory().path + "/DCIM/Camera/" + bitName + suffix
         } else { // Meizu 、Oppo
-            Environment.getExternalStorageDirectory().path + "/DCIM/" + bitName
+            Environment.getExternalStorageDirectory().path + "/DCIM/" + bitName + suffix
         }
         //        fileName = Environment.getExternalStorageDirectory().getPath() + "/DCIM/Camera/" + bitName;
         file = if (Build.VERSION.SDK_INT >= 29) {
