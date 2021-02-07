@@ -76,14 +76,16 @@ object StatisticCode {
     const val MyPost = "MyPost"//我的动态页面点击发动态
     const val Group = "Group"//圈子详情页面点击发动态
 
-    const val Link  = "Link "//联系人
-    const val Other  = "Other "//其他页面
+    const val Link = "Link "//联系人
+    const val Other = "Other "//其他页面
 
-    const val EnterGroup  = "EnterGroup#"//进入圈子
-    const val List  = "List "//
+    const val EnterGroup = "EnterGroup#"//进入圈子
+    const val List = "List "//
 
 
-
+    const val EnterUserPage = "UserHome#"//进入用户主页
+    const val Nearby = "Nearby"//
+    const val LikeList = "LikeList"//
 
 
 }
@@ -96,25 +98,36 @@ object MyTagType {
 
 object ManagerTagCode {
     const val TAG_LIST = "tag_list"
-    const val TAG_INFO= "tag_info"
-    const val MANAGER_PAGER_TYPE= "manager_pager_type"
+    const val TAG_INFO = "tag_info"
+    const val MANAGER_PAGER_TYPE = "manager_pager_type"
 }
 
 /**
  *  审核状态 Wait 等待审核 Reject 被拒绝 Pass 审核通过
  */
-object TagPicAuthStatus{
-   const val Wait="Wait"
-   const val Reject="Reject"
-   const val Pass="Pass"
+object TagPicAuthStatus {
+    const val Wait = "Wait"
+    const val Reject = "Reject"
+    const val Pass = "Pass"
 }
 
 //User：用户卡片 Guide：引导卡片
-object  CardType{
+object CardType {
     const val USER = "User"
     const val GUIDE = "Guide"
 }
-object  GuideShowType{
+
+object GuideShowType {
     const val POPUP = "Popup"
     const val CARD = "Card"
+}
+
+/**
+ *
+Nearby("N", "附近的人"),
+UserHome("U", "用户主页"),
+ */
+object LikeSourceType {
+    const val Nearby = "Nearby"
+    const val UserHome = "UserHome"
 }

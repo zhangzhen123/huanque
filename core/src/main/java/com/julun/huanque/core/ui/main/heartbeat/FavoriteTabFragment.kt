@@ -30,10 +30,7 @@ import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.bean.beans.FavoriteUserBean
 import com.julun.huanque.common.bean.beans.HomePagePicBean
 import com.julun.huanque.common.bean.beans.UserTagBean
-import com.julun.huanque.common.constant.BooleanType
-import com.julun.huanque.common.constant.CardType
-import com.julun.huanque.common.constant.IntentParamKey
-import com.julun.huanque.common.constant.ParamConstant
+import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.AppHelper
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.suger.*
@@ -122,6 +119,7 @@ class FavoriteTabFragment : BaseVMFragment<FavoriteTabViewModel>() {
             if(item.cardType== CardType.GUIDE){
                 AppHelper.openTouch(item.touchType,item.touchValue,requireActivity())
             }else{
+                reportClick(StatisticCode.EnterUserPage+ StatisticCode.LikeList)
                 HomePageActivity.newInstance(requireActivity(), item.userId)
             }
         }

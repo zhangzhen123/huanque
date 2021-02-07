@@ -320,6 +320,7 @@ class NearbyFragment : BaseLazyFragment() {
                     } else {
                         val pic = tempBean.coverPicList.getOrNull(tempBean.selectIndex) ?: ""
                         HomePageActivity.newInstance(requireActivity(), item.userId, showPic = pic)
+                        reportClick(StatisticCode.EnterUserPage+StatisticCode.Nearby)
                     }
 
                 }
@@ -556,9 +557,11 @@ class NearbyFragment : BaseLazyFragment() {
 //                        })
 //                    }
                 }
+                mRecyclerView.postDelayed({
+                    hideLoading()
+                    state_layout_error.hide()
+                },350)
 
-                hideLoading()
-                state_layout_error.hide()
                 mRecyclerView.show()
                 if (bean.isPull) {
                     list.clear()

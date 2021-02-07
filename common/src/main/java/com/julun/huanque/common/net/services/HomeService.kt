@@ -4,10 +4,7 @@ import com.julun.huanque.common.basic.Root
 import com.julun.huanque.common.basic.RootListData
 import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.bean.beans.*
-import com.julun.huanque.common.bean.forms.FriendIdForm
-import com.julun.huanque.common.bean.forms.LikeForm
-import com.julun.huanque.common.bean.forms.NearbyForm
-import com.julun.huanque.common.bean.forms.RecomListForm
+import com.julun.huanque.common.bean.forms.*
 import retrofit2.http.Body
 import retrofit2.http.POST
 
@@ -53,7 +50,7 @@ interface HomeService {
      * 喜欢
      */
     @POST("social/friend/home/like")
-    suspend fun like(@Body form: FriendIdForm): Root<VoidResult>
+    suspend fun like(@Body form: FeelLikeForm): Root<VoidResult>
 
     /**
      * 无感

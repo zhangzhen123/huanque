@@ -9,10 +9,12 @@ import com.julun.huanque.common.bean.beans.CloseConfidantBean
 import com.julun.huanque.common.bean.beans.EvaluateTags
 import com.julun.huanque.common.bean.beans.HomePageInfo
 import com.julun.huanque.common.bean.events.LikeEvent
+import com.julun.huanque.common.bean.forms.FeelLikeForm
 import com.julun.huanque.common.bean.forms.FriendIdForm
 import com.julun.huanque.common.bean.forms.UserIdForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.constant.BusiConstant
+import com.julun.huanque.common.constant.LikeSourceType
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.HomeService
 import com.julun.huanque.common.net.services.SocialService
@@ -265,7 +267,7 @@ class HomePageViewModel : BaseViewModel() {
     fun like(userId: Long) {
         viewModelScope.launch {
             request({
-                val result = service.like(FriendIdForm(userId)).dataConvert(intArrayOf(1501))
+                val result = service.like(FeelLikeForm(userId, LikeSourceType.UserHome)).dataConvert(intArrayOf(1501))
                 heartStatus.value = BusiConstant.True
                 homeInfoBean.value?.heartTouch = BusiConstant.True
                 EventBus.getDefault().post(LikeEvent(userId, true))

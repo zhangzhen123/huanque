@@ -85,14 +85,20 @@ class SaveSearchConfigForm(
 class TagApplyForm(
     var tagId: Int,
     var applyPic: String,
-    var logId: Int?=null
+    var logId: Int? = null
 )
 
 class LogForm(
     var logId: Int
 )
+
 class MyTagForm(
     var findType: String
+)
+
+class FeelLikeForm(
+    var friendId: Long,
+    var sourceType: String
 )
 
 

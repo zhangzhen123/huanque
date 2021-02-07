@@ -9,11 +9,13 @@ import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.bean.beans.DynamicComment
 import com.julun.huanque.common.constant.BusiConstant
+import com.julun.huanque.common.constant.StatisticCode
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.interfaces.SecondCommentClickListener
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.loadImage
+import com.julun.huanque.common.suger.reportClick
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.widgets.emotion.EmojiSpanBuilder
 import com.julun.huanque.core.R
@@ -110,6 +112,7 @@ class DynamicDetailCommentFirstAdapter : BaseQuickAdapter<DynamicComment, BaseVi
                     //跳转主页
                     CommonInit.getInstance().getCurrentActivity()?.let { act ->
                         HomePageActivity.newInstance(act,commentData.userId)
+                        reportClick(StatisticCode.EnterUserPage+ StatisticCode.Post)
                     }
 
 
