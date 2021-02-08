@@ -203,8 +203,11 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
             when (view.id) {
                 R.id.user_info_holder -> {
                     logger.info("打开个人主页")
-                    if (!item.userAnonymous)
+                    if (!item.userAnonymous){
                         HomePageActivity.newInstance(requireActivity(), item.userId)
+                        reportClick(StatisticCode.EnterUserPage+ StatisticCode.Post)
+                    }
+
                 }
                 R.id.btn_action -> {
                     logger.info("关注")

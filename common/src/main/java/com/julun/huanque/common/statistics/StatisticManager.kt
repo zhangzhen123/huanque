@@ -38,7 +38,7 @@ object StatisticManager {
 
 
     //多长时间执行一次
-    private const val DELAY = 25 * 1000L
+    private const val DELAY = 60 * 1000L
 
 
     /** 暂时有最普通的list，后面看换成队列什么的 **/
